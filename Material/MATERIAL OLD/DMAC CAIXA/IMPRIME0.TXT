@@ -1,0 +1,30 @@
+                REDECARD
+
+  
+  
+  
+
+  MASTERCARD        PV:123456789012345
+  ************8884           17:28   D
+  TERM:12345678  AUTE:100012  10/03/11
+  CV:100012111111          AUTO:100012 
+  VENDA CREDITO A VISTA
+
+    APROVADO
+    FINAL 3,00
+  
+    EXIJA O DOCUMENTO FIS-
+    CAL DE NUMERO INDICADO
+    NESTE COMPROVANTE
+    T:_____N:____________
+  
+    ###   OPERACAO SIMULADA    ###
+    ###   NENHUM VALOR SERA    ###
+    ### CREDITADO OU DEBITADO  ###
+
+
+  RECONHECO E PAGAREI A DIVIDA ACIMA
+
+  ASSINATURA  DO  CLIENTE
+
+  (TEF Redecard - 5.0.0)

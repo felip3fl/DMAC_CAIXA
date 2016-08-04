@@ -1,0 +1,34 @@
+UPDATE PRODUTO SET PR_Descricao = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(PR_Descricao,'á','a'),'à','a'),'â','a'),'ã','a'),'ä','a') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(REPLACE(REPLACE(REPLACE(PR_Descricao,'é','e'),'è','e'),'ê','e'),'ë','e') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(REPLACE(REPLACE(REPLACE(PR_Descricao,'í','i'),'ì','i'),'î','i'),'ï','i') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(PR_Descricao,'ó','o'),'ò','o'),'ô','o'),'õ','o'),'ö','o') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(REPLACE(REPLACE(REPLACE(PR_Descricao,'ú','u'),'ù','u'),'û','u'),'ü','u') FROM PRODUTO 
+
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'ý','y') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'ñ','n') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'ç','c') FROM PRODUTO 
+
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'"','') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'$','') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'#','') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'@','') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'¨','') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'&','') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'*','') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'´','') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'^','') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'~','') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'º','') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'?','') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'°','') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'|','') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'!','') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'+','') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'=','') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'<','') FROM PRODUTO 
+UPDATE PRODUTO SET PR_Descricao = REPLACE(PR_Descricao,'>','') FROM PRODUTO 
+
+
+
+--EXEC SP_Atualiza_Produto_Loja '271'
+

@@ -1,0 +1,11 @@
+--insert into produtoloja (PR_Referencia,PR_CodigoFornecedor, PR_Descricao,PR_Classe, PR_Bloqueio, PR_LinhaProduto, PR_ClasseFiscal,
+ PR_Unidade, PR_ICMSSaida,PR_CodigoReducaoICMS, PR_CustoMedio1,PR_PrecoVenda1,PR_ListaPreco1,PR_ListaPreco2,PR_ListaPreco3,
+ PR_VigenciaPreco1, PR_VigenciaPreco2, PR_VigenciaPreco3, PR_PaginaListaPreco, PR_Peso,PR_Comprador, PR_Situacao, 
+PR_SubstituicaoTributaria,PR_IcmPdv, PR_HoraManutencao)  
+select PR_Referencia,PR_CodigoFornecedor, PR_Descricao,PR_Classe, PR_Bloqueio, PR_LinhaProduto, PR_ClasseFiscal,
+ PR_Unidade, PR_ICMSSaida,PR_CodigoReducaoICMS, PR_CustoMedio1,PR_PrecoVenda1,0,0,0,
+ '2010/07/26', '2010/07/26', '2010/07/26', PR_PaginaListaPreco, PR_Peso,PR_Comprador, PR_Situacao,
+ PR_SubstituicaoTributaria,PR_IcmPdv, PR_HoraManutencao from demeo..produto  where pr_referencia in ('2080761')
+
+select * from produtoloja where pr_referencia in ('2080761') 
+

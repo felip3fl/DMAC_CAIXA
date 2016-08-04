@@ -1,0 +1,1 @@
+CREATE TABLE dbo.SAT_NF(	snf_Sequencia int NOT NULL identity,	snf_Descricao char(18),	snf_Sinal char(1),	snf_Dados varchar(2000),snf_pedido numeric 	)  ON [PRIMARY]

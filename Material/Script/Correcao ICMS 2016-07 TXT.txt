@@ -1,0 +1,18 @@
+
+[ICMS20]
+    PICMS         = 18.00  *Esse percentual é 12*
+    
+    VICMS         = 30.71	*aqui o valor deve ser 20.47*
+
+
+[ICMSTOT]
+    VICMS         = 30.71    *aqui o valor deve ser 20.47*
+    
+
+
+	Com esssa mudanças a nota foi autorizada
+Caso tenha maiores dúvidas, entre em contato.
+
+Att.
+
+Rafael
