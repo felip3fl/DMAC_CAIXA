@@ -208,13 +208,13 @@ Begin VB.Form frmControlaCaixa
       End
    End
    Begin Balcao2010.chameleonButton cmdProtocolo 
-      Height          =   480
+      Height          =   0
       Left            =   12975
       TabIndex        =   14
       Top             =   2085
       Width           =   2145
       _ExtentX        =   3784
-      _ExtentY        =   847
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Protocolo"
       ENAB            =   -1  'True
@@ -246,13 +246,13 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdLoja 
-      Height          =   480
+      Height          =   0
       Left            =   165
       TabIndex        =   13
       Top             =   2085
       Width           =   1200
       _ExtentX        =   2117
-      _ExtentY        =   847
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Loja"
       ENAB            =   -1  'True
@@ -284,13 +284,13 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdNroCaixa 
-      Height          =   480
+      Height          =   0
       Left            =   1845
       TabIndex        =   12
       Top             =   2085
       Width           =   1245
       _ExtentX        =   2196
-      _ExtentY        =   847
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "NroCaixa"
       ENAB            =   -1  'True
@@ -322,13 +322,13 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdOperador 
-      Height          =   480
+      Height          =   0
       Left            =   4665
       TabIndex        =   11
       Top             =   2085
       Width           =   5355
       _ExtentX        =   9446
-      _ExtentY        =   847
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Operador"
       ENAB            =   -1  'True
@@ -360,14 +360,14 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdReRomaneio 
-      Height          =   450
+      Height          =   0
       Left            =   4440
       TabIndex        =   10
       Top             =   10770
       Visible         =   0   'False
       Width           =   1095
       _ExtentX        =   1931
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Re Romaneio"
       ENAB            =   -1  'True
@@ -399,14 +399,14 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdReimprimeNF 
-      Height          =   450
+      Height          =   0
       Left            =   1995
       TabIndex        =   9
       Top             =   10815
       Visible         =   0   'False
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "ReEmiNF"
       ENAB            =   -1  'True
@@ -439,14 +439,14 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdBotoesParte2 
-      Height          =   450
+      Height          =   0
       Index           =   4
       Left            =   13695
       TabIndex        =   7
       Top             =   10815
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "T. Numerário"
       ENAB            =   -1  'True
@@ -479,7 +479,7 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdBotoesParte2 
-      Height          =   450
+      Height          =   0
       Index           =   5
       Left            =   14505
       TabIndex        =   6
@@ -487,7 +487,7 @@ Begin VB.Form frmControlaCaixa
       Top             =   10815
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Consulta"
       ENAB            =   -1  'True
@@ -525,14 +525,14 @@ Begin VB.Form frmControlaCaixa
       Top             =   3810
    End
    Begin Balcao2010.chameleonButton cmdBotoesParte2 
-      Height          =   450
+      Height          =   0
       Index           =   2
       Left            =   12105
       TabIndex        =   8
       Top             =   10815
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Cancelar"
       ENAB            =   -1  'True
@@ -565,14 +565,14 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdBotoesParte2 
-      Height          =   450
+      Height          =   0
       Index           =   3
       Left            =   12900
       TabIndex        =   16
       Top             =   10815
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Movimento"
       ENAB            =   -1  'True
@@ -605,13 +605,13 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdVersao 
-      Height          =   555
+      Height          =   0
       Left            =   6795
       TabIndex        =   17
       Top             =   10740
       Width           =   1920
       _ExtentX        =   3387
-      _ExtentY        =   979
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   ""
       ENAB            =   -1  'True
@@ -644,14 +644,14 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdBotoesParte2 
-      Height          =   450
+      Height          =   0
       Index           =   1
       Left            =   11295
       TabIndex        =   19
       Top             =   10815
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Portal"
       ENAB            =   -1  'True
@@ -684,14 +684,14 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdBotoesParte2 
-      Height          =   450
+      Height          =   0
       Index           =   0
       Left            =   10500
       TabIndex        =   20
       Top             =   10815
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Menu ECF"
       ENAB            =   -1  'True
@@ -724,7 +724,7 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdBotoesParte2 
-      Height          =   450
+      Height          =   0
       Index           =   6
       Left            =   390
       TabIndex        =   21
@@ -732,7 +732,7 @@ Begin VB.Form frmControlaCaixa
       Top             =   10815
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Fecha Caixa"
       ENAB            =   -1  'True
@@ -765,7 +765,7 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdBotoesParte2 
-      Height          =   450
+      Height          =   0
       Index           =   7
       Left            =   1185
       TabIndex        =   1
@@ -773,7 +773,7 @@ Begin VB.Form frmControlaCaixa
       Top             =   10815
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Garantia"
       ENAB            =   -1  'True
@@ -806,7 +806,7 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdBotoesParte2 
-      Height          =   450
+      Height          =   0
       Index           =   8
       Left            =   2505
       TabIndex        =   22
@@ -815,7 +815,7 @@ Begin VB.Form frmControlaCaixa
       Visible         =   0   'False
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   ""
       ENAB            =   -1  'True
@@ -848,7 +848,7 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdBotoesParte2 
-      Height          =   450
+      Height          =   0
       Index           =   9
       Left            =   2790
       TabIndex        =   23
@@ -857,7 +857,7 @@ Begin VB.Form frmControlaCaixa
       Visible         =   0   'False
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   ""
       ENAB            =   -1  'True
@@ -1647,6 +1647,7 @@ Private Function notaTrans()
                                 ElseIf Trim(rdoParametro("tiponota")) = "TA" And Trim(rdoParametro("serie")) = "CT" Then
                                     NroNotaFiscal = ExtraiSeq00Controle
                                     wSequencia = txtPedido.text
+                                    ImprimeTransferencia00 wSequencia
                                     ImprimeTransferencia00 wSequencia
                                     sql = "exec sp_totaliza_capa_nota_fiscal_Loja " & txtPedido.text
                                     rdoCNLoja.Execute sql
