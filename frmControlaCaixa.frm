@@ -3,15 +3,15 @@ Begin VB.Form frmControlaCaixa
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    ClientHeight    =   10695
-   ClientLeft      =   975
-   ClientTop       =   1845
+   ClientLeft      =   1290
+   ClientTop       =   900
    ClientWidth     =   15300
    Icon            =   "frmControlaCaixa.frx":0000
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
    Picture         =   "frmControlaCaixa.frx":23FA
-   ScaleHeight     =   11175
-   ScaleWidth      =   15360
+   ScaleHeight     =   10575
+   ScaleWidth      =   20490
    ShowInTaskbar   =   0   'False
    WindowState     =   2  'Maximized
    Begin VB.Frame frmTrans 

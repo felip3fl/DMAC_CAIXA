@@ -5,8 +5,8 @@ Begin VB.Form frmEmissaoNFe
    BorderStyle     =   0  'None
    Caption         =   "Emissão NFe"
    ClientHeight    =   9330
-   ClientLeft      =   15
-   ClientTop       =   705
+   ClientLeft      =   2370
+   ClientTop       =   840
    ClientWidth     =   15300
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
@@ -759,6 +759,8 @@ End Sub
 Private Sub Form_Activate()
   
    qtdeLinhaAnterior = 0
+  
+    
   
    grdLogSig.MergeRow(0) = True
    grdLogSig.MergeCol(0) = True
@@ -1681,7 +1683,7 @@ trataerro:
         Case 5
             verificaNovoArquivo = False
         Case Else
-            mensagemErroDesconhecido Err, "Verificação de pasta"
+            mensagemErroDesconhecido Err, "Verificação de novos arquivo"
     End Select
 End Function
 
@@ -1981,7 +1983,7 @@ trataerro:
             mensagemArquivoTXT.Close
             deletaArquivo GLB_EnderecoPastaRESP & Arquivo
         Case Else
-            mensagemErroDesconhecido Err, "Verificação de pasta"
+            mensagemErroDesconhecido Err, "Verificação de pasta no arquivo unico"
     End Select
 End Function
 
@@ -2009,6 +2011,7 @@ Private Sub atualizaArquivoDestalhesNF(nf As notaFiscal, Arquivo As String, info
     Else
         informacaoSistema = vbNewLine & "(Nenhuma informação sobre essa nota foi encontrada)" & vbNewLine
     End If
+    
     atualizaArquivo GLB_EnderecoPastaRESP, Arquivo, informacaoArquivo, informacaoSistema
     'informacaoArquivo = informacaoArquivo & informacaoSistema
     ado_loja.Close
@@ -2080,9 +2083,6 @@ Public Function carregaArquivo()
     
         Arquivo = Dir(endArquivoResposta, vbDirectory)
         
-        'If ARQUIVO Like "*.TXT" Then
-            'deletaArquivo GLB_EnderecoPastaRESP & ARQUIVO
-        'End If
         
         Do While Arquivo <> ""
             
@@ -2092,8 +2092,10 @@ Public Function carregaArquivo()
             informacaoArquivo = mensagemArquivoTXT.ReadAll
             mensagemArquivoTXT.Close
                 
-            If Not UCase(Arquivo) Like "*RESP-*" Then
-              deletaArquivo GLB_EnderecoPastaRESP & Arquivo
+            If Not UCase(Arquivo) Like "*RESP-CANCEL*" And _
+               Not UCase(Arquivo) Like "*RESP-NOTA*" And _
+               Not UCase(Arquivo) Like "*RESP-SAT*" Then
+               deletaArquivo GLB_EnderecoPastaRESP & Arquivo
             Else
         
                 resultado = lerCampo(informacaoArquivo, "Resultado")
