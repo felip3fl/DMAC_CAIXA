@@ -4607,9 +4607,8 @@ Public Sub NOVO_ImprimeTransfNumerario(grid, Titulo As String, operador As Strin
     impressoraRelatorio "HIPERCARD         " & right(Space(30) & Format(wTNHiperCard, "###,###,##0.00"), 30)
     impressoraRelatorio "DEPOSITO          " & right(Space(30) & Format(wTNDeposito, "###,###,##0.00"), 30)
     impressoraRelatorio "NOTA CREDITO      " & right(Space(30) & Format(wTNNotaCredito, "###,###,##0.00"), 30)
-    impressoraRelatorio "DESPESA CONDUCAO  " & right(Space(30) & Format(wTNConducao, "###,###,##0.00"), 30)
+    impressoraRelatorio "OUTRAS DESPESAS   " & right(Space(30) & Format(wTNConducao, "###,###,##0.00"), 30)
     impressoraRelatorio "DESPESA LOJA      " & right(Space(30) & Format(wTNDespLoja, "###,###,##0.00"), 30)
-    impressoraRelatorio "OUTRAS DESPESAS   " & right(Space(30) & Format(wTNOutros, "###,###,##0.00"), 30)
     impressoraRelatorio "                                                "
     impressoraRelatorio "TOTAL             " & right(Space(30) & Format(wTNTotal, "###,###,##0.00"), 30)
     

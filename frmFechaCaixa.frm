@@ -771,9 +771,8 @@ Private Sub ImprimeTransfNumerario()
                    "HIPERCARD         " & right(Space(30) & Format(wTNHiperCard, "###,###,##0.00"), 30) & _
                    "DEPOSITO          " & right(Space(30) & Format(wTNDeposito, "###,###,##0.00"), 30) & _
                    "NOTA CREDITO      " & right(Space(30) & Format(wTNNotaCredito, "###,###,##0.00"), 30) & _
-                   "DESPESA CONDUCAO  " & right(Space(30) & Format(wTNConducao, "###,###,##0.00"), 30) & _
+                   "OUTRAS DESPESAS   " & right(Space(30) & Format(wTNConducao, "###,###,##0.00"), 30) & _
                    "DESPESA LOJA      " & right(Space(30) & Format(wTNDespLoja, "###,###,##0.00"), 30) & _
-                   "OUTRAS DESPESAS   " & right(Space(30) & Format(wTNOutros, "###,###,##0.00"), 30) & _
                    "                                                " & _
                    "TOTAL             " & right(Space(30) & Format(wTNTotal, "###,###,##0.00"), 30))
                    
@@ -1822,9 +1821,8 @@ rdoCapa.Close
                    "TEF               " & right(Space(30) & Format(wTNVisaEletron + wTNRedeShop, "###,###,##0.00"), 30) & _
                    "DEPOSITO          " & right(Space(30) & Format(wTNDeposito, "###,###,##0.00"), 30) & _
                    "NOTA CREDITO      " & right(Space(30) & Format(wTNNotaCredito, "###,###,##0.00"), 30) & _
-                   "DESPESA CONDUCAO  " & right(Space(30) & Format(wTNConducao, "###,###,##0.00"), 30) & _
+                   "OUTRAS DESPESAS   " & right(Space(30) & Format(wTNConducao, "###,###,##0.00"), 30) & _
                    "DESPESA LOJA      " & right(Space(30) & Format(wTNDespLoja, "###,###,##0.00"), 30) & _
-                   "OUTRAS DESPESAS   " & right(Space(30) & Format(wTNOutros, "###,###,##0.00"), 30) & _
                    "                                                " & _
                    "TOTAL             " & right(Space(30) & Format(wTNTotal, "###,###,##0.00"), 30))
                    
