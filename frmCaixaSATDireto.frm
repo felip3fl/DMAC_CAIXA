@@ -14,6 +14,46 @@ Begin VB.Form frmCaixaSATDireto
    ScaleHeight     =   8250
    ScaleWidth      =   15120
    ShowInTaskbar   =   0   'False
+   Begin VB.Frame fraCEP 
+      BackColor       =   &H80000007&
+      Caption         =   "CEP Cliente"
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   12
+         Charset         =   0
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H00FFFFFF&
+      Height          =   945
+      Left            =   8310
+      TabIndex        =   17
+      Top             =   8985
+      Visible         =   0   'False
+      Width           =   7110
+      Begin VB.TextBox txtCEP 
+         Appearance      =   0  'Flat
+         BackColor       =   &H00FFFFFF&
+         BeginProperty Font 
+            Name            =   "Verdana"
+            Size            =   15.75
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00000000&
+         Height          =   495
+         Left            =   105
+         MaxLength       =   14
+         TabIndex        =   18
+         Top             =   285
+         Width           =   6885
+      End
+   End
    Begin VB.Frame Frame1 
       BackColor       =   &H00000000&
       Height          =   6540
@@ -270,7 +310,7 @@ Begin VB.Form frmCaixaSATDireto
    End
    Begin VB.Frame fraNFP 
       BackColor       =   &H80000007&
-      Caption         =   "CGC/CPF"
+      Caption         =   "CNPJ / CPF"
       BeginProperty Font 
          Name            =   "MS Sans Serif"
          Size            =   12
@@ -599,9 +639,15 @@ Call GravaValorCarrinho(frmCaixaSATDireto, lblTotalItens.Caption)
   wTotalVenda = 0
   wtotalitens = 0
   grdItens.BackColorBkg = &H0&
+  
   fraNFP.top = fraProduto.top
   fraNFP.left = fraProduto.left
   fraNFP.Visible = True
+  
+  fraCEP.top = fraProduto.top
+  fraCEP.left = fraProduto.left
+  fraCEP.Visible = False
+  
   GetAsyncKeyState (vbKeyTab)
   wItens = 0
   wNumeroCupom = 0
@@ -635,6 +681,38 @@ Private Sub grdItens_KeyPress(KeyAscii As Integer)
        Call GravaValorCarrinho(frmCaixaSATDireto, lblTotalItens.Caption)
        Unload Me
    End If
+End Sub
+
+Private Sub txtCEP_KeyPress(KeyAscii As Integer)
+    If KeyAscii = 13 Then
+        If txtCEP.text = "" Then
+            MsgBox "Informe o CEP do cliente", vbExclamation, "CEP Cliente"
+        ElseIf Len(txtCEP.text) <> 8 Then
+            MsgBox "CEP Inválido", vbExclamation, "CEP Cliente"
+        ElseIf IsNumeric(txtCEP.text) = False Then
+            MsgBox "Informe apenas números", vbExclamation, "CEP Cliente"
+        ElseIf txtCEP.text = "11111111" Or _
+        txtCEP.text = "11111111" Or _
+        txtCEP.text = "99999999" Or _
+        txtCEP.text = "88888888" Or _
+        txtCEP.text = "77777777" Or _
+        txtCEP.text = "66666666" Or _
+        txtCEP.text = "55555555" Or _
+        txtCEP.text = "44444444" Or _
+        txtCEP.text = "33333333" Or _
+        txtCEP.text = "22222222" Or _
+        txtCEP.text = "00000000" Or _
+        txtCEP.text = "12345678" Then
+            MsgBox "CEP Inválido!", vbExclamation, "CEP Cliente"
+        Else
+            fraCEP.Visible = False
+            fraProduto.Visible = True
+            txtCodigoProduto.SetFocus
+            Call GravaNumeroCupomCgcCpf
+        End If
+    ElseIf KeyAscii = 27 Then
+        Unload Me
+    End If
 End Sub
 
 Private Sub txtCGC_CPF_Change()
@@ -712,13 +790,25 @@ Private Sub txtCGC_CPF_KeyPress(KeyAscii As Integer)
      
      
          fraNFP.Visible = False
-         fraProduto.Visible = True
-         txtCodigoProduto.SetFocus
          
+         'CEP Cliente consumidor '''''''''''''''''''''''''''''''''''''''''''
+         
+         fraCEP.Visible = True
+         txtCEP.text = ""
+         txtCEP.SetFocus
+
+         
+         
+         
+         
+         ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+         
+         
+           
   '***** ROTINA ECF (NAO APAGAR)
 '     Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
      
-     Call GravaNumeroCupomCgcCpf
+   
      
 
 
@@ -761,7 +851,7 @@ Private Sub txtCodigoProduto_KeyDown(KeyCode As Integer, Shift As Integer)
           rdoCNLoja.BeginTrans
        
           sql = "Update nfcapa set qtditem = " & rdoContaItens("Numeroitem") & ", CPFNFP = '" & txtCGC_CPF & _
-                "', cliente = 999999 " _
+                "', cliente = 999999, CEPCLI = '" & txtCEP.text & "'" _
                 & " where nf = " & wNumeroCupom & " and serie = '" & GLB_SerieCF & "' and numeroped = " & NroPedido
           rdoCNLoja.Execute sql, rdExecDirect
     
