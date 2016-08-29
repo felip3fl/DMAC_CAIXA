@@ -5,8 +5,8 @@ Begin VB.Form frmEmissaoNFe
    BorderStyle     =   0  'None
    Caption         =   "Emissão NFe"
    ClientHeight    =   9330
-   ClientLeft      =   2370
-   ClientTop       =   840
+   ClientLeft      =   2235
+   ClientTop       =   915
    ClientWidth     =   15300
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
@@ -543,7 +543,7 @@ Begin VB.Form frmEmissaoNFe
       BackStyle       =   0  'Transparent
       Caption         =   "Click aqui para ignorar o resultado"
       BeginProperty Font 
-         Name            =   "Arial Narrow"
+         Name            =   "Arial"
          Size            =   9.75
          Charset         =   0
          Weight          =   400
@@ -584,7 +584,7 @@ Begin VB.Form frmEmissaoNFe
       BackStyle       =   0  'Transparent
       Caption         =   "Preparando para emitir"
       BeginProperty Font 
-         Name            =   "Arial Narrow"
+         Name            =   "Arial"
          Size            =   15.75
          Charset         =   0
          Weight          =   400
@@ -754,13 +754,74 @@ Private Sub finalizaProcesso(mensagem As String)
     
 End Sub
 
+Private Sub notaPedentes()
 
+    Dim ado_estrutura As New ADODB.Recordset
+    Dim i As Integer
+    Dim add As Boolean
+    Dim dataPesquisa As String
+    
+    dataPesquisa = Format(DateAdd("m", -1, Date), "YYYY/MM/DD")
+
+    sql = "select HORA, DATAEMI, lojaorigem, NUMEROPED, nf, tm, serie " & vbNewLine & _
+          "from nfcapa " & vbNewLine & _
+          "where tm not in (4012,4016,9016,100,101,9005,4005,9012,204,124,4014)   " & vbNewLine & _
+          "and tiponota in ('V','T','E','S') " & vbNewLine & _
+          "and serie in ('CE','NE')" & vbNewLine & _
+          "and dataemi > '" & dataPesquisa & "'"
+
+    ado_estrutura.CursorLocation = adUseClient
+    ado_estrutura.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    
+        Do While Not ado_estrutura.EOF
+            
+            If ado_estrutura("serie") = "NE" Then
+                mensagemLOG2 grdLogSig, Format(ado_estrutura("DATAEMI"), "YYYY/MM/DD") & " " & Format(ado_estrutura("HORA"), "HH:MM"), _
+                ado_estrutura("tm"), ado_estrutura("lojaorigem"), ado_estrutura("NUMEROPED"), ado_estrutura("nf"), ado_estrutura("tm") & " - [DMAC] Não sicronizada com a retaguarda"
+            Else
+                
+
+                'If add Then
+                Call mensagemLOG2(grdLogSigSAT, Format(ado_estrutura("DATAEMI"), "YYYY/MM/DD") & " " & Format(ado_estrutura("HORA"), "HH:MM"), _
+                Val(ado_estrutura("tm")), ado_estrutura("lojaorigem"), ado_estrutura("NUMEROPED"), ado_estrutura("nf"), ado_estrutura("tm") & " - [DMAC] Não sicronizada com a retaguarda")
+                'End If
+                
+            End If
+        
+            ado_estrutura.MoveNext
+            
+        Loop
+    
+    ado_estrutura.Close
+    
+''    'grdLogSig.MergeRow(0) = True
+''    'grdLogSig.MergeRow(1) = True
+''    'grdLogSig.MergeRow(2) = True
+''    'grdLogSig.MergeRow(3) = True
+''    grdLogSig.MergeCol(0) = False
+''    grdLogSig.MergeCol(1) = True
+''    grdLogSig.MergeCol(2) = True
+''    grdLogSig.MergeCol(3) = True
+''    grdLogSig.MergeCol(4) = False
+''    grdLogSig.MergeCol(5) = False
+''
+''
+''    'grdLogSigSAT.MergeRow(0) = True
+''    'grdLogSigSAT.MergeRow(1) = True
+''    'grdLogSigSAT.MergeRow(2) = True
+''    'grdLogSigSAT.MergeRow(3) = True
+''    grdLogSigSAT.MergeCol(0) = False
+''    grdLogSigSAT.MergeCol(1) = True
+''    grdLogSigSAT.MergeCol(2) = True
+''    grdLogSigSAT.MergeCol(3) = True
+''    grdLogSigSAT.MergeCol(4) = False
+''    grdLogSigSAT.MergeCol(5) = False
+
+End Sub
 
 Private Sub Form_Activate()
   
    qtdeLinhaAnterior = 0
-  
-    
   
    grdLogSig.MergeRow(0) = True
    grdLogSig.MergeCol(0) = True
@@ -801,9 +862,13 @@ Private Sub Form_Activate()
     ElseIf cancelaNota = True Then
         cmdCancelar_Click
     Else
+        
         timerVerificaResposta_Timer
         timerVerificaResposta.Enabled = True
+        
     End If
+    
+    
     
 End Sub
 
@@ -901,9 +966,9 @@ End Function
 
 Private Sub grdLogSig_Click()
     If grdLogSig.CellForeColor = vbRed Then
-        grdLogSig.ForeColorSel = vbRed
+        grdLogSig.BackColorSel = vbRed
     Else
-        grdLogSig.ForeColorSel = &HFFFFFF
+        grdLogSig.BackColorSel = &H343434
     End If
     grdLogSigSAT.Row = 0
     abrirAqruivo = False
@@ -1027,9 +1092,9 @@ End Sub
 
 Private Sub grdLogSigSAT_Click()
     If grdLogSigSAT.CellForeColor = vbRed Then
-        grdLogSigSAT.ForeColorSel = vbRed
+        grdLogSigSAT.BackColorSel = vbRed
     Else
-        grdLogSigSAT.ForeColorSel = &HFFFFFF
+        grdLogSigSAT.BackColorSel = &H343434
     End If
     grdLogSig.Row = 0
     abrirAqruivo = False
@@ -1946,7 +2011,6 @@ Public Function carregaArquivoUnico()
         If resultado = 100 Or resultado = 4012 Or resultado = 9016 Then
              statusFuncionamento "Nota emitida e autorizada com sucesso"
              
-             atualizaCodigoNF nf.pedido, resultado, nf.loja
              atualizaChaveNF nf.pedido, nf.chave, nf.loja
              If nf.eSerie = "CE" Then atualizaNumeroNF nf.pedido, nf.numero
              atualizaArquivo GLB_EnderecoPastaRESP, Arquivo, informacaoArquivo, "DMAC=Atualizado"
@@ -2080,9 +2144,13 @@ Public Function carregaArquivo()
         
         limpaGrid grdLogSig
         limpaGrid grdLogSigSAT
-    
+               
+               
         Arquivo = Dir(endArquivoResposta, vbDirectory)
+                
+        notaPedentes
         
+
         
         Do While Arquivo <> ""
             
@@ -2105,6 +2173,7 @@ Public Function carregaArquivo()
                 If CDate(left(arq.DateCreated, 10)) <> Date And _
                     (resultado = 100 Or _
                     resultado = 101 Or _
+                    resultado = 204 Or _
                     resultado = 9016 Or _
                     resultado = 4012) Then
                
@@ -2199,7 +2268,7 @@ Private Sub atualizaArquivo(ByRef enderecoArquivo As String, Arquivo As String, 
     
 End Sub
 
-Public Function mensagemLOG2(grid, Data As Date, tipoStatus As Integer, loja As String, numeroNotaFiscal As String, pedido As String, mensagem As String)
+Public Function mensagemLOG2(grid, data As Date, tipoStatus As Integer, loja As String, numeroNotaFiscal As String, pedido As String, mensagem As String)
 
     Dim status As String
     Dim corLinha As ColorConstants
@@ -2214,6 +2283,7 @@ Public Function mensagemLOG2(grid, Data As Date, tipoStatus As Integer, loja As 
             corLinha = vbRed
     End Select
                
+                              
 '    If grid.Name <> grdLog.Name Then
         'If chkMostraLogErro.Value = 1 And status = "Erro" Then
             'grid.AddItem data & Chr(9) & loja & Chr(9) & Format(numeroNotaFiscal, "##") & Chr(9) & status & Chr(9) & mensagem
@@ -2221,7 +2291,7 @@ Public Function mensagemLOG2(grid, Data As Date, tipoStatus As Integer, loja As 
         'If chkMostraLogSucesso.Value = 1 And status = "Sucesso" Then
     
     
-        grid.AddItem Data & Chr(9) & loja & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & status & Chr(9) & mensagem
+    grid.AddItem loja & Chr(9) & data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & status & Chr(9) & mensagem
         
         
         'End If
@@ -2236,9 +2306,10 @@ Public Function mensagemLOG2(grid, Data As Date, tipoStatus As Integer, loja As 
     grid.TopRow = grid.Row
     
     grid.Row = 0
-    grid.Col = 0
+    grid.Col = 2
     'If grid.Name <> grdLog.Name Then grid.Sort = flexSortStringAscending
     
+    grid.Sort = flexSortNumericDescending
     grid.Refresh
                    
 End Function

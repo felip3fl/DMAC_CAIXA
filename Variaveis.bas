@@ -281,7 +281,6 @@ Global GLB_ServidorTEF As String
 Global GLB_BancoTEF As String
 Global GLB_UsuarioTEF As String
 Global GLB_SenhaTEF As String
-Global GLB_ImpressoraResumo As String
 Global GLB_Impressora00 As String
 Global Glb_AlteraResolucao As Boolean
 'Global GLB_EnderecoPortal As String

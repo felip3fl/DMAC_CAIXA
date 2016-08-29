@@ -13,8 +13,8 @@ Begin VB.Form frmCaixaNF
    LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   10575
-   ScaleWidth      =   20490
+   ScaleHeight     =   8010
+   ScaleWidth      =   8115
    ShowInTaskbar   =   0   'False
    Begin VB.Frame fraNFP 
       BackColor       =   &H00000000&

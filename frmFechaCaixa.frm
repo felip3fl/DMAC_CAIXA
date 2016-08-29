@@ -5,8 +5,8 @@ Begin VB.Form frmFechaCaixa
    BorderStyle     =   0  'None
    Caption         =   "Fechamento do Caixa"
    ClientHeight    =   8385
-   ClientLeft      =   12600
-   ClientTop       =   1605
+   ClientLeft      =   27960
+   ClientTop       =   1965
    ClientWidth     =   5970
    FillColor       =   &H00808080&
    LinkTopic       =   "Form1"
@@ -465,10 +465,19 @@ Private Sub controlaNotasEmitidas()
 
     Dim sql As String
     Dim rdoNotas As New ADODB.Recordset
+    Dim dataPesquisa As String
+
+    dataPesquisa = Format(DateAdd("m", -1, Date), "YYYY/MM/DD")
 
     notaPedente = False
 
-    sql = ("select count(*) as NFpedente from nfcapa where protocolo = " & GLB_CTR_Protocolo & " and nf = 0 and tiponota in ('V','T','E','S')")
+    sql = "select count(*) as NFpedente " & vbNewLine & _
+          "from nfcapa " & vbNewLine & _
+          "where NroCaixa = " & GLB_Caixa & " " & vbNewLine & _
+          "and tm not in (4012,4016,9016,100,101,9005,4005,9012,204,124,4014) " & vbNewLine & _
+          "and tiponota in ('V','T','E','S')" & vbNewLine & _
+          "and serie in ('CE','NE')" & vbNewLine & _
+          "and dataemi > '" & dataPesquisa & "'"
     
     rdoNotas.CursorLocation = adUseClient
     rdoNotas.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
@@ -1251,7 +1260,7 @@ If KeyAscii = 13 Then
  End If
  
  If notaPedente = True Then
-    MsgBox "Existe nota(s) fiscal(s) ainda não autorizada(s) que precisa ser emitida(s) antes do fechamento", vbInformation
+    MsgBox "Existe nota(s) fiscal(s) ainda não autorizada(s) que precisa ser emitida(s) antes do fechamento", vbExclamation
     Unload Me
     frmEmissaoNFe.Show vbModal
     Exit Sub

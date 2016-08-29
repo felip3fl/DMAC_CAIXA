@@ -2671,7 +2671,6 @@ lsDSN = "Driver={Microsoft Access Driver (*.mdb)};" & _
              GLB_ECF = Trim(rdoParametroINI("CXA_ECF"))
              GLB_Caixa = Trim(rdoParametroINI("CXA_NumeroCaixa"))
              Glb_ImpNotaFiscal = Trim(rdoParametroINI("GLB_ImpNotaFiscal"))
-             GLB_ImpressoraResumo = Trim(rdoParametroINI("GLB_ImpCotacaoResumo"))
              GLB_Impressora00 = Trim(rdoParametroINI("GLB_imp00"))
              Glb_AlteraResolucao = rdoParametroINI("GLB_AlteraResolucao")
              

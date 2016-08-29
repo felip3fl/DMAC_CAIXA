@@ -793,12 +793,12 @@ Private Sub txtCGC_CPF_KeyPress(KeyAscii As Integer)
          
          'CEP Cliente consumidor '''''''''''''''''''''''''''''''''''''''''''
          
-         fraCEP.Visible = True
-         txtCEP.text = ""
-         txtCEP.SetFocus
+         'fraCEP.Visible = True
+         'txtCEP.text = ""
+         'txtCEP.SetFocus
 
          
-         
+         Call GravaNumeroCupomCgcCpf
          
          
          ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''

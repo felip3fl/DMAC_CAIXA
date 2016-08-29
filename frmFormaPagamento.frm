@@ -2078,7 +2078,7 @@ ElseIf txtTipoNota.text = "NF" Then
                    rdoCNLoja.Execute (sql)
 
                    sql = ""
-                   sql = "Update NfCapa set  Serie = 'NE', TM = 99 " & _
+                   sql = "Update NfCapa set  Serie = 'NE', TM = 0 " & _
                          "where NumeroPed = " & pedido
                    rdoCNLoja.Execute (sql)
                    

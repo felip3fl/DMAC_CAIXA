@@ -1,16 +1,16 @@
 VERSION 5.00
-Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "Vsflex7u.ocx"
+Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "vsflex7u.ocx"
 Begin VB.Form frmCaixaNotaManual 
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    Caption         =   "Nota Manual"
-   ClientHeight    =   7905
+   ClientHeight    =   10440
    ClientLeft      =   615
-   ClientTop       =   2070
+   ClientTop       =   465
    ClientWidth     =   14925
    ControlBox      =   0   'False
    LinkTopic       =   "Form1"
-   ScaleHeight     =   7905
+   ScaleHeight     =   10440
    ScaleWidth      =   14925
    ShowInTaskbar   =   0   'False
    Begin VB.Frame fraNFP 

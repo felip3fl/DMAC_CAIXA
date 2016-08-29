@@ -3,8 +3,8 @@ Begin VB.Form frmControlaCaixa
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    ClientHeight    =   10440
-   ClientLeft      =   1290
-   ClientTop       =   465
+   ClientLeft      =   4845
+   ClientTop       =   105
    ClientWidth     =   15300
    Icon            =   "frmControlaCaixa.frx":0000
    LinkTopic       =   "Form1"
@@ -1257,7 +1257,6 @@ Private Sub Form_Activate()
     End If
     
 
-    
 End Sub
 
 Private Sub abilitaFuncoesCF()

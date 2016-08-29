@@ -1847,7 +1847,7 @@ Private Sub grdMovimentoCaixa_EnterCell()
 End Sub
 Private Sub GravaMovimentoCaixa()
 
-    If GLB_Administrador = True And Val(txtRetirada.text) = 0 Then
+    If GLB_Administrador = True And CDbl(txtRetirada.text) = 0 Then
     
         If MsgBox("Deseja deleta todas as Transferencia desse grupo?", vbYesNo + vbQuestion, "Atenção") = vbYes Then
             sql = "delete movimentocaixa " & vbNewLine & _
