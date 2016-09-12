@@ -5,8 +5,8 @@ Begin VB.Form frmReimpressaoMovimento
    BorderStyle     =   0  'None
    Caption         =   "Fechamento do CaixaFechamento do Caixa"
    ClientHeight    =   8505
-   ClientLeft      =   15
-   ClientTop       =   465
+   ClientLeft      =   480
+   ClientTop       =   1125
    ClientWidth     =   15300
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True

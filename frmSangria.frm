@@ -568,7 +568,7 @@ Begin VB.Form frmSangria
       Left            =   5610
       TabIndex        =   14
       Top             =   825
-      Width           =   5055
+      Width           =   7350
       Begin VB.PictureBox picAvancar 
          Appearance      =   0  'Flat
          AutoSize        =   -1  'True

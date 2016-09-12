@@ -4,13 +4,13 @@ Begin VB.Form frmCaixaNotaManual
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    Caption         =   "Nota Manual"
-   ClientHeight    =   10440
-   ClientLeft      =   615
-   ClientTop       =   465
+   ClientHeight    =   8715
+   ClientLeft      =   1935
+   ClientTop       =   1290
    ClientWidth     =   14925
    ControlBox      =   0   'False
    LinkTopic       =   "Form1"
-   ScaleHeight     =   10440
+   ScaleHeight     =   8715
    ScaleWidth      =   14925
    ShowInTaskbar   =   0   'False
    Begin VB.Frame fraNFP 

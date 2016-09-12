@@ -2154,6 +2154,9 @@ ElseIf txtTipoNota.text = "NF" Then
        frmControlaCaixa.cmdTotalPedidoGE.Caption = ""
     
 ElseIf txtTipoNota.text = "Romaneio" Then
+    
+      defineImpressora
+
       Call PegaNumeroRomaneio
       Call ImprimeRomaneio
       Call ImprimeRomaneio

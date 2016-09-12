@@ -3,8 +3,8 @@ Begin VB.Form frmControlaCaixa
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    ClientHeight    =   10440
-   ClientLeft      =   4845
-   ClientTop       =   105
+   ClientLeft      =   2055
+   ClientTop       =   690
    ClientWidth     =   15300
    Icon            =   "frmControlaCaixa.frx":0000
    LinkTopic       =   "Form1"
@@ -1528,7 +1528,6 @@ End If
                     Else
                             notaTrans
                             frmTrans.Visible = False
-                            
                             
                     End If
                     

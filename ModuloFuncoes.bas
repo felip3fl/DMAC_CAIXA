@@ -1484,7 +1484,7 @@ End Function
 Public Sub ImprimeRomaneio()
 Dim wNomeVendedor As String
 
-Open GLB_Impressora00 For Output As #1
+'Open GLB_Impressora00 For Output As #1
  
     Screen.MousePointer = 11
    
@@ -1497,14 +1497,17 @@ Open GLB_Impressora00 For Output As #1
     rsNFE.CursorLocation = adUseClient
     rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
-   Print #1, Tab(10); UCase(rsNFE("LO_Razao"))
-   Print #1, ; UCase(rsNFE("LO_Endereco")) & ", " & rsNFE("LO_numero")
-   Print #1, ; "TELEFONE: "; rsNFE("LO_Telefone")
-   Print #1, ; Format(Date, "dd/mm/yyyy") & " " & Format(Time, "HH:MM:SS") & Space(16) & Format(NroNotaFiscal, "###000")
-   Print #1, "========================================"
-   Print #1, "DESCRICAO DO PRODUTO                    "
-   Print #1, "CODIGO  PRODUTO  QTDxUNIT.   VALOR TOTAL"
-   Print #1, "________________________________________"
+    
+    impressoraRelatorio "[INICIO]"
+    
+   impressoraRelatorio UCase(rsNFE("LO_Razao"))
+   impressoraRelatorio UCase(rsNFE("LO_Endereco")) & ", " & rsNFE("LO_numero")
+   impressoraRelatorio "TELEFONE: " & rsNFE("LO_Telefone")
+   impressoraRelatorio Format(Date, "dd/mm/yyyy") & " " & Format(Time, "HH:MM:SS") & Space(16) & Format(NroNotaFiscal, "###000")
+   impressoraRelatorio "========================================"
+   impressoraRelatorio "DESCRICAO DO PRODUTO                    "
+   impressoraRelatorio "CODIGO  PRODUTO  QTDxUNIT.   VALOR TOTAL"
+   impressoraRelatorio "________________________________________"
    rsNFE.Close
    
   sql = "Select Nfcapa.*,ve_nome From Nfcapa,vende Where  NF = " & NroNotaFiscal & " and Serie='00' and vendedor = ve_codigo"
@@ -1540,8 +1543,8 @@ Open GLB_Impressora00 For Output As #1
              ValorlItem = (rsNFE("vlunit") * rsNFE("Qtde"))
              SubTotal = (SubTotal + ValorlItem)
            
-             Print #1, Trim(rdoProduto("PR_Descricao"))
-             Print #1, rsNFE("referencia") _
+             impressoraRelatorio Trim(rdoProduto("PR_Descricao"))
+             impressoraRelatorio rsNFE("referencia") _
              & Space(3) & right(Space(4) & Format(rsNFE("Qtde"), "###0"), 4) & "x" _
              & Format(rsNFE("vlunit"), "###,###,###.00") & Space(5) _
              & right(Space(10) & Format(ValorlItem, "###,###,###.00"), 14)
@@ -1559,35 +1562,31 @@ Open GLB_Impressora00 For Output As #1
        End If
          
        TotalVenda = (SubTotal - ValorDesconto)
-       Print #1, ""
+       impressoraRelatorio " "
 '       Print #1, "SUB TOTAL " & Space(16) & Right(Space(10) & Format(rsNFECapa("vlrMercadoria"), "###,###,##0.00"), 14)
 '       Print #1, ""
 '       Print #1, "DESCONTO  " & Space(16) & Right(Space(10) & Format(rsNFECapa("desconto"), "###,###,##0.00"), 14)
 '       Print #1, " "
 '       Print #1, "FRETE     " & Space(16) & Right(Space(10) & Format(rsNFECapa("fretecobr"), "###,###,##0.00"), 14)
 '       Print #1, " "
-       Print #1, "TOTAL     " & Space(16) & right(Space(10) & Format(rsNFECapa("totalnota"), "###,###,##0.00"), 14)
-       Print #1, ""
-       Print #1, "________________________________________"
-       Print #1, "ROMANEIO DE CONFERENCIA"
-       Print #1, "PEDIDO: " & rsNFECapa("numeroped") & _
+       impressoraRelatorio "TOTAL     " & Space(16) & right(Space(10) & Format(rsNFECapa("totalnota"), "###,###,##0.00"), 14)
+       impressoraRelatorio ""
+       impressoraRelatorio "________________________________________"
+       impressoraRelatorio "ROMANEIO DE CONFERENCIA"
+       impressoraRelatorio "PEDIDO: " & rsNFECapa("numeroped") & _
                  Space(6) & right(Space(20) & rsNFECapa("vendedor"), 20)
-       Print #1, "========================================"
-       Print #1, " "
-       Print #1, " "
-       Print #1, " "
-       Print #1, " "
-       Print #1, " "
-       Print #1, " "
-       Print #1, " "
-       Print #1, " "
+       impressoraRelatorio "========================================"
+       impressoraRelatorio " "
+       impressoraRelatorio " "
+       impressoraRelatorio " "
+       impressoraRelatorio " "
+       impressoraRelatorio " "
+       impressoraRelatorio " "
+       impressoraRelatorio " "
+       impressoraRelatorio " "
      rsNFECapa.Close
-     Printer.EndDoc
-     Close #1
+     impressoraRelatorio "[FIM]"
       Screen.MousePointer = 0
-
-
-
 
 End Sub
 
@@ -3938,7 +3937,7 @@ Public Sub ImprimeTransferencia00(ByVal nota As Double)
 
     Dim nomeEmpresa As String * 48
     Dim cnpj As String * 48
-    Dim Data As String * 48
+    Dim data As String * 48
     Dim Endereco As String * 48
     Dim Telefone As String * 48
     Dim pedido As String * 48
@@ -3977,8 +3976,8 @@ Public Sub ImprimeTransferencia00(ByVal nota As Double)
    Telefone = "TELEFONE: " & RsDados("LO_Telefone")
    impressoraRelatorio Telefone
    
-   Data = Format(Date, "dd/mm/yyyy") & " " & Format(Time, "HH:MM:SS") & Space(26) & Format(NroNotaFiscal, "###000")
-   impressoraRelatorio Data
+   data = Format(Date, "dd/mm/yyyy") & " " & Format(Time, "HH:MM:SS") & Space(26) & Format(NroNotaFiscal, "###000")
+   impressoraRelatorio data
    
    impressoraRelatorio "                                                "
    
@@ -4080,6 +4079,7 @@ End Function
 Public Function campoCaixa(KeyAscii As Integer) As Integer
     If digitoNumerico(KeyAscii) Or digitoPadrao(KeyAscii) _
     Or KeyAscii = 77 Or KeyAscii = 68 _
+    Or KeyAscii = 66 Or KeyAscii = 98 _
     Or KeyAscii = 109 Or KeyAscii = 100 Then
         campoCaixa = KeyAscii
     End If
