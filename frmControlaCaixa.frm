@@ -3,8 +3,8 @@ Begin VB.Form frmControlaCaixa
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    ClientHeight    =   10440
-   ClientLeft      =   2055
-   ClientTop       =   690
+   ClientLeft      =   2475
+   ClientTop       =   465
    ClientWidth     =   15300
    Icon            =   "frmControlaCaixa.frx":0000
    LinkTopic       =   "Form1"
@@ -1423,6 +1423,7 @@ End If
             End If
           End If
           
+         
          If Mid(Trim(txtPedido.text), 1, 1) = "B" Then
             If VerificaSeEmiteCodigoZero = "S" Then
                 If Len(Trim(txtPedido.text)) = 1 Then
@@ -1616,6 +1617,7 @@ Private Function notaTrans()
                                     'Dim wNumProtocolo As String
                                     'Dim wNroCaixa As String
                                     
+                                    
                                     wSequencia = txtPedido.text
                                     wTipoNota = Trim(rdoParametro("tiponota"))
                                     ImprimeTransferencia00 wSequencia
@@ -1643,6 +1645,9 @@ Private Function notaTrans()
                                     'CriaMovimentoCaixa "        ", PegaSerieNota , rdocontrol, GLB_Loja, "20109", Trim(lblProtocolo.Caption), Trim(lblNroCaixa.Caption), Trim(txtPedido.Text), Trim(rdocontrole("tiponota"))
                                     
                                 ElseIf Trim(rdoParametro("tiponota")) = "TA" And Trim(rdoParametro("serie")) = "CT" Then
+                                
+                                    defineImpressora
+                                
                                     NroNotaFiscal = ExtraiSeq00Controle
                                     wSequencia = txtPedido.text
                                     ImprimeTransferencia00 wSequencia
