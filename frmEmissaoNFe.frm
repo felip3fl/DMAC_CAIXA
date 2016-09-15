@@ -152,15 +152,15 @@ Begin VB.Form frmEmissaoNFe
          SheetBorder     =   8421504
          FocusRect       =   1
          HighLight       =   1
-         AllowSelection  =   -1  'True
-         AllowBigSelection=   -1  'True
+         AllowSelection  =   0   'False
+         AllowBigSelection=   0   'False
          AllowUserResizing=   0
          SelectionMode   =   1
          GridLines       =   1
          GridLinesFixed  =   2
          GridLineWidth   =   1
          Rows            =   50
-         Cols            =   6
+         Cols            =   5
          FixedRows       =   2
          FixedCols       =   0
          RowHeightMin    =   0
@@ -174,7 +174,7 @@ Begin VB.Form frmEmissaoNFe
          ScrollTips      =   0   'False
          MergeCells      =   5
          MergeCompare    =   0
-         AutoResize      =   0   'False
+         AutoResize      =   -1  'True
          AutoSizeMode    =   0
          AutoSearch      =   0
          AutoSearchDelay =   2
@@ -252,15 +252,15 @@ Begin VB.Form frmEmissaoNFe
          SheetBorder     =   8421504
          FocusRect       =   1
          HighLight       =   1
-         AllowSelection  =   -1  'True
-         AllowBigSelection=   -1  'True
+         AllowSelection  =   0   'False
+         AllowBigSelection=   0   'False
          AllowUserResizing=   0
          SelectionMode   =   1
          GridLines       =   1
          GridLinesFixed  =   2
          GridLineWidth   =   1
          Rows            =   2
-         Cols            =   6
+         Cols            =   5
          FixedRows       =   2
          FixedCols       =   0
          RowHeightMin    =   0
@@ -268,13 +268,13 @@ Begin VB.Form frmEmissaoNFe
          ColWidthMin     =   0
          ColWidthMax     =   0
          ExtendLastCol   =   0   'False
-         FormatString    =   $"frmEmissaoNFe.frx":016B
+         FormatString    =   $"frmEmissaoNFe.frx":013A
          ScrollTrack     =   0   'False
          ScrollBars      =   2
          ScrollTips      =   0   'False
          MergeCells      =   5
          MergeCompare    =   0
-         AutoResize      =   0   'False
+         AutoResize      =   -1  'True
          AutoSizeMode    =   0
          AutoSearch      =   0
          AutoSearchDelay =   2
@@ -398,7 +398,7 @@ Begin VB.Form frmEmissaoNFe
          FCOLO           =   16777215
          MCOL            =   5263440
          MPTR            =   1
-         MICON           =   "frmEmissaoNFe.frx":02C0
+         MICON           =   "frmEmissaoNFe.frx":025D
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -436,7 +436,7 @@ Begin VB.Form frmEmissaoNFe
          FCOLO           =   16777215
          MCOL            =   5263440
          MPTR            =   1
-         MICON           =   "frmEmissaoNFe.frx":02DC
+         MICON           =   "frmEmissaoNFe.frx":0279
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -475,7 +475,7 @@ Begin VB.Form frmEmissaoNFe
          FCOLO           =   16777215
          MCOL            =   5263440
          MPTR            =   1
-         MICON           =   "frmEmissaoNFe.frx":02F8
+         MICON           =   "frmEmissaoNFe.frx":0295
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -760,10 +760,11 @@ Private Sub notaPedentes()
     Dim i As Integer
     Dim add As Boolean
     Dim dataPesquisa As String
+    Dim tipoNota As String
     
     dataPesquisa = Format(DateAdd("m", -1, Date), "YYYY/MM/DD")
 
-    sql = "select HORA, DATAEMI, lojaorigem, NUMEROPED, nf, tm, serie " & vbNewLine & _
+    sql = "select HORA, DATAEMI, lojaorigem, NUMEROPED, nf, tm, serie, tiponota " & vbNewLine & _
           "from nfcapa " & vbNewLine & _
           "where tm not in (4012,4016,9016,100,101,9005,4005,9012,204,124,4014)   " & vbNewLine & _
           "and tiponota in ('V','T','E','S') " & vbNewLine & _
@@ -776,14 +777,25 @@ Private Sub notaPedentes()
         Do While Not ado_estrutura.EOF
             
             If ado_estrutura("serie") = "NE" Then
+            
+                If ado_estrutura("tiponota") = "V" Then
+                    tipoNota = "Venda"
+                ElseIf ado_estrutura("tiponota") = "T" Then
+                    tipoNota = "Transferência"
+                ElseIf ado_estrutura("tiponota") = "E" Then
+                    tipoNota = "Devolução"
+                Else
+                    tipoNota = "NF de Outras Operações"
+                End If
+            
                 mensagemLOG2 grdLogSig, Format(ado_estrutura("DATAEMI"), "YYYY/MM/DD") & " " & Format(ado_estrutura("HORA"), "HH:MM"), _
-                ado_estrutura("tm"), ado_estrutura("lojaorigem"), ado_estrutura("NUMEROPED"), ado_estrutura("nf"), ado_estrutura("tm") & " - [DMAC] Não sicronizada com a retaguarda"
-            Else
+                ado_estrutura("tm"), ado_estrutura("lojaorigem"), ado_estrutura("NF"), ado_estrutura("NUMEROPED"), ado_estrutura("tm") & " - [DMAC] " & tipoNota & " não sicronizada com a retaguarda"
                 
+            Else
 
                 'If add Then
                 Call mensagemLOG2(grdLogSigSAT, Format(ado_estrutura("DATAEMI"), "YYYY/MM/DD") & " " & Format(ado_estrutura("HORA"), "HH:MM"), _
-                Val(ado_estrutura("tm")), ado_estrutura("lojaorigem"), ado_estrutura("NUMEROPED"), ado_estrutura("nf"), ado_estrutura("tm") & " - [DMAC] Não sicronizada com a retaguarda")
+                Val(ado_estrutura("tm")), ado_estrutura("lojaorigem"), ado_estrutura("NF"), ado_estrutura("NUMEROPED"), ado_estrutura("tm") & " - [DMAC] Não sicronizada com a retaguarda")
                 'End If
                 
             End If
@@ -829,7 +841,7 @@ Private Sub Form_Activate()
    grdLogSig.MergeCol(2) = True
    grdLogSig.MergeCol(3) = True
    grdLogSig.MergeCol(4) = True
-   grdLogSig.MergeCol(5) = True
+   'grdLogSig.MergeCol(5) = True
    
    grdLogSigSAT.MergeRow(0) = True
    grdLogSigSAT.MergeCol(0) = True
@@ -837,7 +849,7 @@ Private Sub Form_Activate()
    grdLogSigSAT.MergeCol(2) = True
    grdLogSigSAT.MergeCol(3) = True
    grdLogSigSAT.MergeCol(4) = True
-   grdLogSigSAT.MergeCol(5) = True
+'   grdLogSigSAT.MergeCol(5) = True
      
    endArquivoResposta = GLB_EnderecoPastaRESP & "resp-*" & wCGC & ".txt"
   
@@ -2174,7 +2186,10 @@ Public Function carregaArquivo()
                     (resultado = 100 Or _
                     resultado = 101 Or _
                     resultado = 204 Or _
+                    resultado = 4016 Or _
+                    resultado = 9005 Or _
                     resultado = 9016 Or _
+                    resultado = 5000 Or _
                     resultado = 4012) Then
                
                     deletaArquivo GLB_EnderecoPastaRESP & Arquivo
@@ -2268,7 +2283,7 @@ Private Sub atualizaArquivo(ByRef enderecoArquivo As String, Arquivo As String, 
     
 End Sub
 
-Public Function mensagemLOG2(grid, data As Date, tipoStatus As Integer, loja As String, numeroNotaFiscal As String, pedido As String, mensagem As String)
+Public Function mensagemLOG2(grid, Data As Date, tipoStatus As Integer, loja As String, numeroNotaFiscal As String, pedido As String, mensagem As String)
 
     Dim status As String
     Dim corLinha As ColorConstants
@@ -2291,7 +2306,7 @@ Public Function mensagemLOG2(grid, data As Date, tipoStatus As Integer, loja As 
         'If chkMostraLogSucesso.Value = 1 And status = "Sucesso" Then
     
     
-    grid.AddItem loja & Chr(9) & data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & status & Chr(9) & mensagem
+    grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & mensagem
         
         
         'End If
@@ -2306,10 +2321,10 @@ Public Function mensagemLOG2(grid, data As Date, tipoStatus As Integer, loja As 
     grid.TopRow = grid.Row
     
     grid.Row = 0
-    grid.Col = 2
+    grid.Col = 1
     'If grid.Name <> grdLog.Name Then grid.Sort = flexSortStringAscending
     
-    grid.Sort = flexSortNumericDescending
+    grid.Sort = flexSortStringDescending
     grid.Refresh
                    
 End Function

@@ -4,14 +4,14 @@ Begin VB.Form frmCaixaTEF
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    Caption         =   "Caixa TEF"
-   ClientHeight    =   8250
+   ClientHeight    =   8220
    ClientLeft      =   1005
-   ClientTop       =   2190
+   ClientTop       =   2220
    ClientWidth     =   15120
    ControlBox      =   0   'False
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
-   ScaleHeight     =   8250
+   ScaleHeight     =   8220
    ScaleWidth      =   15120
    ShowInTaskbar   =   0   'False
    Begin VB.Frame Frame1 
