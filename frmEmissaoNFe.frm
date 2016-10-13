@@ -5,13 +5,13 @@ Begin VB.Form frmEmissaoNFe
    BorderStyle     =   0  'None
    Caption         =   "Emissão NFe"
    ClientHeight    =   9330
-   ClientLeft      =   2235
-   ClientTop       =   915
-   ClientWidth     =   15300
+   ClientLeft      =   4605
+   ClientTop       =   270
+   ClientWidth     =   15360
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
    ScaleHeight     =   9330
-   ScaleWidth      =   15300
+   ScaleWidth      =   15360
    ShowInTaskbar   =   0   'False
    Visible         =   0   'False
    Begin VB.Frame frameNFE 
@@ -1291,7 +1291,7 @@ Public Sub leituraEstrutura(campo As String)
     ado_estrutura.CursorLocation = adUseClient
     ado_estrutura.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
-    If campo = "PROD" Or campo = "DET" Or campo = "PISALIQ" Or campo = "COFINSALIQ" Or campo = "IPI" Or campo = "IPITRIB" Or campo = "ICMSUFDEST" Then
+    If campo = "PROD" Or campo = "DET" Or campo = "PISALIQ" Or campo = "COFINSALIQ" Or campo = "IPI" Or campo = "IPITRIB" Or campo = "ICMSUFDEST" Or campo = "ICMSSN102" Then
         
         Dim ado_campo As New ADODB.Recordset
             
@@ -1326,8 +1326,8 @@ Public Sub leituraEstrutura(campo As String)
         Loop
 
         ado_campo.Close
-    ElseIf campo = "ICMS00" Or campo = "ICMS10" Or campo = "ICMS20" Or campo = "ICMS30" Or campo = "ICMS40" Or campo = "ICMS50" Or campo = "ICMS60" Or campo = "ICMS70" Or campo = "ICMS90" Or campo = "DUP" Then
-
+    ElseIf campo = "ICMS00" Or campo = "ICMS10" Or campo = "ICMS20" Or campo = "ICMS30" Or campo = "ICMS40" Or campo = "ICMS50" Or campo = "ICMS60" Or campo = "ICMS70" Or campo = "ICMS90" Or campo = "DUP" Or campo = "ICMSSN102" Then
+    
     Else
         sql = insertTabelaNFLojas & Trim(ado_estrutura("etr_sequencia")) - 1 & "','[" & campo & "]','','" & _
               nf.loja & "','" & nf.numero & "','" & Format(Date, "YYYY/MM/DD") & "')"
@@ -1335,7 +1335,7 @@ Public Sub leituraEstrutura(campo As String)
     End If
 
     Do While Not ado_estrutura.EOF
-        If campo = "PROD" Or campo = "DET" Or campo = "ICMS00" Or campo = "ICMS10" Or campo = "ICMS20" Or campo = "ICMS30" Or campo = "ICMS40" Or campo = "ICMS50" Or campo = "ICMS60" Or campo = "ICMS70" Or campo = "ICMS90" Or campo = "PISALIQ" Or campo = "COFINSALIQ" Or campo = "IPI" Or campo = "IPITRIB" Or campo = "ICMSUFDEST" Then
+        If campo = "PROD" Or campo = "DET" Or campo = "ICMS00" Or campo = "ICMS10" Or campo = "ICMS20" Or campo = "ICMS30" Or campo = "ICMS40" Or campo = "ICMS50" Or campo = "ICMS60" Or campo = "ICMS70" Or campo = "ICMS90" Or campo = "PISALIQ" Or campo = "COFINSALIQ" Or campo = "IPI" Or campo = "IPITRIB" Or campo = "ICMSUFDEST" Or campo = "ICMSSN102" Then
             gravaVariosDado campo, ado_estrutura
         ElseIf campo = "DUP" Then
             gravaDadosDUP campo, ado_estrutura
@@ -1378,7 +1378,7 @@ End Sub
 
 Private Sub montaCamposRotulo()
 
-    ReDim vetCampos(31)
+    ReDim vetCampos(32)
     vetCampos(0) = "IDE":           vetCampos(1) = "DANFE":         vetCampos(2) = "EMAIL":
     vetCampos(3) = "NFREF":         vetCampos(4) = "EMIT":          vetCampos(5) = "ENDEREMIT"
     vetCampos(6) = "DEST":          vetCampos(7) = "ENDERDEST":     vetCampos(8) = "ICMSTOT"
@@ -1389,8 +1389,9 @@ Private Sub montaCamposRotulo()
     vetCampos(18) = "ICMS00":       vetCampos(19) = "ICMS10":       vetCampos(20) = "ICMS20":
     vetCampos(21) = "ICMS30":       vetCampos(22) = "ICMS40":       vetCampos(23) = "ICMS50":
     vetCampos(24) = "ICMS60":       vetCampos(25) = "ICMS70":       vetCampos(26) = "ICMS90":
-    vetCampos(27) = "IPI":          vetCampos(28) = "IPITRIB":      vetCampos(29) = "PISALIQ":
-    vetCampos(30) = "COFINSALIQ":   vetCampos(31) = "ICMSUFDEST"
+    vetCampos(27) = "ICMSSN102":
+    vetCampos(28) = "IPI":          vetCampos(29) = "IPITRIB":      vetCampos(30) = "PISALIQ":
+    vetCampos(31) = "COFINSALIQ":   vetCampos(32) = "ICMSUFDEST"
 
 End Sub
 
@@ -1425,17 +1426,19 @@ Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
                   ado_estrutura("etr_campo") & "', " & informacao & ", '" & _
                   nf.loja & "', '" & nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
         Else
-            If Trim(ado_estrutura("ETR_CAMPO")) = "CST" And Mid(campo, 1, 4) = "ICMS" Then
+            If (Trim(ado_estrutura("ETR_CAMPO")) = "CST" And Mid(campo, 1, 4) = "ICMS") Or (Trim(ado_estrutura("ETR_CAMPO")) = "ORIG" And Mid(campo, 1, 6) = "ICMSSN") Then
                 'SQL = "update NFE_NFLojas set nfl_descricao = '[ICMS" & Trim(ado_campo("informacao")) & "]' " & _
                       "where nfl_loja = " & nf.loja & " and nfl_nroNFE = " & nf.numero & " and nfl_sequencia = " & (Trim(ado_estrutura("etr_sequencia")) + (54 * (Trim(ado_campo("item")) - 1))) - 1
                 sql = insertTabelaNFLojas & _
                       (Trim(ado_estrutura("etr_sequencia")) + (500 * (Trim(ado_campo("item")) - 1))) - 2 & "', '" & _
                       "[IMPOSTO]', '" & " " & "', '" & _
                       nf.loja & "', '" & nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
-                sql = sql & vbNewLine & insertTabelaNFLojas & _
-                      (Trim(ado_estrutura("etr_sequencia")) + (500 * (Trim(ado_campo("item")) - 1))) - 1 & "', '" & _
-                      "[ICMS" & Format(Trim(ado_campo("informacao")), "00") & "]', '" & " " & "', '" & _
-                      nf.loja & "', '" & nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
+                If Not (Trim(ado_estrutura("ETR_CAMPO")) = "ORIG" And Mid(campo, 1, 6) = "ICMSSN") Then
+                      sql = sql & vbNewLine & insertTabelaNFLojas & _
+                            (Trim(ado_estrutura("etr_sequencia")) + (500 * (Trim(ado_campo("item")) - 1))) - 1 & "', '" & _
+                            "[ICMS" & Format(Trim(ado_campo("informacao")), "00") & "]', '" & " " & "', '" & _
+                            nf.loja & "', '" & nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
+                End If
                 sql = sql & vbNewLine & insertTabelaNFLojas & _
                       (Trim(ado_estrutura("etr_sequencia")) + (500 * (Trim(ado_campo("item")) - 1))) - 0 & "', '" & _
                       ado_estrutura("etr_campo") & "', '" & Format(Trim(ado_campo("informacao")), "00") & "', '" & _
@@ -1449,12 +1452,19 @@ Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
             End If
         End If
         
-        If Mid(campo, 1, 4) = "ICMS" And Mid(ado_estrutura("ETR_ROTULO"), 5, 2) = Format(Trim(ado_campo("CST")), "00") Then
+        If Mid(campo, 1, 4) = "ICMS" And Mid(ado_estrutura("ETR_ROTULO"), 5, 2) = "SN" And ado_campo("CST") = "2" Then
+           ' MsgBox "campo 1"
+            rdoCNLoja.Execute sql
+        ElseIf Mid(campo, 1, 4) = "ICMS" And Mid(ado_estrutura("ETR_ROTULO"), 5, 2) = Format(Trim(ado_campo("CST")), "00") Then
+            'MsgBox "campo 2"
             rdoCNLoja.Execute sql
         ElseIf campo = "ICMSUFDEST" And informacao <> "0.00" Then
+'            MsgBox "campo 3"
             rdoCNLoja.Execute sql
         ElseIf Mid(campo, 1, 4) = "ICMS" And Mid(ado_estrutura("ETR_ROTULO"), 5, 2) <> Format(Trim(ado_campo("CST")), "00") Then
+            Debug.Print "ICMS SN"
         Else
+ '           MsgBox "campo OUTROS"
             rdoCNLoja.Execute sql
         End If
         
@@ -2481,7 +2491,7 @@ On Error GoTo trataerro
         .CursorLocation = adUseClient
         .Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
         
-        If Not ado_loja.EOF Then obterCNPJloja = Format(ado_loja("cnpj"), "000000000000")
+        If Not ado_loja.EOF Then obterCNPJloja = ado_loja("cnpj")
         
         .Close
     End With
