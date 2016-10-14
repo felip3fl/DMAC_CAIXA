@@ -5,8 +5,8 @@ Begin VB.Form frmEmissaoNFe
    BorderStyle     =   0  'None
    Caption         =   "Emissão NFe"
    ClientHeight    =   9330
-   ClientLeft      =   4605
-   ClientTop       =   270
+   ClientLeft      =   2565
+   ClientTop       =   870
    ClientWidth     =   15360
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
@@ -681,14 +681,8 @@ End Sub
     
 'End Sub
 
-Public Sub cmdTransmitir_Click()
-    
-    Dim Arquivo As String
-    
-    emitiNota = False
-    nf.loja = wLoja
-    If optPesquisaPedido.Value = True Then nf.pedido = txtNFe.text
-     
+Public Sub deletaArquivoResposta()
+
     If nf.eSerie = "NE" Then
         Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & nf.numero & "#" & nf.cnpj & ".txt", vbDirectory)
     ElseIf nf.eSerie = "CE" Then
@@ -698,6 +692,18 @@ Public Sub cmdTransmitir_Click()
     If Arquivo <> "" Then
         deletaArquivo GLB_EnderecoPastaRESP & Arquivo
     End If
+    
+End Sub
+
+Public Sub cmdTransmitir_Click()
+    
+    Dim Arquivo As String
+    
+    emitiNota = False
+    nf.loja = wLoja
+    If optPesquisaPedido.Value = True Then nf.pedido = txtNFe.text
+     
+    deletaArquivoResposta
      
     If nf.eSerie = "NE" Then
     

@@ -800,6 +800,11 @@ Private Sub txtCGC_CPF_KeyPress(KeyAscii As Integer)
          
          Call GravaNumeroCupomCgcCpf
          
+            fraCEP.Visible = False
+            fraProduto.Visible = True
+            txtCodigoProduto.SetFocus
+            
+         
          
          ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
          
