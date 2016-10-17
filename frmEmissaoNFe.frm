@@ -5,13 +5,13 @@ Begin VB.Form frmEmissaoNFe
    BorderStyle     =   0  'None
    Caption         =   "Emissão NFe"
    ClientHeight    =   9330
-   ClientLeft      =   2565
-   ClientTop       =   870
+   ClientLeft      =   2400
+   ClientTop       =   1020
    ClientWidth     =   15360
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
-   ScaleHeight     =   9330
-   ScaleWidth      =   15360
+   ScaleHeight     =   10575
+   ScaleWidth      =   20490
    ShowInTaskbar   =   0   'False
    Visible         =   0   'False
    Begin VB.Frame frameNFE 
@@ -681,8 +681,14 @@ End Sub
     
 'End Sub
 
-Public Sub deletaArquivoResposta()
-
+Public Sub cmdTransmitir_Click()
+    
+    Dim Arquivo As String
+    
+    emitiNota = False
+    nf.loja = wLoja
+    If optPesquisaPedido.Value = True Then nf.pedido = txtNFe.text
+     
     If nf.eSerie = "NE" Then
         Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & nf.numero & "#" & nf.cnpj & ".txt", vbDirectory)
     ElseIf nf.eSerie = "CE" Then
@@ -692,18 +698,6 @@ Public Sub deletaArquivoResposta()
     If Arquivo <> "" Then
         deletaArquivo GLB_EnderecoPastaRESP & Arquivo
     End If
-    
-End Sub
-
-Public Sub cmdTransmitir_Click()
-    
-    Dim Arquivo As String
-    
-    emitiNota = False
-    nf.loja = wLoja
-    If optPesquisaPedido.Value = True Then nf.pedido = txtNFe.text
-     
-    deletaArquivoResposta
      
     If nf.eSerie = "NE" Then
     
@@ -2055,7 +2049,16 @@ Public Function carregaArquivoUnico()
              
              statusFuncionamento "Impressão concluida com sucesso"
              Esperar 4
-             
+        ElseIf resultado = 695 Then 'Erro de ICMS irregular
+             statusFuncionamento "Nota Rejeitada. Tentado transmitir novamente"
+             Esperar 2
+             cmdTransmitir_Click
+             tempo = 0
+             timerSairSistema.Enabled = True
+             timerSairSistema_Timer
+        ElseIf resultado = 4016 Then
+             statusFuncionamento "Nota " & nf.numero & " já autorizada"
+             Esperar 4
         Else
              MsgBox informacaoArquivo, vbCritical, "Nota Fiscal Eletronica"
         End If

@@ -4,8 +4,8 @@ Begin VB.Form frmFormaPagamento
    BorderStyle     =   0  'None
    Caption         =   "Forma de Pagamento"
    ClientHeight    =   8640
-   ClientLeft      =   2385
-   ClientTop       =   1800
+   ClientLeft      =   3735
+   ClientTop       =   180
    ClientWidth     =   13425
    BeginProperty Font 
       Name            =   "Arial Black"
@@ -3473,6 +3473,8 @@ End Sub
 
 
 Public Sub ZeraVariaveis()
+EntFaturada = 0
+EntFinanciada = 0
 ValorPagamentoCartao = 0
 ValDinheiro = 0
 ValTroco = 0

@@ -5,8 +5,8 @@ Begin VB.Form frmCaixaSATDireto
    BorderStyle     =   0  'None
    Caption         =   "Caixa SAT"
    ClientHeight    =   8250
-   ClientLeft      =   2520
-   ClientTop       =   2205
+   ClientLeft      =   2040
+   ClientTop       =   1755
    ClientWidth     =   15120
    ControlBox      =   0   'False
    LinkTopic       =   "Form1"
