@@ -5,15 +5,73 @@ Begin VB.Form frmEmissaoNFe
    BorderStyle     =   0  'None
    Caption         =   "Emissão NFe"
    ClientHeight    =   9330
-   ClientLeft      =   2400
-   ClientTop       =   1020
-   ClientWidth     =   15360
+   ClientLeft      =   930
+   ClientTop       =   690
+   ClientWidth     =   19035
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
-   ScaleHeight     =   10575
-   ScaleWidth      =   20490
+   ScaleHeight     =   9330
+   ScaleWidth      =   19035
    ShowInTaskbar   =   0   'False
    Visible         =   0   'False
+   Begin VB.Timer timerExibirMSG 
+      Enabled         =   0   'False
+      Interval        =   1000
+      Left            =   705
+      Top             =   7245
+   End
+   Begin VB.Frame Frame3 
+      Appearance      =   0  'Flat
+      BackColor       =   &H00404040&
+      BorderStyle     =   0  'None
+      ForeColor       =   &H80000008&
+      Height          =   2745
+      Left            =   15255
+      TabIndex        =   21
+      Top             =   2415
+      Visible         =   0   'False
+      Width           =   3795
+      Begin VB.TextBox Text1 
+         Appearance      =   0  'Flat
+         BackColor       =   &H00FFFFFF&
+         BeginProperty Font 
+            Name            =   "Verdana"
+            Size            =   15.75
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FFFFFF&
+         Height          =   495
+         Left            =   255
+         TabIndex        =   22
+         Top             =   1620
+         Width           =   3435
+      End
+      Begin VB.Label Label1 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "Tipo de pesquisa:"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   9.75
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FFFFFF&
+         Height          =   240
+         Index           =   1
+         Left            =   0
+         TabIndex        =   23
+         Top             =   0
+         Width           =   1635
+      End
+   End
    Begin VB.Frame frameNFE 
       Appearance      =   0  'Flat
       BackColor       =   &H00000000&
@@ -323,7 +381,7 @@ Begin VB.Form frmEmissaoNFe
    End
    Begin VB.Frame frameDadosNotaFiscal 
       BackColor       =   &H00000000&
-      Height          =   3915
+      Height          =   4575
       Left            =   400
       TabIndex        =   2
       Top             =   400
@@ -448,9 +506,9 @@ Begin VB.Form frmEmissaoNFe
       End
       Begin Balcao2010.chameleonButton cmdCancelar 
          Height          =   315
-         Left            =   180
+         Left            =   210
          TabIndex        =   20
-         Top             =   3660
+         Top             =   4230
          Visible         =   0   'False
          Width           =   2775
          _ExtentX        =   4895
@@ -485,6 +543,44 @@ Begin VB.Form frmEmissaoNFe
          CHECK           =   0   'False
          VALUE           =   0   'False
       End
+      Begin Balcao2010.chameleonButton cmdEmail 
+         Height          =   720
+         Left            =   195
+         TabIndex        =   24
+         Top             =   3690
+         Width           =   3435
+         _ExtentX        =   6059
+         _ExtentY        =   1270
+         BTYPE           =   14
+         TX              =   "Enviar Email"
+         ENAB            =   -1  'True
+         BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+            Name            =   "Arial"
+            Size            =   12
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         COLTYPE         =   2
+         FOCUSR          =   -1  'True
+         BCOL            =   2500134
+         BCOLO           =   4210752
+         FCOL            =   16777215
+         FCOLO           =   16777215
+         MCOL            =   5263440
+         MPTR            =   1
+         MICON           =   "frmEmissaoNFe.frx":02B1
+         UMCOL           =   -1  'True
+         SOFT            =   0   'False
+         PICPOS          =   0
+         NGREY           =   0   'False
+         FX              =   0
+         HAND            =   0   'False
+         CHECK           =   0   'False
+         VALUE           =   0   'False
+      End
       Begin VB.Label Label1 
          AutoSize        =   -1  'True
          BackStyle       =   0  'Transparent
@@ -500,6 +596,7 @@ Begin VB.Form frmEmissaoNFe
          EndProperty
          ForeColor       =   &H00FFFFFF&
          Height          =   240
+         Index           =   0
          Left            =   195
          TabIndex        =   7
          Top             =   630
@@ -573,10 +670,10 @@ Begin VB.Form frmEmissaoNFe
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H00FFFFFF&
-      Height          =   240
-      Left            =   400
+      Height          =   435
+      Left            =   405
       TabIndex        =   8
-      Top             =   4545
+      Top             =   5085
       Width           =   3765
    End
    Begin VB.Label lblStatusImpressao 
@@ -627,6 +724,10 @@ Dim endArquivoResposta As String
 
 Private Declare Function ShellExecute Lib "shell32.dll" Alias "ShellExecuteA" (ByVal Hwnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long) As Long
 
+Private Sub chameleonButton1_Click()
+
+End Sub
+
 Private Sub chkMostraLogErro_Click()
     carregaGrdLogSig
 End Sub
@@ -653,7 +754,7 @@ Private Sub cmdCancelar_Click()
             deletaArquivo GLB_EnderecoPastaRESP & Arquivo
         End If
         
-        finalizaProcesso "Cancelando Nota Fiscal Eletrônico " & nf.numero
+        finalizaProcesso "Cancelando Nota Fiscal Eletrônico " & nf.numero, True
         cancelaNE nf
         
     ElseIf nf.eSerie = "CE" Then
@@ -662,13 +763,52 @@ Private Sub cmdCancelar_Click()
             deletaArquivo GLB_EnderecoPastaRESP & Arquivo
         End If
         
-        finalizaProcesso "Cancelando Cupom Fiscal Eletrônico " & nf.numero
+        finalizaProcesso "Cancelando Cupom Fiscal Eletrônico " & nf.numero, True
         cancelaSAT nf
     Else
         MsgBox "Nota não valida para esse tipo de cancelamento", vbCritical, "Cancelamento de NE ou CE"
     End If
     
 
+End Sub
+
+Private Sub cmdEmail_Click()
+
+    Dim rsNFE As New ADODB.Recordset
+    Dim Arquivo As String
+    
+    sql = "select top 1 nf as nf, " & vbNewLine _
+        & "ChaveNFe as chave," & vbNewLine _
+        & "ce_email as email," & vbNewLine _
+        & "ce_razao as nome" & vbNewLine _
+        & "from nfcapa, fin_cliente" & vbNewLine _
+        & "where " & vbNewLine _
+        & "lojaorigem in " & lojasWhere & " " & "" & vbNewLine _
+        & "and ce_codigoCliente = cliente" & vbNewLine _
+        & "and tiponota in ('V','S','E','R')" & vbNewLine _
+        & "and numeroped = " & nf.pedido
+    
+    rsNFE.CursorLocation = adUseClient
+    rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    
+        If Not rsNFE.EOF Then
+            If rsNFE("chave") = Empty Then
+                lblMSGNota.Caption = "Chave de acesso não encontrada"
+            ElseIf rsNFE("email") = Empty Then
+                lblMSGNota.Caption = "Email não cadastrado ou válido"
+                cmdEmail.Enabled = False
+            Else
+                lblMSGNota.Caption = ""
+                criarArquivorEmail nf, rsNFE("chave"), rsNFE("email"), rsNFE("nome")
+                tempo = 56
+                finalizaProcesso "Enviando XML e DANFE para " & rsNFE("email"), False
+            End If
+        Else
+            lblMSGNota.Caption = "Nota não encontrada ou operação de nf inválido"
+        End If
+    
+    rsNFE.Close
+    
 End Sub
 
 Private Sub cmdIgnorarResultado_Click()
@@ -701,7 +841,7 @@ Public Sub cmdTransmitir_Click()
      
     If nf.eSerie = "NE" Then
     
-        finalizaProcesso "Emitindo Nota Fiscal Eletrônica " & nf.numero
+        finalizaProcesso "Emitindo Nota Fiscal Eletrônica " & nf.numero, True
     
         sql = "exec sp_vda_cria_nfe '" & nf.loja & "', '" & nf.numero & "', 'NE', ''"
         rdoCNLoja.Execute sql
@@ -721,7 +861,7 @@ Public Sub cmdTransmitir_Click()
         
     ElseIf nf.eSerie = "CE" Then
         
-        finalizaProcesso "Emitindo Cupom Fiscal Eletrônico"
+        finalizaProcesso "Emitindo Cupom Fiscal Eletrônico", True
         criaTXTSAT "sat", nf
         
     End If
@@ -731,16 +871,16 @@ End Sub
 Private Sub cmdImprimir_Click()
     tempo = 56
     If nf.eSerie = "NE" Then
-        finalizaProcesso "Imprimindo Nota Fiscal Eletrônico " & nf.numero
+        finalizaProcesso "Imprimindo Nota Fiscal Eletrônico " & nf.numero, False
         Call ImprimirNota(nf, "NOTA")
     ElseIf nf.eSerie = "CE" Then
-        finalizaProcesso "Imprimindo Cupom Fiscal Eletrônico " & nf.numero
+        finalizaProcesso "Imprimindo Cupom Fiscal Eletrônico " & nf.numero, False
         Call ImprimirNota(nf, "SAT")
     End If
 End Sub
 
 
-Private Sub finalizaProcesso(mensagem As String)
+Private Sub finalizaProcesso(mensagem As String, esperaResposta As Boolean)
             
     mensagemStatus = mensagem
     frameDadosNotaFiscal.Visible = False
@@ -748,7 +888,9 @@ Private Sub finalizaProcesso(mensagem As String)
     lblStatusImpressao.Width = Me.Width
     cmdIgnorarResultado.Width = Me.Width
     
-    timerSairSistema.Enabled = True
+    timerSairSistema.Enabled = esperaResposta
+    timerExibirMSG.Enabled = Not (esperaResposta)
+    
     lblStatusImpressao.Visible = True
     cmdIgnorarResultado.Visible = True
     
@@ -861,6 +1003,7 @@ Private Sub Form_Activate()
     cmdIgnorarResultado.Visible = False
     cmdTransmitir.Enabled = False
     cmdImprimir.Enabled = False
+    cmdEmail.Enabled = False
     timerSairSistema.Enabled = False
     cmdImprimir.ToolTipText = "Nota Fiscal Eletrônica não transmitida"
     tempo = 0
@@ -1198,12 +1341,21 @@ Private Sub optPesquisaPedido_Click()
 End Sub
 
 
+Private Sub timerExibirMSG_Timer()
+    tempo = tempo + 1
+    statusFuncionamento mensagemStatus
+    If tempo > 60 Then
+        timerSairSistema.Enabled = False
+        Unload Me
+    End If
+End Sub
+
 Private Sub timerSairSistema_Timer()
     tempo = tempo + 1
     statusFuncionamento mensagemStatus
     carregaArquivoUnico
     If tempo > 60 Then
-        timerSairSistema.Enabled = False
+        timerExibirMSG.Enabled = False
         Unload Me
     End If
 End Sub
@@ -1222,6 +1374,8 @@ Public Sub txtNFe_KeyPress(KeyAscii As Integer)
         
         Dim rsNFE As New ADODB.Recordset
         
+        txtNFe.text = Val(txtNFe.text)
+        
         If optPesquisaPedido.Value Then sql = " and numeroped = "
         If optPesquisaNumero.Value Then sql = " and nf = "
         sql = "select nf as nf, ChaveNFe as chave, serie as serie, lo_cgc as cgc, numeroped as pedido " & vbNewLine _
@@ -1235,6 +1389,7 @@ Public Sub txtNFe_KeyPress(KeyAscii As Integer)
             
         If rsNFE.EOF Then
             cmdImprimir.Enabled = False
+             cmdEmail.Enabled = False
             cmdTransmitir.Enabled = False
             optPesquisaPedido.Value = True
             txtNFe.text = Empty
@@ -1253,6 +1408,7 @@ Public Sub txtNFe_KeyPress(KeyAscii As Integer)
             
             If nf.chave <> "" Then
                 cmdImprimir.Enabled = True
+                 cmdEmail.Enabled = True
                 cmdImprimir.ToolTipText = ""
             End If
             
@@ -1614,7 +1770,23 @@ Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
     
 End Sub
 
+Private Sub criarArquivorEmail(nf As notaFiscal, chaveAcesso As String, email As String, destinatario As String)
 
+    Open GLB_EnderecoPastaFIL & _
+    "email" & (Format(nf.numero, "000000000")) & "#" & _
+    nf.cnpj & ".txt" For Output As #1
+            
+        Print #1, "CHAVENFE     = " & chaveAcesso
+        Print #1, "DESTINATARIO   = " & email
+        Print #1, "ASSUNTO   = Nota Fiscal Eletrônica " & wRazao
+        Print #1, "MENSAGEM   = Olá" & destinatario & ", você está recebendo uma cópia da DANFE e o arquivo XML"
+        Print #1, "NOMEEMITENTE = " & wRazao
+        Print #1, "ANEXOPDF = sim"
+        Print #1, "ANEXOXML = sim"
+    
+    Close #1
+
+End Sub
 
 Private Sub criarArquivorDanfe(nf As notaFiscal, chaveAcesso As String)
 
@@ -2027,10 +2199,15 @@ Public Function carregaArquivoUnico()
             nf.chave = lerCampo(informacaoArquivo, "ChaveNFe")
         End If
              
-        atualizaArquivoDestalhesNF nf, Arquivo, informacaoArquivo
-        atualizaCodigoNF nf.pedido, resultado, nf.loja
+        If resultado <> "4014" Then
+            atualizaArquivoDestalhesNF nf, Arquivo, informacaoArquivo
+            atualizaCodigoNF nf.pedido, resultado, nf.loja
+        End If
                      
-        If resultado = 100 Or resultado = 4012 Or resultado = 9016 Then
+        If resultado = 4014 Then
+             statusFuncionamento "Email enviado com sucesso"
+             Esperar 4
+        ElseIf resultado = 100 Or resultado = 4012 Or resultado = 9016 Then
              statusFuncionamento "Nota emitida e autorizada com sucesso"
              
              atualizaChaveNF nf.pedido, nf.chave, nf.loja
