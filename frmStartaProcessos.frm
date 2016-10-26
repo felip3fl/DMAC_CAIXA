@@ -48,7 +48,9 @@ Private Sub Form_Activate()
     rsComplementoVenda.CursorLocation = adUseClient
     rsComplementoVenda.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
-    If rsComplementoVenda("serie") = "NE" Then
+    If rsComplementoVenda.EOF Then
+        Esperar 1
+    ElseIf rsComplementoVenda("serie") = "NE" Then
         Call CriaNFE(NroNotaFiscal, pedido)
     ElseIf rsComplementoVenda("serie") = "CE" Then
         Call CriaSAT(NroNotaFiscal, pedido)
@@ -57,7 +59,6 @@ Private Sub Form_Activate()
     End If
     
     rsComplementoVenda.Close
- 
 
  Screen.MousePointer = 0
  Unload Me

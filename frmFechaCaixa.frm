@@ -1339,6 +1339,7 @@ If KeyAscii = 13 Then
                                                Date, Time, _
                                                wProtocolos)
                 
+                     frmStartaProcessos.Show vbModal
                   
                      Unload Me
                      Unload frmControlaCaixa

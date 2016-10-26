@@ -5,8 +5,8 @@ Begin VB.Form frmEmissaoNFe
    BorderStyle     =   0  'None
    Caption         =   "Emissão NFe"
    ClientHeight    =   9330
-   ClientLeft      =   930
-   ClientTop       =   690
+   ClientLeft      =   825
+   ClientTop       =   1050
    ClientWidth     =   19035
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
@@ -20,23 +20,23 @@ Begin VB.Form frmEmissaoNFe
       Left            =   705
       Top             =   7245
    End
-   Begin VB.Frame Frame3 
+   Begin VB.Frame frmNCM 
       Appearance      =   0  'Flat
       BackColor       =   &H00404040&
       BorderStyle     =   0  'None
       ForeColor       =   &H80000008&
-      Height          =   2745
-      Left            =   15255
+      Height          =   1170
+      Left            =   6015
       TabIndex        =   21
-      Top             =   2415
+      Top             =   3750
       Visible         =   0   'False
-      Width           =   3795
-      Begin VB.TextBox Text1 
+      Width           =   3450
+      Begin VB.TextBox txtNCM 
          Appearance      =   0  'Flat
          BackColor       =   &H00FFFFFF&
          BeginProperty Font 
             Name            =   "Verdana"
-            Size            =   15.75
+            Size            =   9.75
             Charset         =   0
             Weight          =   400
             Underline       =   0   'False
@@ -44,16 +44,17 @@ Begin VB.Form frmEmissaoNFe
             Strikethrough   =   0   'False
          EndProperty
          ForeColor       =   &H00FFFFFF&
-         Height          =   495
-         Left            =   255
+         Height          =   360
+         Left            =   200
+         MaxLength       =   8
          TabIndex        =   22
-         Top             =   1620
-         Width           =   3435
+         Top             =   600
+         Width           =   3000
       End
       Begin VB.Label Label1 
          AutoSize        =   -1  'True
          BackStyle       =   0  'Transparent
-         Caption         =   "Tipo de pesquisa:"
+         Caption         =   "Digite o NCM:"
          BeginProperty Font 
             Name            =   "MS Sans Serif"
             Size            =   9.75
@@ -66,10 +67,10 @@ Begin VB.Form frmEmissaoNFe
          ForeColor       =   &H00FFFFFF&
          Height          =   240
          Index           =   1
-         Left            =   0
+         Left            =   200
          TabIndex        =   23
-         Top             =   0
-         Width           =   1635
+         Top             =   200
+         Width           =   1230
       End
    End
    Begin VB.Frame frameNFE 
@@ -707,7 +708,7 @@ Option Explicit
 
 Dim vetCampos() As String
 Dim sql As String
-Dim tipoNota As String
+Dim tiponota As String
 Private whereNotaFiscal As String
 Const insertTabelaNFLojas = "insert into NFE_NFLojas " & vbNewLine & _
                             "(nfl_sequencia, nfl_descricao, nfl_dados, nfl_loja, nfl_nroNFE, nfl_dataEmissao) " & vbNewLine & _
@@ -902,7 +903,7 @@ Private Sub notaPedentes()
     Dim i As Integer
     Dim add As Boolean
     Dim dataPesquisa As String
-    Dim tipoNota As String
+    Dim tiponota As String
     
     dataPesquisa = Format(DateAdd("m", -1, Date), "YYYY/MM/DD")
 
@@ -921,17 +922,17 @@ Private Sub notaPedentes()
             If ado_estrutura("serie") = "NE" Then
             
                 If ado_estrutura("tiponota") = "V" Then
-                    tipoNota = "Venda"
+                    tiponota = "Venda"
                 ElseIf ado_estrutura("tiponota") = "T" Then
-                    tipoNota = "Transferência"
+                    tiponota = "Transferência"
                 ElseIf ado_estrutura("tiponota") = "E" Then
-                    tipoNota = "Devolução"
+                    tiponota = "Devolução"
                 Else
-                    tipoNota = "NF de Outras Operações"
+                    tiponota = "NF de Outras Operações"
                 End If
             
                 mensagemLOG2 grdLogSig, Format(ado_estrutura("DATAEMI"), "YYYY/MM/DD") & " " & Format(ado_estrutura("HORA"), "HH:MM"), _
-                ado_estrutura("tm"), ado_estrutura("lojaorigem"), ado_estrutura("NF"), ado_estrutura("NUMEROPED"), ado_estrutura("tm") & " - [DMAC] " & tipoNota & " não sicronizada com a retaguarda"
+                ado_estrutura("tm"), ado_estrutura("lojaorigem"), ado_estrutura("NF"), ado_estrutura("NUMEROPED"), ado_estrutura("tm") & " - [DMAC] " & tiponota & " não sicronizada com a retaguarda"
                 
             Else
 
@@ -1129,7 +1130,7 @@ Private Sub grdLogSig_Click()
     abrirAqruivo = False
 End Sub
 
-Private Sub acaoDblGrid(grid, tipoNota As String)
+Private Sub acaoDblGrid(grid, tiponota As String)
     If linhaSelecionaValida(grid) = True Then
     
         Dim nf As notaFiscal
@@ -1138,14 +1139,12 @@ Private Sub acaoDblGrid(grid, tipoNota As String)
         
         nf.pedido = grid.TextMatrix(grid.Row, 2)
         If nf.pedido = Empty Then
-            
             lblMSGNota.Caption = "Número de pedido não encontrado"
             Exit Sub
         End If
         
         nf.loja = grid.TextMatrix(grid.Row, 1)
         If nf.loja = Empty Then
-            
             lblMSGNota.Caption = "Loja não encontrada"
             Exit Sub
         End If
@@ -1158,13 +1157,13 @@ Private Sub acaoDblGrid(grid, tipoNota As String)
         End If
         
         If abrirAqruivo = True Then
-            abrirTXT nf, tipoNota
+            abrirTXT nf, tiponota
         Else
         
-            If grid.TextMatrix(grid.Row, 4) <> "Erro" And Not grid.TextMatrix(grid.Row, 5) Like "*Cancelamento*" Then
-                ImprimirNota nf, tipoNota
+            If grid.CellForeColor <> vbRed And Not grid.TextMatrix(grid.Row, 4) Like "*Cancelamento*" Then
+                ImprimirNota nf, tiponota
             Else
-                abrirArquivoResposta nf
+                abrirArquivoResposta nf, tiponota
             End If
         
         End If
@@ -1259,7 +1258,7 @@ Private Sub grdLogSigSAT_DblClick()
     acaoDblGrid grdLogSigSAT, "SAT"
 End Sub
 
-Private Sub abrirArquivoResposta(nf As notaFiscal)
+Private Sub abrirArquivoResposta(nf As notaFiscal, tiponota As String)
     
     Dim Arquivo As String
     
@@ -1268,7 +1267,11 @@ Private Sub abrirArquivoResposta(nf As notaFiscal)
     Dim resultado As String
     Dim fso As New FileSystemObject
     
-    Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & nf.pedido & "#" & nf.cnpj & ".txt", vbDirectory)
+    If tiponota = "NOTA" Then
+        Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & nf.numero & "#" & nf.cnpj & ".txt", vbDirectory)
+    Else
+        Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & nf.pedido & "#" & nf.cnpj & ".txt", vbDirectory)
+    End If
     
      If Arquivo <> "" Then
         Screen.MousePointer = 11
@@ -1608,6 +1611,7 @@ Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
             End If
         End If
         
+        
         If Mid(campo, 1, 4) = "ICMS" And Mid(ado_estrutura("ETR_ROTULO"), 5, 2) = "SN" And ado_campo("CST") = "2" Then
            ' MsgBox "campo 1"
             rdoCNLoja.Execute sql
@@ -1866,7 +1870,7 @@ Private Sub cancelaSAT(nf As notaFiscal)
 
 End Sub
 
-Private Sub ImprimirNota(nf As notaFiscal, tipoNota As String)
+Private Sub ImprimirNota(nf As notaFiscal, tiponota As String)
     
     Dim rsNFE As New ADODB.Recordset
     
@@ -1887,11 +1891,11 @@ Private Sub ImprimirNota(nf As notaFiscal, tipoNota As String)
                 lblMSGNota.Caption = ""
                 
                 If frameDadosNotaFiscal.Visible = False Then
-                    If tipoNota = "NOTA" Then criarArquivorDanfe nf, rsNFE("chave")
-                    If tipoNota = "SAT" Then criarArquivorDACTE nf, rsNFE("chave")
+                    If tiponota = "NOTA" Then criarArquivorDanfe nf, rsNFE("chave")
+                    If tiponota = "SAT" Then criarArquivorDACTE nf, rsNFE("chave")
                 ElseIf MsgBox("Deseja imprimir a nota " & nf.numero & "? ", vbQuestion + vbYesNo, "Impressão de Nota") = vbYes Then
-                    If tipoNota = "NOTA" Then criarArquivorDanfe nf, rsNFE("chave")
-                    If tipoNota = "SAT" Then criarArquivorDACTE nf, rsNFE("chave")
+                    If tiponota = "NOTA" Then criarArquivorDanfe nf, rsNFE("chave")
+                    If tiponota = "SAT" Then criarArquivorDACTE nf, rsNFE("chave")
                 End If
             End If
         Else
@@ -2163,6 +2167,7 @@ Public Function carregaArquivoUnico()
     Dim resultado As String
     Dim fso As New FileSystemObject
     
+    
     If nf.eSerie = "NE" Then
         Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & nf.numero & "#" & nf.cnpj & ".txt", vbDirectory)
     Else
@@ -2233,6 +2238,11 @@ Public Function carregaArquivoUnico()
              tempo = 0
              timerSairSistema.Enabled = True
              timerSairSistema_Timer
+             
+        ElseIf resultado = 778 Then 'ERRO NCM
+             statusFuncionamento "Erro de NCM na referencia " & "9990011" & "; Contate a área Fiscal"
+             Esperar 5
+             
         ElseIf resultado = 4016 Then
              statusFuncionamento "Nota " & nf.numero & " já autorizada"
              Esperar 4
@@ -2258,6 +2268,9 @@ trataerro:
             mensagemErroDesconhecido Err, "Verificação de pasta no arquivo unico"
     End Select
 End Function
+
+
+
 
 Private Sub atualizaArquivoDestalhesNF(nf As notaFiscal, Arquivo As String, informacaoArquivo As String)
 
@@ -2589,13 +2602,13 @@ Private Sub carregaGrdLogSig()
 End Sub
 
 
-Private Sub abrirTXT(nf As notaFiscal, tipoNota As String)
+Private Sub abrirTXT(nf As notaFiscal, tiponota As String)
 
     Dim enderecoArquivoTXT As String
      
     Screen.MousePointer = 11
     
-    enderecoArquivoTXT = criaTXTtemporario(GLB_EnderecoPastaFIL, tipoNota, nf.pedido, nf.cnpj, nf.loja)
+    enderecoArquivoTXT = criaTXTtemporario(GLB_EnderecoPastaFIL, tiponota, nf.pedido, nf.cnpj, nf.loja)
     If enderecoArquivoTXT <> "" Then
         ShellExecute Hwnd, "open", (enderecoArquivoTXT), "", "", 1
         Shell "explorer " & GLB_EnderecoPastaFIL, vbHide
@@ -2634,18 +2647,18 @@ End Function
 
 
 
-Public Function criaTXTtemporario(Endereco As String, tipoNota As String, pedido As String, cnpj As String, loja As String) As String
+Public Function criaTXTtemporario(Endereco As String, tiponota As String, pedido As String, cnpj As String, loja As String) As String
 
     Dim corpoMensagem As String
     Dim nota As notaFiscal
     
 On Error GoTo trataerro
     
-    If tipoNota = "NOTA" Then corpoMensagem = montaTXT(pedido, loja)
-    If tipoNota = "SAT" Then corpoMensagem = montaTXTSAT(pedido)
+    If tiponota = "NOTA" Then corpoMensagem = montaTXT(pedido, loja)
+    If tiponota = "SAT" Then corpoMensagem = montaTXTSAT(pedido)
     
     If corpoMensagem <> Empty Then
-        criaTXTtemporario = Endereco & LCase(tipoNota) & (Format(pedido, "000000000")) & "#" & cnpj & ".txt"
+        criaTXTtemporario = Endereco & LCase(tiponota) & (Format(pedido, "000000000")) & "#" & cnpj & ".txt"
         Open criaTXTtemporario For Output As #1
              Print #1, corpoMensagem
         Close #1
