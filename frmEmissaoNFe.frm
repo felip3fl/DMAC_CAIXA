@@ -377,8 +377,8 @@ Begin VB.Form frmEmissaoNFe
    Begin VB.Timer timerSairSistema 
       Enabled         =   0   'False
       Interval        =   1000
-      Left            =   555
-      Top             =   6390
+      Left            =   1845
+      Top             =   7965
    End
    Begin VB.Frame frameDadosNotaFiscal 
       BackColor       =   &H00000000&
@@ -1180,7 +1180,7 @@ End Sub
 Private Sub grdLogSig_KeyDown(KeyCode As Integer, Shift As Integer)
     If KeyCode = 17 Then
         abrirAqruivo = True
-        lblMSGNota.Caption = ". . ."
+        grdLogSig.BackColorSel = vbBlue
     End If
 End Sub
 
@@ -1214,7 +1214,7 @@ Private Sub grdLogSig_KeyUp(KeyCode As Integer, Shift As Integer)
 
     If KeyCode = 17 Then
         abrirAqruivo = False
-        lblMSGNota.Caption = ""
+        grdLogSig.BackColorSel = &H343434
     End If
 End Sub
 
@@ -1294,7 +1294,7 @@ End Sub
 Private Sub grdLogSigSAT_KeyDown(KeyCode As Integer, Shift As Integer)
     If KeyCode = 17 Then
         abrirAqruivo = True
-        lblMSGNota.Caption = ". . ."
+        grdLogSigSAT.BackColorSel = vbBlue
     End If
 End Sub
 
@@ -1318,7 +1318,7 @@ Private Sub grdLogSigSAT_KeyUp(KeyCode As Integer, Shift As Integer)
 
     If KeyCode = 17 Then
         abrirAqruivo = False
-        lblMSGNota.Caption = ""
+        grdLogSigSAT.BackColorSel = &H343434
     End If
     
 End Sub
