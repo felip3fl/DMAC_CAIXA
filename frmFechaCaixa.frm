@@ -5,8 +5,8 @@ Begin VB.Form frmFechaCaixa
    BorderStyle     =   0  'None
    Caption         =   "Fechamento do Caixa"
    ClientHeight    =   8385
-   ClientLeft      =   8445
-   ClientTop       =   2250
+   ClientLeft      =   24315
+   ClientTop       =   2415
    ClientWidth     =   5970
    FillColor       =   &H00808080&
    LinkTopic       =   "Form1"
@@ -159,7 +159,7 @@ Begin VB.Form frmFechaCaixa
       Top             =   6360
       Width           =   4980
    End
-   Begin VB.Label Label1 
+   Begin VB.Label lblMSG 
       AutoSize        =   -1  'True
       BackStyle       =   0  'Transparent
       Caption         =   "Saldos > 0 Serão retidos como Saldo de Caixa  "
@@ -433,6 +433,8 @@ End Sub
 
 Private Sub Form_Activate()
 
+    Dim qtdeNotasEmitida As Integer
+
     defineImpressora
 
     wControlaSaldoCaixa = 0
@@ -450,8 +452,17 @@ Private Sub Form_Activate()
     wControlaSaldoCaixa = wControlaSaldoCaixa + (Format(grdMovimentoCaixa.TextMatrix(21, 3), "0.00"))
     wControlaSaldoCaixa = wControlaSaldoCaixa + (Format(grdMovimentoCaixa.TextMatrix(22, 3), "0.00"))
     wControlaSaldoCaixa = wControlaSaldoCaixa + (Format(grdMovimentoCaixa.TextMatrix(23, 3), "0.00"))
+    
+    qtdeNotasEmitida = controlaNotasEmitidas
+    
+    If qtdeNotasEmitida > 0 Then
+        lblMSG.Caption = "Há " & qtdeNotasEmitida & " notas/cupons com problemas de emissão"
+        lblMSG.ForeColor = vbRed
+    Else
+        lblMSG.Caption = "Saldos > 0 Serão retidos como Saldo de Caixa  "
+        lblMSG.ForeColor = vbWhite
+    End If
                         
-    controlaNotasEmitidas
                         
 ' If wControlaSaldoCaixa > 0 Then
 '    MsgBox "Existe Saldo em Modalidade Não Permitida para o Fechamento.", vbOKOnly
@@ -461,7 +472,7 @@ Private Sub Form_Activate()
 
 End Sub
 
-Private Sub controlaNotasEmitidas()
+Private Function controlaNotasEmitidas() As Integer
 
     Dim sql As String
     Dim rdoNotas As New ADODB.Recordset
@@ -473,8 +484,8 @@ Private Sub controlaNotasEmitidas()
 
     sql = "select count(*) as NFpedente " & vbNewLine & _
           "from nfcapa " & vbNewLine & _
-          "where NroCaixa = " & GLB_Caixa & " " & vbNewLine & _
-          "and tm not in (4012,4016,9016,100,101,9005,4005,9012,204,124,4014) " & vbNewLine & _
+          "where NroCaixa IN (" & GLB_Caixa & ") " & vbNewLine & _
+          "and tm not in (4012,4016,9016,101,100,9005,4005,9012,204,124,4014) " & vbNewLine & _
           "and tiponota in ('V','T','E','S')" & vbNewLine & _
           "and serie in ('CE','NE')" & vbNewLine & _
           "and dataemi > '" & dataPesquisa & "'"
@@ -484,11 +495,14 @@ Private Sub controlaNotasEmitidas()
         
         If rdoNotas("NFpedente") > 0 Then
             notaPedente = True
+            controlaNotasEmitidas = rdoNotas("NFpedente")
+        Else
+            controlaNotasEmitidas = rdoNotas("NFpedente")
         End If
     
     rdoNotas.Close
   
-End Sub
+End Function
 
 Private Sub Form_Load()
 

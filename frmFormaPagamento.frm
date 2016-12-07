@@ -4,7 +4,7 @@ Begin VB.Form frmFormaPagamento
    BorderStyle     =   0  'None
    Caption         =   "Forma de Pagamento"
    ClientHeight    =   8640
-   ClientLeft      =   3735
+   ClientLeft      =   3810
    ClientTop       =   465
    ClientWidth     =   13425
    BeginProperty Font 
