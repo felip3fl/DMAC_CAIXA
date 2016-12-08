@@ -1586,6 +1586,7 @@ Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
                   nf.loja & "', '" & nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
         Else
             If (Trim(ado_estrutura("ETR_CAMPO")) = "CST" And Mid(campo, 1, 4) = "ICMS") Or (Trim(ado_estrutura("ETR_CAMPO")) = "ORIG" And Mid(campo, 1, 6) = "ICMSSN") Then
+            'If (Trim(ado_estrutura("ETR_CAMPO")) = "CST" And Mid(campo, 1, 4) = "ICMS") Or (Trim(ado_estrutura("ETR_CAMPO")) = "ORIG" And Mid(campo, 1, 6) = "ICMSSN") Then
                 'SQL = "update NFE_NFLojas set nfl_descricao = '[ICMS" & Trim(ado_campo("informacao")) & "]' " & _
                       "where nfl_loja = " & nf.loja & " and nfl_nroNFE = " & nf.numero & " and nfl_sequencia = " & (Trim(ado_estrutura("etr_sequencia")) + (54 * (Trim(ado_campo("item")) - 1))) - 1
                 sql = insertTabelaNFLojas & _
@@ -1611,8 +1612,12 @@ Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
             End If
         End If
         
+        If Mid(ado_estrutura("ETR_ROTULO"), 5, 2) = "SN" Then
+            Debug.Print "ICMS SN"
+        End If
         
-        If Mid(campo, 1, 4) = "ICMS" And Mid(ado_estrutura("ETR_ROTULO"), 5, 2) = "SN" And ado_campo("CST") = "2" Then
+        If Mid(campo, 1, 4) = "ICMS" And Mid(ado_estrutura("ETR_ROTULO"), 5, 2) = "SN" And Trim(ado_campo("CST")) = "2" Then
+        'If Mid(campo, 1, 4) = "ICMS" And Mid(ado_estrutura("ETR_ROTULO"), 5, 2) = Format(Trim(ado_campo("CST")), "00") Then
            ' MsgBox "campo 1"
             rdoCNLoja.Execute sql
         ElseIf Mid(campo, 1, 4) = "ICMS" And Mid(ado_estrutura("ETR_ROTULO"), 5, 2) = Format(Trim(ado_campo("CST")), "00") Then
