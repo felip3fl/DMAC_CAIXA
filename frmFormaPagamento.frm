@@ -2311,14 +2311,14 @@ lblTootip.Visible = False
           rdoCNLoja.Execute sql
           
         Wecf = GLB_ECF
-        wData = Format(PegaLoja("ctr_datainicial"), "yyyy/mm/dd")
+        wData = Format(PegaLoja("ctr_datainicial"), "YYYY/MM/DD")
          
          If PegaLoja.EOF = False Then
                   
                If txtTipoNota.text = "Romaneio" Or txtTipoNota.text = "RomaneioDireto" Then
                   sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Subgrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
                               & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota) values(" & Wecf & ",'" & PegaLoja("ctr_operador") & "','" & Trim(wlblloja) & "', " _
-                              & " '" & wData & "', " & 20105 & ",''," & NroNotaFiscal & ",'" & txtSerie.text & "', " _
+                              & " '" & Format(wData, "YYYY/MM/DD") & "', " & 20105 & ",''," & NroNotaFiscal & ",'" & txtSerie.text & "', " _
                               & "" & ConverteVirgula(Format(frmControlaCaixa.cmdTotalVenda.Caption, "##,##0.00")) & ", " _
                               & "0,'" & Agencia & "',0,0," & WParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(PegaLoja("ctr_datainicial"), "yyyy/mm/dd") & "','V')"
                   rdoCNLoja.Execute (sql)
@@ -2328,7 +2328,7 @@ lblTootip.Visible = False
                  
                  sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Subgrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
                               & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio,MC_ControleAVR, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota) values(" & Wecf & ",'" & PegaLoja("ctr_operador") & "','" & Trim(wlblloja) & "', " _
-                              & " '" & wData & "', " & 10204 & ",'', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
+                              & " '" & Format(wData, "YYYY/MM/DD") & "', " & 10204 & ",'', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
                               & "" & ConverteVirgula(Format(AvistaReceber, "##,##0.00")) & ", " _
                               & "0,'" & Agencia & "',0,0," & WParcelas & ", " & 9 & ",'A','A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(PegaLoja("ctr_datainicial"), "yyyy/mm/dd") & "','V')"
                  rdoCNLoja.Execute (sql)
