@@ -1476,30 +1476,34 @@ End Sub
 
 Sub ImprimeAnaliticoVenda()
  
+    Screen.MousePointer = 11
+    
+    
+    impressoraRelatorio "[INICIO]"
+    
+    'Retorno = Bematech_FI_AbreRelatorioGerencialMFD("01")
  
-Screen.MousePointer = 11
-    Retorno = Bematech_FI_AbreRelatorioGerencialMFD("01")
- 
-    Retorno = Bematech_FI_UsaRelatorioGerencialMFD("________________________________________________" & _
+    impressoraRelatorio ("________________________________________________" & _
                    "          RELATORIO ANALITICO DE VENDA          " & _
                    left("Loja " & Format(GLB_Loja, "000") & Space(10), 10) & _
                    right(Space(38) & (Format(Trim(""), "dd/mm/yyyy")), 38) & _
                    "________________________________________________")
     
-    Retorno = Bematech_FI_UsaRelatorioGerencialMFD("                                                " & _
+    impressoraRelatorio ("                                                " & _
                    left("NF " & Space(10), 10) & left("SERIE" & Space(8), 8) & _
                    left("FORMA PAGAMENTO" & Space(20), 20) & left("VALOR " & Space(10), 10) & _
                    "                                                ")
  
      For Idx = 1 To grdAnaliticoVenda.Rows - 1 Step 1
      
-     Retorno = Bematech_FI_UsaRelatorioGerencialMFD(left(grdAnaliticoVenda.TextMatrix(Idx, 0) & Space(10), 10) & _
+     impressoraRelatorio (left(grdAnaliticoVenda.TextMatrix(Idx, 0) & Space(10), 10) & _
                    left(grdAnaliticoVenda.TextMatrix(Idx, 1) & Space(8), 8) & _
                    left(grdAnaliticoVenda.TextMatrix(Idx, 2) & Space(20), 20) & _
                    right(Space(10) & Format(grdAnaliticoVenda.TextMatrix(Idx, 3), "###,###,##0.00"), 10))
      Next Idx
     
-     Retorno = Bematech_FI_FechaRelatorioGerencial()
+        impressoraRelatorio "[FIM]"
+ 
  
      Screen.MousePointer = 0
      
