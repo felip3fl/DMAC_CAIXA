@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "vsflex7u.ocx"
+Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "Vsflex7u.ocx"
 Begin VB.Form frmFechaCaixa 
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
@@ -397,11 +397,40 @@ End Sub
 Private Sub cmdGravar_Click()
 
 End Sub
+Private Sub verificarValorNegativo()
+'ricardo versao 01
+     Dim rdoSelectCapa As New ADODB.Recordset
+
+    sql = ("Select * from Movimentocaixa Where MC_NumeroECF = " & GLB_ECF & "" _
+     & " and  mc_tipoNota = 'V' and mc_data = '" & Format(Date, "yyyy/mm/dd") _
+     & "' " & " and MC_Protocolo = " & GLB_CTR_Protocolo & " ")
+
+
+     rdoSelectCapa.CursorLocation = adUseClient
+     rdoSelectCapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+     
+   If Not rdoSelectCapa.EOF Then
+        Do While Not rdoSelectCapa.EOF
+            If Mid(rdoSelectCapa("mc_valor"), 1, 1) = "-" Then
+               MsgBox "Numero Negativo", vbCritical, "Aviso"
+               ChkFechamento.Value = 0
+               
+               Exit Sub
+               
+            End If
+            rdoSelectCapa.MoveNext
+       Loop
+   End If
+     
+End Sub
+
 
 Private Sub ChkFechamento_Click()
     
-    
     If ChkFechamento.Value = 1 Then
+        
+        verificarValorNegativo
+    
         sql = "     SELECT * FROM  ControleCaixa WHERE  ctr_SITUACAOcaixa='A' AND ctr_supervisor <>99"
                 rdoFechamentoGeral.CursorLocation = adUseClient
                 rdoFechamentoGeral.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
