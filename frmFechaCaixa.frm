@@ -5,8 +5,8 @@ Begin VB.Form frmFechaCaixa
    BorderStyle     =   0  'None
    Caption         =   "Fechamento do Caixa"
    ClientHeight    =   8385
-   ClientLeft      =   24315
-   ClientTop       =   2415
+   ClientLeft      =   3015
+   ClientTop       =   1740
    ClientWidth     =   5970
    FillColor       =   &H00808080&
    LinkTopic       =   "Form1"
@@ -1381,7 +1381,9 @@ If KeyAscii = 13 Then
                                                Date, Time, _
                                                Date, Time, _
                                                wProtocolos)
-                
+                    
+                     wPedido = 0
+                     pedido = 0
                      frmStartaProcessos.Show vbModal
                   
                      Unload Me

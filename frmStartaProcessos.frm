@@ -76,13 +76,6 @@ Private Sub StatusAtualizacao()
    sql = "exec SP_Atualiza_Processos_Venda_Central"
           rdoCNLoja.Execute sql
 
-   'ConectaODBCMatriz
-    
-   'If wConectouRetaguarda = True Then
-        'sql = "Exec SP_Est_Transferencia_destino '" & RTrim(LTrim(GLB_Loja)) & "'"
-        'rdoCNRetaguarda.Execute sql
-   'End If
-
 End Sub
 
 
