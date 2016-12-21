@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "vsflex7u.ocx"
+Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "Vsflex7u.ocx"
 Begin VB.Form frmReimpressaoMovimento 
    BackColor       =   &H80000007&
    BorderStyle     =   0  'None
@@ -12,8 +12,8 @@ Begin VB.Form frmReimpressaoMovimento
    LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   8505
-   ScaleWidth      =   15300
+   ScaleHeight     =   10575
+   ScaleWidth      =   20490
    ShowInTaskbar   =   0   'False
    Begin VSFlex7UCtl.VSFlexGrid grdMovimentoCaixa 
       Height          =   1185
@@ -508,10 +508,10 @@ Begin VB.Form frmReimpressaoMovimento
       ForeColorFrozen =   4210752
       WallPaperAlignment=   4
    End
-   Begin VB.Label Label1 
+   Begin VB.Label lblMsgMovimentoCaixa 
       AutoSize        =   -1  'True
       BackStyle       =   0  'Transparent
-      Caption         =   "Analítico de Venda"
+      Caption         =   "Movimento Caixa"
       BeginProperty Font 
          Name            =   "Arial"
          Size            =   11.25
@@ -523,11 +523,10 @@ Begin VB.Form frmReimpressaoMovimento
       EndProperty
       ForeColor       =   &H00FFFFFF&
       Height          =   270
-      Left            =   10155
+      Left            =   5490
       TabIndex        =   9
-      Top             =   5925
-      Visible         =   0   'False
-      Width           =   1950
+      Top             =   195
+      Width           =   1830
    End
    Begin VB.Image fraFechamentoAnterior 
       Appearance      =   0  'Flat
@@ -670,6 +669,8 @@ Dim wCampoAdminstrador As String
 Dim rsMovimento As New ADODB.Recordset
 Dim wGrupo As String
 
+
+
 Dim wDiasCarregaMov As Integer
 
 Private Sub chbLeituraX_Click()
@@ -717,10 +718,14 @@ Private Sub Form_Activate()
     grdAnaliticoVenda.left = grdAnaliticoVenda.left
     grdAnaliticoVenda.top = grdMovimentoCaixa.top
     lblCabec2.left = grdAnaliticoVenda.left
+    lblMsgMovimentoCaixa.left = grdMovimentoCaixa.left
     
     Call CarregaControleMovimento
     
     Screen.MousePointer = 0
+    
+
+    
 End Sub
 
 Private Sub Form_Load()
@@ -733,6 +738,7 @@ Private Sub Form_Load()
     Call AjustaTela(frmReimpressaoMovimento)
     'grdMovimentosDisponiveis.Visible = False
     grdMovimentoCaixa.Visible = False
+    lblMsgMovimentoCaixa.Visible = False
     'Image1.Width = grdMovimentoCaixa.Width
     'txtSupervisor.Enabled = True
     'txtSenhaSupervisor.Enabled = True
@@ -766,6 +772,7 @@ Private Sub grdAnaliticoVenda_KeyPress(KeyAscii As Integer)
 If KeyAscii = 27 Then
      'grdMovimentosDisponiveis.Visible = True
      grdMovimentoCaixa.Visible = False
+     lblMsgMovimentoCaixa.Visible = False
      grdAnaliticoVenda.Visible = False
      lblCabec2.Visible = False
      'Image1.Width = grdMovimentosDisponiveis.Width
@@ -777,10 +784,14 @@ End Sub
 
 Private Sub grdMovimentoCaixa_DblClick()
 
-
+    Dim msgTipoMovimento As String
 
     If MsgBox("Deseja imprimir o movimento?", vbQuestion + vbYesNo, "Atenção") = vbYes Then
         Call CarregaValoresTransfNumerario(wProtocoloImpressao)
+        
+        msgTipoMovimento = "Reimpressao"
+        If wDataInicioFechamento = Date Then msgTipoMovimento = "CAIXA EM ABERTO"
+        
         
         wQdteViasImpressao = 1
         Call BuscaQtdeViaImpressaoMovimento
@@ -788,13 +799,13 @@ Private Sub grdMovimentoCaixa_DblClick()
         For i = 1 To wQdteViasImpressao
 
         
-            Call NOVO_ImprimeMovimento(grdMovimentoCaixa, "FECHAMENTO DE CAIXA (Reimpressao)", wOperadorImpressao, wNroCaixaImpressao, _
+            Call NOVO_ImprimeMovimento(grdMovimentoCaixa, "FECHAMENTO DE CAIXA (" & msgTipoMovimento & ")", wOperadorImpressao, wNroCaixaImpressao, _
                                        wDataInicioFechamento, Format(wHoraInicioFechamento, "HH:MM:SS"), _
                                        wDataFinalFechamento, Format(wHoraFinalFechamento, "HH:MM:SS"), _
                                        CStr(wProtocoloImpressao))
                                        
       
-            Call NOVO_ImprimeTransfNumerario(grdMovimentoCaixa, "TRANSFERENCIA DE NUMERARIO (Reimpressao)", wOperadorImpressao, wNroCaixaImpressao, _
+            Call NOVO_ImprimeTransfNumerario(grdMovimentoCaixa, "TRANSFERENCIA DE NUMERARIO (" & msgTipoMovimento & ")", wOperadorImpressao, wNroCaixaImpressao, _
                                              wDataInicioFechamento, Format(wHoraInicioFechamento, "HH:MM:SS"), _
                                              wDataFinalFechamento, Format(wHoraFinalFechamento, ""), _
                                              CStr(wProtocoloImpressao))
@@ -810,6 +821,7 @@ Private Sub grdMovimentoCaixa_KeyPress(KeyAscii As Integer)
 If KeyAscii = 27 Then
     'grdMovimentosDisponiveis.Visible = True
      grdMovimentoCaixa.Visible = False
+     lblMsgMovimentoCaixa.Visible = False
      grdAnaliticoVenda.Visible = False
      lblCabec2.Visible = False
      'Image1.Width = grdMovimentosDisponiveis.Width
@@ -833,8 +845,15 @@ Private Sub grdMovimentosDisponiveis_Click()
            wDataFinalFechamento = Format(grdMovimentosDisponiveis.TextMatrix(grdMovimentosDisponiveis.Row, 1), "DD/MM/YYYY")
            wHoraFinalFechamento = Format(grdMovimentosDisponiveis.TextMatrix(grdMovimentosDisponiveis.Row, 1), "HH:MM")
            
+           If wDataInicioFechamento = Date Then
+                lblMsgMovimentoCaixa = "Movimento Caixa (CAIXA EM ABERTO)"
+           Else
+                lblMsgMovimentoCaixa = "Movimento Caixa"
+           End If
+           
           'grdMovimentosDisponiveis.Visible = False
           grdMovimentoCaixa.Visible = True
+          lblMsgMovimentoCaixa.Visible = True
           'grdAnaliticoVenda.Visible = True
            
           sql = ("Select Max(CTr_DataInicial)as DataMov,Max(Ctr_Protocolo) as Seq " _
@@ -1092,7 +1111,7 @@ Sub CarregaMovimentosDisponiveis()
     'Image1.Width = grdMovimentosDisponiveis.Width
 
     sql = "select CTR_DataInicial, CTR_DataFinal, CTR_NumeroCaixa, CTR_Protocolo, USU_Nome from controlecaixa,UsuarioCaixa " _
-        & "where CTR_Operador = USU_Codigo and CTR_SituacaoCaixa = 'F' and CTR_Supervisor <> 99 and  USU_TipoUsuario = 'O' AND " _
+        & "where CTR_Operador = USU_Codigo and CTR_Supervisor <> 99 and  USU_TipoUsuario = 'O' AND " _
         & "CTR_DataInicial between '" & Format(Date - wDiasCarregaMov, "YYYY/MM/DD") & "' and '" & Format(Date + 3, "YYYY/MM/DD") & "' " _
         & "order by CTR_Protocolo"
        rdoDataFechamentoRetaguarda.CursorLocation = adUseClient
@@ -1354,6 +1373,7 @@ End Sub
 Sub CarregaControleMovimento()
 
     grdMovimentoCaixa.Visible = False
+    lblMsgMovimentoCaixa.Visible = False
     grdAnaliticoVenda.Visible = False
     
     Call CarregaMovimentosDisponiveis

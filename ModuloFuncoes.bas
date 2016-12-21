@@ -1145,7 +1145,7 @@ Private Sub FinalizaNota(wPedido As String)
 End Sub
     
 
-Function Cabecalho(ByVal tipoNota As String)
+Function Cabecalho(ByVal tiponota As String)
         
     Dim wCgcCliente As String
     Dim impri As Long
@@ -1195,13 +1195,13 @@ Function Cabecalho(ByVal tipoNota As String)
     wVendedorLojaVenda = IIf(IsNull(rsNFE("VendedorLojaVenda")), 0, rsNFE("VendedorLojaVenda"))
 
 
-    If UCase(tipoNota) = "T" Then
+    If UCase(tiponota) = "T" Then
         WNatureza = "TRANSFERENCIA"
-    ElseIf UCase(tipoNota) = "V" Then
+    ElseIf UCase(tiponota) = "V" Then
         WNatureza = "VENDA"
-    ElseIf UCase(tipoNota) = "E" Then
+    ElseIf UCase(tiponota) = "E" Then
         WNatureza = "DEVOLUCAO"
-    ElseIf UCase(tipoNota) = "S" And GLB_CFOP = "5949" Or GLB_CFOP = "6949" Then
+    ElseIf UCase(tiponota) = "S" And GLB_CFOP = "5949" Or GLB_CFOP = "6949" Then
         WNatureza = "OUTRAS OPER Ñ ESPEC."
     End If
     
@@ -3555,7 +3555,7 @@ Printer.EndDoc
 End Function
 
 
-Function Cabecalhotransferencia(ByVal tipoNota As String)
+Function Cabecalhotransferencia(ByVal tiponota As String)
         
     Dim wCgcCliente As String
     Dim impri As Long
@@ -3937,7 +3937,7 @@ Public Sub ImprimeTransferencia00(ByVal nota As Double)
 
     Dim nomeEmpresa As String * 48
     Dim cnpj As String * 48
-    Dim data As String * 48
+    Dim Data As String * 48
     Dim Endereco As String * 48
     Dim Telefone As String * 48
     Dim pedido As String * 48
@@ -3976,8 +3976,8 @@ Public Sub ImprimeTransferencia00(ByVal nota As Double)
    Telefone = "TELEFONE: " & RsDados("LO_Telefone")
    impressoraRelatorio Telefone
    
-   data = Format(Date, "dd/mm/yyyy") & " " & Format(Time, "HH:MM:SS") & Space(26) & Format(NroNotaFiscal, "###000")
-   impressoraRelatorio data
+   Data = Format(Date, "dd/mm/yyyy") & " " & Format(Time, "HH:MM:SS") & Space(26) & Format(NroNotaFiscal, "###000")
+   impressoraRelatorio Data
    
    impressoraRelatorio "                                                "
    
@@ -4430,9 +4430,51 @@ Public Sub CarregaMovimento(grid, protocolo As String)
   wSubTotal_S = 0
   wtotalGarantia = 0
 
+  Call CarregaMovimentoZERO(grid, protocolo)
 
 End Sub
 
+Private Sub CarregaMovimentoZERO(grid, protocolo As String)
+    
+    Dim sql As String
+
+    sql = ("select mc_Grupo,sum(MC_Valor) as TotalModalidade,Count(*) as Quantidade from movimentocaixa" _
+          & " Where MC_Protocolo in (" & protocolo _
+          & ") and  MC_Serie = '00' and (MC_Grupo like '20105') AND MC_TipoNota in ('V','T','E','S') group by mc_grupo")
+          
+    rdoFormaPagamento.CursorLocation = adUseClient
+    rdoFormaPagamento.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    
+    If Not rdoFormaPagamento.EOF Then
+    
+        grid.TextMatrix(29, 0) = "00 *"
+        grid.TextMatrix(29, 1) = rdoFormaPagamento("TotalModalidade")
+        grid.TextMatrix(29, 2) = rdoFormaPagamento("Quantidade")
+        grid.TextMatrix(29, 3) = "0"
+    
+    End If
+    
+    rdoFormaPagamento.Close
+    
+     sql = ("select mc_Grupo,sum(MC_Valor) as TotalModalidade,Count(*) as Quantidade from movimentocaixa" _
+          & " Where MC_Protocolo in (" & protocolo _
+          & ") and  MC_Serie = '00' and (MC_Grupo like '20105') AND MC_TipoNota in ('C') group by mc_grupo")
+          
+    rdoFormaPagamento.CursorLocation = adUseClient
+    rdoFormaPagamento.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    
+    If Not rdoFormaPagamento.EOF Then
+    
+        grid.TextMatrix(38, 0) = "00 Cancelada *"
+        grid.TextMatrix(38, 1) = rdoFormaPagamento("TotalModalidade")
+        grid.TextMatrix(38, 2) = rdoFormaPagamento("Quantidade")
+        grid.TextMatrix(38, 3) = "0"
+    
+    End If
+    
+    rdoFormaPagamento.Close
+    
+End Sub
 
 Public Function carregaControleCaixa() As Boolean
 

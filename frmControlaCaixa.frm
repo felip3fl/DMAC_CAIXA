@@ -1306,6 +1306,11 @@ cmdLoja.Caption = "Loja " & rdoParametro("PAR_Loja")
 lblOperador.Caption = Trim(GLB_USU_Nome)
 cmdOperador.Caption = "Operador  " & Trim(GLB_USU_Nome)
 
+tipoZero = False
+If VerificaSeEmiteCodigoZero = "S" Then
+    tipoZero = True
+End If
+
 lblProtocolo.Caption = GLB_CTR_Protocolo
 cmdProtocolo.Caption = "Protocolo  " & GLB_CTR_Protocolo
 rdoParametro.Close
@@ -1317,6 +1322,9 @@ rdoParametro.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 rdoParametro.Close
 
 abilitaFuncoesCF
+
+
+
 'txtPedido.SetFocus
 End Sub
 

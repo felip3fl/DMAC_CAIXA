@@ -432,5 +432,7 @@ Global wFechamentoGeral As Boolean
 
 Global tipoCupomEmite As String
 
+Global tipoZero As Boolean
+
 'Global GLB_EnderecoPortal As String
 

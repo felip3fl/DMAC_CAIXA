@@ -5,8 +5,8 @@ Begin VB.Form frmFechaCaixa
    BorderStyle     =   0  'None
    Caption         =   "Fechamento do Caixa"
    ClientHeight    =   8385
-   ClientLeft      =   3015
-   ClientTop       =   1740
+   ClientLeft      =   3555
+   ClientTop       =   1845
    ClientWidth     =   5970
    FillColor       =   &H00808080&
    LinkTopic       =   "Form1"
@@ -429,7 +429,7 @@ Private Sub ChkFechamento_Click()
     
     If ChkFechamento.Value = 1 Then
         
-        verificarValorNegativo
+        'verificarValorNegativo
     
         sql = "     SELECT * FROM  ControleCaixa WHERE  ctr_SITUACAOcaixa='A' AND ctr_supervisor <>99"
                 rdoFechamentoGeral.CursorLocation = adUseClient
