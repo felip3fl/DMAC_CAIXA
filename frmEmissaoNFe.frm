@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "vsflex7u.ocx"
+Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "Vsflex7u.ocx"
 Begin VB.Form frmEmissaoNFe 
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
@@ -1589,7 +1589,7 @@ Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
             'If (Trim(ado_estrutura("ETR_CAMPO")) = "CST" And Mid(campo, 1, 4) = "ICMS") Or (Trim(ado_estrutura("ETR_CAMPO")) = "ORIG" And Mid(campo, 1, 6) = "ICMSSN") Then
                 'SQL = "update NFE_NFLojas set nfl_descricao = '[ICMS" & Trim(ado_campo("informacao")) & "]' " & _
                       "where nfl_loja = " & nf.loja & " and nfl_nroNFE = " & nf.numero & " and nfl_sequencia = " & (Trim(ado_estrutura("etr_sequencia")) + (54 * (Trim(ado_campo("item")) - 1))) - 1
-                      If Trim(ado_estrutura("ETR_CAMPO")) = "ORIG" Then
+                      If Trim(ado_estrutura("ETR_CAMPO")) = "CST" Then
                         Debug.Print "oi"
                       End If
                       
@@ -1606,7 +1606,7 @@ Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
                 'FELIPE AQUI 2017
                 sql = sql & vbNewLine & insertTabelaNFLojas & _
                       (Trim(ado_estrutura("etr_sequencia")) + (500 * (Trim(ado_campo("item")) - 1))) - 0 & "', '" & _
-                      ado_estrutura("etr_campo") & "', '" & Format(Trim(ado_campo("informacao")), "0") & "', '" & _
+                      ado_estrutura("etr_campo") & "', '" & Trim(ado_campo("informacao")) & "', '" & _
                       nf.loja & "', '" & nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
                 
             Else

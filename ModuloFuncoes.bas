@@ -1872,7 +1872,7 @@ sql = "Select nfcapa.*, fin_Estado.*,fin_Cliente.* from nfcapa, fin_Estado, fin_
                     & "aliqICMSInter = " & ConverteVirgula(wIE_icmsFECPAliqInter) & " ," _
                     & "aliqICMSDest = " & ConverteVirgula(wIE_icmsFECPAliqDest) & " ," _
                     & "ICMSInterpart = " & ConverteVirgula(wIE_icmsFECPPart) & " ," _
-                    & "DetalheImpressao = '" & wDetalheImpressao & "', CSTICMS = " & GLB_Tributacao & ", " _
+                    & "DetalheImpressao = '" & wDetalheImpressao & "', CSTICMS = " & Format(GLB_Tributacao, "00") & ", " _
                     & "CFOP = " & GLB_CFOP & ", ICMSAplicado = " & ConverteVirgula(wIE_icmsdestino) _
                     & " where nfitens.numeroped = " & NumeroDocumento _
                     & " and Referencia = '" & RsItensNF("PR_Referencia") & "' and Item=" & RsItensNF("Item") & ""
@@ -3976,7 +3976,7 @@ Public Sub ImprimeTransferencia00(ByVal nota As Double)
    Telefone = "TELEFONE: " & RsDados("LO_Telefone")
    impressoraRelatorio Telefone
    
-   Data = Format(Date, "dd/mm/yyyy") & " " & Format(Time, "HH:MM:SS") & Space(26) & Format(NroNotaFiscal, "###000")
+   Data = Format(Date, "dd/mm/yyyy") & " " & Format(Time, "HH:MM:SS") & Space(23) & NroNotaFiscal
    impressoraRelatorio Data
    
    impressoraRelatorio "                                                "
