@@ -2044,8 +2044,9 @@ Private Function obterNumPedidoArquivo(Arquivo As String, nf As notaFiscal) As S
         
         sql = "select numeroped " & vbNewLine & _
         "from nfcapa " & vbNewLine & _
-        "where nf = '" & Val(Mid(Arquivo, InStr(Arquivo, "#") - 6, 6)) & "'"
-        
+        "where nf = '" & Val(Mid(Arquivo, InStr(Arquivo, "#") - 6, 6)) & "'" & vbNewLine & _
+        "and serie = 'NE'"
+
         ado_loja.CursorLocation = adUseClient
         ado_loja.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
         
