@@ -1383,7 +1383,7 @@ Public Sub txtNFe_KeyPress(KeyAscii As Integer)
         
         If optPesquisaPedido.Value Then sql = " and numeroped = "
         If optPesquisaNumero.Value Then sql = " and nf = "
-        sql = "select nf as nf, " & vbNewLine _
+        sql = "select top 1 nf as nf, " & vbNewLine _
               & "ChaveNFe as chave, " & vbNewLine _
               & "serie as serie, " & vbNewLine _
               & "lo_cgc as cgc, " & vbNewLine _
@@ -1392,7 +1392,8 @@ Public Sub txtNFe_KeyPress(KeyAscii As Integer)
               & "from nfcapa, loja " & vbNewLine _
               & "where tiponota in ('V','T','E','S') " & vbNewLine _
               & "and lo_loja = lojaorigem " & vbNewLine _
-              & "and lojaorigem = '" & wLoja & "' " & sql & txtNFe.text
+              & "and lojaorigem = '" & wLoja & "' " & sql & txtNFe.text & vbNewLine _
+              & "order by dataemi desc"
         
         rsNFE.CursorLocation = adUseClient
         rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
@@ -1414,7 +1415,7 @@ Public Sub txtNFe_KeyPress(KeyAscii As Integer)
             nf.pedido = RTrim(rsNFE("pedido"))
             wPedido = RTrim(rsNFE("pedido"))
             pedido = RTrim(rsNFE("pedido"))
-            If rsNFE("data") <> Date Then
+            If rsNFE("data") <> GLB_DataInicial And GLB_Administrador = True Then
                 MsgBox "Não é permitido emitir NFe/Cupom fora da data do movimento", vbExclamation, "Emissão de NFe/Cupom"
                 cmdTransmitir.Enabled = False
             Else
@@ -2416,15 +2417,15 @@ Public Function carregaArquivo()
         
                 Set arq = fso.GetFile(GLB_EnderecoPastaRESP & Arquivo)
             
-                If CDate(left(arq.DateCreated, 10)) <> Date And _
-                    (resultado = 100 Or _
-                    resultado = 101 Or _
-                    resultado = 204 Or _
-                    resultado = 4016 Or _
-                    resultado = 9005 Or _
-                    resultado = 9016 Or _
-                    resultado = 5000 Or _
-                    resultado = 4012) Then
+                If CDate(left(arq.DateCreated, 10)) <> GLB_DataInicial Then
+'                    (resultado = 100 Or _
+'                    resultado = 101 Or _
+'                    resultado = 204 Or _
+'                    resultado = 4016 Or _
+'                    resultado = 9005 Or _
+'                    resultado = 9016 Or _
+'                    resultado = 5000 Or _
+'                    resultado = 4012) Then
                
                     deletaArquivo GLB_EnderecoPastaRESP & Arquivo
                     
