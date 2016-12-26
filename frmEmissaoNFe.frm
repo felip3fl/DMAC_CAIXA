@@ -1372,6 +1372,8 @@ End Sub
 Public Sub txtNFe_KeyPress(KeyAscii As Integer)
 
     lblMSGNota.Caption = ""
+    cmdImprimir.Enabled = False
+    cmdEmail.Enabled = False
     
     If KeyAscii = 13 Then
         
@@ -1381,7 +1383,12 @@ Public Sub txtNFe_KeyPress(KeyAscii As Integer)
         
         If optPesquisaPedido.Value Then sql = " and numeroped = "
         If optPesquisaNumero.Value Then sql = " and nf = "
-        sql = "select nf as nf, ChaveNFe as chave, serie as serie, lo_cgc as cgc, numeroped as pedido " & vbNewLine _
+        sql = "select nf as nf, " & vbNewLine _
+              & "ChaveNFe as chave, " & vbNewLine _
+              & "serie as serie, " & vbNewLine _
+              & "lo_cgc as cgc, " & vbNewLine _
+              & "numeroped as pedido, " & vbNewLine _
+              & "dataemi as data " & vbNewLine _
               & "from nfcapa, loja " & vbNewLine _
               & "where tiponota in ('V','T','E','S') " & vbNewLine _
               & "and lo_loja = lojaorigem " & vbNewLine _
@@ -1392,14 +1399,14 @@ Public Sub txtNFe_KeyPress(KeyAscii As Integer)
             
         If rsNFE.EOF Then
             cmdImprimir.Enabled = False
-             cmdEmail.Enabled = False
+            cmdEmail.Enabled = False
             cmdTransmitir.Enabled = False
             optPesquisaPedido.Value = True
             txtNFe.text = Empty
             lblMSGNota.Caption = "Nota Fiscal não encontrada"
             Exit Sub
         Else
-            'txtNFe.Locked = True
+            
             nf.numero = RTrim(rsNFE("NF"))
             nf.chave = RTrim(rsNFE("chave"))
             nf.eSerie = RTrim(rsNFE("serie"))
@@ -1407,12 +1414,19 @@ Public Sub txtNFe_KeyPress(KeyAscii As Integer)
             nf.pedido = RTrim(rsNFE("pedido"))
             wPedido = RTrim(rsNFE("pedido"))
             pedido = RTrim(rsNFE("pedido"))
-            cmdTransmitir.Enabled = True
+            If rsNFE("data") <> Date Then
+                MsgBox "Não é permitido emitir NFe/Cupom fora da data do movimento", vbExclamation, "Emissão de NFe/Cupom"
+                cmdTransmitir.Enabled = False
+            Else
+                cmdTransmitir.Enabled = True
+            End If
             
             If nf.chave <> "" Then
                 cmdImprimir.Enabled = True
-                 cmdEmail.Enabled = True
                 cmdImprimir.ToolTipText = ""
+                If nf.eSerie = "NE" Then
+                    cmdEmail.Enabled = True
+                End If
             End If
             
         End If
@@ -2518,23 +2532,16 @@ Public Function mensagemLOG2(grid, Data As Date, tipoStatus As Integer, loja As 
             corLinha = vbRed
     End Select
                
-                              
-'    If grid.Name <> grdLog.Name Then
-        'If chkMostraLogErro.Value = 1 And status = "Erro" Then
-            'grid.AddItem data & Chr(9) & loja & Chr(9) & Format(numeroNotaFiscal, "##") & Chr(9) & status & Chr(9) & mensagem
-        'End If
-        'If chkMostraLogSucesso.Value = 1 And status = "Sucesso" Then
-    
-    
-    grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & mensagem
+    If chkMostraLogErro.Value = 1 And chkMostraLogSucesso = 1 Then
+        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & mensagem
+    ElseIf chkMostraLogErro = 1 And status = "Erro" Then
+        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & mensagem
+    ElseIf chkMostraLogSucesso = 1 And status <> "Erro" Then
+        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & mensagem
+    End If
         
-        
-        'End If
-'    Else
-        'grid.AddItem data & Chr(9) & loja & Chr(9) & Format(numeroNotaFiscal, "##") & Chr(9) & status & Chr(9) & mensagem
-  '  End If
     
-    If status = "Erro" And chkMostraLogErro = 1 Then
+    If status = "Erro" Then
         pintaLinha grid, corLinha, (grid.Rows - 1)
     End If
     
