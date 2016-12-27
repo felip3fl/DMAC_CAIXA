@@ -1,7 +1,7 @@
 VERSION 5.00
 Object = "{C932BA88-4374-101B-A56C-00AA003668DC}#1.1#0"; "MSMASK32.OCX"
-Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "vsflex7u.ocx"
-Object = "{D76D7130-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "vsflex7d.ocx"
+Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "Vsflex7u.ocx"
+Object = "{D76D7130-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "Vsflex7d.ocx"
 Begin VB.Form frmSangria 
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
@@ -1541,7 +1541,6 @@ End Sub
 
 Private Sub grdMovimentoCaixa_DblClick()
 
-
 If GLB_Administrador = True Then
 
     'wCampoAdminstrador = grdMovimentoCaixa.TextMatrix(grdMovimentoCaixa.Row, 0)
@@ -1647,10 +1646,44 @@ Private Sub txtRetirada_GotFocus()
     txtRetirada.SelLength = Len(txtRetirada.text)
 End Sub
 
+Private Sub verificarValorNegativo()
+'ricardo versao 01
+     Dim rdoSelectCapa As New ADODB.Recordset
+
+    sql = ("Select * from Movimentocaixa Where MC_NumeroECF = " & GLB_ECF & "" _
+     & " and  mc_tipoNota = 'V' and mc_data = '" & Format(Date, "yyyy/mm/dd") _
+     & "' " & " and MC_Protocolo = " & GLB_CTR_Protocolo & " ")
+
+
+     rdoSelectCapa.CursorLocation = adUseClient
+     rdoSelectCapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+     
+   If Not rdoSelectCapa.EOF Then
+        Do While Not rdoSelectCapa.EOF
+            If Mid(rdoSelectCapa("mc_valor"), 1, 1) = "-" Then
+               MsgBox "Numero Negativo", vbCritical, "Aviso"
+               
+               
+               Exit Sub
+               
+            End If
+            rdoSelectCapa.MoveNext
+       Loop
+   End If
+     
+End Sub
+
 Private Sub txtRetirada_KeyPress(KeyAscii As Integer)
   If KeyAscii = 13 Then
   
      If txtRetirada.text = "" Then
+        Exit Sub
+     End If
+     
+     verificarValorNegativo
+     
+     If Mid(txtRetirada.text, 1, 1) = "-" Then
+        MsgBox "Valor não pode ser negativo", vbCritical, "Aviso"
         Exit Sub
      End If
      
