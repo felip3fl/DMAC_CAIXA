@@ -484,6 +484,7 @@ Private Sub Form_Activate()
     
     qtdeNotasEmitida = controlaNotasEmitidas
     
+ 
     If qtdeNotasEmitida > 0 Then
         lblMSG.Caption = "Há " & qtdeNotasEmitida & " notas/cupons com problemas de emissão"
         lblMSG.ForeColor = vbRed
@@ -492,6 +493,20 @@ Private Sub Form_Activate()
         lblMSG.ForeColor = vbWhite
     End If
                         
+                        
+                        
+    CarregaMensagemValorNegativo
+    
+    
+    
+'    If grdMovimentoCaixa < 0 Then
+'        lblMSG.Caption = "Há saldo negativo que impede o fechamento do caixa"
+'        lblMSG.ForeColor = vbRed
+'     Else
+'     lblMSG.Caption = ""
+'     lblMSG.ForeColor = vbWhite
+'    End If
+    
                         
 ' If wControlaSaldoCaixa > 0 Then
 '    MsgBox "Existe Saldo em Modalidade Não Permitida para o Fechamento.", vbOKOnly
@@ -535,7 +550,6 @@ End Function
 
 Private Sub Form_Load()
 
-  
 
   'left = 100
   'top = 2900
@@ -605,11 +619,173 @@ Private Sub Form_Load()
 '  rdoFechamentoGeral.Close
 '
 '
-  
-  
-  
+ 
+
+
+'    NomeGrid.Row = NomeGrid.Rows - 1
+'     NomeGrid.Col = 0
+'     NomeGrid.ColSel = 12
+'     NomeGrid.FillStyle = flexFillRepeat
+'     NomeGrid.CellBackColor = Cor
+'     NomeGrid.FillStyle = flexFillSingle
+     
+
+CarregaMensagemValorNegativo
+
+
+
+'      If grdMovimentoCaixa.TextMatrix(1, 3) < 0 Then
+'             MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+'             lblMSG.Caption = "Há saldo negativo que impede o fechamento do caixa"
+'             lblMSG.ForeColor = vbRed
+'        Exit Sub
+'      End If
+'
+'      If grdMovimentoCaixa.TextMatrix(2, 3) < 0 Then
+'             MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+'             lblMSG.Caption = "Há saldo negativo que impede o fechamento do caixa"
+'             lblMSG.ForeColor = vbRed
+'        Exit Sub
+'      End If
+'
+'      If grdMovimentoCaixa.TextMatrix(4, 3) < 0 Then
+'             MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+''             grdMovimentoCaixa.Row = 4
+''             grdMovimentoCaixa.Col = 3
+''             grdMovimentoCaixa.CellBackColor = vbRed
+'        Exit Sub
+'      End If
+'
+'      If grdMovimentoCaixa.TextMatrix(5, 3) < 0 Then
+'             MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+'             lblMSG.Caption = "Há saldo negativo que impede o fechamento do caixa"
+'             lblMSG.ForeColor = vbRed
+'        Exit Sub
+'      End If
+'
+'      If grdMovimentoCaixa.TextMatrix(6, 3) < 0 Then
+'             MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+'             lblMSG.Caption = "Há saldo negativo que impede o fechamento do caixa"
+'             lblMSG.ForeColor = vbRed
+'        Exit Sub
+'      End If
+'
+'      If grdMovimentoCaixa.TextMatrix(7, 3) < 0 Then
+'             MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+'             lblMSG.Caption = "Há saldo negativo que impede o fechamento do caixa"
+'             lblMSG.ForeColor = vbRed
+'        Exit Sub
+'      End If
+'
+'      If grdMovimentoCaixa.TextMatrix(8, 3) < 0 Then
+'             MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+'             lblMSG.Caption = "Há saldo negativo que impede o fechamento do caixa"
+'             lblMSG.ForeColor = vbRed
+'        Exit Sub
+'      End If
+'
+'      If grdMovimentoCaixa.TextMatrix(9, 3) < 0 Then
+'             MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+'             lblMSG.Caption = "Há saldo negativo que impede o fechamento do caixa"
+'             lblMSG.ForeColor = vbRed
+'        Exit Sub
+'      End If
+'
+'      If grdMovimentoCaixa.TextMatrix(10, 3) < 0 Then
+'             MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+'             lblMSG.Caption = "Há saldo negativo que impede o fechamento do caixa"
+'             lblMSG.ForeColor = vbRed
+'        Exit Sub
+'      End If
+'
+'      If grdMovimentoCaixa.TextMatrix(11, 3) < 0 Then
+'             MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+'             lblMSG.Caption = "Há saldo negativo que impede o fechamento do caixa"
+'             lblMSG.ForeColor = vbRed
+'        Exit Sub
+'      End If
+      
+      
+    
+
 End Sub
 
+Private Sub CarregaMensagemValorNegativo()
+
+      If grdMovimentoCaixa.TextMatrix(1, 3) < 0 Then
+             MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+             lblMSG.Caption = "Há saldo negativo que impede o fechamento do caixa"
+             lblMSG.ForeColor = vbRed
+        Exit Sub
+      End If
+      
+      If grdMovimentoCaixa.TextMatrix(2, 3) < 0 Then
+             MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+             lblMSG.Caption = "Há saldo negativo que impede o fechamento do caixa"
+             lblMSG.ForeColor = vbRed
+        Exit Sub
+      End If
+      
+      If grdMovimentoCaixa.TextMatrix(4, 3) < 0 Then
+             MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+             lblMSG.Caption = "Há saldo negativo que impede o fechamento do caixa"
+             lblMSG.ForeColor = vbRed
+'             grdMovimentoCaixa.Row = 4
+'             grdMovimentoCaixa.Col = 3
+'             grdMovimentoCaixa.CellBackColor = vbRed
+        Exit Sub
+      End If
+      
+      If grdMovimentoCaixa.TextMatrix(5, 3) < 0 Then
+             MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+             lblMSG.Caption = "Há saldo negativo que impede o fechamento do caixa"
+             lblMSG.ForeColor = vbRed
+        Exit Sub
+      End If
+      
+      If grdMovimentoCaixa.TextMatrix(6, 3) < 0 Then
+             MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+             lblMSG.Caption = "Há saldo negativo que impede o fechamento do caixa"
+             lblMSG.ForeColor = vbRed
+        Exit Sub
+      End If
+      
+      If grdMovimentoCaixa.TextMatrix(7, 3) < 0 Then
+             MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+             lblMSG.Caption = "Há saldo negativo que impede o fechamento do caixa"
+             lblMSG.ForeColor = vbRed
+        Exit Sub
+      End If
+      
+      If grdMovimentoCaixa.TextMatrix(8, 3) < 0 Then
+             MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+             lblMSG.Caption = "Há saldo negativo que impede o fechamento do caixa"
+             lblMSG.ForeColor = vbRed
+        Exit Sub
+      End If
+      
+      If grdMovimentoCaixa.TextMatrix(9, 3) < 0 Then
+             MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+             lblMSG.Caption = "Há saldo negativo que impede o fechamento do caixa"
+             lblMSG.ForeColor = vbRed
+        Exit Sub
+      End If
+      
+      If grdMovimentoCaixa.TextMatrix(10, 3) < 0 Then
+             MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+             lblMSG.Caption = "Há saldo negativo que impede o fechamento do caixa"
+             lblMSG.ForeColor = vbRed
+        Exit Sub
+      End If
+      
+      If grdMovimentoCaixa.TextMatrix(11, 3) < 0 Then
+             MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+             lblMSG.Caption = "Há saldo negativo que impede o fechamento do caixa"
+             lblMSG.ForeColor = vbRed
+        Exit Sub
+      End If
+      
+End Sub
 
 Private Sub ImprimeMovimento()
  

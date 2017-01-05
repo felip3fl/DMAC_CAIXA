@@ -1236,6 +1236,31 @@ Private Sub Form_Load()
   
   imgLogo.Picture = LoadPicture(endIMG("logo"))
   
+  
+  'ricardo - verifica coluna 3 se tem negativo
+'  If Mid(grdMovimentoCaixa.TextMatrix(1, 3), 1, 1) = "-" Then
+'    MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+'  Exit Sub
+'  End If
+'
+'  If Mid(grdMovimentoCaixa.TextMatrix(2, 3), 1, 1) = "-" Then
+'    MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+'  Exit Sub
+'  End If
+
+
+  
+  For i = 1 To grdMovimentoCaixa.Rows - 8
+     If grdMovimentoCaixa.TextMatrix(i, 3) < 0 Then
+
+            MsgBox "Valor não pode estar negativo", vbInformation, "Aviso"
+
+       Exit Sub
+       End If
+
+    Next i
+     
+  
 End Sub
 
 Private Sub CarregaMovimentocaixa()
@@ -1674,19 +1699,48 @@ Private Sub verificarValorNegativo()
 End Sub
 
 Private Sub txtRetirada_KeyPress(KeyAscii As Integer)
-  If KeyAscii = 13 Then
+  'ricardo 12/2016
+         
+   If KeyAscii > 64 Then  'Não permite letras
+    KeyAscii = 0
+End If
+
+
+    'Não permite caracteres especiais
+'  If (KeyAscii < 65 Or KeyAscii > 90) And _
+'       (KeyAscii < 97 Or KeyAscii > 122) And _
+'       (KeyAscii < 48 Or KeyAscii > 57) And _
+'       (KeyAscii <> 32) And _
+'       (KeyAscii <> 13) And _
+'       (KeyAscii > 9) Then
+'        KeyAscii = 0
+'  End If
+    
+If KeyAscii = 13 Then
   
      If txtRetirada.text = "" Then
         Exit Sub
      End If
-     
-     verificarValorNegativo
-     
+    
      If Mid(txtRetirada.text, 1, 1) = "-" Then
         MsgBox "Valor não pode ser negativo", vbCritical, "Aviso"
+        txtRetirada.text = ""
+        
         Exit Sub
      End If
      
+        
+        '- Não deixar que a saida seja maior > que a Entrada
+       If txtRetirada.text > grdMovimentoCaixa.TextMatrix(grdMovimentoCaixa.Row, 1) Then
+            
+            MsgBox "Valor da Retirada não pode ser maior que a Entrada", vbInformation, "Aviso"
+            txtRetirada.text = ""
+            txtRetirada.SetFocus
+            
+       Exit Sub
+       End If
+    
+
      If txtRetirada.text > 0 Or GLB_Administrador = True Then
         wValorGrid = grdMovimentoCaixa.TextMatrix(grdMovimentoCaixa.Row, 2)
         If grdMovimentoCaixa.Row = 1 Then wValorGrid = wValorGrid + grdMovimentoCaixa.TextMatrix(14, 3)
@@ -1738,7 +1792,7 @@ Private Sub txtRetirada_KeyPress(KeyAscii As Integer)
   If KeyAscii = 27 Then
     Unload Me
   End If
-
+  
 End Sub
 
 
