@@ -1120,6 +1120,10 @@ Private Function obterNumeroNota(pedido As String, numeroNFE As String) As Strin
 
 End Function
 
+Private Sub frameNFE_DragDrop(Source As Control, X As Single, Y As Single)
+
+End Sub
+
 Private Sub grdLogSig_Click()
     If grdLogSig.CellForeColor = vbRed Then
         grdLogSig.BackColorSel = vbRed
