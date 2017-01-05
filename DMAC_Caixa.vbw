@@ -1,5 +1,5 @@
 frmCaixaSATDireto = 503, 53, 1026, 592, C, 0, 0, 0, 0, C
-chameleonButton = 233, 108, 1194, 647, , 175, 98, 630, 637, C
+chameleonButton = 233, 108, 1194, 647, C, 175, 98, 630, 637, C
 frmFormaPagamento = 77, 208, 1224, 747, C, 0, 0, 0, 0, C
 frmStartaProcessos = 3168, 70, 3623, 609, CZ, 0, 0, 0, 0, C
 frmCaixaNF = 333, 0, 788, 539, C, 0, 0, 0, 0, C
@@ -7,7 +7,7 @@ frmLoginCaixa = 55, 129, 510, 668, C, 0, 0, 0, 0, C
 frmFundoEscuro = 0, 0, 0, 0, C, 0, 0, 0, 0, C
 Variaveis = 768, 130, 1223, 669, C
 ModuloFuncoes = 55, 247, 1035, 786, CZ
-frmFechaCaixa = 257, 123, 712, 662, C, 0, 0, 0, 0, C
+frmFechaCaixa = 257, 123, 712, 662, CZ, 0, 0, 0, 0, C
 frmMovimentoCaixa = 0, 0, 0, 0, C, 0, 0, 0, 0, C
 frmSangria = 14, 97, 1050, 636, CZ, 0, 0, 0, 0, C
 frmControlaCaixa = 415, 149, 870, 688, CZ, 0, 0, 0, 0, C
