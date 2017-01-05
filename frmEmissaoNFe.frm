@@ -14,6 +14,111 @@ Begin VB.Form frmEmissaoNFe
    ScaleWidth      =   19035
    ShowInTaskbar   =   0   'False
    Visible         =   0   'False
+   Begin VB.Frame frmAdministrador 
+      BackColor       =   &H00000000&
+      Height          =   1995
+      Left            =   420
+      TabIndex        =   24
+      Top             =   5490
+      Visible         =   0   'False
+      Width           =   3825
+      Begin Balcao2010.chameleonButton cmdCancelar 
+         Height          =   555
+         Left            =   165
+         TabIndex        =   26
+         Top             =   645
+         Width           =   3435
+         _ExtentX        =   6059
+         _ExtentY        =   979
+         BTYPE           =   14
+         TX              =   "Cancelar NFe / CFe"
+         ENAB            =   -1  'True
+         BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+            Name            =   "Arial"
+            Size            =   12
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         COLTYPE         =   2
+         FOCUSR          =   -1  'True
+         BCOL            =   2500134
+         BCOLO           =   4210752
+         FCOL            =   16777215
+         FCOLO           =   16777215
+         MCOL            =   5263440
+         MPTR            =   1
+         MICON           =   "frmEmissaoNFe.frx":0000
+         UMCOL           =   -1  'True
+         SOFT            =   0   'False
+         PICPOS          =   0
+         NGREY           =   0   'False
+         FX              =   0
+         HAND            =   0   'False
+         CHECK           =   0   'False
+         VALUE           =   0   'False
+      End
+      Begin Balcao2010.chameleonButton cmdLiberar 
+         Height          =   555
+         Left            =   180
+         TabIndex        =   27
+         Top             =   1185
+         Width           =   3435
+         _ExtentX        =   6059
+         _ExtentY        =   979
+         BTYPE           =   14
+         TX              =   "Atualizar TM "
+         ENAB            =   -1  'True
+         BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+            Name            =   "Arial"
+            Size            =   12
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         COLTYPE         =   2
+         FOCUSR          =   -1  'True
+         BCOL            =   2500134
+         BCOLO           =   4210752
+         FCOL            =   16777215
+         FCOLO           =   16777215
+         MCOL            =   5263440
+         MPTR            =   1
+         MICON           =   "frmEmissaoNFe.frx":001C
+         UMCOL           =   -1  'True
+         SOFT            =   0   'False
+         PICPOS          =   0
+         NGREY           =   0   'False
+         FX              =   0
+         HAND            =   0   'False
+         CHECK           =   0   'False
+         VALUE           =   0   'False
+      End
+      Begin VB.Label Label2 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "Administrador"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   9.75
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FFFFFF&
+         Height          =   240
+         Left            =   195
+         TabIndex        =   25
+         Top             =   255
+         Width           =   1455
+      End
+   End
    Begin VB.Timer timerExibirMSG 
       Enabled         =   0   'False
       Interval        =   1000
@@ -27,7 +132,7 @@ Begin VB.Form frmEmissaoNFe
       ForeColor       =   &H80000008&
       Height          =   1170
       Left            =   6015
-      TabIndex        =   21
+      TabIndex        =   20
       Top             =   3750
       Visible         =   0   'False
       Width           =   3450
@@ -47,7 +152,7 @@ Begin VB.Form frmEmissaoNFe
          Height          =   360
          Left            =   200
          MaxLength       =   8
-         TabIndex        =   22
+         TabIndex        =   21
          Top             =   600
          Width           =   3000
       End
@@ -68,7 +173,7 @@ Begin VB.Form frmEmissaoNFe
          Height          =   240
          Index           =   1
          Left            =   200
-         TabIndex        =   23
+         TabIndex        =   22
          Top             =   200
          Width           =   1230
       End
@@ -143,7 +248,7 @@ Begin VB.Form frmEmissaoNFe
             FCOLO           =   16777215
             MCOL            =   5263440
             MPTR            =   1
-            MICON           =   "frmEmissaoNFe.frx":0000
+            MICON           =   "frmEmissaoNFe.frx":0038
             UMCOL           =   -1  'True
             SOFT            =   0   'False
             PICPOS          =   0
@@ -227,7 +332,7 @@ Begin VB.Form frmEmissaoNFe
          ColWidthMin     =   0
          ColWidthMax     =   0
          ExtendLastCol   =   0   'False
-         FormatString    =   $"frmEmissaoNFe.frx":001C
+         FormatString    =   $"frmEmissaoNFe.frx":0054
          ScrollTrack     =   0   'False
          ScrollBars      =   2
          ScrollTips      =   0   'False
@@ -327,7 +432,7 @@ Begin VB.Form frmEmissaoNFe
          ColWidthMin     =   0
          ColWidthMax     =   0
          ExtendLastCol   =   0   'False
-         FormatString    =   $"frmEmissaoNFe.frx":013A
+         FormatString    =   $"frmEmissaoNFe.frx":0172
          ScrollTrack     =   0   'False
          ScrollBars      =   2
          ScrollTips      =   0   'False
@@ -457,7 +562,7 @@ Begin VB.Form frmEmissaoNFe
          FCOLO           =   16777215
          MCOL            =   5263440
          MPTR            =   1
-         MICON           =   "frmEmissaoNFe.frx":025D
+         MICON           =   "frmEmissaoNFe.frx":0295
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -495,46 +600,7 @@ Begin VB.Form frmEmissaoNFe
          FCOLO           =   16777215
          MCOL            =   5263440
          MPTR            =   1
-         MICON           =   "frmEmissaoNFe.frx":0279
-         UMCOL           =   -1  'True
-         SOFT            =   0   'False
-         PICPOS          =   0
-         NGREY           =   0   'False
-         FX              =   0
-         HAND            =   0   'False
-         CHECK           =   0   'False
-         VALUE           =   0   'False
-      End
-      Begin Balcao2010.chameleonButton cmdCancelar 
-         Height          =   315
-         Left            =   210
-         TabIndex        =   20
-         Top             =   4230
-         Visible         =   0   'False
-         Width           =   2775
-         _ExtentX        =   4895
-         _ExtentY        =   556
-         BTYPE           =   14
-         TX              =   "Cancelar"
-         ENAB            =   -1  'True
-         BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-            Name            =   "Arial"
-            Size            =   12
-            Charset         =   0
-            Weight          =   700
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         COLTYPE         =   2
-         FOCUSR          =   -1  'True
-         BCOL            =   2500134
-         BCOLO           =   4210752
-         FCOL            =   16777215
-         FCOLO           =   16777215
-         MCOL            =   5263440
-         MPTR            =   1
-         MICON           =   "frmEmissaoNFe.frx":0295
+         MICON           =   "frmEmissaoNFe.frx":02B1
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -547,7 +613,7 @@ Begin VB.Form frmEmissaoNFe
       Begin Balcao2010.chameleonButton cmdEmail 
          Height          =   720
          Left            =   195
-         TabIndex        =   24
+         TabIndex        =   23
          Top             =   3690
          Width           =   3435
          _ExtentX        =   6059
@@ -572,7 +638,7 @@ Begin VB.Form frmEmissaoNFe
          FCOLO           =   16777215
          MCOL            =   5263440
          MPTR            =   1
-         MICON           =   "frmEmissaoNFe.frx":02B1
+         MICON           =   "frmEmissaoNFe.frx":02CD
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -816,6 +882,14 @@ Private Sub cmdIgnorarResultado_Click()
     tempo = 200
 End Sub
 
+Private Sub cmdLiberar_Click()
+    Screen.MousePointer = 11
+    sql = "update nfcapa set tm = 100"
+    rdoCNLoja.Execute sql
+    Screen.MousePointer = 0
+    MsgBox "Atualização do TM realizada com sucesso", vbInformation, "DMAC Caixa"
+End Sub
+
 'Public Sub deletaResposta(pedido As String, nf As notaFiscal)
 
  '   arquivo = Dir(GLB_EnderecoPastaRESP & "*" & pedido & "#" & nf.cnpj & ".txt", vbDirectory)
@@ -975,7 +1049,9 @@ Private Sub notaPedentes()
 End Sub
 
 Private Sub Form_Activate()
-  
+    
+   frmAdministrador.Visible = GLB_Administrador
+    
    qtdeLinhaAnterior = 0
   
    grdLogSig.MergeRow(0) = True
@@ -1120,7 +1196,7 @@ Private Function obterNumeroNota(pedido As String, numeroNFE As String) As Strin
 
 End Function
 
-Private Sub frameNFE_DragDrop(Source As Control, X As Single, Y As Single)
+Private Sub Frame3_DragDrop(Source As Control, X As Single, Y As Single)
 
 End Sub
 
