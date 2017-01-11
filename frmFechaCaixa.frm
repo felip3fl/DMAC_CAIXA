@@ -520,9 +520,9 @@ Private Function controlaNotasEmitidas() As Integer
 
     Dim sql As String
     Dim rdoNotas As New ADODB.Recordset
-    Dim dataPesquisa As String
+    'Dim dataPesquisa As String
 
-    dataPesquisa = Format(DateAdd("m", -1, Date), "YYYY/MM/DD")
+    'dataPesquisa = Format(DateAdd("m", -1, Date), "YYYY/MM/DD")
 
     notaPedente = False
 
@@ -532,7 +532,7 @@ Private Function controlaNotasEmitidas() As Integer
           "and tm not in (4012,4016,9016,101,100,9005,4005,9012,204,124,4014) " & vbNewLine & _
           "and tiponota in ('V','T','E','S')" & vbNewLine & _
           "and serie in ('CE','NE')" & vbNewLine & _
-          "and dataemi > '" & dataPesquisa & "'"
+          "and dataemi = '" & GLB_DataInicial & "'"
     
     rdoNotas.CursorLocation = adUseClient
     rdoNotas.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic

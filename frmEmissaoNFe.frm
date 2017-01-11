@@ -976,17 +976,17 @@ Private Sub notaPedentes()
     Dim ado_estrutura As New ADODB.Recordset
     Dim i As Integer
     Dim add As Boolean
-    Dim dataPesquisa As String
+    'Dim dataPesquisa As String
     Dim tiponota As String
     
-    dataPesquisa = Format(DateAdd("m", -1, Date), "YYYY/MM/DD")
+    'dataPesquisa = Format(DateAdd("m", -1, Date), "YYYY/MM/DD")
 
     sql = "select HORA, DATAEMI, lojaorigem, NUMEROPED, nf, tm, serie, tiponota " & vbNewLine & _
           "from nfcapa " & vbNewLine & _
           "where tm not in (4012,4016,9016,100,101,9005,4005,9012,204,124,4014)   " & vbNewLine & _
           "and tiponota in ('V','T','E','S') " & vbNewLine & _
           "and serie in ('CE','NE')" & vbNewLine & _
-          "and dataemi > '" & dataPesquisa & "'"
+          "and dataemi = '" & GLB_DataInicial & "'"
 
     ado_estrutura.CursorLocation = adUseClient
     ado_estrutura.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
@@ -1495,7 +1495,7 @@ Public Sub txtNFe_KeyPress(KeyAscii As Integer)
             nf.pedido = RTrim(rsNFE("pedido"))
             wPedido = RTrim(rsNFE("pedido"))
             pedido = RTrim(rsNFE("pedido"))
-            If rsNFE("data") <> GLB_DataInicial And GLB_Administrador = True Then
+            If Format(rsNFE("data"), "YYYY/MM/DD") <> GLB_DataInicial And GLB_Administrador = False Then
                 MsgBox "Não é permitido emitir NFe/Cupom fora da data do movimento", vbExclamation, "Emissão de NFe/Cupom"
                 cmdTransmitir.Enabled = False
             Else
