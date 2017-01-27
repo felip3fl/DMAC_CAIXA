@@ -3,12 +3,11 @@ Begin VB.Form frmControlaCaixa
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    ClientHeight    =   10440
-   ClientLeft      =   1140
-   ClientTop       =   1920
+   ClientLeft      =   735
+   ClientTop       =   90
    ClientWidth     =   15300
    Icon            =   "frmControlaCaixa.frx":0000
    LinkTopic       =   "Form1"
-   LockControls    =   -1  'True
    Picture         =   "frmControlaCaixa.frx":23FA
    ScaleHeight     =   10440
    ScaleWidth      =   15300
@@ -1249,7 +1248,7 @@ End Sub
 
 Private Sub Form_Activate()
     'txtPedido.Visible = False
-
+    'webAviso.Navigate "https://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx?versao=0.00&tipoConteudo=Skeuqr8PQBY="
     ShellExecute Hwnd, "open", ("C:\Sistemas\DMAC Caixa\TrocaVersao.exe"), "", "", 1
     
     If wFechamentoGeral = True Then

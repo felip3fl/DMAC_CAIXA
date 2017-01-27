@@ -1597,7 +1597,10 @@ Public Sub leituraEstrutura(campo As String)
             gravaDados campo, ado_estrutura
         End If
     Loop
-
+    
+    sql = "delete NFE_NFLojas where NFL_Descricao = '    voutro' and NFL_Dados = '0.00' AND NFL_Sequencia > 200"
+    rdoCNLoja.Execute (sql)
+    
     ado_estrutura.Close
     
 'frmLogNotaFiscal.mensagemLOG2 frmLogNotaFiscal.grdLog, Now, 100, "181", nf.numero, "Rotulo '" & campo & "' inserido com sucesso"
