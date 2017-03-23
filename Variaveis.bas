@@ -434,5 +434,14 @@ Global tipoCupomEmite As String
 
 Global tipoZero As Boolean
 
+Global Nf_Dev As Double
+Global Serie_Dev As String
+Global NfDev_Dev As Double
+Global SerieDev_Dev As String
+Global DataDev_Dev As String
+Global ValorNotaCredito_Dev As Double
+Global NotaCredito_Dev As Double
+Global ReImpressao_Dev As Boolean
+
 'Global GLB_EnderecoPortal As String
 

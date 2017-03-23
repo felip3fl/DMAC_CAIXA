@@ -4065,11 +4065,11 @@ Public Sub ImprimeTransferencia00(ByVal nota As Double)
 End Sub
 
 
-Public Function CriaMovimentoCaixa(ByVal nf As Double, ByVal Serie As String, ByVal TotalNota As Double, ByVal loja As String, ByVal Grupo As Double, ByVal NroProtocolo As Integer, ByVal nroCaixa As Integer, ByVal NroPedido As Double)
+Public Function CriaMovimentoCaixa(ByVal Nf As Double, ByVal Serie As String, ByVal TotalNota As Double, ByVal loja As String, ByVal Grupo As Double, ByVal NroProtocolo As Integer, ByVal nroCaixa As Integer, ByVal NroPedido As Double)
     
     sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
         & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo, MC_NroCaixa, MC_DataProcesso, MC_Pedido) values(" & GLB_ECF & ",'0','" & Trim(loja) & "', " _
-        & " '" & Format(Date, "yyyy/mm/dd") & "'," & Grupo & ", " & nf & ",'" & Serie & "', " _
+        & " '" & Format(Date, "yyyy/mm/dd") & "'," & Grupo & ", " & Nf & ",'" & Serie & "', " _
         & "" & ConverteVirgula(Format(TotalNota, "##,###0.00")) & ", " _
         & "0,0,0,0,0,9,'A'," & NroProtocolo & "," & nroCaixa & ",'" & Format(Date, "yyyy/mm/dd") & "'," & NroPedido & ")"
         adoCNLoja.Execute (sql)
@@ -4900,7 +4900,7 @@ Public Function EnviaEmail(ByVal numped)
     Dim sql As String
     Dim rsEmail As New ADODB.Recordset
     
-    Dim nf As String
+    Dim Nf As String
     Dim Serie As String
     Dim condpag As String
     Dim loja As String
@@ -4913,15 +4913,186 @@ Public Function EnviaEmail(ByVal numped)
     rsEmail.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     If Not rsEmail.EOF Then
-        nf = Trim(rsEmail("nf"))
+        Nf = Trim(rsEmail("nf"))
         Serie = Trim(rsEmail("serie"))
         loja = Trim(rsEmail("lojaOrigem"))
-        sql = "Exec SP_ALERTA_FATURADA '" & loja & "', " & nf & ",'" & Serie & "'"
+        sql = "Exec SP_ALERTA_FATURADA '" & loja & "', " & Nf & ",'" & Serie & "'"
         rdoCNLoja.Execute (sql)
     End If
 
 End Function
 
 
+
+
+Public Function Devolucao(pedido As String)
+ Dim adoDevolucao As New ADODB.Recordset
+ Dim SqlDev As String
+ 
+ 
+ 
+ ReImpressao_Dev = False
+ SqlDev = " Select NF,SERIE,NfDevolucao,SerieDevolucao,DATAEMI,TOTALNOTA,NotaCredito,tiponota from  nfcapa where serie='NE' and tiponota='E' and numeroped=" & pedido
+     adoDevolucao.CursorLocation = adUseClient
+    adoDevolucao.Open SqlDev, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    If Not adoDevolucao.EOF Then
+                If Trim(adoDevolucao("tiponota")) = "E" Then
+                         Nf_Dev = adoDevolucao("NF")
+                         Serie_Dev = adoDevolucao("SERIE")
+                         NfDev_Dev = adoDevolucao("NfDevolucao")
+                         SerieDev_Dev = adoDevolucao("SerieDevolucao")
+                         DataDev_Dev = Format(adoDevolucao("DATAEMI"), "DD/MM/YYYY")
+                         ValorNotaCredito_Dev = Format(adoDevolucao("TOTALNOTA"), "###,###,###0.00")
+                         NotaCredito_Dev = adoDevolucao("NotaCredito")
+                         ReImpressao_Dev = True
+                        
+                End If
+                
+    End If
+    adoDevolucao.Close
+End Function
+
+Public Function CriaNotaCredito1(ByVal Nf As Double, ByVal Serie As String, ByVal NfDev As Double, ByVal SerieDev As String, ByVal DataDev As String, ByVal ValorNotaCredito As Double, ByVal NotaCredito As Double, ByVal ReImpressao As Boolean)
+    Dim rsDadosNfCapa As New ADODB.Recordset
+    Dim rsVerLoja As New ADODB.Recordset
+    Dim rsDataEmiDevol As New ADODB.Recordset
+    Dim Linha1 As String
+    Dim wTotalNota As Double
+    Dim wValorExtenso As String
+    Dim wDataEmiDevolucao As Date
+    ConectaODBCMatriz
+   
+    For Each NomeImpressora In Printers
+        If Trim(UCase(NomeImpressora.DeviceName)) = UCase(Glb_ImpNotaFiscal) Then
+            Set Printer = NomeImpressora
+            Exit For
+        End If
+    Next
+    
+    sql = "Select * from NfCapa, fin_cliente " _
+        & "where Nf=" & Nf & " and cliente = ce_codigocliente " _
+        & "and Serie='" & Serie & "'"
+    rsDadosNfCapa.CursorLocation = adUseClient
+    rsDadosNfCapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+
+    If Not rsDadosNfCapa.EOF Then
+        If ReImpressao = True Then
+            sql = "Select DataEmi From NfCapa Where NF = '" & NfDev & "' and " _
+                & "Serie = '" & SerieDev & "' and Lojaorigem = '" & Trim(GLB_Loja) & "'"
+                
+             rsDataEmiDevol.CursorLocation = adUseClient
+             rsDataEmiDevol.Open sql, rdoCNRetaguarda, adOpenForwardOnly, adLockPessimistic
+            
+            If rsDataEmiDevol.EOF Then
+                rsDataEmiDevol.Close
+                
+                MsgBox "Irei conectar na Retaguarda para localizar a nota." & Chr(10) & "Pois a mesma não foi encontrado no BANCO LOCAL", vbInformation + vbOKOnly
+                
+                If GLB_ConectouOK = True Then
+                    sql = ""
+                    sql = "Select DataEmi From NfCapa Where NF = " & rsDadosNfCapa("NfDevolucao") & " and " _
+                        & "Serie = '" & rsDadosNfCapa("SerieDevolucao") & "' and Lojaorigem = '" & Trim(GLB_Loja) & "'"
+    
+                    rsDataEmiDevol.CursorLocation = adUseClient
+                    rsDataEmiDevol.Open sql, rdoCNRetaguarda, adOpenForwardOnly, adLockPessimistic
+             
+                    If rsDataEmiDevol.EOF Then
+                        wDataEmiDevolucao = Date
+                    Else
+                        wDataEmiDevolucao = rsDataEmiDevol("DataEmi")
+                    End If
+                    rsDataEmiDevol.Close
+
+                End If
+            Else
+                wDataEmiDevolucao = rsDataEmiDevol("DataEmi")
+                rsDataEmiDevol.Close
+            End If
+        Else
+                wDataEmiDevolucao = DataDev
+        End If
+            
+        sql = ""
+        sql = "Select CTS_Loja,LO_Razao,CTS_numeroNCredito,LO_Razao,Loja.* from ControleSistema,Loja " _
+            & "where LO_Loja=CTS_Loja"
+        rsVerLoja.CursorLocation = adUseClient
+        rsVerLoja.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+
+       
+        If Not rsVerLoja.EOF Then
+            If Serie = "SM" Then
+                wTotalNota = rsDadosNfCapa("TotalNotaAlternativa")
+            Else
+                wTotalNota = ValorNotaCredito
+            End If
+
+            For i = 1 To 4
+
+                Printer.ScaleMode = vbMillimeters
+                Printer.FontName = "Romam"
+                Printer.FontSize = 9
+                Printer.Print Space(2) & "___________________________________________________________________________________________________________________"
+                Printer.Print
+                
+                If Len(Trim(rsVerLoja("LO_Razao"))) < 1 Then
+                    If ReImpressao = False Then
+                        Printer.Print Space(2) & rsVerLoja("CTS_Razao")
+                    Else
+                        Printer.Print Space(2) & rsVerLoja("CTS_Razao") & Space(84) & "RE-IMPRESSAO"
+                    End If
+                Else
+                    If ReImpressao = False Then
+                        Printer.Print Space(2) & Trim(Mid(rsVerLoja("LO_Razao"), 1, Len(rsVerLoja("LO_Razao"))))
+                    Else
+                        Printer.Print Space(2) & Trim(Mid(rsVerLoja("LO_Razao"), 20, Len(rsVerLoja("LO_Razao")))) & Space(84) & "RE-IMPRESSAO"
+                    End If
+                End If
+                
+                Printer.Print Space(2) & left(rsVerLoja("LO_Endereco") & Space(30), 30) _
+                    & "    -    " & rsVerLoja("LO_Cep") & "   -   " & rsVerLoja("LO_Municipio") _
+                    & right(Space(72) & "NOTA DE CREDITO", 72)
+                Printer.Print Space(2) & "FONE : " & "(" & right(String(3, "0") & rsVerLoja("LO_DDD"), 3) & ")" _
+                        & left(rsVerLoja("LO_Telefone") & Space(10), 10) & " -  " _
+                        & "FAX : " & "(" & right(String(3, "0") & rsVerLoja("LO_DDD"), 3) & ")" & left(rsVerLoja("LO_Telefone") & Space(10), 10)
+                Printer.Print Space(2) & "C.G.C : " & left(rsVerLoja("LO_CGC") & Space(25), 25) & "INSCR.EST. : " & rsVerLoja("LO_InscricaoEstadual")
+                Printer.Print Space(140) & "NUM.  " & right(String(9, "0") & NotaCredito, 9) & right(Space(10) & i & "a.VIA", 10)
+                Printer.Print Space(2) & "A"
+                Printer.Print Space(2) & rsDadosNfCapa("ce_razao")
+                Printer.Print Space(2) & left(rsDadosNfCapa("ce_endereco") & Space(130), 130) & left("DATA : " & rsDadosNfCapa("DataEmi") & Space(18), 18)
+                Printer.Print Space(2) & rsDadosNfCapa("ce_Municipio") & "  -   " & rsDadosNfCapa("ce_estado")
+                Printer.Print Space(2) & "FONE : " & rsDadosNfCapa("ce_telefone")
+                Printer.Print Space(2) & "EFETUAMOS NESTA DATA EM SUA CONTA CORRENTE O SEGUINTE LANÇAMENTO:"
+                Printer.Print Space(2) & "___________________________________________________________________________________________________________________"
+                Printer.Print Space(40) & "HISTORICO" & Space(40) & "| DEBITO" & Space(30) & "| CREDITO"
+                Printer.Print Space(2) & "___________________________________________________________________________________________________________________"
+                Printer.Print
+                Printer.Print Space(2) & "PELO RECEBIMENTO DA MERCADORIA EM DEVOLUÇÃO"
+                Printer.Print Space(2) & "CONFORME NF " & Nf & " SERIE " & Serie & " DE " & rsDadosNfCapa("DataEmi")
+                Printer.Print Space(2) & "NO VALOR DE R$          " & Format(wTotalNota, "###,###,###0.00")
+                Printer.Print
+                Printer.Print Space(2) & "REFERENTE NF DE VENDA " & NfDev & " - " & SerieDev & " DE " & wDataEmiDevolucao
+                Printer.Print Space(2) & "DA LOJA " & rsDadosNfCapa("LojaOrigem") & Space(140) & Format(wTotalNota, "###,###,###0.00")
+                Printer.Print Space(2) & "___________________________________________________________________________________________________________________"
+                Printer.Print
+                Printer.Print Space(142) & "ATENCIOSAMENTE"
+                Printer.Print
+                Printer.Print Space(120) & "_______________________________________"
+                If Len(Trim(rsVerLoja("LO_Razao"))) < 1 Then
+                    Printer.Print Space(120) & rsVerLoja("CTS_Razao")
+                Else
+                    Printer.Print Space(120) + Space((39 - Len(Trim(rsVerLoja("LO_Razao"))))) & Trim(Mid(rsVerLoja("LO_Razao"), 1, Len(rsVerLoja("LO_Razao"))))
+                End If
+                Printer.Print
+                Printer.Print
+                If i = 2 Then
+                    Printer.NewPage
+                End If
+            Next i
+            Printer.EndDoc
+        End If
+    End If
+
+
+End Function
 
 

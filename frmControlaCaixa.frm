@@ -3,7 +3,7 @@ Begin VB.Form frmControlaCaixa
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    ClientHeight    =   10440
-   ClientLeft      =   735
+   ClientLeft      =   -810
    ClientTop       =   90
    ClientWidth     =   15300
    Icon            =   "frmControlaCaixa.frx":0000
@@ -1578,11 +1578,11 @@ End If
 
 End Sub
 
-Function CriaMovimentoCaixa(ByVal nf As Double, ByVal Serie As String, ByVal TotalNota As Double, ByVal loja As String, ByVal Grupo As Double, ByVal NroProtocolo As Double, ByVal nroCaixa As Integer, ByVal NroPedido As Double, ByVal tiponota As String)
+Function CriaMovimentoCaixa(ByVal Nf As Double, ByVal Serie As String, ByVal TotalNota As Double, ByVal loja As String, ByVal Grupo As Double, ByVal NroProtocolo As Double, ByVal nroCaixa As Integer, ByVal NroPedido As Double, ByVal tiponota As String)
     
     sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
         & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo, MC_NroCaixa, MC_DataProcesso, MC_Pedido,MC_TipoNota) values(" & GLB_ECF & ",'0','" & Trim(loja) & "', " _
-        & " '" & Format(Date, "yyyy/mm/dd") & "'," & Grupo & ", " & nf & ",'" & Serie & "', " _
+        & " '" & Format(Date, "yyyy/mm/dd") & "'," & Grupo & ", " & Nf & ",'" & Serie & "', " _
         & "" & ConverteVirgula(Format(TotalNota, "##,###0.00")) & ", " _
         & "0,0,0,0,0,9,'A'," & NroProtocolo & "," & nroCaixa & ",'" & Format(Date, "yyyy/mm/dd") & "'," & NroPedido & ",'" & tiponota & "')"
         rdoCNLoja.Execute (sql)
