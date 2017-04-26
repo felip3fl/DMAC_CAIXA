@@ -132,14 +132,14 @@ Function Cliptografia(ByRef ValorClipt As String)
     Dim Ret As String
     Dim CharLido As String
     Dim Maximo As Long
-    Dim i As Long
+    Dim I As Long
 
     
     Ret = ""
     Maximo = Len(ValorClipt)
     
-    For i = 1 To Maximo
-        CharLido = UCase(Mid(ValorClipt, i, 1))
+    For I = 1 To Maximo
+        CharLido = UCase(Mid(ValorClipt, I, 1))
         If CharLido = "A" Then
             CharLido = "E"
         ElseIf CharLido = "B" Then
@@ -2302,11 +2302,11 @@ End Function
 
 
 
-Sub Esperar(ByVal tempo As Integer)
+Sub Esperar(ByVal Tempo As Integer)
     
     Dim StartTime As Long
     StartTime = Timer
-    Do While Timer < StartTime + tempo
+    Do While Timer < StartTime + Tempo
         DoEvents
     Loop
 
@@ -2317,7 +2317,7 @@ Function FU_ValidaCPF(CPF As String) As Integer
 '
     Dim soma As Integer
     Dim Resto As Integer
-    Dim i As Integer
+    Dim I As Integer
     
     'Valida argumento
     If Len(CPF) <> 11 Then
@@ -2328,9 +2328,9 @@ Function FU_ValidaCPF(CPF As String) As Integer
         
     
     soma = 0
-    For i = 1 To 9
-        soma = soma + Val(Mid$(CPF, i, 1)) * (11 - i)
-    Next i
+    For I = 1 To 9
+        soma = soma + Val(Mid$(CPF, I, 1)) * (11 - I)
+    Next I
     Resto = 11 - (soma - (Int(soma / 11) * 11))
     If Resto = 10 Or Resto = 11 Then Resto = 0
     If Resto <> Val(Mid$(CPF, 10, 1)) Then
@@ -2339,9 +2339,9 @@ Function FU_ValidaCPF(CPF As String) As Integer
     End If
         
     soma = 0
-    For i = 1 To 10
-        soma = soma + Val(Mid$(CPF, i, 1)) * (12 - i)
-    Next i
+    For I = 1 To 10
+        soma = soma + Val(Mid$(CPF, I, 1)) * (12 - I)
+    Next I
     Resto = 11 - (soma - (Int(soma / 11) * 11))
     If Resto = 10 Or Resto = 11 Then Resto = 0
     If Resto <> Val(Mid$(CPF, 11, 1)) Then
@@ -2354,14 +2354,14 @@ Function FU_ValidaCPF(CPF As String) As Integer
 End Function
 
 Function FU_ValidaCGC(CGC As String) As Integer
-        Dim Retorno, a, j, i, d1, d2
+        Dim Retorno, a, j, I, d1, d2
         If Len(CGC) = 8 And Val(CGC) > 0 Then
            a = 0
            j = 0
            d1 = 0
-           For i = 1 To 7
-               a = Val(Mid(CGC, i, 1))
-               If (i Mod 2) <> 0 Then
+           For I = 1 To 7
+               a = Val(Mid(CGC, I, 1))
+               If (I Mod 2) <> 0 Then
                   a = a * 2
                End If
                If a > 9 Then
@@ -2369,7 +2369,7 @@ Function FU_ValidaCGC(CGC As String) As Integer
                Else
                   j = j + a
                End If
-           Next i
+           Next I
            d1 = IIf((j Mod 10) <> 0, 10 - (j Mod 10), 0)
            If d1 = Val(Mid(CGC, 8, 1)) Then
               FU_ValidaCGC = True
@@ -2379,23 +2379,23 @@ Function FU_ValidaCGC(CGC As String) As Integer
         Else
            If Len(CGC) = 14 And Val(CGC) > 0 Then
               a = 0
-              i = 0
+              I = 0
               d1 = 0
               d2 = 0
               j = 5
-              For i = 1 To 12 Step 1
-                  a = a + (Val(Mid(CGC, i, 1)) * j)
+              For I = 1 To 12 Step 1
+                  a = a + (Val(Mid(CGC, I, 1)) * j)
                   j = IIf(j > 2, j - 1, 9)
-              Next i
+              Next I
               a = a Mod 11
               d1 = IIf(a > 1, 11 - a, 0)
               a = 0
-              i = 0
+              I = 0
               j = 6
-              For i = 1 To 13 Step 1
-                  a = a + (Val(Mid(CGC, i, 1)) * j)
+              For I = 1 To 13 Step 1
+                  a = a + (Val(Mid(CGC, I, 1)) * j)
                   j = IIf(j > 2, j - 1, 9)
-              Next i
+              Next I
               a = a Mod 11
               d2 = IIf(a > 1, 11 - a, 0)
               If (d1 = Val(Mid(CGC, 13, 1)) And d2 = Val(Mid(CGC, 14, 1))) Then
@@ -2419,7 +2419,7 @@ Public Function VerificaRetornoImpressora(Label As String, RetornoFuncao As Stri
     Dim StringRetorno As String
     Dim ValorRetorno As String
     Dim RetornoStatus As Integer
-    Dim mensagem As String
+    Dim Mensagem As String
     
     wVerificaImpressoraFiscal = False
     
@@ -2522,24 +2522,24 @@ Public Function VerificaRetornoImpressora(Label As String, RetornoFuncao As Stri
                 End If
                 
                 If RetornaMensagem Then
-                    mensagem = "Status da Impressora: " & ValorRetorno & _
+                    Mensagem = "Status da Impressora: " & ValorRetorno & _
                            vbCr & vbLf & StringRetorno & vbCr & vbLf & _
                            Label & RetornoFuncao
                 Else
-                    mensagem = "Status da Impressora: " & ValorRetorno & _
+                    Mensagem = "Status da Impressora: " & ValorRetorno & _
                        vbCr & vbLf & StringRetorno
                 End If
                 wValorRetorno = ValorRetorno
-                MsgBox mensagem, vbOKOnly + vbInformation, TituloJanela
+                MsgBox Mensagem, vbOKOnly + vbInformation, TituloJanela
                 Exit Function
         End If 'fim do ST1 <> 0 and ST2 <> 0
         
         If RetornaMensagem Then
-            mensagem = Label & RetornoFuncao
+            Mensagem = Label & RetornoFuncao
         End If
         
-        If mensagem <> "" Then
-            MsgBox mensagem, vbOKOnly + vbInformation, TituloJanela
+        If Mensagem <> "" Then
+            MsgBox Mensagem, vbOKOnly + vbInformation, TituloJanela
         End If
         Exit Function
     ElseIf Retorno = -1 Then
@@ -2579,14 +2579,14 @@ Function ConverteVirgula(ByVal numero As String) As String
     Dim Ret As String
     Dim CharLido As String
     Dim Maximo As Long
-    Dim i As Long
+    Dim I As Long
     
     Ret = ""
     numero = IIf(IsNull(numero), 0, numero)
     Maximo = Len(numero)
     
-    For i = 1 To Maximo
-        CharLido = Mid(numero, i, 1)
+    For I = 1 To Maximo
+        CharLido = Mid(numero, I, 1)
         If IsNumeric(CharLido) Then
             Ret = Ret & CharLido
         ElseIf CharLido = "," And InStr(Ret, ".") = 0 Then
@@ -2603,14 +2603,14 @@ Function ReplaceVirgula(ByVal numero As String) As String
     Dim Ret As String
     Dim CharLido As String
     Dim Maximo As Long
-    Dim i As Long
+    Dim I As Long
     
     Ret = "0"
     numero = IIf(IsNull(numero), 0, numero)
     Maximo = Len(numero)
     
-    For i = 1 To Maximo
-        CharLido = Mid(numero, i, 1)
+    For I = 1 To Maximo
+        CharLido = Mid(numero, I, 1)
         
         
         If IsNumeric(CharLido) Then
@@ -2630,7 +2630,7 @@ Sub Main()
  
 'On Error GoTo ConexaoErro
  
- 
+wErroApresenta = 0
 Call verificaAppExecucao
  
 If adoCNAccess.State = 1 Then
@@ -4837,17 +4837,17 @@ Public Function endIMG(nomeBotao As String) As String
     
 End Function
 
-Public Sub notificacaoEmail(mensagem As String)
+Public Sub notificacaoEmail(Mensagem As String)
     
     ConectaODBCMatriz
     
     Dim teste As String
-    mensagem = Replace(mensagem, "'", "''")
+    Mensagem = Replace(Mensagem, "'", "''")
     ')
     
     sql = "insert into alerta_movimento_email" & vbNewLine & _
           "(AME_Numero,AME_NroCaixa, AME_Mensagem, AME_Usuario, AME_DataHora, AME_Situacao, AME_Loja)" & vbNewLine & _
-          "values (" & GLB_ADMProtocolo & ", " & GLB_Caixa & ", '" & mensagem & "', '" & GLB_ADMNome & "'," & vbNewLine & _
+          "values (" & GLB_ADMProtocolo & ", " & GLB_Caixa & ", '" & Mensagem & "', '" & GLB_ADMNome & "'," & vbNewLine & _
           "'" & Format(Date, "YYYY/MM/DD") & " " & Time & "', '" & "A" & "', '" & GLB_Loja & "')" & vbNewLine & _
           ""
     rdoCNRetaguarda.Execute (sql)
@@ -5026,7 +5026,7 @@ Public Function CriaNotaCredito1(ByVal Nf As Double, ByVal Serie As String, ByVa
                 wTotalNota = ValorNotaCredito
             End If
 
-            For i = 1 To 4
+            For I = 1 To 4
 
                 Printer.ScaleMode = vbMillimeters
                 Printer.FontName = "Romam"
@@ -5055,7 +5055,7 @@ Public Function CriaNotaCredito1(ByVal Nf As Double, ByVal Serie As String, ByVa
                         & left(rsVerLoja("LO_Telefone") & Space(10), 10) & " -  " _
                         & "FAX : " & "(" & right(String(3, "0") & rsVerLoja("LO_DDD"), 3) & ")" & left(rsVerLoja("LO_Telefone") & Space(10), 10)
                 Printer.Print Space(2) & "C.G.C : " & left(rsVerLoja("LO_CGC") & Space(25), 25) & "INSCR.EST. : " & rsVerLoja("LO_InscricaoEstadual")
-                Printer.Print Space(140) & "NUM.  " & right(String(9, "0") & NotaCredito, 9) & right(Space(10) & i & "a.VIA", 10)
+                Printer.Print Space(140) & "NUM.  " & right(String(9, "0") & NotaCredito, 9) & right(Space(10) & I & "a.VIA", 10)
                 Printer.Print Space(2) & "A"
                 Printer.Print Space(2) & rsDadosNfCapa("ce_razao")
                 Printer.Print Space(2) & left(rsDadosNfCapa("ce_endereco") & Space(130), 130) & left("DATA : " & rsDadosNfCapa("DataEmi") & Space(18), 18)
@@ -5084,10 +5084,10 @@ Public Function CriaNotaCredito1(ByVal Nf As Double, ByVal Serie As String, ByVa
                 End If
                 Printer.Print
                 Printer.Print
-                If i = 2 Then
+                If I = 2 Then
                     Printer.NewPage
                 End If
-            Next i
+            Next I
             Printer.EndDoc
         End If
     End If
@@ -5095,4 +5095,26 @@ Public Function CriaNotaCredito1(ByVal Nf As Double, ByVal Serie As String, ByVa
 
 End Function
 
+
+Public Function obterReferenciaPorItem(numeroped As String, item As String) As String
+    Dim sql As String
+    Dim rsNFECapa As New ADODB.Recordset
+    
+    sql = "select REFERENCIA" & vbNewLine & _
+          "from nfitens " & vbNewLine & _
+          "where NUMEROPED = '" & numeroped & "' " & vbNewLine & _
+          "AND item = '" & item & "'"
+    
+    rsNFECapa.CursorLocation = adUseClient
+    rsNFECapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    
+        If rsNFECapa.EOF = False Then
+            obterReferenciaPorItem = rsNFECapa("REFERENCIA")
+        Else
+            obterReferenciaPorItem = "[REFERENCIA NÃO ENCONTRADA]"
+        End If
+    
+    rsNFECapa.Close
+    
+End Function
 

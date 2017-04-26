@@ -24,6 +24,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Private Sub Form_Activate()
+    
     frmControlaCaixa.Show 1
 End Sub
 
@@ -34,6 +35,9 @@ Private Sub Form_Load()
     Me.Width = (imgTarefas.Width)
     Me.top = -500
     Me.left = -100
+    
+    frmTrocaVersao.Show 1
+    
 End Sub
 
 Private Sub Form_Unload(Cancel As Integer)

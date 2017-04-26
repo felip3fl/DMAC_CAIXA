@@ -2579,10 +2579,8 @@ lblTootip.Visible = False
                     & "0,'" & "" & "',0,0," & WParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(PegaLoja("ctr_datainicial"), "yyyy/mm/dd") & "','PA')"
             rdoCNLoja.Execute (sql)
 
-End If
+    End If
               
-              
-    
     End If
     
     PegaLoja.Close

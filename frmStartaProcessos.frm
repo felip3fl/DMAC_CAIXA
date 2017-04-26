@@ -40,7 +40,7 @@ Private Sub Form_Activate()
       
   frmControlaCaixa.webInternet1.Picture = LoadPicture(endIMG("topo1024768hd"))
   frmStartaProcessos.Picture = LoadPicture(endIMG("FundoProcessa"))
- Call StatusAtualizacao
+  Call StatusAtualizacao
  
     wPedido = pedido
     
@@ -73,8 +73,18 @@ Private Sub StatusAtualizacao()
    sql = "exec SP_Atualiza_Processos_Venda " & pedido & ", " & NroNotaFiscal & ", " & GLB_CTR_Protocolo & ", " & GLB_Caixa
           rdoCNLoja.Execute sql
 
+On Error GoTo TrataErro
+
    sql = "exec SP_Atualiza_Processos_Venda_Central"
           rdoCNLoja.Execute sql
+          
+Exit Sub
+TrataErro:
+    wErroApresenta = wErroApresenta + 1
+    If wErroApresenta >= 3 Then
+        wErroApresenta = 0
+        MsgBox "Erro de atualização de processos de venda na Retaguarda", vbCritical
+    End If
 
 End Sub
 

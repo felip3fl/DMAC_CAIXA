@@ -59,8 +59,8 @@ Public Declare Function Bematech_FI_ClicheProprietario Lib "BEMAFI32.DLL" (ByVal
 Public Declare Function Bematech_FI_NumeroCaixa Lib "BEMAFI32.DLL" (ByVal NumeroCaixa As String) As Integer
 Public Declare Function Bematech_FI_NumeroLoja Lib "BEMAFI32.DLL" (ByVal NumeroLoja As String) As Integer
 Public Declare Function Bematech_FI_SimboloMoeda Lib "BEMAFI32.DLL" (ByVal SimboloMoeda As String) As Integer
-Public Declare Function Bematech_FI_MinutosLigada Lib "BEMAFI32.DLL" (ByVal Minutos As String) As Integer
-Public Declare Function Bematech_FI_MinutosImprimindo Lib "BEMAFI32.DLL" (ByVal Minutos As String) As Integer
+Public Declare Function Bematech_FI_MinutosLigada Lib "BEMAFI32.DLL" (ByVal minutos As String) As Integer
+Public Declare Function Bematech_FI_MinutosImprimindo Lib "BEMAFI32.DLL" (ByVal minutos As String) As Integer
 Public Declare Function Bematech_FI_VerificaModoOperacao Lib "BEMAFI32.DLL" (ByVal Modo As String) As Integer
 Public Declare Function Bematech_FI_VerificaEpromConectada Lib "BEMAFI32.DLL" (ByVal Flag As String) As Integer
 Public Declare Function Bematech_FI_FlagsFiscais Lib "BEMAFI32.DLL" (ByRef Flag As Integer) As Integer
@@ -248,6 +248,8 @@ Global wPegaDesconto As Double
 Global wPegaFrete As Double
 Global wDocumento   As String
 Global wPessoa As Double
+
+Global wErroApresenta As Byte
 
 Global wLoja As String * 5
 Global wMensagemECF As String * 48

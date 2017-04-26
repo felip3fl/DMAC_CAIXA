@@ -5,8 +5,8 @@ Begin VB.Form frmEmissaoNFe
    BorderStyle     =   0  'None
    Caption         =   "Emissão NFe"
    ClientHeight    =   9330
-   ClientLeft      =   1455
-   ClientTop       =   180
+   ClientLeft      =   1095
+   ClientTop       =   930
    ClientWidth     =   19035
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
@@ -222,11 +222,11 @@ Begin VB.Form frmEmissaoNFe
          End
          Begin Balcao2010.chameleonButton cmdAtualizar 
             Height          =   315
-            Left            =   7950
+            Left            =   7740
             TabIndex        =   15
             Top             =   210
-            Width           =   1905
-            _ExtentX        =   3360
+            Width           =   2115
+            _ExtentX        =   3731
             _ExtentY        =   556
             BTYPE           =   14
             TX              =   "Atualizar"
@@ -781,7 +781,7 @@ Const insertTabelaNFLojas = "insert into NFE_NFLojas " & vbNewLine & _
                             "values ('"
                             
 Dim Nf As notaFiscal
-Dim tempo As Byte
+Dim Tempo As Byte
 Dim mensagemStatus As String
 Dim qtdeLinhaAnterior As Integer
 Dim abrirAqruivo As Boolean
@@ -839,6 +839,11 @@ Private Sub cmdCancelar_Click()
 
 End Sub
 
+
+Private Sub cmdContingencia_Click()
+
+End Sub
+
 Private Sub cmdEmail_Click()
 
     Dim rsNFE As New ADODB.Recordset
@@ -867,7 +872,7 @@ Private Sub cmdEmail_Click()
             Else
                 lblMSGNota.Caption = ""
                 criarArquivorEmail Nf, rsNFE("chave"), rsNFE("email"), rsNFE("nome")
-                tempo = 56
+                Tempo = 56
                 finalizaProcesso "Enviando XML e DANFE para " & rsNFE("email"), False
             End If
         Else
@@ -879,7 +884,7 @@ Private Sub cmdEmail_Click()
 End Sub
 
 Private Sub cmdIgnorarResultado_Click()
-    tempo = 200
+    Tempo = 200
 End Sub
 
 Private Sub cmdLiberar_Click()
@@ -921,13 +926,13 @@ Public Sub cmdTransmitir_Click()
         sql = "exec sp_vda_cria_nfe '" & Nf.loja & "', '" & Nf.numero & "', 'NE', ''"
         rdoCNLoja.Execute sql
     
-        Dim i As Byte
+        Dim I As Byte
     
-        For i = 0 To UBound(vetCampos)
-            If vetCampos(i) <> "" Then
-                leituraEstrutura vetCampos(i)
+        For I = 0 To UBound(vetCampos)
+            If vetCampos(I) <> "" Then
+                leituraEstrutura vetCampos(I)
             End If
-        Next i
+        Next I
     
         numeroCopiaImpressao
     
@@ -944,7 +949,7 @@ Public Sub cmdTransmitir_Click()
 End Sub
 
 Private Sub cmdImprimir_Click()
-    tempo = 56
+    Tempo = 56
     If Nf.eSerie = "NE" Then
         finalizaProcesso "Imprimindo Nota Fiscal Eletrônico " & Nf.numero, False
         Call ImprimirNota(Nf, "NOTA")
@@ -955,9 +960,9 @@ Private Sub cmdImprimir_Click()
 End Sub
 
 
-Private Sub finalizaProcesso(mensagem As String, esperaResposta As Boolean)
+Private Sub finalizaProcesso(Mensagem As String, esperaResposta As Boolean)
             
-    mensagemStatus = mensagem
+    mensagemStatus = Mensagem
     frameDadosNotaFiscal.Visible = False
     frameNFE.Visible = False
     lblStatusImpressao.Width = Me.Width
@@ -974,7 +979,7 @@ End Sub
 Private Sub notaPedentes()
 
     Dim ado_estrutura As New ADODB.Recordset
-    Dim i As Integer
+    Dim I As Integer
     Dim add As Boolean
     'Dim dataPesquisa As String
     Dim tiponota As String
@@ -1083,7 +1088,7 @@ Private Sub Form_Activate()
     cmdEmail.Enabled = False
     timerSairSistema.Enabled = False
     cmdImprimir.ToolTipText = "Nota Fiscal Eletrônica não transmitida"
-    tempo = 0
+    Tempo = 0
     cancelaNotaResultado = False
     
     Me.Picture = LoadPicture(endIMG("FundoProcessa"))
@@ -1104,21 +1109,21 @@ Private Sub Form_Activate()
     
 End Sub
 
-Public Sub statusFuncionamento(mensagem As String)
+Public Sub statusFuncionamento(Mensagem As String)
     
    ' mensagem = "Imprimindo Garantia Estendida" & " "
-    If lblStatusImpressao.Caption = mensagem & " " & "  . . . ." Then
-        lblStatusImpressao.Caption = mensagem & " " & ".   . . ."
-    ElseIf lblStatusImpressao.Caption = mensagem & " " & ".   . . ." Then
-        lblStatusImpressao.Caption = mensagem & " " & ". .   . ."
-    ElseIf lblStatusImpressao.Caption = mensagem & " " & ". .   . ." Then
-        lblStatusImpressao.Caption = mensagem & " " & ". . .   ."
-    ElseIf lblStatusImpressao.Caption = mensagem & " " & ". . .   ." Then
-        lblStatusImpressao.Caption = mensagem & " " & ". . . .  "
-    ElseIf lblStatusImpressao.Caption = mensagem & " " & ". . . .  " Then
-        lblStatusImpressao.Caption = mensagem & " " & "  . . . ."
+    If lblStatusImpressao.Caption = Mensagem & " " & "  . . . ." Then
+        lblStatusImpressao.Caption = Mensagem & " " & ".   . . ."
+    ElseIf lblStatusImpressao.Caption = Mensagem & " " & ".   . . ." Then
+        lblStatusImpressao.Caption = Mensagem & " " & ". .   . ."
+    ElseIf lblStatusImpressao.Caption = Mensagem & " " & ". .   . ." Then
+        lblStatusImpressao.Caption = Mensagem & " " & ". . .   ."
+    ElseIf lblStatusImpressao.Caption = Mensagem & " " & ". . .   ." Then
+        lblStatusImpressao.Caption = Mensagem & " " & ". . . .  "
+    ElseIf lblStatusImpressao.Caption = Mensagem & " " & ". . . .  " Then
+        lblStatusImpressao.Caption = Mensagem & " " & "  . . . ."
     Else
-        lblStatusImpressao.Caption = mensagem & " " & "  . . . ."
+        lblStatusImpressao.Caption = Mensagem & " " & "  . . . ."
     End If
     
 End Sub
@@ -1195,10 +1200,6 @@ Private Function obterNumeroNota(pedido As String, numeroNFE As String) As Strin
     rsNotaFiscal.Close
 
 End Function
-
-Private Sub Frame3_DragDrop(Source As Control, X As Single, Y As Single)
-
-End Sub
 
 Private Sub grdLogSig_Click()
     If grdLogSig.CellForeColor = vbRed Then
@@ -1316,7 +1317,7 @@ Private Function procuraArquivo(pedido As String, loja As String) As String
 End Function
 
 Private Sub Label2_Click()
-    tempo = 10
+    Tempo = 10
     timerSairSistema_Timer
 End Sub
 
@@ -1356,7 +1357,7 @@ Private Sub abrirArquivoResposta(Nf As notaFiscal, tiponota As String)
      If Arquivo <> "" Then
         Screen.MousePointer = 11
     
-        tempo = 200
+        Tempo = 200
         
         Set mensagemArquivoTXT = fso.OpenTextFile(GLB_EnderecoPastaRESP & Arquivo)
         informacaoArquivo = mensagemArquivoTXT.ReadAll
@@ -1412,7 +1413,7 @@ Private Sub Image1_Click()
 End Sub
 
 Private Sub lblStatusImpressao_Click()
-    tempo = 200
+    Tempo = 200
 End Sub
 
 Private Sub optPesquisaNumero_Click()
@@ -1425,19 +1426,19 @@ End Sub
 
 
 Private Sub timerExibirMSG_Timer()
-    tempo = tempo + 1
+    Tempo = Tempo + 1
     statusFuncionamento mensagemStatus
-    If tempo > 60 Then
+    If Tempo > 60 Then
         timerSairSistema.Enabled = False
         Unload Me
     End If
 End Sub
 
 Private Sub timerSairSistema_Timer()
-    tempo = tempo + 1
+    Tempo = Tempo + 1
     statusFuncionamento mensagemStatus
     carregaArquivoUnico
-    If tempo > 60 Then
+    If Tempo > 60 Then
         timerExibirMSG.Enabled = False
         Unload Me
     End If
@@ -1826,9 +1827,9 @@ Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
 
     Dim ado_campo As New ADODB.Recordset
     Dim informacao As String
-    Dim i As Byte
+    Dim I As Byte
     
-    i = 0
+    I = 0
     
     sql = "select " & RTrim(ado_estrutura("etr_campo_de")) & " as Informacao " & vbNewLine & _
           "from " & ado_estrutura("etr_tabela_de") & " " & vbNewLine & _
@@ -1857,7 +1858,7 @@ Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
         
         
         sql = insertTabelaNFLojas & _
-              Trim(ado_estrutura("etr_sequencia") + (i)) & "', '" & ado_estrutura("etr_campo") & _
+              Trim(ado_estrutura("etr_sequencia") + (I)) & "', '" & ado_estrutura("etr_campo") & _
               "', '" & RTrim(informacao) & "', '" & _
               Nf.loja & "', '" & Nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
               
@@ -1865,7 +1866,7 @@ Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
         
         If ado_estrutura("etr_campo") = "    NDUP" Then
             sql = insertTabelaNFLojas & _
-            Trim(ado_estrutura("etr_sequencia") + (i) - 1) & "', '[" & RTrim(ado_estrutura("etr_ROTULO")) & _
+            Trim(ado_estrutura("etr_sequencia") + (I) - 1) & "', '[" & RTrim(ado_estrutura("etr_ROTULO")) & _
             "]', '" & "" & "', '" & _
             Nf.loja & "', '" & Nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
               
@@ -1874,7 +1875,7 @@ Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
         End If
               
         ado_campo.MoveNext
-        i = i + 5
+        I = I + 5
     Loop
     ado_campo.Close
     ado_estrutura.MoveNext
@@ -2027,7 +2028,7 @@ Private Function verificaNovoArquivo() As Boolean
     Dim Arquivo As String
     Dim qtdeArquivos As Integer
     'Static qtdeLinhaAnterior As Integer
-    On Error GoTo trataerro
+    On Error GoTo TrataErro
     
     Arquivo = Dir(endArquivoResposta, vbDirectory)
     If Arquivo <> "" Then qtdeArquivos = 1
@@ -2049,7 +2050,7 @@ Private Function verificaNovoArquivo() As Boolean
     End If
     
     Exit Function
-trataerro:
+TrataErro:
     Select Case Err.Number
         Case 5
             verificaNovoArquivo = False
@@ -2061,12 +2062,12 @@ End Function
 
 
 Public Sub deletaArquivo(enderecoNomeArquivo As String)
-On Error GoTo trataerro
+On Error GoTo TrataErro
 
     Kill enderecoNomeArquivo
     Exit Sub
     
-trataerro:
+TrataErro:
     Select Case Err.Number
         Case 53
             MsgBox "Arquivo XML lido não pode ser encontrado na pasta", _
@@ -2160,7 +2161,7 @@ Private Function obterNumPedidoArquivo(Arquivo As String, Nf As notaFiscal) As S
 End Function
 
 Public Function obterLoja(cnpj As String) As String
-On Error GoTo trataerro
+On Error GoTo TrataErro
     Dim ado_loja As New ADODB.Recordset
     
     With ado_loja
@@ -2178,7 +2179,7 @@ On Error GoTo trataerro
     End With
     
     Exit Function
-trataerro:
+TrataErro:
     Select Case Err.Number
         Case Else
             mensagemErroDesconhecido Err, "Erro ao obter a loja"
@@ -2269,7 +2270,7 @@ End Sub
 Public Function carregaArquivoUnico()
 
     Static Arquivo As String
-    On Error GoTo trataerro
+    On Error GoTo TrataErro
     
     Dim informacaoArquivo As String
     Dim mensagemArquivoTXT As TextStream
@@ -2286,7 +2287,7 @@ Public Function carregaArquivoUnico()
     If Arquivo <> "" Then
         Screen.MousePointer = 11
     
-        tempo = 200
+        Tempo = 200
         
         Set mensagemArquivoTXT = fso.OpenTextFile(GLB_EnderecoPastaRESP & Arquivo)
         informacaoArquivo = mensagemArquivoTXT.ReadAll
@@ -2322,6 +2323,7 @@ Public Function carregaArquivoUnico()
              statusFuncionamento "Email enviado com sucesso"
              Esperar 4
         ElseIf resultado = 100 Or resultado = 4012 Or resultado = 9016 Then
+        
              statusFuncionamento "Nota emitida e autorizada com sucesso"
              
              atualizaChaveNF Nf.pedido, Nf.chave, Nf.loja
@@ -2350,13 +2352,18 @@ Public Function carregaArquivoUnico()
              statusFuncionamento "Nota Rejeitada. Tentado transmitir novamente"
              Esperar 2
              cmdTransmitir_Click
-             tempo = 0
+             Tempo = 0
              timerSairSistema.Enabled = True
              timerSairSistema_Timer
              
         ElseIf resultado = 778 Then 'ERRO NCM
-             statusFuncionamento "Erro de NCM na referencia " & "9990011" & "; Contate a área Fiscal"
-             Esperar 5
+            
+             Dim itemErro As String
+             
+             itemErro = obterNumeroItem(lerCampo(informacaoArquivo, "Mensagem"))
+             
+             statusFuncionamento "Erro de NCM na referencia " & obterReferenciaPorItem(Nf.pedido, itemErro) & "; Contate a área Fiscal"
+             Esperar 7
              
         ElseIf resultado = 4016 Then
              statusFuncionamento "Nota " & Nf.numero & " já autorizada"
@@ -2374,7 +2381,7 @@ Public Function carregaArquivoUnico()
     
     
     Exit Function
-trataerro:
+TrataErro:
     Select Case Err.Number
         Case 62, 13
             mensagemArquivoTXT.Close
@@ -2468,7 +2475,7 @@ End Sub
 Public Function carregaArquivo()
 
     Static Arquivo As String
-    On Error GoTo trataerro
+    On Error GoTo TrataErro
     
     If verificaNovoArquivo = True Then
     
@@ -2583,7 +2590,7 @@ Public Function carregaArquivo()
     End If
     
     Exit Function
-trataerro:
+TrataErro:
     Select Case Err.Number
         Case 62, 13
             mensagemArquivoTXT.Close
@@ -2607,11 +2614,11 @@ Private Sub atualizaArquivo(ByRef enderecoArquivo As String, Arquivo As String, 
     
 End Sub
 
-Public Function mensagemLOG2(grid, Data As Date, tipoStatus As Integer, loja As String, numeroNotaFiscal As String, pedido As String, mensagem As String)
+Public Function mensagemLOG2(grid, Data As Date, tipoStatus As Integer, loja As String, numeroNotaFiscal As String, pedido As String, Mensagem As String)
 
     Dim status As String
     Dim corLinha As ColorConstants
-    Dim i As Byte
+    Dim I As Byte
     
     
     Select Case tipoStatus
@@ -2623,11 +2630,11 @@ Public Function mensagemLOG2(grid, Data As Date, tipoStatus As Integer, loja As 
     End Select
                
     If chkMostraLogErro.Value = 1 And chkMostraLogSucesso = 1 Then
-        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & mensagem
+        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & Mensagem
     ElseIf chkMostraLogErro = 1 And status = "Erro" Then
-        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & mensagem
+        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & Mensagem
     ElseIf chkMostraLogSucesso = 1 And status <> "Erro" Then
-        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & mensagem
+        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & Mensagem
     End If
         
     
@@ -2648,25 +2655,25 @@ End Function
 
 Public Sub pintaLinha(grid, Cor, Linha As Integer)
     grid.Row = Linha
-    For i = 0 To grid.Cols - 1
-        grid.Col = i
+    For I = 0 To grid.Cols - 1
+        grid.Col = I
         grid.CellForeColor = Cor
-    Next i
+    Next I
 End Sub
 
 Public Sub pintaFonteLinha(grid, Cor, Linha As Integer)
     grid.Row = Linha
-    For i = 0 To grid.Cols - 1
-        grid.Col = i
+    For I = 0 To grid.Cols - 1
+        grid.Col = I
         grid.s = Cor
-    Next i
+    Next I
 End Sub
 
 
 
 
 Public Sub montaComboLoja()
-On Error GoTo trataerro
+On Error GoTo TrataErro
     Dim ado_loja As New ADODB.Recordset
     Dim ado_loja2 As New ADODB.Recordset
 
@@ -2696,7 +2703,7 @@ On Error GoTo trataerro
     End With
 
     Exit Sub
-trataerro:
+TrataErro:
     Select Case Err.Number
         Case Else
             mensagemErroDesconhecido Err, "Erro na leitura de lista de lojas"
@@ -2760,7 +2767,7 @@ Public Function criaTXTtemporario(Endereco As String, tiponota As String, pedido
     Dim corpoMensagem As String
     Dim nota As notaFiscal
     
-On Error GoTo trataerro
+On Error GoTo TrataErro
     
     If tiponota = "NOTA" Then corpoMensagem = montaTXT(pedido, loja)
     If tiponota = "SAT" Then corpoMensagem = montaTXTSAT(pedido)
@@ -2774,7 +2781,7 @@ On Error GoTo trataerro
     
     Exit Function
     
-trataerro:
+TrataErro:
     Select Case Err.Number
     Case Else
         mensagemErroDesconhecido Err, "Erro na criação do arquivo"
@@ -2791,7 +2798,7 @@ End Function
 
 
 Public Function obterCNPJloja() As String
-On Error GoTo trataerro
+On Error GoTo TrataErro
     Dim ado_loja As New ADODB.Recordset
     With ado_loja
         sql = "select top 1 lo_cgc as cnpj from loja where lo_loja in " & lojasWhere & " group by lo_cgc"
@@ -2804,7 +2811,7 @@ On Error GoTo trataerro
     End With
     
     Exit Function
-trataerro:
+TrataErro:
     Select Case Err.Number
         'Case Else
             'mensagemErroDesconhecido Err, "Erro ao obter o CNPJ da loja"
@@ -2870,3 +2877,22 @@ Private Sub numeroCopiaImpressao()
     
 End Sub
 
+Private Function obterNumeroItem(informacoes As String) As String
+    
+    informacoes = Replace(informacoes, "[", "((")
+    informacoes = Replace(informacoes, "]", "))")
+    
+    If informacoes Like "*((*" Then
+        Dim inicioCampo, fimCampo As Integer
+    
+        inicioCampo = (InStr(informacoes, "((")) + (Len("(("))
+        fimCampo = (InStr(inicioCampo, informacoes, "))")) - inicioCampo
+    
+        If inicioCampo + fimCampo <> 0 Then
+            obterNumeroItem = Mid$(informacoes, inicioCampo, fimCampo)
+        End If
+    Else
+        obterNumeroItem = ""
+    End If
+    
+End Function
