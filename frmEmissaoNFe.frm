@@ -789,6 +789,8 @@ Public lojasWhere As String
 Dim tempoVerificacaoResposta As Long
 Dim endArquivoResposta As String
 
+Dim icms41 As Boolean
+
 Private Declare Function ShellExecute Lib "shell32.dll" Alias "ShellExecuteA" (ByVal Hwnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long) As Long
 
 Private Sub chameleonButton1_Click()
@@ -1591,6 +1593,7 @@ Public Sub leituraEstrutura(campo As String)
         rdoCNLoja.Execute Sql
     End If
 
+    
     Do While Not ado_estrutura.EOF
         If campo = "PROD" Or campo = "DET" Or campo = "ICMS00" Or campo = "ICMS10" Or campo = "ICMS20" Or campo = "ICMS30" Or campo = "ICMS40" Or campo = "ICMS50" Or campo = "ICMS60" Or campo = "ICMS70" Or campo = "ICMS90" Or campo = "PISALIQ" Or campo = "COFINSALIQ" Or campo = "IPI" Or campo = "IPITRIB" Or campo = "ICMSUFDEST" Or campo = "ICMSSN102" Then
             gravaVariosDado campo, ado_estrutura
@@ -1658,7 +1661,7 @@ End Sub
 Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
     Dim ado_campo As New ADODB.Recordset
     Dim informacao As String
-    
+  
     Sql = "select " & Trim(ado_estrutura("etr_campo_de")) & " informacao, h_nItem item, N_cstICMS CST " & _
           "from " & ado_estrutura("etr_tabela_de") & " " & _
           "where " & whereNotaFiscal & " and " & Trim(ado_estrutura("etr_campo_de")) & " is not null " & _
@@ -1691,7 +1694,7 @@ Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
                 'SQL = "update NFE_NFLojas set nfl_descricao = '[ICMS" & Trim(ado_campo("informacao")) & "]' " & _
                       "where nfl_loja = " & nf.loja & " and nfl_nroNFE = " & nf.numero & " and nfl_sequencia = " & (Trim(ado_estrutura("etr_sequencia")) + (54 * (Trim(ado_campo("item")) - 1))) - 1
                       If Trim(ado_estrutura("ETR_CAMPO")) = "CST" Then
-                        Debug.Print "oi"
+                        
                       End If
                       
                 Sql = insertTabelaNFLojas & _
@@ -1699,10 +1702,16 @@ Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
                       "[IMPOSTO]', '" & " " & "', '" & _
                       Nf.loja & "', '" & Nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
                 If Not (Trim(ado_estrutura("ETR_CAMPO")) = "ORIG" And Mid(campo, 1, 6) = "ICMSSN") Then
+                    Dim cst As String
+                    cst = Format(Trim(ado_campo("informacao")), "00")
+                    If cst = "41" Then cst = "40"
+                    
+                    
                       Sql = Sql & vbNewLine & insertTabelaNFLojas & _
                             (Trim(ado_estrutura("etr_sequencia")) + (500 * (Trim(ado_campo("item")) - 1))) - 1 & "', '" & _
-                            "[ICMS" & Format(Trim(ado_campo("informacao")), "00") & "]', '" & " " & "', '" & _
+                            "[ICMS" & cst & "]', '" & " " & "', '" & _
                             Nf.loja & "', '" & Nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
+                            
                 End If
                 'FELIPE AQUI 2017
                 Sql = Sql & vbNewLine & insertTabelaNFLojas & _
@@ -1722,7 +1731,14 @@ Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
             Debug.Print "ICMS SN"
         End If
         
-        If Mid(campo, 1, 4) = "ICMS" And Mid(ado_estrutura("ETR_ROTULO"), 5, 2) = "SN" And Trim(ado_campo("CST")) = "2" Then
+        If Mid(campo, 1, 4) = "ICMS" And Format(ado_campo("CST"), "00") = "41" And icms41 = False Then
+            If LTrim(ado_estrutura("etr_campo")) = "ORIG" Then
+                icms41 = True
+                rdoCNLoja.Execute Sql
+                Exit Sub
+            End If
+            rdoCNLoja.Execute Sql
+        ElseIf Mid(campo, 1, 4) = "ICMS" And Mid(ado_estrutura("ETR_ROTULO"), 5, 2) = "SN" And Trim(ado_campo("CST")) = "2" Then
         'If Mid(campo, 1, 4) = "ICMS" And Mid(ado_estrutura("ETR_ROTULO"), 5, 2) = Format(Trim(ado_campo("CST")), "00") Then
            ' MsgBox "campo 1"
             rdoCNLoja.Execute Sql
@@ -1734,6 +1750,7 @@ Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
             rdoCNLoja.Execute Sql
         ElseIf Mid(campo, 1, 4) = "ICMS" And Mid(ado_estrutura("ETR_ROTULO"), 5, 2) <> Format(Trim(ado_campo("CST")), "00") Then
             Debug.Print "ICMS SN"
+
         Else
  '           MsgBox "campo OUTROS"
             rdoCNLoja.Execute Sql
