@@ -202,7 +202,7 @@ Private Function obterServidorPasta()
    ' End If
     
     rsControle.CursorLocation = adUseClient
-    rsControle.Open Sql, adoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsControle.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
         obterServidorPasta = rsControle("ServidorAtualizacao")
     
@@ -266,8 +266,8 @@ Private Sub Form_Load()
     
     CenterForm Me
   
-    endPastaLocal = "c:\sistemas\" & pastaAtual
-    'endPastaLocal = "c:\sistemas\dmac venda\"
+    'endPastaLocal = "c:\sistemas\" & pastaAtual
+    endPastaLocal = "c:\sistemas\dmac caixa\"
     
     endPastaRemoto = obterServidorPasta
     'endPastaRemoto = "\\128.0.0.30\sistemas\"
@@ -569,9 +569,9 @@ Public Function AlwaysOnTop(FrmID As Form, ByVal OnTop As Boolean) As Boolean
     Const HWND_TOPMOST = -1
     Const HWND_NOTOPMOST = -2
     If OnTop = True Then
-        AlwaysOnTop = SetWindowPos(FrmID.hwnd, HWND_TOPMOST, 0, 0, 0, 0, FLAGS)
+        AlwaysOnTop = SetWindowPos(FrmID.Hwnd, HWND_TOPMOST, 0, 0, 0, 0, FLAGS)
     Else
-        AlwaysOnTop = SetWindowPos(FrmID.hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, FLAGS)
+        AlwaysOnTop = SetWindowPos(FrmID.Hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, FLAGS)
     End If
 End Function
 

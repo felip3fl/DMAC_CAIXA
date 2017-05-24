@@ -5,8 +5,8 @@ Begin VB.Form frmEmissaoNFe
    BorderStyle     =   0  'None
    Caption         =   "Emissão NFe"
    ClientHeight    =   9330
-   ClientLeft      =   885
-   ClientTop       =   915
+   ClientLeft      =   795
+   ClientTop       =   1740
    ClientWidth     =   19035
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
@@ -992,7 +992,7 @@ Private Sub notaPedentes()
     Sql = "select HORA, DATAEMI, lojaorigem, NUMEROPED, nf, tm, serie, tiponota " & vbNewLine & _
           "from nfcapa " & vbNewLine & _
           "where tm not in (4012,4016,9016,100,101,9005,4005,9012,204,124,4014)   " & vbNewLine & _
-          "and tiponota in ('V','T','E','S') " & vbNewLine & _
+          "and tiponota in ('V','T','E','S','R') " & vbNewLine & _
           "and serie in ('CE','NE')" & vbNewLine & _
           "and dataemi = '" & GLB_DataInicial & "'"
 
@@ -1475,7 +1475,7 @@ Public Sub txtNFe_KeyPress(KeyAscii As Integer)
               & "numeroped as pedido, " & vbNewLine _
               & "dataemi as data " & vbNewLine _
               & "from nfcapa, loja " & vbNewLine _
-              & "where tiponota in ('V','T','E','S') " & vbNewLine _
+              & "where tiponota in ('V','T','E','S','R') " & vbNewLine _
               & "and lo_loja = lojaorigem " & vbNewLine _
               & "and lojaorigem = '" & wLoja & "' " & Sql & txtNFe.text & vbNewLine _
               & "order by dataemi desc"
