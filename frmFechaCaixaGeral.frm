@@ -1,6 +1,6 @@
 VERSION 5.00
+Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "Vsflex7u.ocx"
 Object = "{C932BA88-4374-101B-A56C-00AA003668DC}#1.1#0"; "MSMASK32.OCX"
-Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "vsflex7u.ocx"
 Begin VB.Form frmFechaCaixaGeral 
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
@@ -467,7 +467,7 @@ Dim wTNTotal As Double
 
 Dim wQtdeGrid As Integer
 Dim Idx As Long
-Dim sql As String
+Dim Sql As String
 Dim Cor As String
 Dim Cor1 As String
 Dim Cor2 As String
@@ -570,11 +570,11 @@ Private Sub FechaCaixaOK()
   wQdteViasImpressao = 1
   Call BuscaQtdeViaImpressaoMovimento
   
-  For i = 1 To wQdteViasImpressao
+  For I = 1 To wQdteViasImpressao
       Call ImprimeMovimento
       'Call ImprimeMovimento00
       Call ImprimeTransfNumerario
-  Next i
+  Next I
   
   
   
@@ -638,18 +638,18 @@ Private Sub Form_Load()
 
   'Call CarregaGrid
   
-  sql = ("Select Max(CTr_DataInicial)as DataMov from ControleCaixa where CTR_Supervisor <> 99 and CTr_NumeroCaixa = " & GLB_Caixa & "")
+  Sql = ("Select Max(CTr_DataInicial)as DataMov from ControleCaixa where CTR_Supervisor <> 99 and CTr_NumeroCaixa = " & GLB_Caixa & "")
        rdoDataFechamentoRetaguarda.CursorLocation = adUseClient
-       rdoDataFechamentoRetaguarda.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rdoDataFechamentoRetaguarda.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
        
        mskDataFec.text = Format(rdoDataFechamentoRetaguarda("DataMov"), "dd/mm/yyyy")
        'lblCabec.Caption = lblCabec & " " & Format(rdoDataFechamentoRetaguarda("DataMov"), "dd/mm/yyyy")
        'Call CarregaMovimentocaixa(Format(rdoDataFechamentoRetaguarda("DataMov"), "yyyy/mm/dd"))
        
        
-    sql = "select ctr_protocolo as protocolo from controlecaixa where CTR_Supervisor <> 99 and convert(char(10),CTR_DataInicial,111) = '" & Format(rdoDataFechamentoRetaguarda("DataMov"), "yyyy/mm/dd") & "'"
+    Sql = "select ctr_protocolo as protocolo from controlecaixa where CTR_Supervisor <> 99 and convert(char(10),CTR_DataInicial,111) = '" & Format(rdoDataFechamentoRetaguarda("DataMov"), "yyyy/mm/dd") & "'"
     rdoProtocolos.CursorLocation = adUseClient
-    rdoProtocolos.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rdoProtocolos.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
         
     wProtocolos = ""
     Do While Not rdoProtocolos.EOF
@@ -769,11 +769,11 @@ Dim wImprime2 As String
 Dim wTotal00 As Double
 wTotal00 = 0
  
-sql = ("Select Serie, sum(totalnota) as TotalSerieNota, count(Serie) as QtdeSerie from nfcapa Where ecf = " & GLB_ECF & "" _
+Sql = ("Select Serie, sum(totalnota) as TotalSerieNota, count(Serie) as QtdeSerie from nfcapa Where ecf = " & GLB_ECF & "" _
      & " and  TipoNota = 'V' and Serie = '00' and  DataEmi = '" & Format(Date, "yyyy/mm/dd") _
      & "' " & " and Protocolo = " & GLB_CTR_Protocolo & " group by Serie ")
      rdoCapa.CursorLocation = adUseClient
-     rdoCapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+     rdoCapa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
      
 If Not rdoCapa.EOF Then
    wTotal00 = rdoCapa("TotalSerieNota")
@@ -1125,12 +1125,12 @@ Private Sub CarregaValoresTransfNumerario(DataMov As Date)
     wTNOutros = 0
     wTNTotal = 0
    
-   sql = ("SELECT MC_GrupoAuxiliar,MO_Descricao,SUM(MC_Valor) as Valor FROM MOVIMENTOCAIXA,MODALIDADE WHERE Mo_GRUPO=MC_GrupoAuxiliar" _
+   Sql = ("SELECT MC_GrupoAuxiliar,MO_Descricao,SUM(MC_Valor) as Valor FROM MOVIMENTOCAIXA,MODALIDADE WHERE Mo_GRUPO=MC_GrupoAuxiliar" _
         & " AND MC_GRUPOAUXILIAR LIKE '30%' and MC_DATA between '" & Format(DataMov, "yyyy/mm/dd") & " 00:00:00.000' and '" _
        & Format(DataMov, "yyyy/mm/dd") & " 23:59:59:000" _
         & "' GROUP BY MC_GrupoAuxiliar,MO_DESCRICAO order by MC_GrupoAuxiliar")
        rdoTransfNumerario.CursorLocation = adUseClient
-       rdoTransfNumerario.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rdoTransfNumerario.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
        
   If Not rdoTransfNumerario.EOF Then
      Do While Not rdoTransfNumerario.EOF
@@ -1181,11 +1181,11 @@ Private Sub CarregaValoresTransfNumerario(DataMov As Date)
 End Sub
 Private Sub FechaCaixaGeral()
 
-sql = ("update ControleCaixa set CTR_situacaocaixa = 'F' Where CTR_supervisor = '99' and CTR_situacaocaixa = 'A'")
-rdoCNLoja.Execute sql, rdExecDirect
+Sql = ("update ControleCaixa set CTR_situacaocaixa = 'F' Where CTR_supervisor = '99' and CTR_situacaocaixa = 'A'")
+rdoCNLoja.Execute Sql, rdExecDirect
 
-sql = ("update estoqueloja set el_estoqueanterior = el_estoque")
-rdoCNLoja.Execute sql, rdExecDirect
+Sql = ("update estoqueloja set el_estoqueanterior = el_estoque")
+rdoCNLoja.Execute Sql, rdExecDirect
   
 End Sub
    
@@ -1201,10 +1201,10 @@ Private Sub grdMovimentoCaixa_DblClick()
     
         Dim rdoProtocolos As New ADODB.Recordset
     
-        sql = "select top 1 usu_nome as operador,  CTR_Supervisor as supervisor, CTR_DataInicial as datainicial, CTR_DataFinal as dataFinal, CTR_NumeroCaixa as numeroCaixa from ControleCaixa, Usuariocaixa  where USU_Codigo = CTR_Operador and ctr_protocolo in (" & wProtocolos & ") order by CTR_DataInicial "
+        Sql = "select top 1 usu_nome as operador,  CTR_Supervisor as supervisor, CTR_DataInicial as datainicial, CTR_DataFinal as dataFinal, CTR_NumeroCaixa as numeroCaixa from ControleCaixa, Usuariocaixa  where USU_Codigo = CTR_Operador and ctr_protocolo in (" & wProtocolos & ") order by CTR_DataInicial "
     
         rdoProtocolos.CursorLocation = adUseClient
-        rdoProtocolos.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        rdoProtocolos.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
         
         If rdoProtocolos.EOF Then
             MsgBox "Erro! Não foi possivel listar os protocolos dessa data", vbCritical, "Erro interno"
@@ -1298,10 +1298,10 @@ Private Sub picAvancar_Click()
     mskDataFec.text = Format(CDate(mskDataFec.text) + 1, "DD/MM/YYYY")
     
     
-    sql = "select ctr_protocolo as protocolo from controlecaixa " & vbNewLine & _
+    Sql = "select ctr_protocolo as protocolo from controlecaixa " & vbNewLine & _
           "where CTR_Supervisor <> 99 and convert(char(10),CTR_DataInicial,111) = '" & Format(mskDataFec.text, "yyyy/mm/dd") & "'"
     rdoProtocolos.CursorLocation = adUseClient
-    rdoProtocolos.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rdoProtocolos.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
         
     wProtocolos = ""
     Do While Not rdoProtocolos.EOF
@@ -1347,10 +1347,10 @@ Private Sub picVoltar_Click()
     lblCabec.Caption = Mid(Trim(lblCabec), 1, Len(Trim(lblCabec)) - 11) & " " _
                      & Format(Trim(mskDataFec.text), "dd/mm/yyyy")
                     
-    sql = "select ctr_protocolo as protocolo from controlecaixa " & vbNewLine & _
+    Sql = "select ctr_protocolo as protocolo from controlecaixa " & vbNewLine & _
           "where CTR_Supervisor <> 99 and convert(char(10),CTR_DataInicial,111) = '" & Format(mskDataFec.text, "yyyy/mm/dd") & "'"
     rdoProtocolos.CursorLocation = adUseClient
-    rdoProtocolos.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rdoProtocolos.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
         
     wProtocolos = ""
     Do While Not rdoProtocolos.EOF
@@ -1400,9 +1400,9 @@ If KeyAscii = 27 Then
 End If
 If KeyAscii = 13 Then
  
-         sql = ("Select * from UsuarioCaixa where USU_Nome ='" & txtSupervisor.text & "' and USU_TipoUsuario='S'")
+         Sql = ("Select * from UsuarioCaixa where USU_Nome ='" & txtSupervisor.text & "' and USU_TipoUsuario='S'")
          RsDados.CursorLocation = adUseClient
-         RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+         RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
          If RsDados.EOF Then
             MsgBox "Supervisor não Cadastrado", vbCritical, "Aviso"
             RsDados.Close
