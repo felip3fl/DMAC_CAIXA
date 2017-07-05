@@ -773,7 +773,7 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Dim vetCampos() As String
-Dim Sql As String
+Dim sql As String
 Dim tiponota As String
 Private whereNotaFiscal As String
 Const insertTabelaNFLojas = "insert into NFE_NFLojas " & vbNewLine & _
@@ -851,7 +851,7 @@ Private Sub cmdEmail_Click()
     Dim rsNFE As New ADODB.Recordset
     Dim Arquivo As String
     
-    Sql = "select top 1 nf as nf, " & vbNewLine _
+    sql = "select top 1 nf as nf, " & vbNewLine _
         & "ChaveNFe as chave," & vbNewLine _
         & "ce_email as email," & vbNewLine _
         & "ce_razao as nome" & vbNewLine _
@@ -863,7 +863,7 @@ Private Sub cmdEmail_Click()
         & "and numeroped = " & Nf.pedido
     
     rsNFE.CursorLocation = adUseClient
-    rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
         If Not rsNFE.EOF Then
             If rsNFE("chave") = Empty Then
@@ -891,8 +891,8 @@ End Sub
 
 Private Sub cmdLiberar_Click()
     Screen.MousePointer = 11
-    Sql = "update nfcapa set tm = 100"
-    rdoCNLoja.Execute Sql
+    sql = "update nfcapa set tm = 100"
+    rdoCNLoja.Execute sql
     Screen.MousePointer = 0
     MsgBox "Atualização do TM realizada com sucesso", vbInformation, "DMAC Caixa"
 End Sub
@@ -927,8 +927,8 @@ Public Sub cmdTransmitir_Click()
         
         criaDuplicataBanco
     
-        Sql = "exec sp_vda_cria_nfe '" & Nf.loja & "', '" & Nf.numero & "', 'NE', ''"
-        rdoCNLoja.Execute Sql
+        sql = "exec sp_vda_cria_nfe '" & Nf.loja & "', '" & Nf.numero & "', 'NE', ''"
+        rdoCNLoja.Execute sql
     
         Dim I As Byte
     
@@ -991,7 +991,7 @@ Private Sub notaPedentes()
     
     'dataPesquisa = Format(DateAdd("m", -1, Date), "YYYY/MM/DD")
 
-    Sql = "select HORA, DATAEMI, lojaorigem, NUMEROPED, nf, tm, serie, tiponota " & vbNewLine & _
+    sql = "select HORA, DATAEMI, lojaorigem, NUMEROPED, nf, tm, serie, tiponota " & vbNewLine & _
           "from nfcapa " & vbNewLine & _
           "where tm not in (4012,4016,9016,100,101,9005,4005,9012,204,124,4014)   " & vbNewLine & _
           "and tiponota in ('V','T','E','S','R') " & vbNewLine & _
@@ -999,7 +999,7 @@ Private Sub notaPedentes()
           "and dataemi = '" & GLB_DataInicial & "'"
 
     ado_estrutura.CursorLocation = adUseClient
-    ado_estrutura.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    ado_estrutura.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
         Do While Not ado_estrutura.EOF
             
@@ -1160,12 +1160,12 @@ End Sub
 
 Private Sub carregaInfoLoja()
 
-    Dim Sql As String
+    Dim sql As String
     Dim rsNotaFiscal As New ADODB.Recordset
     
-    Sql = "select lo_cgc from loja where lo_loja = '" & GLB_Loja & "'"
+    sql = "select lo_cgc from loja where lo_loja = '" & GLB_Loja & "'"
     rsNotaFiscal.CursorLocation = adUseClient
-    rsNotaFiscal.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsNotaFiscal.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
         Nf.cnpj = rsNotaFiscal("lo_cgc")
         Nf.loja = wLoja
@@ -1190,7 +1190,7 @@ Private Function obterNumeroNota(pedido As String, numeroNFE As String) As Strin
         Exit Function
     End If
 
-    Sql = "select nf " & vbNewLine & _
+    sql = "select nf " & vbNewLine & _
           "from nfcapa " & vbNewLine & _
           "where " & campo & " = '" & valor & " and serie = 'NE' and lojaorigem = " & wLoja
 
@@ -1468,22 +1468,23 @@ Public Sub txtNFe_KeyPress(KeyAscii As Integer)
         
         txtNFe.text = Val(txtNFe.text)
         
-        If optPesquisaPedido.Value Then Sql = " and numeroped = "
-        If optPesquisaNumero.Value Then Sql = " and nf = "
-        Sql = "select top 1 nf as nf, " & vbNewLine _
+        If optPesquisaPedido.Value Then sql = " and numeroped = "
+        If optPesquisaNumero.Value Then sql = " and nf = "
+        sql = "select top 1 nf as nf, " & vbNewLine _
               & "ChaveNFe as chave, " & vbNewLine _
               & "serie as serie, " & vbNewLine _
               & "lo_cgc as cgc, " & vbNewLine _
               & "numeroped as pedido, " & vbNewLine _
+              & "codoper as cfop, " & vbNewLine _
               & "dataemi as data " & vbNewLine _
               & "from nfcapa, loja " & vbNewLine _
               & "where tiponota in ('V','T','E','S','R') " & vbNewLine _
               & "and lo_loja = lojaorigem " & vbNewLine _
-              & "and lojaorigem = '" & wLoja & "' " & Sql & txtNFe.text & vbNewLine _
+              & "and lojaorigem = '" & wLoja & "' " & sql & txtNFe.text & vbNewLine _
               & "order by dataemi desc"
         
         rsNFE.CursorLocation = adUseClient
-        rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
             
         If rsNFE.EOF Then
             cmdImprimir.Enabled = False
@@ -1500,6 +1501,7 @@ Public Sub txtNFe_KeyPress(KeyAscii As Integer)
             Nf.eSerie = RTrim(rsNFE("serie"))
             Nf.cnpj = RTrim(rsNFE("cgc"))
             Nf.pedido = RTrim(rsNFE("pedido"))
+            Nf.cfop = RTrim(rsNFE("cfop"))
             wPedido = RTrim(rsNFE("pedido"))
             pedido = RTrim(rsNFE("pedido"))
             If Format(rsNFE("data"), "YYYY/MM/DD") <> GLB_DataInicial And GLB_Administrador = False Then
@@ -1531,10 +1533,10 @@ End Sub
 
 Private Sub limpaTabelaArquivos()
 
-    Dim Sql As String
+    Dim sql As String
     
-    Sql = "delete NFE_NFLojas where NFL_DataEmissao < dateadd(d,-6,GETDATE())"
-    rdoCNLoja.Execute Sql
+    sql = "delete NFE_NFLojas where NFL_DataEmissao < dateadd(d,-6,GETDATE())"
+    rdoCNLoja.Execute sql
     
 End Sub
 
@@ -1544,45 +1546,45 @@ Public Sub leituraEstrutura(campo As String)
     
     Call montaWhereFiscal
 
-    Sql = "select etr_sequencia, etr_campo, etr_tabela_de, " & vbNewLine & _
+    sql = "select etr_sequencia, etr_campo, etr_tabela_de, " & vbNewLine & _
           "etr_campo_de, ETR_ROTULO " & vbNewLine & _
           "from NFE_Estrutura " & vbNewLine & _
           "where etr_rotulo = '" & campo & "' and etr_tabela_de <> '' AND etr_campo_de <> ''"
 
     ado_estrutura.CursorLocation = adUseClient
-    ado_estrutura.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    ado_estrutura.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
     If campo = "PROD" Or campo = "DET" Or campo = "PISALIQ" Or campo = "COFINSALIQ" Or campo = "IPI" Or campo = "IPITRIB" Or campo = "ICMSUFDEST" Or campo = "ICMSSN102" Then
         
         Dim ado_campo As New ADODB.Recordset
             
-            Sql = "select h_nItem item " & _
+            sql = "select h_nItem item " & _
                   "from " & ado_estrutura("etr_tabela_de") & _
                   " where " & whereNotaFiscal & " order by h_nItem"
     
             ado_campo.CursorLocation = adUseClient
-            ado_campo.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+            ado_campo.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
 
         If campo = "PROD" Then
-            Sql = insertTabelaNFLojas & Trim(ado_estrutura("etr_sequencia")) - 2 & "','--','','" & _
+            sql = insertTabelaNFLojas & Trim(ado_estrutura("etr_sequencia")) - 2 & "','--','','" & _
                       Nf.loja & "','" & Nf.numero & "','" & Format(Date, "YYYY/MM/DD") & "')"
-            rdoCNLoja.Execute Sql
+            rdoCNLoja.Execute sql
         End If
 
 
         Do While Not ado_campo.EOF
         
             If campo = "PROD" Then
-                Sql = insertTabelaNFLojas & Trim(ado_estrutura("etr_sequencia")) + (500 * (Trim(ado_campo("item")) - 1)) - 2 & "','[DET]','','" & _
+                sql = insertTabelaNFLojas & Trim(ado_estrutura("etr_sequencia")) + (500 * (Trim(ado_campo("item")) - 1)) - 2 & "','[DET]','','" & _
                 Nf.loja & "','" & Nf.numero & "','" & Format(Date, "YYYY/MM/DD") & "')"
-                rdoCNLoja.Execute Sql
+                rdoCNLoja.Execute sql
             End If
             
-            Sql = insertTabelaNFLojas & Trim(ado_estrutura("etr_sequencia")) + (500 * (Trim(ado_campo("item")) - 1)) - 1 & "','[" & campo & "]','','" & _
+            sql = insertTabelaNFLojas & Trim(ado_estrutura("etr_sequencia")) + (500 * (Trim(ado_campo("item")) - 1)) - 1 & "','[" & campo & "]','','" & _
                   Nf.loja & "','" & Nf.numero & "','" & Format(Date, "YYYY/MM/DD") & "')"
             
-            rdoCNLoja.Execute Sql
+            rdoCNLoja.Execute sql
             ado_campo.MoveNext
         Loop
 
@@ -1590,9 +1592,9 @@ Public Sub leituraEstrutura(campo As String)
     ElseIf campo = "ICMS00" Or campo = "ICMS10" Or campo = "ICMS20" Or campo = "ICMS30" Or campo = "ICMS40" Or campo = "ICMS50" Or campo = "ICMS60" Or campo = "ICMS70" Or campo = "ICMS90" Or campo = "DUP" Or campo = "ICMSSN102" Then
     
     Else
-        Sql = insertTabelaNFLojas & Trim(ado_estrutura("etr_sequencia")) - 1 & "','[" & campo & "]','','" & _
+        sql = insertTabelaNFLojas & Trim(ado_estrutura("etr_sequencia")) - 1 & "','[" & campo & "]','','" & _
               Nf.loja & "','" & Nf.numero & "','" & Format(Date, "YYYY/MM/DD") & "')"
-        rdoCNLoja.Execute Sql
+        rdoCNLoja.Execute sql
     End If
 
     
@@ -1606,12 +1608,31 @@ Public Sub leituraEstrutura(campo As String)
         End If
     Loop
     
-    Sql = "delete NFE_NFLojas where NFL_Descricao = '    voutro' and NFL_Dados = '0.00' AND NFL_Sequencia > 200"
-    rdoCNLoja.Execute (Sql)
+    sql = "delete NFE_NFLojas where NFL_Descricao = '    voutro' and NFL_Dados = '0.00' AND NFL_Sequencia > 200"
+    rdoCNLoja.Execute (sql)
+    
+    If Nf.cfop = "5602" Or Nf.cfop = "5605" Then
+        zerarValoresNota (Nf.numero)
+    End If
     
     ado_estrutura.Close
     
 'frmLogNotaFiscal.mensagemLOG2 frmLogNotaFiscal.grdLog, Now, 100, "181", nf.numero, "Rotulo '" & campo & "' inserido com sucesso"
+
+End Sub
+
+Private Sub zerarValoresNota(numeroNF As String)
+    Dim sql As String
+    
+    sql = "update nfe_nflojas " & vbNewLine & _
+          "set nfl_dados = '0.00'" & vbNewLine & _
+          "where nfl_nroNFE = '" & numeroNF & "'" & vbNewLine & _
+          "and NFL_Descricao like '%VPROD%'" & vbNewLine & _
+          "or NFL_Descricao like '%VUNCOM%'" & vbNewLine & _
+          "or NFL_Descricao like '%VUNTRIB%'" & vbNewLine & _
+          "or NFL_Descricao like '%VNF%'"
+    
+    rdoCNLoja.Execute (sql)
 
 End Sub
 
@@ -1623,17 +1644,17 @@ End Function
 Public Sub atualizaNota(campo As String)
     Dim ado_estrutura As New ADODB.Recordset
 
-    Sql = "select top 1 etr_rotulo, etr_tabela_de " & _
+    sql = "select top 1 etr_rotulo, etr_tabela_de " & _
           "from NFE_Estrutura " & _
           "where etr_rotulo = '" & campo & "' and etr_tabela_de <> '' and etr_campo_de <> ''"
     ado_estrutura.CursorLocation = adUseClient
-    ado_estrutura.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    ado_estrutura.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
-        Sql = "update nfe_ide " & _
+        sql = "update nfe_ide " & _
               " set situacao = 'P' " & _
               "where " & whereNotaFiscal
 
-        rdoCNLoja.Execute Sql
+        rdoCNLoja.Execute sql
 
     ado_estrutura.Close
 End Sub
@@ -1664,7 +1685,7 @@ Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
     Dim ado_campo As New ADODB.Recordset
     Dim informacao As String
   
-    Sql = "select " & Trim(ado_estrutura("etr_campo_de")) & " informacao, h_nItem item, N_cstICMS CST " & _
+    sql = "select " & Trim(ado_estrutura("etr_campo_de")) & " informacao, h_nItem item, N_cstICMS CST " & _
           "from " & ado_estrutura("etr_tabela_de") & " " & _
           "where " & whereNotaFiscal & " and " & Trim(ado_estrutura("etr_campo_de")) & " is not null " & _
           "order by h_nItem"
@@ -1672,7 +1693,7 @@ Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
     Debug.Print ado_estrutura("etr_campo_de")
     
     ado_campo.CursorLocation = adUseClient
-    ado_campo.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    ado_campo.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     Do While Not ado_campo.EOF
     
@@ -1686,7 +1707,7 @@ Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
             Else
                 informacao = Replace(Format(Trim(ado_campo("informacao")), "0.00"), ",", ".")
             End If
-            Sql = insertTabelaNFLojas & _
+            sql = insertTabelaNFLojas & _
                   (Trim(ado_estrutura("etr_sequencia")) + (500 * (Trim(ado_campo("item")) - 1))) & "', '" & _
                   ado_estrutura("etr_campo") & "', " & informacao & ", '" & _
                   Nf.loja & "', '" & Nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
@@ -1699,7 +1720,7 @@ Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
                         
                       End If
                       
-                Sql = insertTabelaNFLojas & _
+                sql = insertTabelaNFLojas & _
                       (Trim(ado_estrutura("etr_sequencia")) + (500 * (Trim(ado_campo("item")) - 1))) - 2 & "', '" & _
                       "[IMPOSTO]', '" & " " & "', '" & _
                       Nf.loja & "', '" & Nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
@@ -1709,20 +1730,20 @@ Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
                     If cst = "41" Then cst = "40"
                     
                     
-                      Sql = Sql & vbNewLine & insertTabelaNFLojas & _
+                      sql = sql & vbNewLine & insertTabelaNFLojas & _
                             (Trim(ado_estrutura("etr_sequencia")) + (500 * (Trim(ado_campo("item")) - 1))) - 1 & "', '" & _
                             "[ICMS" & cst & "]', '" & " " & "', '" & _
                             Nf.loja & "', '" & Nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
                             
                 End If
                 'FELIPE AQUI 2017
-                Sql = Sql & vbNewLine & insertTabelaNFLojas & _
+                sql = sql & vbNewLine & insertTabelaNFLojas & _
                       (Trim(ado_estrutura("etr_sequencia")) + (500 * (Trim(ado_campo("item")) - 1))) - 0 & "', '" & _
                       ado_estrutura("etr_campo") & "', '" & Trim(ado_campo("informacao")) & "', '" & _
                       Nf.loja & "', '" & Nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
                 
             Else
-                Sql = insertTabelaNFLojas & _
+                sql = insertTabelaNFLojas & _
                       (Trim(ado_estrutura("etr_sequencia")) + (500 * (Trim(ado_campo("item")) - 1))) + 1 & "', '" & _
                       ado_estrutura("etr_campo") & "', '" & Replace(Trim(ado_campo("informacao")), ",", ".") & "', '" & _
                       Nf.loja & "', '" & Nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
@@ -1736,26 +1757,26 @@ Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
         If Mid(campo, 1, 4) = "ICMS" And Format(ado_campo("CST"), "00") = "41" And icms41 = False Then
             If LTrim(ado_estrutura("etr_campo")) = "ORIG" Then
                 icms41 = True
-                rdoCNLoja.Execute Sql
+                rdoCNLoja.Execute sql
                 Exit Sub
             End If
-            rdoCNLoja.Execute Sql
+            rdoCNLoja.Execute sql
         ElseIf Mid(campo, 1, 4) = "ICMS" And Mid(ado_estrutura("ETR_ROTULO"), 5, 2) = "SN" And Trim(ado_campo("CST")) = "2" Then
         'If Mid(campo, 1, 4) = "ICMS" And Mid(ado_estrutura("ETR_ROTULO"), 5, 2) = Format(Trim(ado_campo("CST")), "00") Then
            ' MsgBox "campo 1"
-            rdoCNLoja.Execute Sql
+            rdoCNLoja.Execute sql
         ElseIf Mid(campo, 1, 4) = "ICMS" And Mid(ado_estrutura("ETR_ROTULO"), 5, 2) = Format(Trim(ado_campo("CST")), "00") Then
             'MsgBox "campo 2"
-            rdoCNLoja.Execute Sql
+            rdoCNLoja.Execute sql
         ElseIf campo = "ICMSUFDEST" And informacao <> "0.00" Then
 '            MsgBox "campo 3"
-            rdoCNLoja.Execute Sql
+            rdoCNLoja.Execute sql
         ElseIf Mid(campo, 1, 4) = "ICMS" And Mid(ado_estrutura("ETR_ROTULO"), 5, 2) <> Format(Trim(ado_campo("CST")), "00") Then
             Debug.Print "ICMS SN"
 
         Else
  '           MsgBox "campo OUTROS"
-            rdoCNLoja.Execute Sql
+            rdoCNLoja.Execute sql
         End If
         
         ado_campo.MoveNext
@@ -1772,12 +1793,12 @@ Private Sub gravaDados(campo As String, ado_estrutura As ADODB.Recordset)
     Dim ado_campo As New ADODB.Recordset
     Dim informacao As String
     
-    Sql = "select top 1 " & RTrim(ado_estrutura("etr_campo_de")) & " as Informacao " & vbNewLine & _
+    sql = "select top 1 " & RTrim(ado_estrutura("etr_campo_de")) & " as Informacao " & vbNewLine & _
           "from " & ado_estrutura("etr_tabela_de") & " " & vbNewLine & _
           "where " & whereNotaFiscal & " and " & ado_estrutura("etr_campo_de") & " is not null"
     
     ado_campo.CursorLocation = adUseClient
-    ado_campo.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    ado_campo.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     Do While Not ado_campo.EOF
         If Mid(ado_estrutura("ETR_CAMPO"), 5, 1) = "V" Or Mid(ado_estrutura("ETR_CAMPO"), 5, 1) = "Q" Then
@@ -1815,12 +1836,12 @@ Private Sub gravaDados(campo As String, ado_estrutura As ADODB.Recordset)
             End If
         End If
         
-        Sql = insertTabelaNFLojas & _
+        sql = insertTabelaNFLojas & _
               Trim(ado_estrutura("etr_sequencia")) & "', '" & ado_estrutura("etr_campo") & _
               "', '" & RTrim(informacao) & "', '" & _
               Nf.loja & "', '" & Nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
               
-        rdoCNLoja.Execute Sql
+        rdoCNLoja.Execute sql
               
         ado_campo.MoveNext
     Loop
@@ -1852,12 +1873,12 @@ Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
     
     I = 0
     
-    Sql = "select " & RTrim(ado_estrutura("etr_campo_de")) & " as Informacao " & vbNewLine & _
+    sql = "select " & RTrim(ado_estrutura("etr_campo_de")) & " as Informacao " & vbNewLine & _
           "from " & ado_estrutura("etr_tabela_de") & " " & vbNewLine & _
           "where " & whereNotaFiscal & " and " & ado_estrutura("etr_campo_de") & " is not null"
     
     ado_campo.CursorLocation = adUseClient
-    ado_campo.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    ado_campo.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     Do While Not ado_campo.EOF
         If Mid(ado_estrutura("ETR_CAMPO"), 5, 1) = "V" Or Mid(ado_estrutura("ETR_CAMPO"), 5, 1) = "Q" Then
@@ -1878,20 +1899,20 @@ Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
         End If
         
         
-        Sql = insertTabelaNFLojas & _
+        sql = insertTabelaNFLojas & _
               Trim(ado_estrutura("etr_sequencia") + (I)) & "', '" & ado_estrutura("etr_campo") & _
               "', '" & RTrim(informacao) & "', '" & _
               Nf.loja & "', '" & Nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
               
-        rdoCNLoja.Execute Sql
+        rdoCNLoja.Execute sql
         
         If ado_estrutura("etr_campo") = "    NDUP" Then
-            Sql = insertTabelaNFLojas & _
+            sql = insertTabelaNFLojas & _
             Trim(ado_estrutura("etr_sequencia") + (I) - 1) & "', '[" & RTrim(ado_estrutura("etr_ROTULO")) & _
             "]', '" & "" & "', '" & _
             Nf.loja & "', '" & Nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
               
-            rdoCNLoja.Execute Sql
+            rdoCNLoja.Execute sql
             'i = i + 1
         End If
               
@@ -1938,13 +1959,13 @@ End Sub
 Private Sub cancelaNE(Nf As notaFiscal)
 
     Dim ado_NFe As New ADODB.Recordset
-    Dim Sql As String
+    Dim sql As String
     Dim xJust As String
       
     If Nf.chave <> "" Then
-        Sql = "select xJust from nfe_ide " & vbNewLine & "where enf = '" & Nf.numero & "' and eloja = '" & Nf.loja & "'"
+        sql = "select xJust from nfe_ide " & vbNewLine & "where enf = '" & Nf.numero & "' and eloja = '" & Nf.loja & "'"
         ado_NFe.CursorLocation = adUseClient
-        ado_NFe.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        ado_NFe.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
         xJust = RTrim(ado_NFe("xJust"))
         ado_NFe.Close
           
@@ -1964,14 +1985,14 @@ Private Sub cancelaSAT(Nf As notaFiscal)
     
     Dim rsNFE As New ADODB.Recordset
     
-    Sql = "select top 1 nf as nf, " & vbNewLine _
+    sql = "select top 1 nf as nf, " & vbNewLine _
         & "ChaveNFe as chave" & vbNewLine _
         & "from nfcapa" & vbNewLine _
         & "where lojaorigem in " & lojasWhere & " " & "" & vbNewLine _
         & "and numeroped = " & Nf.pedido
     
     rsNFE.CursorLocation = adUseClient
-    rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
         If Not rsNFE.EOF Then
             If rsNFE("chave") = Empty Then
@@ -2004,7 +2025,7 @@ Private Sub ImprimirNota(Nf As notaFiscal, tiponota As String)
     
     Dim rsNFE As New ADODB.Recordset
     
-    Sql = "select top 1 nf as nf, " & vbNewLine _
+    sql = "select top 1 nf as nf, " & vbNewLine _
         & "ChaveNFe as chave" & vbNewLine _
         & "from nfcapa" & vbNewLine _
         & "where " & vbNewLine _
@@ -2012,7 +2033,7 @@ Private Sub ImprimirNota(Nf As notaFiscal, tiponota As String)
         & "and numeroped = " & Nf.pedido
     
     rsNFE.CursorLocation = adUseClient
-    rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
         If Not rsNFE.EOF Then
             If rsNFE("chave") = Empty Then
@@ -2131,12 +2152,12 @@ Private Function obterNumNFArquivo(Arquivo, Nf As notaFiscal) As String
         
         If numNF = "" Or numNF = "0" Then
             
-            Sql = "select top 1 nf as nf " & vbNewLine & _
+            sql = "select top 1 nf as nf " & vbNewLine & _
             "from nfcapa " & vbNewLine & _
             "where numeroped = '" & Nf.pedido & "'"
             
             ado_loja.CursorLocation = adUseClient
-            ado_loja.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+            ado_loja.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                 
             If Not ado_loja.EOF Then
                 obterNumNFArquivo = ado_loja("nf")
@@ -2162,13 +2183,13 @@ Private Function obterNumPedidoArquivo(Arquivo As String, Nf As notaFiscal) As S
     
         Dim ado_loja As New ADODB.Recordset
         
-        Sql = "select numeroped " & vbNewLine & _
+        sql = "select numeroped " & vbNewLine & _
         "from nfcapa " & vbNewLine & _
         "where nf = '" & Val(Mid(Arquivo, InStr(Arquivo, "#") - 6, 6)) & "'" & vbNewLine & _
         "and serie = 'NE'"
 
         ado_loja.CursorLocation = adUseClient
-        ado_loja.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        ado_loja.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
         
         If Not ado_loja.EOF Then
             obterNumPedidoArquivo = RTrim(ado_loja("numeroped"))
@@ -2186,12 +2207,12 @@ On Error GoTo TrataErro
     Dim ado_loja As New ADODB.Recordset
     
     With ado_loja
-        Sql = "select lo_loja as loja " & vbNewLine & _
+        sql = "select lo_loja as loja " & vbNewLine & _
         "from loja " & vbNewLine & _
         "where lo_cgc like '%" & cnpj & "%'"
         
         .CursorLocation = adUseClient
-        .Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        .Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
         If Not ado_loja.EOF Then
             obterLoja = RTrim(ado_loja("loja"))
@@ -2208,77 +2229,77 @@ TrataErro:
 End Function
 
 Private Sub atualizaNumeroNF(NumeroPedido, numeroNF)
-    Dim Sql As String
+    Dim sql As String
     
     If numeroNF <> "" Then
     
-        Sql = "update nfCapa" & vbNewLine & _
+        sql = "update nfCapa" & vbNewLine & _
               "set nf = '" & numeroNF & "'" & vbNewLine & _
               "where numeroped = '" & NumeroPedido & "'" & vbNewLine & _
               "and serie like 'CE%'" & vbNewLine & _
               "and NF = '0' " & vbNewLine & _
               "and lojaOrigem in " & lojasWhere & "" & vbNewLine & vbNewLine
     
-        rdoCNLoja.Execute Sql
+        rdoCNLoja.Execute sql
         
-        Sql = "update nfitens" & vbNewLine & _
+        sql = "update nfitens" & vbNewLine & _
               "set nf = '" & numeroNF & "'" & vbNewLine & _
               "where numeroped = '" & NumeroPedido & "'" & vbNewLine & _
               "and serie like 'CE%'" & vbNewLine & _
               "and NF = '0' " & vbNewLine & _
               "and lojaOrigem in " & lojasWhere & "" & vbNewLine & vbNewLine
     
-        rdoCNLoja.Execute Sql
+        rdoCNLoja.Execute sql
         
-        Sql = "update movimentocaixa" & vbNewLine & _
+        sql = "update movimentocaixa" & vbNewLine & _
               "set mc_documento = '" & numeroNF & "'" & vbNewLine & _
               "where mc_pedido = '" & NumeroPedido & "'" & vbNewLine & _
               "and MC_serie like 'CE%'" & vbNewLine & _
               "and MC_documento = '0' " & vbNewLine & _
               "and mc_loja in " & lojasWhere & "" & vbNewLine & vbNewLine
     
-        rdoCNLoja.Execute Sql
+        rdoCNLoja.Execute sql
         
-        Sql = "update CarimboNotaFiscal" & vbNewLine & _
+        sql = "update CarimboNotaFiscal" & vbNewLine & _
               "set CNF_nf = '" & numeroNF & "'" & vbNewLine & _
               "where CNF_NumeroPed = '" & NumeroPedido & "'" & vbNewLine & _
               "and cnf_serie like 'CE%'" & vbNewLine & _
               "and CNF_nf = '0' " & vbNewLine & _
               "and CNF_loja in " & lojasWhere & "" & vbNewLine & vbNewLine
     
-        rdoCNLoja.Execute Sql
+        rdoCNLoja.Execute sql
         
     End If
     
 End Sub
 
 Private Sub atualizaCodigoNF(NumeroPedido, Codigo, lojaNF)
-    Dim Sql As String
+    Dim sql As String
     
-    Sql = "update nfCapa" & vbNewLine & _
+    sql = "update nfCapa" & vbNewLine & _
           "set tm = '" & Codigo & "'" & vbNewLine & _
           "where numeroped = '" & NumeroPedido & "'" & vbNewLine & _
           "and lojaOrigem in " & lojasWhere & "" & vbNewLine & vbNewLine
 
     'Debug.Print sql
-    rdoCNLoja.Execute Sql
+    rdoCNLoja.Execute sql
     
     'atualizaArquivo GLB_EnderecoPastaRESP, arquivo, informacaoArquivo, "DMAC=atualizaCodigoNF"
     
 End Sub
 
 Private Sub atualizaChaveNF(NumeroPedido, chaveNF, lojaNF)
-    Dim Sql As String
+    Dim sql As String
     
     If chaveNF <> "" Then
     
-        Sql = "update nfCapa" & vbNewLine & _
+        sql = "update nfCapa" & vbNewLine & _
               "set ChaveNFe = '" & chaveNF & "'" & vbNewLine & _
               "where numeroped = '" & NumeroPedido & "'" & vbNewLine & _
               "and ChaveNFe = ''" & vbNewLine & _
               "and lojaOrigem in " & lojasWhere & "" & vbNewLine & vbNewLine
     
-        rdoCNLoja.Execute Sql
+        rdoCNLoja.Execute sql
         
     End If
     
@@ -2420,7 +2441,7 @@ Private Sub atualizaArquivoDestalhesNF(Nf As notaFiscal, Arquivo As String, info
     Dim ado_loja As New ADODB.Recordset
     Dim informacaoSistema As String
       
-    Sql = "select top 1 " & vbNewLine & _
+    sql = "select top 1 " & vbNewLine & _
     "totalnota as totalnota," & vbNewLine & _
     "numeroped as pedido," & vbNewLine & _
     "tiponota as tipo,  " & vbNewLine & _
@@ -2429,7 +2450,7 @@ Private Sub atualizaArquivoDestalhesNF(Nf As notaFiscal, Arquivo As String, info
     "where numeroped = '" & Nf.pedido & "'"
     
     ado_loja.CursorLocation = adUseClient
-    ado_loja.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    ado_loja.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     If Not ado_loja.EOF Then
         informacaoSistema = vbNewLine & "Pedido=" & ado_loja("pedido") & vbNewLine & _
@@ -2446,14 +2467,14 @@ Private Sub atualizaArquivoDestalhesNF(Nf As notaFiscal, Arquivo As String, info
     
     '''''''''''''''''''''''''''''''''''''''''''''''
     
-    Sql = "select top 1 vendedor as vendedor," & vbNewLine & _
+    sql = "select top 1 vendedor as vendedor," & vbNewLine & _
     "ve_nome as nomeVendedor  " & vbNewLine & _
     "from nfcapa, vende " & vbNewLine & _
     "where numeroped = '" & Nf.pedido & "'" & vbNewLine & _
     "and ve_codigo = vendedor"
     
     ado_loja.CursorLocation = adUseClient
-    ado_loja.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    ado_loja.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     If Not ado_loja.EOF Then
         informacaoSistema = vbNewLine & "Vendedor=" & ado_loja("vendedor") & " - " & ado_loja("nomeVendedor") & vbNewLine
@@ -2466,7 +2487,7 @@ Private Sub atualizaArquivoDestalhesNF(Nf As notaFiscal, Arquivo As String, info
     
     '''''''''''''''''''''''''''''''''''''''''''''''
     
-    Sql = "select top 1 " & vbNewLine & _
+    sql = "select top 1 " & vbNewLine & _
     "cliente as codigoCliente,  " & vbNewLine & _
     "ce_razao as nomeCliente, " & vbNewLine & _
     "ce_cgc as cgcCliente " & vbNewLine & _
@@ -2475,7 +2496,7 @@ Private Sub atualizaArquivoDestalhesNF(Nf As notaFiscal, Arquivo As String, info
     "and numeroped = '" & Nf.pedido & "'"
     
     ado_loja.CursorLocation = adUseClient
-    ado_loja.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    ado_loja.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
         
     If Not ado_loja.EOF Then
         informacaoSistema = vbNewLine & "Código Cliente=" & ado_loja("codigoCliente") & vbNewLine & _
@@ -2699,13 +2720,13 @@ On Error GoTo TrataErro
     Dim ado_loja2 As New ADODB.Recordset
 
     With ado_loja
-        Sql = "select cts_loja as lojas From ControleSistema"
+        sql = "select cts_loja as lojas From ControleSistema"
         .CursorLocation = adUseClient
-        .Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        .Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
         
-            Sql = "select LO_Loja AS LOJAS from loja where LO_CGC IN (select LO_CGC from loja where LO_Loja = '" & Trim(ado_loja("lojas")) & "') AND LO_Situacao = 'A' ORDER BY LO_Regiao"
+            sql = "select LO_Loja AS LOJAS from loja where LO_CGC IN (select LO_CGC from loja where LO_Loja = '" & Trim(ado_loja("lojas")) & "') AND LO_Situacao = 'A' ORDER BY LO_Regiao"
             ado_loja2.CursorLocation = adUseClient
-            ado_loja2.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+            ado_loja2.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
             
             lojasWhere = "("
             
@@ -2759,14 +2780,14 @@ End Sub
 Public Function montaTXT(pedido As String, loja As String) As String
     Dim ado_estrutura As New ADODB.Recordset
 
-    Sql = "select nfl_descricao, nfl_dados " & _
+    sql = "select nfl_descricao, nfl_dados " & _
           "from NFE_NFLojas, nfcapa " & _
           "where nfl_nroNFE = nf " & _
           "and numeroped = '" & pedido & "' " & _
           "order by NFL_sequencia, nfl_NROnfe, nfl_dados desc"
     
     ado_estrutura.CursorLocation = adUseClient
-    ado_estrutura.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    ado_estrutura.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
         
     Do While Not ado_estrutura.EOF
         If left(ado_estrutura("nfl_descricao"), 1) = "[" Or left(ado_estrutura("nfl_descricao"), 2) = "--" Then
@@ -2822,9 +2843,9 @@ Public Function obterCNPJloja() As String
 On Error GoTo TrataErro
     Dim ado_loja As New ADODB.Recordset
     With ado_loja
-        Sql = "select top 1 lo_cgc as cnpj from loja where lo_loja in " & lojasWhere & " group by lo_cgc"
+        sql = "select top 1 lo_cgc as cnpj from loja where lo_loja in " & lojasWhere & " group by lo_cgc"
         .CursorLocation = adUseClient
-        .Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        .Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
         
         If Not ado_loja.EOF Then obterCNPJloja = ado_loja("cnpj")
         
@@ -2880,14 +2901,14 @@ Private Sub numeroCopiaImpressao()
                          "AND NFL_NRONFE = '" & Nf.numero & "'" & vbNewLine & _
                          "AND NFL_Loja = '" & Nf.loja & "'"
 
-    Sql = "Select condpag as condpag " & vbNewLine & _
+    sql = "Select condpag as condpag " & vbNewLine & _
           "from nfcapa" & vbNewLine & _
           "where LojaOrigem = '" & Nf.loja & "'" & vbNewLine & _
           "and nf = '" & Nf.numero & "'" & vbNewLine & _
           "and serie = '" & Nf.eSerie & "'"
     
     ado_rotulo.CursorLocation = adUseClient
-    ado_rotulo.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    ado_rotulo.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
         
         If Val(ado_rotulo("condpag")) > 3 Then
             rdoCNLoja.Execute SQLLinhaImpressora
@@ -2917,3 +2938,4 @@ Private Function obterNumeroItem(informacoes As String) As String
     End If
     
 End Function
+
