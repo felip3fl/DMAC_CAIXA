@@ -924,6 +924,8 @@ Public Sub cmdTransmitir_Click()
     If Nf.eSerie = "NE" Then
     
         finalizaProcesso "Emitindo Nota Fiscal Eletrônica " & Nf.numero, True
+        
+        criaDuplicataBanco
     
         Sql = "exec sp_vda_cria_nfe '" & Nf.loja & "', '" & Nf.numero & "', 'NE', ''"
         rdoCNLoja.Execute Sql
