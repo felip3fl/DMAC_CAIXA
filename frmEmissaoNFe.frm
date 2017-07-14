@@ -4,13 +4,13 @@ Begin VB.Form frmEmissaoNFe
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    Caption         =   "Emissão NFe"
-   ClientHeight    =   9330
-   ClientLeft      =   795
-   ClientTop       =   1740
+   ClientHeight    =   9240
+   ClientLeft      =   780
+   ClientTop       =   930
    ClientWidth     =   19035
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
-   ScaleHeight     =   9330
+   ScaleHeight     =   9240
    ScaleWidth      =   19035
    ShowInTaskbar   =   0   'False
    Visible         =   0   'False
@@ -2367,9 +2367,10 @@ Public Function carregaArquivoUnico()
              
              statusFuncionamento "Impressão concluida com sucesso"
              Esperar 4
-        ElseIf resultado = 695 Then 'Erro de ICMS irregular
+             
+        ElseIf resultado = 695 Or resultado = 521 Then 'Erro de ICMS irregular
              statusFuncionamento "Nota Rejeitada. Tentado transmitir novamente"
-             Esperar 2
+             Esperar 3
              cmdTransmitir_Click
              Tempo = 0
              timerSairSistema.Enabled = True
