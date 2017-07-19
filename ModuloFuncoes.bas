@@ -5125,7 +5125,7 @@ End Function
 Public Sub criaDuplicataBanco()
     On Error GoTo TrataErro
 
-    Sql = "exec Sp_Cria_Duplicatas '" & wLoja & "','" & Format(Date, "YYYY/MM/DD") & "','" & Format(Date, "YYYY/MM/DD") & "'"
+    Sql = "exec Sp_Cria_Duplicatas '" & Format(Date, "YYYY/MM/DD") & "','" & Format(Date, "YYYY/MM/DD") & "'"
     rdoCNLoja.Execute (Sql)
     
 Exit Sub
