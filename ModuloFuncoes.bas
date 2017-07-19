@@ -4903,7 +4903,8 @@ Public Function EnviaEmail(ByVal numped)
     Dim condpag As String
     Dim loja As String
     
-    
+    On Error GoTo TrataErro
+
     
     Sql = "select lojaOrigem, nf, serie, condpag from nfcapa where numeroped = " & numped & " and condpag >= 3"
     
@@ -4917,6 +4918,11 @@ Public Function EnviaEmail(ByVal numped)
         Sql = "Exec SP_ALERTA_FATURADA '" & loja & "', " & Nf & ",'" & Serie & "'"
         rdoCNLoja.Execute (Sql)
     End If
+
+Exit Function
+
+TrataErro:
+    MsgBox "Erro ao criar e-mail do faturado (E-mail Alerta)" & vbNewLine & Err.Number & " - " & Err.Description, vbCritical
 
 End Function
 
@@ -5116,3 +5122,15 @@ Public Function obterReferenciaPorItem(numeroPed As String, Item As String) As S
     
 End Function
 
+Public Sub criaDuplicataBanco()
+    On Error GoTo TrataErro
+
+    Sql = "exec Sp_Cria_Duplicatas '" & wLoja & "','" & Format(Date, "YYYY/MM/DD") & "','" & Format(Date, "YYYY/MM/DD") & "'"
+    rdoCNLoja.Execute (Sql)
+    
+Exit Sub
+
+TrataErro:
+    MsgBox "Erro ao criar as duplicatas no banco de dados" & vbNewLine & Err.Number & " - " & Err.Description, vbCritical
+    
+End Sub

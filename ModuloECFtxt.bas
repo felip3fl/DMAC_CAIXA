@@ -40,6 +40,7 @@ Type notaFiscal
     cnpj As String
     chave As String
     pedido As String
+    cfop As String
 End Type
 
 
@@ -189,12 +190,12 @@ Public Function montaTXTSAT(pedido As String) As String
     
 End Function
 
-Public Function montaTXT(nf As notaFiscal) As String
+Public Function montaTXT(Nf As notaFiscal) As String
     Dim ado_estrutura As New ADODB.Recordset
 
     sql = "select nfl_descricao, nfl_dados " & _
           "from NFE_NFLojas " & _
-          "where nfl_loja = '" & nf.loja & "' and nfl_nroNFE = '" & nf.numero & "'" & _
+          "where nfl_loja = '" & Nf.loja & "' and nfl_nroNFE = '" & Nf.numero & "'" & _
           "order by NFL_sequencia, nfl_NROnfe, nfl_dados desc"
     
     ado_estrutura.CursorLocation = adUseClient
@@ -219,38 +220,38 @@ Public Sub mensagemErroDesconhecido(numeroErro As ErrObject, nomeFormulario As S
     End
 End Sub
 
-Public Function criaTXTSAT(tipoTXT As String, nf As notaFiscal)
+Public Function criaTXTSAT(tipoTXT As String, Nf As notaFiscal)
     Dim corpoMensagem As String
     
-On Error GoTo trataerro
+On Error GoTo TrataErro
     
-    corpoMensagem = montaTXTSAT(nf.pedido)
+    corpoMensagem = montaTXTSAT(Nf.pedido)
     Open GLB_EnderecoPastaFIL & _
-    tipoTXT & (Format(nf.pedido, "000000000")) & "#" & nf.cnpj & ".txt" For Output As #1
+    tipoTXT & (Format(Nf.pedido, "000000000")) & "#" & Nf.cnpj & ".txt" For Output As #1
          Print #1, corpoMensagem
     Close #1
     
     Exit Function
-trataerro:
+TrataErro:
     Select Case Err.Number
     Case Else
         mensagemErroDesconhecido Err, "Criação de arquivo"
     End Select
 End Function
 
-Public Function criaTXT(tipoTXT As String, nf As notaFiscal)
+Public Function criaTXT(tipoTXT As String, Nf As notaFiscal)
     Dim corpoMensagem As String
     
-On Error GoTo trataerro
+On Error GoTo TrataErro
     
-    corpoMensagem = montaTXT(nf)
+    corpoMensagem = montaTXT(Nf)
     Open GLB_EnderecoPastaFIL & _
-    tipoTXT & (Format(nf.numero, "000000000")) & "#" & nf.cnpj & ".txt" For Output As #1
+    tipoTXT & (Format(Nf.numero, "000000000")) & "#" & Nf.cnpj & ".txt" For Output As #1
          Print #1, Mid(corpoMensagem, 4, Len(corpoMensagem))
     Close #1
     
     Exit Function
-trataerro:
+TrataErro:
     Select Case Err.Number
     Case Else
         mensagemErroDesconhecido Err, "Criação de arquivo"

@@ -3,8 +3,8 @@ Object = "{90F3D7B3-92E7-44BA-B444-6A8E2A3BC375}#1.0#0"; "actskin4.ocx"
 Begin VB.Form frmInicio 
    Caption         =   "Conectar"
    ClientHeight    =   1980
-   ClientLeft      =   3645
-   ClientTop       =   3630
+   ClientLeft      =   3435
+   ClientTop       =   4695
    ClientWidth     =   3030
    Icon            =   "frmInicio.frx":0000
    LinkTopic       =   "Form1"
@@ -69,10 +69,10 @@ Attribute VB_Exposed = False
 Private Sub cmb_loja_Click()
 
 
-sql = "Select CXA_NumeroCaixa from ParametroSistema order by CXA_NumeroCaixa"
+Sql = "Select CXA_NumeroCaixa from ParametroSistema order by CXA_NumeroCaixa"
 
 rdoParametroINI.CursorLocation = adUseClient
-rdoParametroINI.Open sql, adoCNAccess, adOpenForwardOnly, adLockPessimistic
+rdoParametroINI.Open Sql, adoCNAccess, adOpenForwardOnly, adLockPessimistic
 
         If Not rdoParametroINI.EOF Then
             cmb_Caixa.Clear
@@ -107,10 +107,10 @@ lsDSN = "Driver={Microsoft Access Driver (*.mdb)};" & _
           "Uid=Admin; Pwd=astap36"
   adoCNAccess.Open lsDSN
  
-sql = "Select * from ConexaoSistema where GLB_Loja = '" & Trim(cmb_loja.text) & "'"
+Sql = "Select * from ConexaoSistema where GLB_Loja = '" & Trim(cmb_loja.text) & "'"
  
 rdoConexaoINI.CursorLocation = adUseClient
-rdoConexaoINI.Open sql, adoCNAccess, adOpenForwardOnly, adLockPessimistic
+rdoConexaoINI.Open Sql, adoCNAccess, adOpenForwardOnly, adLockPessimistic
  
   If Not rdoConexaoINI.EOF Then
        GLB_Servidor = Trim(rdoConexaoINI("GLB_ServidorRetaguarda"))
@@ -131,12 +131,12 @@ Continua:
     If GLB_ConectouOK = True Then
        Call DadosLoja
        
-       sql = "Select * from ControleCaixa Where CTR_Supervisor = 99 and CTR_SituacaoCaixa='F' " _
+       Sql = "Select * from ControleCaixa Where CTR_Supervisor = 99 and CTR_SituacaoCaixa='F' " _
            & "and CTR_datainicial >= '" & Format(Date, "yyyy/mm/dd") & "'"
             RsDados.CursorLocation = adUseClient
             
             
-            RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+            RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
             If Not RsDados.EOF Then
                MsgBox "Fechamento Geral de hoje já foi efetuado. Não é possivel abrir o Caixa."
                wPermitirVenda = False
@@ -170,10 +170,10 @@ Private Sub Form_Load()
 'Skin1.LoadSkin "c:\WINDOWS\system\skin.skn"
 'Skin1.ApplySkin Me.Hwnd
 
-sql = "Select GLB_LOJA from ConexaoSistema GROUP BY GLB_LOJA"
+Sql = "Select GLB_LOJA from ConexaoSistema GROUP BY GLB_LOJA"
  
 rdoConexaoINI.CursorLocation = adUseClient
-rdoConexaoINI.Open sql, adoCNAccess, adOpenForwardOnly, adLockPessimistic
+rdoConexaoINI.Open Sql, adoCNAccess, adOpenForwardOnly, adLockPessimistic
  
         If Not rdoConexaoINI.EOF Then
             cmb_loja.Clear
