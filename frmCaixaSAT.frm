@@ -1,18 +1,18 @@
 VERSION 5.00
-Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "vsflex7u.ocx"
+Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "Vsflex7u.ocx"
 Begin VB.Form frmCaixaSAT 
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    Caption         =   "frmCaixaSAT"
    ClientHeight    =   8745
-   ClientLeft      =   1845
-   ClientTop       =   1800
+   ClientLeft      =   3420
+   ClientTop       =   1665
    ClientWidth     =   12345
    ControlBox      =   0   'False
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
-   ScaleHeight     =   10575
-   ScaleWidth      =   20490
+   ScaleHeight     =   8745
+   ScaleWidth      =   12345
    ShowInTaskbar   =   0   'False
    Begin VB.Frame Frame1 
       BackColor       =   &H00000000&
@@ -341,7 +341,7 @@ Attribute VB_Exposed = False
 
 Option Explicit
 Dim wQuantidade As Integer
-Dim sql As String
+Dim Sql As String
 Dim wValorVenda As Double
 Dim SomaTotalVenda As Double
 Dim PrecoVenda As Double
@@ -565,12 +565,12 @@ Private Sub txtCGC_CPF_KeyPress(KeyAscii As Integer)
       If GravaNumeroCupomCgcCpf = False Then Exit Sub
     
 
-      sql = "Select nfitens.Referencia,nfitens.QTDE,nfitens.VLUnit,PR_Descricao,PR_icmpdv,pr_substituicaotributaria " _
+      Sql = "Select nfitens.Referencia,nfitens.QTDE,nfitens.VLUnit,PR_Descricao,PR_icmpdv,pr_substituicaotributaria " _
           & "From nfitens,Produtoloja  " _
           & "Where PR_referencia = Referencia and NumeroPed = " _
           & txtPedido.text & " and Tiponota = 'PA' order by Item"
            RsDadosTef.CursorLocation = adUseClient
-           RsDadosTef.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+           RsDadosTef.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
          
           If Not RsDadosTef.EOF Then
              Do While Not RsDadosTef.EOF
@@ -690,16 +690,16 @@ Private Function GravaNumeroCupomCgcCpf() As Boolean
     'If validaNumeroCupom = True Then
         Screen.MousePointer = vbHourglass
         rdoCNLoja.BeginTrans
-        sql = "Update nfitens set nf = " & "0" & ",Serie = '" & GLB_SerieCF & "' Where NumeroPed = " & txtPedido.text
-              rdoCNLoja.Execute sql, rdExecDirect
+        Sql = "Update nfitens set nf = " & "0" & ",Serie = '" & GLB_SerieCF & "' Where NumeroPed = " & txtPedido.text
+              rdoCNLoja.Execute Sql, rdExecDirect
         Screen.MousePointer = vbNormal
         rdoCNLoja.CommitTrans
         rdoCNLoja.BeginTrans
         Screen.MousePointer = vbHourglass
         
-        sql = "Update nfcapa set nf = " & "0" & ",Serie = '" & GLB_SerieCF & "', ECF = " & GLB_ECF & " , CPFNFP = '" & txtCGC_CPF & "'" _
+        Sql = "Update nfcapa set nf = " & "0" & ",Serie = '" & GLB_SerieCF & "', ECF = " & GLB_ECF & " , CPFNFP = '" & txtCGC_CPF & "'" _
               & " Where NumeroPed = " & txtPedido.text
-              rdoCNLoja.Execute sql, rdExecDirect
+              rdoCNLoja.Execute Sql, rdExecDirect
         Screen.MousePointer = vbNormal
         rdoCNLoja.CommitTrans
         Screen.MousePointer = vbNormal
@@ -728,11 +728,11 @@ Private Sub CarregaGrid()
         
         pedido = txtPedido
             
-        sql = "Select Desconto,Fretecobr From Nfcapa Where NumeroPed = " _
+        Sql = "Select Desconto,Fretecobr From Nfcapa Where NumeroPed = " _
              & txtPedido.text & " and tiponota = 'PA' "
                
         RsDadosCapa.CursorLocation = adUseClient
-        RsDadosCapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        RsDadosCapa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
           
              
         If Not RsDadosCapa.EOF Then
@@ -744,12 +744,12 @@ Private Sub CarregaGrid()
         RsDadosCapa.Close
             
        
-        sql = "Select nfitens.VLUnit,nfitens.QTDE,nfitens.Item,nfitens.Referencia,PR_Descricao " _
+        Sql = "Select nfitens.VLUnit,nfitens.QTDE,nfitens.Item,nfitens.Referencia,PR_Descricao " _
              & "From nfitens,Produtoloja " _
              & "Where referencia = PR_Referencia and NumeroPed = " _
              & txtPedido.text & " and Tiponota = 'PA' order by Item"
             RsDadosTef.CursorLocation = adUseClient
-            RsDadosTef.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+            RsDadosTef.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
            
              pedido = txtPedido
              If Not RsDadosTef.EOF Then

@@ -531,7 +531,7 @@ Private Function controlaNotasEmitidas() As Integer
           "where tm not in (4012,4016,9016,101,100,9005,4005,9012,204,124,4014) " & vbNewLine & _
           "and tiponota in ('V','T','E','S','R')" & vbNewLine & _
           "and serie in ('CE','NE')" & vbNewLine & _
-          "and dataemi = '" & GLB_DataInicial & "'"
+          "and dataemi >= '" & Format(GLB_DataInicial, "YYYY/MM") & "/01'"
     
     rdoNotas.CursorLocation = adUseClient
     rdoNotas.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
