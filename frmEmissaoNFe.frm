@@ -2922,7 +2922,7 @@ End Sub
 
 Private Function obterNumeroItem(informacoes As String) As String
     
-    informacoes = Replace(informacoes, "[", "((")
+    informacoes = Replace(informacoes, "[nItem:", "((")
     informacoes = Replace(informacoes, "]", "))")
     
     If informacoes Like "*((*" Then
