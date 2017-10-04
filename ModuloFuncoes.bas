@@ -5,7 +5,7 @@ Dim wContaItem As Integer
 Dim rsNFELoja As New ADODB.Recordset
 Dim rsNFECapa As New ADODB.Recordset
 Dim RSControleImpostos As New ADODB.Recordset
-Dim Sql As String
+Dim sql As String
 Declare Function GetPrivateProfileString Lib "kernel32" Alias "GetPrivateProfileStringA" (ByVal lpApplicationName As String, ByVal LpKeyName As Any, ByVal lpDefault As String, ByVal lpReturnedString As String, ByVal nSize As Long, ByVal lpFilename As String) As Long
 Public Declare Function GetAsyncKeyState Lib "user32" (ByVal vKey As Long) As Integer
 Dim Fim
@@ -226,31 +226,31 @@ End Function
 Function ConsistePedido(ByRef pedido As Double)
 
     
-    Sql = ""
-    Sql = "Select Sum(VlUnit * qtde) as TotItem " _
+    sql = ""
+    sql = "Select Sum(VlUnit * qtde) as TotItem " _
         & "From NfItens " _
         & "where NumeroPed = " & pedido & " "
        
         rdoVlItem.CursorLocation = adUseClient
-        rdoVlItem.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        rdoVlItem.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
-    Sql = ""
-    Sql = "Select TotalNota,FreteCobr,desconto " _
+    sql = ""
+    sql = "Select TotalNota,FreteCobr,desconto " _
         & "From NfCapa " _
         & "where NumeroPed = " & pedido & " "
        
         rdoVlNota.CursorLocation = adUseClient
-        rdoVlNota.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        rdoVlNota.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
        
    
     
     If (Not rdoVlNota.EOF) And (Not rdoVlItem.EOF) Then
         If Format(rdoVlItem("TotItem") + rdoVlNota("FreteCobr"), "#,##0.00") <> Format(rdoVlNota("TotalNota"), "#,##0.00") Then
-            Sql = ""
-            Sql = "Update NfCapa Set TotalNota = " & ConverteVirgula(Format(rdoVlItem("TotItem") + rdoVlNota("FreteCobr") - rdoVlNota("Desconto"), "#,##0.00")) & ", VlrMercadoria = " & ConverteVirgula(Format(rdoVlItem("TotItem"), "#,##0.00")) & " " _
+            sql = ""
+            sql = "Update NfCapa Set TotalNota = " & ConverteVirgula(Format(rdoVlItem("TotItem") + rdoVlNota("FreteCobr") - rdoVlNota("Desconto"), "#,##0.00")) & ", VlrMercadoria = " & ConverteVirgula(Format(rdoVlItem("TotItem"), "#,##0.00")) & " " _
                 & "Where NfCapa.NumeroPed = " & pedido & " "
             
-            rdoCNLoja.Execute (Sql)
+            rdoCNLoja.Execute (sql)
         End If
     End If
     
@@ -297,10 +297,10 @@ If GLB_Contingencia = "N" Then
        GLB_Loja = Trim(wLoja)
        GLB_NF = NroNotaFiscal
        GLB_Serie = "NE"
-       Sql = "Select ce_tipopessoa from fin_cliente,nfcapa where lojaorigem = '" & wLoja & "' " & _
+       sql = "Select ce_tipopessoa from fin_cliente,nfcapa where lojaorigem = '" & wLoja & "' " & _
              "and NF = " & NroNotaFiscal & " and Serie = 'NE' and cliente = ce_codigoCliente"
        rsNFE.CursorLocation = adUseClient
-       rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
  '      GLB_Pessoa = rsComplementoVenda("ce_tipopessoa")
        rsNFE.Close
        
@@ -310,10 +310,10 @@ If GLB_Contingencia = "N" Then
        
        Open Trim(PegaCaminhoNFe) & "\nfestart\txt\FIL_" & LTrim(RTrim(GLB_Loja)) & "\txt\" & wNomeArquivo For Output Access Write As #txtNFe
        
-      Sql = "Select  * from NFE_IDE" _
+      sql = "Select  * from NFE_IDE" _
               & " Where eloja ='" & GLB_Loja & "' and enf = " & GLB_NF & " and eserie ='" & GLB_Serie & "'"
       rsNFE.CursorLocation = adUseClient
-      rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic '
+      rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic '
        
        
        linhaArquivo = "NOTA FISCAL|1"
@@ -353,12 +353,12 @@ Else
   
     wTipoNf = "5"
   
-    Sql = ""
-    Sql = "Select Top 1 * from NFE_IDE" _
+    sql = ""
+    sql = "Select Top 1 * from NFE_IDE" _
           & " where Situacao = 'A' "
     
     rsNFE.CursorLocation = adUseClient
-    rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     If rsNFE.EOF Then
        rsNFE.Close
        Exit Sub
@@ -368,10 +368,10 @@ Else
        GLB_Loja = rsNFE("eloja")
        GLB_NF = rsNFE("enf")
        GLB_Serie = rsNFE("eserie")
-       Sql = "Select ce_tipopessoa from fin_cliente,nfcapa where lojaorigem = '" & wLoja & "' " & _
+       sql = "Select ce_tipopessoa from fin_cliente,nfcapa where lojaorigem = '" & wLoja & "' " & _
              "and NF = " & NroNotaFiscal & " and Serie = 'NE' and cliente = ce_codigoCliente"
        rsNFE.CursorLocation = adUseClient
-       rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
        GLB_Pessoa = rsComplementoVenda("ce_tipopessoa")
        rsNFE.Close
        txtNFe = FreeFile
@@ -418,11 +418,11 @@ End If
 ' NFE_EMIT
 '----------------------------------------------------------------------------------------------------------------------
 
-Sql = ""
-Sql = "Select  * from NFE_EMIT" _
+sql = ""
+sql = "Select  * from NFE_EMIT" _
     & " Where eloja ='" & GLB_Loja & "' and enf = " & GLB_NF & " and eserie ='" & GLB_Serie & "'"
       rsNFE.CursorLocation = adUseClient
-      rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic '
+      rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic '
 
      
        linhaArquivo = "C|" & LTrim(RTrim(rsNFE("xnome"))) & LTrim(RTrim(wdelimitador)) _
@@ -457,11 +457,11 @@ Sql = "Select  * from NFE_EMIT" _
 ' NFE_DEST
 '----------------------------------------------------------------------------------------------------------------------
 
-Sql = ""
-Sql = "Select  * from NFE_DEST" _
+sql = ""
+sql = "Select  * from NFE_DEST" _
     & " Where eloja ='" & GLB_Loja & "' and enf = " & GLB_NF & " and eserie ='" & GLB_Serie & "'"
       rsNFE.CursorLocation = adUseClient
-      rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+      rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
       
       If GLB_Pessoa <> "F" And GLB_Pessoa <> "U" Then
          GLB_IE = LTrim(RTrim(rsNFE("ie")))
@@ -507,13 +507,13 @@ Sql = "Select  * from NFE_DEST" _
 '----------------------------------------------------------------------------------------------------------------------
 ' NFE_PROD
 '----------------------------------------------------------------------------------------------------------------------
- Sql = ""
- Sql = "Select * from NFE_PROD,ProdutoLoja " _
+ sql = ""
+ sql = "Select * from NFE_PROD,ProdutoLoja " _
        & "Where eloja ='" & GLB_Loja & "' and enf = " & GLB_NF & " and eserie ='" _
        & GLB_Serie & "' and pr_referencia=i_cprod "
     
     rsNFE.CursorLocation = adUseClient
-    rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
      
     If Not rsNFE.EOF Then
        Do While Not rsNFE.EOF
@@ -626,12 +626,12 @@ Sql = "Select  * from NFE_DEST" _
     '----------------------------------------------------------------------------------------------------------------------
     ' NFE_TOTAL
     '----------------------------------------------------------------------------------------------------------------------
-     Sql = ""
-     Sql = "Select * from NFE_TOTAL Where eloja ='" & GLB_Loja & "' and enf = " & GLB_NF & " and eserie ='" _
+     sql = ""
+     sql = "Select * from NFE_TOTAL Where eloja ='" & GLB_Loja & "' and enf = " & GLB_NF & " and eserie ='" _
             & GLB_Serie & "'"
 
         rsNFE.CursorLocation = adUseClient
-        rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic '
+        rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic '
 
         If Not rsNFE.EOF Then
            Do While Not rsNFE.EOF
@@ -666,12 +666,12 @@ rsNFE.Close
     '----------------------------------------------------------------------------------------------------------------------
     ' NFE_TRANSP
     '----------------------------------------------------------------------------------------------------------------------
-     Sql = ""
-     Sql = "Select * from NFE_TRANSP Where eloja ='" & GLB_Loja & "' and enf = " & GLB_NF & " and eserie ='" _
+     sql = ""
+     sql = "Select * from NFE_TRANSP Where eloja ='" & GLB_Loja & "' and enf = " & GLB_NF & " and eserie ='" _
             & GLB_Serie & "'"
 
        rsNFE.CursorLocation = adUseClient
-       rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic '
+       rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic '
 
         If Not rsNFE.EOF Then
            Do While Not rsNFE.EOF
@@ -696,12 +696,12 @@ rsNFE.Close
     '----------------------------------------------------------------------------------------------------------------------
     ' NFE_COBR
     '----------------------------------------------------------------------------------------------------------------------
-       Sql = ""
-       Sql = "Select * from NFE_COBR Where eloja ='" & GLB_Loja & "' and enf = " & GLB_NF & " and eserie ='" _
+       sql = ""
+       sql = "Select * from NFE_COBR Where eloja ='" & GLB_Loja & "' and enf = " & GLB_NF & " and eserie ='" _
             & GLB_Serie & "'"
 
         rsNFE.CursorLocation = adUseClient
-        rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic '
+        rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic '
         
         If Not rsNFE.EOF Then
            Do While Not rsNFE.EOF
@@ -721,12 +721,12 @@ rsNFE.Close
     '----------------------------------------------------------------------------------------------------------------------
     ' NFE_INFADIC
     '----------------------------------------------------------------------------------------------------------------------
-       Sql = ""
-       Sql = "Select * from NFE_INFADIC Where eloja ='" & GLB_Loja & "' and enf = " & GLB_NF & " and eserie ='" _
+       sql = ""
+       sql = "Select * from NFE_INFADIC Where eloja ='" & GLB_Loja & "' and enf = " & GLB_NF & " and eserie ='" _
             & GLB_Serie & "'"
 
         rsNFE.CursorLocation = adUseClient
-        rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic '
+        rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic '
 
         If Not rsNFE.EOF Then
            Do While Not rsNFE.EOF
@@ -749,11 +749,11 @@ rsNFE.Close
      rsNFE.Close
      Close #txtNFe
      
-     Sql = ""
-     Sql = "Update NFE_IDE Set Situacao = 'P' Where eloja='" & LTrim(RTrim(GLB_Loja)) & "' and enf = " & GLB_NF _
+     sql = ""
+     sql = "Update NFE_IDE Set Situacao = 'P' Where eloja='" & LTrim(RTrim(GLB_Loja)) & "' and enf = " & GLB_NF _
          & " and eserie = '" & GLB_Serie & "'"
        rsNFE.CursorLocation = adUseClient
-       rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
      
      
 '     Print #txtNFE, LTrim(RTrim(wdelimitador))
@@ -762,16 +762,16 @@ End Sub
 
 Private Sub ImprimeCarimbo()
                  
-                       Sql = ""
+                       sql = ""
 '                       SQL = "Select CNF_Carimbo,CNF_DetalheImpressao,CNF_TipoCarimbo from CarimboNotaFiscal where " & _
 '                             "CNF_Nf = " & rsNFE("nf") & " and CNF_Serie = '" & rsNFE("Serie") & "' and CNF_Loja = '" & rsNFE("Lojaorigem") & "'" & _
 '                             "order by cnf_tipocarimbo desc, cnf_sequencia asc"
-                       Sql = "Select CNF_Carimbo,CNF_DetalheImpressao,CNF_TipoCarimbo from CarimboNotaFiscal where " & _
+                       sql = "Select CNF_Carimbo,CNF_DetalheImpressao,CNF_TipoCarimbo from CarimboNotaFiscal where " & _
                              "CNF_Numeroped = '" & rsNFE("numeroped") & "'" & _
                              "order by cnf_tipocarimbo desc, cnf_sequencia asc"
                        
                        RsPegaItensEspeciais.CursorLocation = adUseClient
-                       RsPegaItensEspeciais.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+                       RsPegaItensEspeciais.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
                        If Not RsPegaItensEspeciais.EOF Then
                             Printer.Print ""
@@ -826,11 +826,11 @@ End Sub
 
 Function PegaLojaControle() As String
 
-    Sql = ""
-    Sql = "Select CTS_Loja from ControleSistema"
+    sql = ""
+    sql = "Select CTS_Loja from ControleSistema"
        
         rspegaloja.CursorLocation = adUseClient
-        rspegaloja.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        rspegaloja.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     If Not rspegaloja.EOF Then
         PegaLojaControle = Trim(rspegaloja("CTS_Loja"))
@@ -839,11 +839,11 @@ Function PegaLojaControle() As String
 End Function
 Function PegaCaminhoNFe() As String
 
-    Sql = ""
-    Sql = "Select CTS_CaminhoNFe from ControleSistema"
+    sql = ""
+    sql = "Select CTS_CaminhoNFe from ControleSistema"
        
         rspegaloja.CursorLocation = adUseClient
-        rspegaloja.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        rspegaloja.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     If Not rspegaloja.EOF Then
         PegaCaminhoNFe = Trim(rspegaloja("CTS_CaminhoNFe"))
@@ -853,11 +853,11 @@ End Function
 
 Function PegaSerieNota() As String
 
-       Sql = ""
-       Sql = "Select CS_Serie AS serie from ControleSerie where CS_NroCaixa = '" & GLB_Caixa & "'"
+       sql = ""
+       sql = "Select CS_Serie AS serie from ControleSerie where CS_NroCaixa = '" & GLB_Caixa & "'"
      
        rdoSerie.CursorLocation = adUseClient
-       rdoSerie.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rdoSerie.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
        If Not rdoSerie.EOF Then
            PegaSerieNota = RTrim(rdoSerie("serie"))
@@ -894,17 +894,17 @@ End Function
 Public Function ExtraiSeqNotaControle() As Double
      Dim WnovaSeqNota As Long
      
-     Sql = ""
-     Sql = "Select CTS_NumeroNF + 1 as NumNota from ControleSistema"
+     sql = ""
+     sql = "Select CTS_NumeroNF + 1 as NumNota from ControleSistema"
    
      rsNFE.CursorLocation = adUseClient
-     rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+     rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
      
      If Not rsNFE.EOF Then
         
         ExtraiSeqNotaControle = rsNFE("NumNota")
-        Sql = "update ControleSistema set CTS_NumeroNF= " & rsNFE("NumNota") & ""
-        rdoCNLoja.Execute (Sql)
+        sql = "update ControleSistema set CTS_NumeroNF= " & rsNFE("NumNota") & ""
+        rdoCNLoja.Execute (sql)
      End If
      rsNFE.Close
 End Function
@@ -912,17 +912,17 @@ End Function
 Public Function ExtraiSeqNEControle() As Double
      Dim WnovaSeqNota As Long
      
-     Sql = ""
-     Sql = "Select CTS_NumeroNE + 1 as NumNota from ControleSistema"
+     sql = ""
+     sql = "Select CTS_NumeroNE + 1 as NumNota from ControleSistema"
    
      rsNFE.CursorLocation = adUseClient
-     rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+     rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
      
      If Not rsNFE.EOF Then
         
         ExtraiSeqNEControle = rsNFE("NumNota")
-        Sql = "update ControleSistema set CTS_NumeroNE= " & rsNFE("NumNota") & ""
-        rdoCNLoja.Execute (Sql)
+        sql = "update ControleSistema set CTS_NumeroNE= " & rsNFE("NumNota") & ""
+        rdoCNLoja.Execute (sql)
      End If
      rsNFE.Close
 End Function
@@ -931,17 +931,17 @@ End Function
 Public Function ExtraiSeq00Controle() As Double
      Dim WnovaSeqNota As Long
      
-     Sql = ""
-     Sql = "Select CTS_Numero00 + 1 as NumNota from ControleSistema"
+     sql = ""
+     sql = "Select CTS_Numero00 + 1 as NumNota from ControleSistema"
    
      rsNFE.CursorLocation = adUseClient
-     rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+     rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
      
      If Not rsNFE.EOF Then
         
         ExtraiSeq00Controle = rsNFE("NumNota")
-        Sql = "update ControleSistema set CTS_Numero00= " & rsNFE("NumNota") & ""
-        rdoCNLoja.Execute (Sql)
+        sql = "update ControleSistema set CTS_Numero00= " & rsNFE("NumNota") & ""
+        rdoCNLoja.Execute (sql)
      End If
      rsNFE.Close
 End Function
@@ -964,8 +964,8 @@ wControlaQuebraDaPagina = 0
     
     Call DadosLoja
             
-    Sql = ""
-    Sql = "Select NFCAPA.FreteCobr,NFCAPA.PedCli,NFCAPA.LojaVenda,NFCAPA.VendedorLojaVenda,NFCAPA.QTDITEM, " & _
+    sql = ""
+    sql = "Select NFCAPA.FreteCobr,NFCAPA.PedCli,NFCAPA.LojaVenda,NFCAPA.VendedorLojaVenda,NFCAPA.QTDITEM, " & _
           "NFCAPA.AV,NFCAPA.NF,NFCAPA.BASEICMS,NFCAPA.SERIE,NFCAPA.PAGINANF,NFCAPA.VOLUME,NFCAPA.PESOBR, " & _
           "NFCAPA.CLIENTE,fin_CLIENTE.CE_Telefone,NFCAPA.NUMEROPED,NFCAPA.VENDEDOR,NFCAPA.PGENTRA,fin_cliente.ce_numero, " & _
           "NFCAPA.LOJAORIGEM,NFCAPA.DATAEMI,Nfcapa.nf,NfCapa.Desconto,NFCAPA.CODOPER,NFCAPA.TOTALNOTA, " & _
@@ -979,13 +979,13 @@ wControlaQuebraDaPagina = 0
           "NfItens.Serie = NfCapa.Serie And NfItens.nf = NfCapa.nf And fin_Cliente.ce_CodigoCliente = NfCapa.Cliente"
    
     rsNFE.CursorLocation = adUseClient
-    rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     
     If Not rsNFE.EOF Then
       Cabecalho "V"
       
-      Sql = "Select produtoloja.pr_referencia,produtoloja.pr_descricao, " _
+      sql = "Select produtoloja.pr_referencia,produtoloja.pr_descricao, " _
           & "produtoloja.pr_classefiscal,produtoloja.pr_unidade,produtoloja.pr_st, " _
           & "produtoloja.pr_icmssaida,nfitens.referencia,nfitens.qtde,NfItens.TipoNota," _
           & "nfitens.vlunit,nfitens.vltotitem,nfitens.icms,nfitens.detalheImpressao,nfitens.CSTICMS," _
@@ -995,7 +995,7 @@ wControlaQuebraDaPagina = 0
           & "and nfitens.nf = " & nota & " and Serie='" & Serie & "' order by nfitens.item"
      
       rsItensVenda.CursorLocation = adUseClient
-      rsItensVenda.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+      rsItensVenda.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
       If Not rsItensVenda.EOF Then
          wConta = 0
@@ -1230,23 +1230,23 @@ Function Cabecalho(ByVal tiponota As String)
     Linha(ContLinha) = "PEDIDO " & rsNFE("NUMEROPED") & "  VEN " & rsNFE("VENDEDOR")
     ContLinha = ContLinha + 1
              
-    Sql = "select mo_descricao,mc_valor,mo_grupo from movimentocaixa,modalidade " & _
+    sql = "select mo_descricao,mc_valor,mo_grupo from movimentocaixa,modalidade " & _
           "where mc_grupo = mo_grupo and mc_documento = " & rsNFE("nf") & " and mc_Serie ='" & rsNFE("serie") & _
           "' and mc_loja = '" & Trim(rsNFE("lojaorigem")) & "' and mc_grupo like '10%'"
 
     rdoModalidade.CursorLocation = adUseClient
-    rdoModalidade.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rdoModalidade.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
          
     If Not rdoModalidade.EOF Then
         Do While Not rdoModalidade.EOF
          
           If rdoModalidade("mo_grupo") = 10501 Then
             
-               Sql = "Select cp_condicao,cp_intervaloParcelas,cp_parcelas from CondicaoPagamento " _
+               sql = "Select cp_condicao,cp_intervaloParcelas,cp_parcelas from CondicaoPagamento " _
                     & "where  CP_Codigo =" & rsNFE("CondPag")
 
                rdoConPag.CursorLocation = adUseClient
-               rdoConPag.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+               rdoConPag.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                wValorParcela = Format((rsNFE("totalnota") - rsNFE("pgentra")) / rdoConPag("cp_parcelas"), "###,##0.00")
                ContParcela = 1
                wMid = 1
@@ -1451,11 +1451,11 @@ End Function
 Public Function DadosLoja()
 
     'SQL = ""
-    Sql = "Select CTS_Loja,CTS_SenhaLiberacao,CTS_LogoPedido,Loja.* from loja,Controlesistema " & _
+    sql = "Select CTS_Loja,CTS_SenhaLiberacao,CTS_LogoPedido,Loja.* from loja,Controlesistema " & _
           "where lo_loja=CTS_Loja"
 
     rsNFELoja.CursorLocation = adUseClient
-    rsNFELoja.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsNFELoja.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
     If Not rsNFELoja.EOF Then
 
@@ -1492,10 +1492,10 @@ Dim wNomeVendedor As String
     ValorDesconto = 0
     SubTotal = 0
 
-    Sql = ("Select * from Loja Where LO_Loja='" & Trim(GLB_Loja & "'"))
+    sql = ("Select * from Loja Where LO_Loja='" & Trim(GLB_Loja & "'"))
 
     rsNFE.CursorLocation = adUseClient
-    rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     
     impressoraRelatorio "[INICIO]"
@@ -1510,11 +1510,11 @@ Dim wNomeVendedor As String
    impressoraRelatorio "________________________________________"
    rsNFE.Close
    
-  Sql = "Select Nfcapa.*,ve_nome From Nfcapa,vende Where  NF = " & NroNotaFiscal & " and Serie='00' and vendedor = ve_codigo"
+  sql = "Select Nfcapa.*,ve_nome From Nfcapa,vende Where  NF = " & NroNotaFiscal & " and Serie='00' and vendedor = ve_codigo"
              
     
               rsNFECapa.CursorLocation = adUseClient
-              rsNFECapa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+              rsNFECapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
              
              If Not rsNFECapa.EOF Then
@@ -1525,19 +1525,19 @@ Dim wNomeVendedor As String
              
              
    
-   Sql = "Select * from Nfitens " _
+   sql = "Select * from Nfitens " _
        & "Where  NF = " & NroNotaFiscal & " and Serie='00'"
        
       
        rsNFE.CursorLocation = adUseClient
-       rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
        
        If Not rsNFE.EOF Then
           Do While Not rsNFE.EOF
-             Sql = "Select PR_Descricao from Produtoloja Where PR_Referencia ='" & rsNFE("Referencia") & "'"
+             sql = "Select PR_Descricao from Produtoloja Where PR_Referencia ='" & rsNFE("Referencia") & "'"
              rdoProduto.CursorLocation = adUseClient
-             rdoProduto.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+             rdoProduto.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
              
              ValorlItem = (rsNFE("vlunit") * rsNFE("Qtde"))
@@ -1645,12 +1645,12 @@ If RsCapaNF.State = 1 Then
   RsCapaNF.Close
 End If
 
-Sql = "Select nfcapa.*, fin_Estado.*,fin_Cliente.* from nfcapa, fin_Estado, fin_cliente where nfcapa.numeroped = " & _
+sql = "Select nfcapa.*, fin_Estado.*,fin_Cliente.* from nfcapa, fin_Estado, fin_cliente where nfcapa.numeroped = " & _
        NumeroDocumento & " and nfcapa.cliente = fin_cliente.ce_codigocliente " & _
       "And fin_cliente.ce_estado = fin_Estado.UF_Estado"
              
              RsCapaNF.CursorLocation = adUseClient
-             RsCapaNF.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+             RsCapaNF.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
         
         If Not RsCapaNF.EOF Then
            If RsCapaNF("ce_Tipopessoa") = "F" Or RsCapaNF("ce_Tipopessoa") = "U" Then
@@ -1669,7 +1669,7 @@ Sql = "Select nfcapa.*, fin_Estado.*,fin_Cliente.* from nfcapa, fin_Estado, fin_
            'If wPessoa = 2 And RsCapaNF("ce_estado") <> "SP" Then
            If RsCapaNF("ce_estado") <> "SP" Then
                  
-                Sql = "Select UF_FECP AS FECP, " & vbNewLine _
+                sql = "Select UF_FECP AS FECP, " & vbNewLine _
                       & "UF_ICMSInterEstadual as ICMSInterEstadual, " & vbNewLine _
                       & "UF_ICMSInterno as  ICMSInterno, " & vbNewLine _
                       & "UF_ICMSInterEstadual as  ICMSInterEstadual, " & vbNewLine _
@@ -1678,7 +1678,7 @@ Sql = "Select nfcapa.*, fin_Estado.*,fin_Cliente.* from nfcapa, fin_Estado, fin_
                       & "from fin_estado " & vbNewLine _
                       & "where UF_Estado = '" & RsCapaNF("ce_estado") & "'"
                 RsItensNF.CursorLocation = adUseClient
-                RsItensNF.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+                RsItensNF.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                 
                     wPICMSFECP = RsItensNF("FECP")
                     wIE_icmsFECPAplicado = RsItensNF("ICMSInterEstadual")
@@ -1706,12 +1706,12 @@ Sql = "Select nfcapa.*, fin_Estado.*,fin_Cliente.* from nfcapa, fin_Estado, fin_
         End If
                  
                     
-        Sql = "Select produtoloja.*, nfitens.* from produtoloja,nfitens " _
+        sql = "Select produtoloja.*, nfitens.* from produtoloja,nfitens " _
               & "where nfitens.numeroped = " & NumeroDocumento & "" _
               & " and pr_referencia = nfitens.referencia order by NfItens.Item"
           
               RsItensNF.CursorLocation = adUseClient
-              RsItensNF.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+              RsItensNF.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
           
           
@@ -1863,7 +1863,7 @@ Sql = "Select nfcapa.*, fin_Estado.*,fin_Cliente.* from nfcapa, fin_Estado, fin_
                                         
                     'GLB_DataInicial
                                         
-                    Sql = "UPDATE nfitens set baseicms = " & ConverteVirgula(GLB_BasedeCalculoICMS) & ", " _
+                    sql = "UPDATE nfitens set baseicms = " & ConverteVirgula(GLB_BasedeCalculoICMS) & ", " _
                     & "Valoricms = " & ConverteVirgula(GLB_ValorCalculadoICMS) & " ," _
                     & "valorICMSFECP = " & ConverteVirgula(wVICMSFECP) & " ," _
                     & "aliqICMSFECP = " & ConverteVirgula(wPICMSFECP) & " ," _
@@ -1876,7 +1876,7 @@ Sql = "Select nfcapa.*, fin_Estado.*,fin_Cliente.* from nfcapa, fin_Estado, fin_
                     & "CFOP = " & GLB_CFOP & ", ICMSAplicado = " & ConverteVirgula(wIE_icmsdestino) _
                     & " where nfitens.numeroped = " & NumeroDocumento _
                     & " and Referencia = '" & RsItensNF("PR_Referencia") & "' and Item=" & RsItensNF("Item") & ""
-                    rdoCNLoja.Execute (Sql)
+                    rdoCNLoja.Execute (sql)
                 
                     If Err.Number = 0 Then
                         rdoCNLoja.CommitTrans
@@ -1902,11 +1902,11 @@ Sql = "Select nfcapa.*, fin_Estado.*,fin_Cliente.* from nfcapa, fin_Estado, fin_
 
             rdoCNLoja.BeginTrans
 
-            Sql = ""
-            Sql = "update CarimboNotafiscal set CNF_Serie = '" & RsCapaNF("Serie") & "', CNF_NF = " & RsCapaNF("nf") & _
+            sql = ""
+            sql = "update CarimboNotafiscal set CNF_Serie = '" & RsCapaNF("Serie") & "', CNF_NF = " & RsCapaNF("nf") & _
                   " , CNF_Situacaoprocesso = 'A' , CNF_DataProcesso = '" & Format(Date, "yyyy/mm/dd") & "' " & _
                   " where CNF_NumeroPed = " & NumeroDocumento
-              rdoCNLoja.Execute (Sql)
+              rdoCNLoja.Execute (sql)
   
             If Err.Number = 0 Then
                  rdoCNLoja.CommitTrans
@@ -1922,9 +1922,9 @@ Sql = "Select nfcapa.*, fin_Estado.*,fin_Cliente.* from nfcapa, fin_Estado, fin_
                
                wSequenciaS = wSequenciaS + 1
                             
-               Sql = ""
-                Sql = ""
-                Sql = " Insert into CarimboNotafiscal (CNF_NumeroPed,CNF_Loja," & vbNewLine & _
+               sql = ""
+                sql = ""
+                sql = " Insert into CarimboNotafiscal (CNF_NumeroPed,CNF_Loja," & vbNewLine & _
                       "CNF_Serie,CNF_NF," & vbNewLine & _
                       "CNF_Sequencia,CNF_Carimbo," & vbNewLine & _
                       "CNF_TipoCarimbo,CNF_DetalheImpressao," & vbNewLine & _
@@ -1937,7 +1937,7 @@ Sql = "Select nfcapa.*, fin_Estado.*,fin_Cliente.* from nfcapa, fin_Estado, fin_
                       "'" & Format(Date, "yyyy/mm/dd") & "'," & vbNewLine & _
                       "'A','" & Format(Date, "yyyy/mm/dd") & "')"
                 
-                rdoCNLoja.Execute (Sql)
+                rdoCNLoja.Execute (sql)
 
                 If Err.Number = 0 Then
                   rdoCNLoja.CommitTrans
@@ -1950,12 +1950,12 @@ Sql = "Select nfcapa.*, fin_Estado.*,fin_Cliente.* from nfcapa, fin_Estado, fin_
             
                rdoCNLoja.BeginTrans
                             
-               Sql = ""
-               Sql = " Insert into CarimboNotafiscal (CNF_NumeroPed,CNF_Loja,CNF_Serie,CNF_NF,CNF_Sequencia,CNF_Carimbo,CNF_TipoCarimbo,CNF_DetalheImpressao,CNF_Data,CNF_SituacaoProcesso,CNF_DataProcesso) " & _
+               sql = ""
+               sql = " Insert into CarimboNotafiscal (CNF_NumeroPed,CNF_Loja,CNF_Serie,CNF_NF,CNF_Sequencia,CNF_Carimbo,CNF_TipoCarimbo,CNF_DetalheImpressao,CNF_Data,CNF_SituacaoProcesso,CNF_DataProcesso) " & _
                       " Values(" & RsCapaNF("NumeroPed") & ",'" & Trim(wLoja) & "','" & RsCapaNF("Serie") & "'," & RsCapaNF("nf") & _
                       ",1,' DESCONTO:    " & Format(RsCapaNF("desconto"), "#####0.00") & _
                       "' , 'Z',' ','" & Format(Date, "yyyy/mm/dd") & "','A','" & Format(Date, "yyyy/mm/dd") & "')"
-                rdoCNLoja.Execute (Sql)
+                rdoCNLoja.Execute (sql)
 
                 If Err.Number = 0 Then
                   rdoCNLoja.CommitTrans
@@ -1968,17 +1968,17 @@ Sql = "Select nfcapa.*, fin_Estado.*,fin_Cliente.* from nfcapa, fin_Estado, fin_
             
                 wSequenciaS = wSequenciaS + 1
                   
-                Sql = ""
-                Sql = "Select CE_linha12 from CarimbosEspeciais where ce_Referencia = '9999991'"
-                RsCarimbo.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+                sql = ""
+                sql = "Select CE_linha12 from CarimbosEspeciais where ce_Referencia = '9999991'"
+                RsCarimbo.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                   
                  rdoCNLoja.BeginTrans
                   
-                Sql = ""
-                Sql = " Insert into CarimboNotafiscal (CNF_NumeroPed,CNF_Loja,CNF_Serie,CNF_NF,CNF_Sequencia,CNF_Carimbo,CNF_TipoCarimbo,CNF_DetalheImpressao,CNF_Data,CNF_SituacaoProcesso,CNF_DataProcesso) " & _
+                sql = ""
+                sql = " Insert into CarimboNotafiscal (CNF_NumeroPed,CNF_Loja,CNF_Serie,CNF_NF,CNF_Sequencia,CNF_Carimbo,CNF_TipoCarimbo,CNF_DetalheImpressao,CNF_Data,CNF_SituacaoProcesso,CNF_DataProcesso) " & _
                   " Values(" & RsCapaNF("NumeroPed") & ",'" & Trim(wLoja) & "','" & RsCapaNF("Serie") & "'," & RsCapaNF("nf") & _
                   "," & wSequenciaS & " ,'" & RsCarimbo("CE_linha12") & "' , 'S',' ','" & Format(Date, "yyyy/mm/dd") & "','A','" & Format(Date, "yyyy/mm/dd") & "')"
-                rdoCNLoja.Execute (Sql)
+                rdoCNLoja.Execute (sql)
                 RsCarimbo.Close
             
                 If Err.Number = 0 Then
@@ -1993,18 +1993,18 @@ Sql = "Select nfcapa.*, fin_Estado.*,fin_Cliente.* from nfcapa, fin_Estado, fin_
             
                 wSequenciaS = wSequenciaS + 1
                             
-                Sql = ""
-                Sql = "Select CE_linha12 from CarimbosEspeciais where ce_Referencia = '9999992' "
+                sql = ""
+                sql = "Select CE_linha12 from CarimbosEspeciais where ce_Referencia = '9999992' "
                 RsCarimbo.CursorLocation = adUseClient
-                RsCarimbo.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+                RsCarimbo.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
             
                 rdoCNLoja.BeginTrans
             
-                Sql = ""
-                Sql = " Insert into CarimboNotafiscal (CNF_NumeroPed,CNF_Loja,CNF_Serie,CNF_NF,CNF_Sequencia,CNF_Carimbo,CNF_TipoCarimbo,CNF_DetalheImpressao,CNF_Data,CNF_SituacaoProcesso,CNF_DataProcesso) " & _
+                sql = ""
+                sql = " Insert into CarimboNotafiscal (CNF_NumeroPed,CNF_Loja,CNF_Serie,CNF_NF,CNF_Sequencia,CNF_Carimbo,CNF_TipoCarimbo,CNF_DetalheImpressao,CNF_Data,CNF_SituacaoProcesso,CNF_DataProcesso) " & _
                       " Values(" & RsCapaNF("NumeroPed") & ",'" & Trim(wLoja) & "','" & RsCapaNF("Serie") & "'," & RsCapaNF("nf") & _
                       "," & wSequenciaS & " ,'" & RsCarimbo("CE_linha12") & "' , 'S',' ','" & Format(Date, "yyyy/mm/dd") & "','A','" & Format(Date, "yyyy/mm/dd") & "')"
-                rdoCNLoja.Execute (Sql)
+                rdoCNLoja.Execute (sql)
             
                 If Err.Number = 0 Then
                     rdoCNLoja.CommitTrans
@@ -2026,18 +2026,18 @@ Sql = "Select nfcapa.*, fin_Estado.*,fin_Cliente.* from nfcapa, fin_Estado, fin_
           
           If tipoCupomEmite Like "CE*" Then
                 
-                Sql = ""
-                Sql = "Select top 1 ve_codigo as codigoVendedor, ve_nome as nome from nfcapa, vende where vendedor = ve_codigo and numeroped = " & NumeroDocumento
+                sql = ""
+                sql = "Select top 1 ve_codigo as codigoVendedor, ve_nome as nome from nfcapa, vende where vendedor = ve_codigo and numeroped = " & NumeroDocumento
                 RsCarimbo.CursorLocation = adUseClient
-                RsCarimbo.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+                RsCarimbo.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
             
                 rdoCNLoja.BeginTrans
             
-                Sql = ""
-                Sql = " Insert into CarimboNotafiscal (CNF_NumeroPed,CNF_Loja,CNF_Serie,CNF_NF,CNF_Sequencia,CNF_Carimbo,CNF_TipoCarimbo,CNF_DetalheImpressao,CNF_Data,CNF_SituacaoProcesso,CNF_DataProcesso) " & _
+                sql = ""
+                sql = " Insert into CarimboNotafiscal (CNF_NumeroPed,CNF_Loja,CNF_Serie,CNF_NF,CNF_Sequencia,CNF_Carimbo,CNF_TipoCarimbo,CNF_DetalheImpressao,CNF_Data,CNF_SituacaoProcesso,CNF_DataProcesso) " & _
                       " Values(" & RsCapaNF("NumeroPed") & ",'" & Trim(wLoja) & "','" & RsCapaNF("Serie") & "'," & RsCapaNF("nf") & _
                       "," & 0 & " ,'" & "Pedido: " & RsCapaNF("NumeroPed") & ", Vendedor: " & RsCarimbo("codigoVendedor") & " - " & RsCarimbo("nome") & "" & "' , 'S',' ','" & Format(Date, "yyyy/mm/dd") & "','A','" & Format(Date, "yyyy/mm/dd") & "')"
-                rdoCNLoja.Execute (Sql)
+                rdoCNLoja.Execute (sql)
             
                 If Err.Number = 0 Then
                     rdoCNLoja.CommitTrans
@@ -2049,25 +2049,25 @@ Sql = "Select nfcapa.*, fin_Estado.*,fin_Cliente.* from nfcapa, fin_Estado, fin_
           
           End If
           
-            Sql = ""
-            Sql = "select count(*) as somacarimbo from carimbonotafiscal where cnf_Loja = '" & RsCapaNF("Lojaorigem") & "' and CNF_NF = " & RsCapaNF("nf") & _
+            sql = ""
+            sql = "select count(*) as somacarimbo from carimbonotafiscal where cnf_Loja = '" & RsCapaNF("Lojaorigem") & "' and CNF_NF = " & RsCapaNF("nf") & _
                          " and cnf_serie = '" & RsCapaNF("serie") & "' " & _
                          " and CNF_NumeroPed = " & RsCapaNF("numeroped") & " "
             RsCarimbo.CursorLocation = adUseClient
-            RsCarimbo.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+            RsCarimbo.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
             If Not RsCarimbo.EOF Then
                wTotalCarimbo = RsCarimbo("somacarimbo")
             End If
             RsCarimbo.Close
             
           
-            Sql = ""
-            Sql = "select * from carimbonotafiscal where cnf_Loja = '" & RsCapaNF("Lojaorigem") & "' and CNF_NF = " & RsCapaNF("nf") & _
+            sql = ""
+            sql = "select * from carimbonotafiscal where cnf_Loja = '" & RsCapaNF("Lojaorigem") & "' and CNF_NF = " & RsCapaNF("nf") & _
                   " and cnf_serie = '" & RsCapaNF("serie") & "' " & _
                   " and CNF_NumeroPed = " & RsCapaNF("numeroped") & _
                   " order by cnf_tipocarimbo desc, cnf_sequencia asc"
             RsCarimbo.CursorLocation = adUseClient
-            RsCarimbo.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+            RsCarimbo.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
             If Not RsCarimbo.EOF Then
                 
@@ -2100,13 +2100,13 @@ Sql = "Select nfcapa.*, fin_Estado.*,fin_Cliente.* from nfcapa, fin_Estado, fin_
 
                    rdoCNLoja.BeginTrans
                    
-                   Sql = ""
-                   Sql = "update CarimboNotafiscal set CNF_DetalheImpressao = '" & wDetalheImpressao & "', cnf_data = '" & Format(RsCapaNF("dataemi"), "yyyy/mm/dd") & "'" & _
+                   sql = ""
+                   sql = "update CarimboNotafiscal set CNF_DetalheImpressao = '" & wDetalheImpressao & "', cnf_data = '" & Format(RsCapaNF("dataemi"), "yyyy/mm/dd") & "'" & _
                          " where cnf_Loja = '" & RsCarimbo("cnf_Loja") & "' and cnf_nf = " & RsCarimbo("cnf_nf") & _
                          " and cnf_serie = '" & RsCarimbo("cnf_serie") & "' and cnf_tipocarimbo = '" & RsCarimbo("cnf_tipocarimbo") & "' " & _
                          " and cnf_sequencia = '" & RsCarimbo("cnf_sequencia") & "' " & _
                          " and CNF_NumeroPed = " & RsCapaNF("numeroped") & " "
-                         rdoCNLoja.Execute (Sql)
+                         rdoCNLoja.Execute (sql)
                          
                    If Err.Number = 0 Then
                         rdoCNLoja.CommitTrans
@@ -2121,16 +2121,16 @@ Sql = "Select nfcapa.*, fin_Estado.*,fin_Cliente.* from nfcapa, fin_Estado, fin_
              
 '-------------------------------------- ATUALIZA CAPA DE VENDA --------------------------------------------------
              
-             Sql = "update nfitens set BaseICMS = 0 where BaseICMS is null and numeroped = " & NumeroDocumento
-             rdoCNLoja.Execute (Sql)
+             sql = "update nfitens set BaseICMS = 0 where BaseICMS is null and numeroped = " & NumeroDocumento
+             rdoCNLoja.Execute (sql)
              
-             Sql = "Select sum(BASEICMS) as BaseICMS from nfitens where numeroped = " & NumeroDocumento
+             sql = "Select sum(BASEICMS) as BaseICMS from nfitens where numeroped = " & NumeroDocumento
              RsCarimbo.CursorLocation = adUseClient
-             RsCarimbo.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+             RsCarimbo.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
              
-             Sql = "select top 1 CFOP from nfitens where numeroped = " & NumeroDocumento
+             sql = "select top 1 CFOP from nfitens where numeroped = " & NumeroDocumento
              RsItensNF.CursorLocation = adUseClient
-             RsItensNF.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+             RsItensNF.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
              rdoCNLoja.BeginTrans
 
@@ -2142,7 +2142,7 @@ Sql = "Select nfcapa.*, fin_Estado.*,fin_Cliente.* from nfcapa, fin_Estado, fin_
 '''                & "where nfcapa.numeroped = " & NumeroDocumento & ""
 '''                rdoCNLoja.Execute (sql)
                 
-             Sql = "UPDATE nfcapa set " _
+             sql = "UPDATE nfcapa set " _
                 & "Paginanf = " & ConverteVirgula(wUltimoItem) & ",BaseICMS = " _
                 & ConverteVirgula(RsCarimbo("BaseICMS")) & ", " _
                 & "valorICMSFECP = '" & ConverteVirgula(wTotalVICMSFECP) & "', " _
@@ -2150,7 +2150,7 @@ Sql = "Select nfcapa.*, fin_Estado.*,fin_Cliente.* from nfcapa, fin_Estado, fin_
                 & "valICMSDest = '" & ConverteVirgula(wIE_icmsFECPUFDESTTotal) & "', " _
                 & "ECF  = " & GLB_ECF & ", CodOper = " & RsItensNF("CFOP") & " " _
                 & "where nfcapa.numeroped = " & NumeroDocumento & ""
-                rdoCNLoja.Execute (Sql)
+                rdoCNLoja.Execute (sql)
 
                 
              If Err.Number = 0 Then
@@ -2201,10 +2201,10 @@ Sub PegaNumeroRomaneio()
 
         Screen.MousePointer = 11
         
-        Sql = "Select * from ControleSistema "
+        sql = "Select * from ControleSistema "
         
         rdocontrole.CursorLocation = adUseClient
-        rdocontrole.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        rdocontrole.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
             
         NroNotaFiscal = rdocontrole("CTS_Numero00") + 1
         rdocontrole.Close
@@ -2212,9 +2212,9 @@ Sub PegaNumeroRomaneio()
         rdoCNLoja.BeginTrans
         Screen.MousePointer = vbHourglass
         
-        Sql = "Update ControleSistema set CTS_Numero00 =" & NroNotaFiscal
+        sql = "Update ControleSistema set CTS_Numero00 =" & NroNotaFiscal
         
-        rdoCNLoja.Execute Sql
+        rdoCNLoja.Execute sql
         Screen.MousePointer = vbNormal
         rdoCNLoja.CommitTrans
      
@@ -2222,23 +2222,23 @@ Sub PegaNumeroRomaneio()
          rdoCNLoja.BeginTrans
           Screen.MousePointer = vbHourglass
           
-          Sql = "Update nfcapa set NF = " & NroNotaFiscal _
+          sql = "Update nfcapa set NF = " & NroNotaFiscal _
               & ", Serie = '00' Where NumeroPed = " & pedido _
               & " and tiponota = 'PA'"
           
-          rdoCNLoja.Execute Sql
+          rdoCNLoja.Execute sql
           Screen.MousePointer = vbNormal
           rdoCNLoja.CommitTrans
           
           rdoCNLoja.BeginTrans
           Screen.MousePointer = vbHourglass
           
-          Sql = "Update nfitens set NF = " & NroNotaFiscal _
+          sql = "Update nfitens set NF = " & NroNotaFiscal _
               & ", Serie = '00' Where NumeroPed = " & pedido _
               & " and tiponota = 'PA'"
           
           
-          rdoCNLoja.Execute Sql
+          rdoCNLoja.Execute sql
           Screen.MousePointer = vbNormal
           rdoCNLoja.CommitTrans
 End Sub
@@ -2252,10 +2252,10 @@ Function AcharICMSInterEstadual(ByVal Referencia As String, ByVal ChaveIcms As D
     wIE_BasedeReducao = 0
     wIE_icmsdestino = 0
     
-    Sql = "SELECT * from IcmsInterEstadual where IE_Codigo = " & ChaveIcms
+    sql = "SELECT * from IcmsInterEstadual where IE_Codigo = " & ChaveIcms
        
     RsICMSIntER.CursorLocation = adUseClient
-    RsICMSIntER.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    RsICMSIntER.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
            
     If RsICMSIntER.EOF Then
         AcharICMSInterEstadual = False
@@ -2282,15 +2282,15 @@ End Function
 Function ConsistenciaNota(ByVal pedido As Double, ByVal Serie As String) As Boolean
     
     
-    Sql = ""
-    Sql = "Select count(NfItens.Referencia) as QuantRef, NfCapa.QtdItem from NfCapa,NfItens " _
+    sql = ""
+    sql = "Select count(NfItens.Referencia) as QuantRef, NfCapa.QtdItem from NfCapa,NfItens " _
         & "where NfCapa.NumeroPed=" & pedido & " " _
         & "and NfItens.NumeroPed=NfCapa.NumeroPed " _
         & "Group by NfCapa.QtdItem " _
         & "having Count(NfItens.Referencia) = NfCapa.QtdItem"
     
     rsItemNota.CursorLocation = adUseClient
-    rsItemNota.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsItemNota.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     If Not rsItemNota.EOF Then
         ConsistenciaNota = True
     Else
@@ -2642,27 +2642,45 @@ lsDSN = "Driver={Microsoft Access Driver (*.mdb)};" & _
           "Dbq=c:\sistemas\DMACini.mdb;" & _
           "Uid=Admin; Pwd=astap36"
   adoCNAccess.Open lsDSN
-  Sql = "Select * from ConexaoTEF"
+   sql = "Select * from ConexaoTEFGETNET"
   rdoConexaoINI.CursorLocation = adUseClient
-  rdoConexaoINI.Open Sql, adoCNAccess, adOpenForwardOnly, adLockPessimistic
+  rdoConexaoINI.Open sql, adoCNAccess, adOpenForwardOnly, adLockPessimistic
  
         If Not rdoConexaoINI.EOF Then
-           
-           GLB_ServidorTEF = Trim(rdoConexaoINI("TEF_Servidor"))
-           GLB_BancoTEF = Trim(rdoConexaoINI("TEF_Banco"))
-         End If
+        
+tef_terminal = rdoConexaoINI("DTef_Terminal")
+tef_versao_ac = rdoConexaoINI("DTef_versao_ac")
+tef_nome_ac = rdoConexaoINI("DTef_nome_ac")
+tef_num_sites = rdoConexaoINI("DTef_num_sites")
+tef_lista_ips = rdoConexaoINI("DTef_lista_ips") + " "
+tef_parametros = rdoConexaoINI("DTef_parametros")
+    
+  If rdoConexaoINI("DTef_criptografia") = True Then
+    tef_criptografia = "1"
+  Else
+   tef_criptografia = "0"
+  End If
+  
+  
+   If rdoConexaoINI("DTef_log") = True Then
+    tef_log = "1"
+  Else
+   tef_log = "0"
+  End If
+ 
+ End If
   rdoConexaoINI.Close
    
-  Sql = "Select count(*) as QtdeDeLojasINI from ConexaoSistema"
+  sql = "Select count(*) as QtdeDeLojasINI from ConexaoSistema"
    
   rdoConexaoINI.CursorLocation = adUseClient
-  rdoConexaoINI.Open Sql, adoCNAccess, adOpenForwardOnly, adLockPessimistic
+  rdoConexaoINI.Open sql, adoCNAccess, adOpenForwardOnly, adLockPessimistic
  
         If Not rdoConexaoINI.EOF Then
             
-          Sql = "Select * from ParametroSistema"
+          sql = "Select * from ParametroSistema"
           rdoParametroINI.CursorLocation = adUseClient
-          rdoParametroINI.Open Sql, adoCNAccess, adOpenForwardOnly, adLockPessimistic
+          rdoParametroINI.Open sql, adoCNAccess, adOpenForwardOnly, adLockPessimistic
            
           If Not rdoParametroINI.EOF Then
              GLB_ECF = Trim(rdoParametroINI("CXA_ECF"))
@@ -2685,9 +2703,9 @@ lsDSN = "Driver={Microsoft Access Driver (*.mdb)};" & _
            
               rdoConexaoINI.Close
               
-              Sql = "Select * from ConexaoSistema"
+              sql = "Select * from ConexaoSistema"
                      rdoConexaoINI.CursorLocation = adUseClient
-                     rdoConexaoINI.Open Sql, adoCNAccess, adOpenForwardOnly, adLockPessimistic
+                     rdoConexaoINI.Open sql, adoCNAccess, adOpenForwardOnly, adLockPessimistic
                      
                      If Not rdoConexaoINI.EOF Then
                         GLB_Servidor = Trim(rdoConexaoINI("GLB_ServidorRetaguarda"))
@@ -2727,10 +2745,10 @@ Continua:
  
     If GLB_ConectouOK = True Then
        Call DadosLoja
-        Sql = "Select * from ControleCaixa Where CTR_Supervisor = 99 and CTR_SituacaoCaixa='F' " _
+        sql = "Select * from ControleCaixa Where CTR_Supervisor = 99 and CTR_SituacaoCaixa='F' " _
            & "and CTR_datainicial >= '" & Format(Date, "yyyy/mm/dd") & "'"
             rsNFE.CursorLocation = adUseClient
-            rsNFE.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+            rsNFE.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
             If Not rsNFE.EOF Then
                MsgBox "Fechamento Geral de hoje já foi efetuado. Não é possivel abrir o Caixa."
                wPermitirVenda = False
@@ -2807,10 +2825,10 @@ End Sub
 
 Sub AtualizaNumeroCupom()
 
-    Sql = ""
-    Sql = "Update controleEcf set ct_ultimocupom= CT_UltimoCupom + 1 " _
+    sql = ""
+    sql = "Update controleEcf set ct_ultimocupom= CT_UltimoCupom + 1 " _
         & "where CT_Ecf=" & Val(GLB_ECF) & ""
-           rdoCNLoja.Execute (Sql)
+           rdoCNLoja.Execute (sql)
 
 End Sub
 
@@ -2912,11 +2930,11 @@ Function ConcatenaCarimboNF(NroPedido As Long)
 
    Dim Carimbo As String
    Carimbo = ""
-   Sql = ""
-   Sql = "select cnf_Carimbo from carimbonotafiscal where cnf_numeroped = " & NroPedido & _
+   sql = ""
+   sql = "select cnf_Carimbo from carimbonotafiscal where cnf_numeroped = " & NroPedido & _
          " order by cnf_tipocarimbo desc, cnf_sequencia asc"
    RsCarimbo.CursorLocation = adUseClient
-   RsCarimbo.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+   RsCarimbo.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
    Do While Not RsCarimbo.EOF
    
@@ -2931,9 +2949,9 @@ End Function
 
 Function BuscaQtdeViaImpressaoMovimento()
    
-    Sql = "Select CTS_QtdeViaMovimento from controlesistema"
+    sql = "Select CTS_QtdeViaMovimento from controlesistema"
     rdocontrole.CursorLocation = adUseClient
-    rdocontrole.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rdocontrole.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     wQdteViasImpressao = IIf(IsNull(rdocontrole("CTS_QtdeViaMovimento")), 1, rdocontrole("CTS_QtdeViaMovimento"))
     rdocontrole.Close
@@ -2943,9 +2961,9 @@ End Function
 
 Function BuscaQtdeViaImpressaoRomaneio()
 
-    Sql = "Select CTS_QtdeViaRomaneio from controlesistema"
+    sql = "Select CTS_QtdeViaRomaneio from controlesistema"
     rdocontrole.CursorLocation = adUseClient
-    rdocontrole.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rdocontrole.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     wQdteViasImpressao = IIf(IsNull(rdocontrole("CTS_QtdeViaMovimento")), 1, rdocontrole("CTS_QtdeViaMovimento"))
     rdocontrole.Close
@@ -2959,16 +2977,16 @@ Function InserirPreVenda(NroPedido As Long)
   GLB_CodigoNFTef = ""
   wDescontoTEF = 0
   
-  Sql = "Select (totalnota + desconto) as totalnota,cpfnfp,desconto from nfcapa " _
+  sql = "Select (totalnota + desconto) as totalnota,cpfnfp,desconto from nfcapa " _
       & "where numeroped = " & NroPedido
   rsTEF.CursorLocation = adUseClient
-  rsTEF.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+  rsTEF.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
   
   If Not rsTEF.EOF Then
 
-      Sql = "select count(*) as QtdePag from movimentocaixa where mc_grupo like '10%' and mc_pedido = " & NroPedido
+      sql = "select count(*) as QtdePag from movimentocaixa where mc_grupo like '10%' and mc_pedido = " & NroPedido
       rdocontrole.CursorLocation = adUseClient
-      rdocontrole.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+      rdocontrole.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
       If rdocontrole("QtdePag") > 1 Then
          wPagamentoECF = 0
@@ -2981,13 +2999,13 @@ Function InserirPreVenda(NroPedido As Long)
       
       wCGC = Val(rsTEF("cpfnfp"))
      
-      Sql = ""
-      Sql = "Exec InserirPreVenda '" & NroPedido & "','" & Format(Date, "yyyy/mm/dd") & "', " _
+      sql = ""
+      sql = "Exec InserirPreVenda '" & NroPedido & "','" & Format(Date, "yyyy/mm/dd") & "', " _
             & ConverteVirgula(Format(rsTEF("Totalnota"), "0.00")) & "," & wDescontoTEF & "," & wDescontoTEF & "," _
             & ConverteVirgula(rsTEF("Desconto")) & ",0,0,0,'" _
             & wCGC & "'," & wPagamentoECF & ",0,0"
 
-      rdoCNTEF.Execute Sql
+      rdoCNTEF.Execute sql
       
 
 ''    @Referencia AS VARCHAR(6),
@@ -3021,21 +3039,21 @@ Function InserirItemPreVenda(NroPedido As Long)
 
   wSequencia = 0
   
-  Sql = ""
-  Sql = "Select sequencial,valortotalitens from prevenda where referencia = " & NroPedido
+  sql = ""
+  sql = "Select sequencial,valortotalitens from prevenda where referencia = " & NroPedido
   rsTEF.CursorLocation = adUseClient
-  rsTEF.Open Sql, rdoCNTEF, adOpenForwardOnly, adLockPessimistic
+  rsTEF.Open sql, rdoCNTEF, adOpenForwardOnly, adLockPessimistic
   wSequencia = rsTEF("sequencial")
   rsTEF.Close
   
-  Sql = ""
-  Sql = "Select referencia,qtde,pr_descricao,pr_icmpdv,pr_icmspdvsaidaiva,pr_st,PR_SubstituicaoTributaria, " & _
+  sql = ""
+  sql = "Select referencia,qtde,pr_descricao,pr_icmpdv,pr_icmspdvsaidaiva,pr_st,PR_SubstituicaoTributaria, " & _
         "vlunit as preco " & _
         "from nfitens,produtoloja where pr_referencia = referencia " & _
         "and numeroped = " & NroPedido
   
   rsTEF.CursorLocation = adUseClient
-  rsTEF.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+  rsTEF.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
  If Not rsTEF.EOF Then
      Do While Not rsTEF.EOF
@@ -3052,14 +3070,14 @@ Function InserirItemPreVenda(NroPedido As Long)
            situacaotributaria = "F"
        End If
 
-       Sql = ""
-       Sql = "Exec AtualizarProdutoServico '0000000" & Trim(rsTEF("referencia")) & "','" & Trim(rsTEF("pr_descricao")) & "'," & _
+       sql = ""
+       sql = "Exec AtualizarProdutoServico '0000000" & Trim(rsTEF("referencia")) & "','" & Trim(rsTEF("pr_descricao")) & "'," & _
              ConverteVirgula(Format(rsTEF("preco"), "0.00")) & ",0,'PC',0," & rsTEF("qtde") & "," & ConverteVirgula(wicmstef) & ",'" & situacaotributaria & "',0"
-       rdoCNTEF.Execute Sql
+       rdoCNTEF.Execute sql
 
-       Sql = ""
-       Sql = "Exec InserirItemPreVenda " & wSequencia & ",'0000000" & Trim(rsTEF("referencia")) & "'," & rsTEF("qtde") & ",0,0,0,0,0,0,0"
-       rdoCNTEF.Execute Sql
+       sql = ""
+       sql = "Exec InserirItemPreVenda " & wSequencia & ",'0000000" & Trim(rsTEF("referencia")) & "'," & rsTEF("qtde") & ",0,0,0,0,0,0,0"
+       rdoCNTEF.Execute sql
        rsTEF.MoveNext
      Loop
   Else
@@ -3074,10 +3092,10 @@ Function InserirPagamentoPreVenda(NroPedido As Long)
 Dim wSequencia As Integer
 Dim wSeqPagamento As Integer
   
-  Sql = "select count(*) as QTDEPag from movimentocaixa " _
+  sql = "select count(*) as QTDEPag from movimentocaixa " _
            & "Where mc_grupo like '10%' and mc_pedido = " & NroPedido
       rsTEF.CursorLocation = adUseClient
-      rsTEF.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+      rsTEF.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
   
   If rsTEF("QTDEPag") = 1 Then
       rsTEF.Close
@@ -3088,29 +3106,29 @@ Dim wSeqPagamento As Integer
   wSequencia = 0
   wSeqPagamento = 0
   
-  Sql = ""
-  Sql = "Select sequencial from prevenda where referencia = " & NroPedido
+  sql = ""
+  sql = "Select sequencial from prevenda where referencia = " & NroPedido
   rsTEF.CursorLocation = adUseClient
-  rsTEF.Open Sql, rdoCNTEF, adOpenForwardOnly, adLockPessimistic
+  rsTEF.Open sql, rdoCNTEF, adOpenForwardOnly, adLockPessimistic
   
   wSequencia = rsTEF("sequencial")
   rsTEF.Close
   
 
-       Sql = "select fpt_CodigoTEF,MC_Valor from formapagamentotef,modalidade,movimentocaixa " _
+       sql = "select fpt_CodigoTEF,MC_Valor from formapagamentotef,modalidade,movimentocaixa " _
            & "Where RTrim(LTrim(fpt_condicao)) = RTrim(LTrim(mo_descricao)) " _
            & "and mo_grupo like '10%' and mo_grupo =  mc_grupo and mc_pedido = " & NroPedido
       rsTEF.CursorLocation = adUseClient
-      rsTEF.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+      rsTEF.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
       If Not rsTEF.EOF Then
          Do While Not rsTEF.EOF
             wSeqPagamento = wSeqPagamento + 1
          
-            Sql = "Exec InserirFormaPagamentoPreVenda " & rsTEF("FPT_CodigoTEF") & "," & wSequencia & "," _
+            sql = "Exec InserirFormaPagamentoPreVenda " & rsTEF("FPT_CodigoTEF") & "," & wSequencia & "," _
                 & wSeqPagamento & "," _
                 & ConverteVirgula(rsTEF("MC_Valor")) & ",0"
-            rdoCNTEF.Execute Sql
+            rdoCNTEF.Execute sql
             rsTEF.MoveNext
           Loop
       Else
@@ -3132,20 +3150,20 @@ Screen.MousePointer = 11
   frmFormaPagamento.Enabled = False
   Do While wCont < 10
      
-     Sql = "select NumeroCupomReferencia from LogOperacao where ReferenciaPreVenda = " & NroPedido
+     sql = "select NumeroCupomReferencia from LogOperacao where ReferenciaPreVenda = " & NroPedido
      rsTEF.CursorLocation = adUseClient
-     rsTEF.Open Sql, rdoCNTEF, adOpenForwardOnly, adLockPessimistic
+     rsTEF.Open sql, rdoCNTEF, adOpenForwardOnly, adLockPessimistic
   
      If Not rsTEF.EOF Then
 
-        Sql = "update nfcapa set serie = '" & GLB_SerieCF & "', nf = " & rsTEF("NumeroCupomReferencia") & " where numeroped = " & NroPedido
-        rdoCNLoja.Execute Sql
+        sql = "update nfcapa set serie = '" & GLB_SerieCF & "', nf = " & rsTEF("NumeroCupomReferencia") & " where numeroped = " & NroPedido
+        rdoCNLoja.Execute sql
   
-        Sql = "update nfitens set serie = '" & GLB_SerieCF & "',nf = " & rsTEF("NumeroCupomReferencia") & " where numeroped = " & NroPedido
-        rdoCNLoja.Execute Sql
+        sql = "update nfitens set serie = '" & GLB_SerieCF & "',nf = " & rsTEF("NumeroCupomReferencia") & " where numeroped = " & NroPedido
+        rdoCNLoja.Execute sql
   
-        Sql = "update movimentocaixa set mc_serie = '" & GLB_SerieCF & "',mc_documento = " & rsTEF("NumeroCupomReferencia") & " where mc_pedido = " & NroPedido
-        rdoCNLoja.Execute Sql
+        sql = "update movimentocaixa set mc_serie = '" & GLB_SerieCF & "',mc_documento = " & rsTEF("NumeroCupomReferencia") & " where mc_pedido = " & NroPedido
+        rdoCNLoja.Execute sql
         
         rsTEF.Close
         frmFormaPagamento.Enabled = True
@@ -3165,16 +3183,16 @@ Screen.MousePointer = 11
          Screen.MousePointer = 11
 
          
-        Sql = "update nfcapa set serie = null, tiponota = 'PA' , nf = null where numeroped = " & NroPedido
-        rdoCNLoja.Execute Sql
+        sql = "update nfcapa set serie = null, tiponota = 'PA' , nf = null where numeroped = " & NroPedido
+        rdoCNLoja.Execute sql
   
-        Sql = "update nfitens set serie = null, tiponota = 'PA' , nf = null where numeroped = " & NroPedido
-        rdoCNLoja.Execute Sql
+        sql = "update nfitens set serie = null, tiponota = 'PA' , nf = null where numeroped = " & NroPedido
+        rdoCNLoja.Execute sql
   
-        Sql = "delete movimentocaixa where mc_pedido = " & NroPedido
-        rdoCNLoja.Execute Sql
+        sql = "delete movimentocaixa where mc_pedido = " & NroPedido
+        rdoCNLoja.Execute sql
         
-        Sql = "delete carimbonotafiscal where cnf_numeroped =" & NroPedido
+        sql = "delete carimbonotafiscal where cnf_numeroped =" & NroPedido
         
         frmFormaPagamento.txtTipoNota = "PA"
         Screen.MousePointer = 0
@@ -3235,12 +3253,12 @@ End Function
 
 Public Sub VerificaSeEmiteCupom()
 
-    Dim Sql As String
+    Dim sql As String
 
-    Sql = "Select upper(CS_SerieCF) as serie from Controleserie"
+    sql = "Select upper(CS_SerieCF) as serie from Controleserie"
     
     rdoSerie.CursorLocation = adUseClient
-    rdoSerie.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rdoSerie.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     If Not rdoSerie.EOF Then
         tipoCupomEmite = rdoSerie("serie")
@@ -3264,11 +3282,11 @@ End Sub
 
 Function BuscaCodigoPagamentoTEF(FormaTEF As String) As Integer
 
-       Sql = ""
-       Sql = "Select FPT_CodigoTEF from FormaPagamentoTEF where FPT_Condicao = '" & Trim(UCase(FormaTEF)) & "'"
+       sql = ""
+       sql = "Select FPT_CodigoTEF from FormaPagamentoTEF where FPT_Condicao = '" & Trim(UCase(FormaTEF)) & "'"
        
        rdoSerie.CursorLocation = adUseClient
-       rdoSerie.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rdoSerie.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
        If Not rdoSerie.EOF Then
          If frmFormaPagamento.chbPOS.Value = 1 And rdoSerie("FPT_CodigoTEF") = 3 Then
@@ -3288,26 +3306,26 @@ End Function
 
 Function ConverteNFparaCF(NroPedido As Long)
 ''        Dim NroNF As Integer
-        Sql = "update nfcapa set tiponota = 'PA' where numeroped = " & NroPedido
-        rdoCNLoja.Execute Sql
+        sql = "update nfcapa set tiponota = 'PA' where numeroped = " & NroPedido
+        rdoCNLoja.Execute sql
 
-        Sql = "update nfitens set tiponota = 'PA' where numeroped = " & NroPedido
-        rdoCNLoja.Execute Sql
+        sql = "update nfitens set tiponota = 'PA' where numeroped = " & NroPedido
+        rdoCNLoja.Execute sql
 
-        Sql = "delete movimentocaixa where mc_pedido = " & NroPedido
-        rdoCNLoja.Execute Sql
+        sql = "delete movimentocaixa where mc_pedido = " & NroPedido
+        rdoCNLoja.Execute sql
           
-        Sql = "delete CarimboNotaFiscal where cnf_numeroped = " & NroPedido
-        rdoCNLoja.Execute Sql
+        sql = "delete CarimboNotaFiscal where cnf_numeroped = " & NroPedido
+        rdoCNLoja.Execute sql
         
-        Sql = "Delete itemprevenda"
-        rdoCNTEF.Execute Sql
+        sql = "Delete itemprevenda"
+        rdoCNTEF.Execute sql
         
-        Sql = "Delete prevendaxformapagamento"
-        rdoCNTEF.Execute Sql
+        sql = "Delete prevendaxformapagamento"
+        rdoCNTEF.Execute sql
 
-        Sql = "Delete prevenda"
-        rdoCNTEF.Execute Sql
+        sql = "Delete prevenda"
+        rdoCNTEF.Execute sql
         
 End Function
 
@@ -3359,12 +3377,12 @@ End Sub
 Public Sub verificaGarantiaEstendida(ByRef pedido As String)
  '  Private Sub pedidoComGarantia(NumeroPedido As String)
     Screen.MousePointer = 11
-    Sql = "select count(*) garantiaEstendida " & vbNewLine & _
+    sql = "select count(*) garantiaEstendida " & vbNewLine & _
           "from nfcapa " & vbNewLine & _
           "where numeroPed = " & pedido & " and garantiaEstendida = 'S' and tipoNota = 'V' "
     
     rsProdutoGarantiaEstendida.CursorLocation = adUseClient
-    rsProdutoGarantiaEstendida.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsProdutoGarantiaEstendida.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     'Set rsProdutoGarantiaEstendida = rdoCNLoja.OpenResultset(SQL)
         Screen.MousePointer = 0
@@ -3390,11 +3408,11 @@ End Function
 
 Function VerificaSeEmiteCodigoZero() As String
 
-       Sql = ""
-       Sql = "Select CTS_EmiteCodigoZero from ControleSistema"
+       sql = ""
+       sql = "Select CTS_EmiteCodigoZero from ControleSistema"
      
        rdoSerie.CursorLocation = adUseClient
-       rdoSerie.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rdoSerie.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
        If Not rdoSerie.EOF Then
            VerificaSeEmiteCodigoZero = rdoSerie("CTS_EmiteCodigoZero")
@@ -3422,13 +3440,13 @@ wControlaQuebraDaPagina = 0
 
     Call DadosLoja
             
-    Sql = "select qtditem from nfcapa Where NumeroPed = " & frmControlaCaixa.txtPedido.text
-    rsComplementoVenda.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    sql = "select qtditem from nfcapa Where NumeroPed = " & frmControlaCaixa.txtPedido.text
+    rsComplementoVenda.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
             
             
-    Sql = ""
+    sql = ""
    
-    Sql = "Select NFCAPA.FreteCobr,NFCAPA.PedCli,NFCAPA.LojaVenda,NFCAPA.VendedorLojaVenda,NFCAPA.AV," _
+    sql = "Select NFCAPA.FreteCobr,NFCAPA.PedCli,NFCAPA.LojaVenda,NFCAPA.VendedorLojaVenda,NFCAPA.AV," _
         & "NFCAPA.Nf,NFCAPA.BASEICMS, NFCAPA.Serie, NFCAPA.PAGINANF, " _
         & "NFCAPA.volume,NFCAPA.PESOBR, NFCAPA.PESOLQ,  " _
         & "NFCAPA.CLIENTE,NFCAPA.NUMEROPED,NFCAPA.VENDEDOR," _
@@ -3448,13 +3466,13 @@ wControlaQuebraDaPagina = 0
 
 
     RsDados.CursorLocation = adUseClient
-    RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     
     If Not RsDados.EOF Then
       Cabecalhotransferencia "T"
       
-      Sql = "Select produtoloja.pr_referencia,produtoloja.pr_descricao, " _
+      sql = "Select produtoloja.pr_referencia,produtoloja.pr_descricao, " _
           & "produtoloja.pr_classefiscal,produtoloja.pr_unidade,produtoloja.pr_st, " _
           & "produtoloja.pr_icmssaida,nfitens.referencia,nfitens.qtde,NfItens.TipoNota," _
           & "nfitens.vlunit,nfitens.vltotitem,nfitens.icms,nfitens.detalheImpressao,nfitens.CSTICMS," _
@@ -3464,7 +3482,7 @@ wControlaQuebraDaPagina = 0
           & "and nfitens.nf = " & nota & " and Serie='" & Serie & "' order by nfitens.item"
      
       rsItensVenda.CursorLocation = adUseClient
-      rsItensVenda.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+      rsItensVenda.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
       If Not rsItensVenda.EOF Then
          wConta = 0
@@ -3625,23 +3643,23 @@ Function Cabecalhotransferencia(ByVal tiponota As String)
     Linha(ContLinha) = "Pedido " & RsDados("NUMEROPED") & "  Ven " & RsDados("VENDEDOR")
     ContLinha = ContLinha + 1
              
-    Sql = "select mo_descricao,mc_valor,mo_grupo from movimentocaixa,modalidade " & _
+    sql = "select mo_descricao,mc_valor,mo_grupo from movimentocaixa,modalidade " & _
           "where mc_grupo = mo_grupo and mc_documento = " & RsDados("nf") & " and mc_Serie ='" & RsDados("serie") & _
           "' and mc_loja = '" & Trim(RsDados("lojaorigem")) & "' and mc_grupo like '10%'"
 
     rdoModalidade.CursorLocation = adUseClient
-    rdoModalidade.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rdoModalidade.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
          
     If Not rdoModalidade.EOF Then
         Do While Not rdoModalidade.EOF
          
           If rdoModalidade("mo_grupo") = 10501 Then
             
-               Sql = "Select cp_condicao,cp_intervaloParcelas,cp_parcelas from CondicaoPagamento " _
+               sql = "Select cp_condicao,cp_intervaloParcelas,cp_parcelas from CondicaoPagamento " _
                     & "where  CP_Codigo =" & RsDados("CondPag")
 
                rdoConPag.CursorLocation = adUseClient
-               rdoConPag.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+               rdoConPag.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                wValorParcela = Format((RsDados("totalnota") - RsDados("pgentra")) / rdoConPag("cp_parcelas"), "###,##0.00")
                ContParcela = 1
                wMid = 1
@@ -3777,16 +3795,16 @@ End Function
 
 Private Sub ImprimeCarimboTransferencia()
                  
-                       Sql = ""
+                       sql = ""
 '                       SQL = "Select CNF_Carimbo,CNF_DetalheImpressao,CNF_TipoCarimbo from CarimboNotaFiscal where " & _
 '                             "CNF_Nf = " & rsNFE("nf") & " and CNF_Serie = '" & rsNFE("Serie") & "' and CNF_Loja = '" & rsNFE("Lojaorigem") & "'" & _
 '                             "order by cnf_tipocarimbo desc, cnf_sequencia asc"
-                       Sql = "Select CNF_Carimbo,CNF_DetalheImpressao,CNF_TipoCarimbo from CarimboNotaFiscal where " & _
+                       sql = "Select CNF_Carimbo,CNF_DetalheImpressao,CNF_TipoCarimbo from CarimboNotaFiscal where " & _
                              "CNF_Numeroped = '" & Trim(frmControlaCaixa.txtPedido.text) & "'" & _
                              "order by cnf_tipocarimbo desc, cnf_sequencia asc"
                        
                        RsPegaItensEspeciais.CursorLocation = adUseClient
-                       RsPegaItensEspeciais.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+                       RsPegaItensEspeciais.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
                        If Not RsPegaItensEspeciais.EOF Then
                             Printer.Print ""
@@ -3900,7 +3918,7 @@ Public Function carregaProdutoGarantia(pedido As String) As Boolean
     
     aceitaGarantia = False
     
-    Sql = "select count(*) itensGarantia " & _
+    sql = "select count(*) itensGarantia " & _
     "from produtoLoja as p, nfitens as i, nfcapa as c " & _
     "where i.numeroPed = " & pedido & " and  " & _
     "p.pr_referencia = i.referencia and " & _
@@ -3909,7 +3927,7 @@ Public Function carregaProdutoGarantia(pedido As String) As Boolean
     "c.condpag  < 3"
     
     rsProdGarantiaEstendida.CursorLocation = adUseClient
-    rsProdGarantiaEstendida.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsProdGarantiaEstendida.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
         If Val(rsProdGarantiaEstendida("itensGarantia")) > 0 Then
             frmGarantiaEstendida.wNumeroPedido = pedido
@@ -3934,7 +3952,7 @@ Public Sub ImprimeTransferencia00(ByVal nota As Double)
     Dim TotalVenda As Double
 
     Dim nomeEmpresa As String * 48
-    Dim cnpj As String * 48
+    Dim CNPJ As String * 48
     Dim Data As String * 48
     Dim Endereco As String * 48
     Dim Telefone As String * 48
@@ -3948,15 +3966,15 @@ Public Sub ImprimeTransferencia00(ByVal nota As Double)
     ValorDesconto = 0
     SubTotal = 0
 
-    Sql = "Select Lojaorigem,cliente,totalnota,lojat from nfcapa Where numeroped = " & frmControlaCaixa.txtPedido.text
+    sql = "Select Lojaorigem,cliente,totalnota,lojat from nfcapa Where numeroped = " & frmControlaCaixa.txtPedido.text
     
     RsDadosCapa.CursorLocation = adUseClient
-    RsDadosCapa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    RsDadosCapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
-    Sql = "Select * from Loja Where LO_Loja= '" & Trim(RsDadosCapa("Lojaorigem")) & "'"
+    sql = "Select * from Loja Where LO_Loja= '" & Trim(RsDadosCapa("Lojaorigem")) & "'"
 
     RsDados.CursorLocation = adUseClient
-    RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     impressoraRelatorio "[INICIO]"
 
     impressoraRelatorio "                                                "
@@ -3965,8 +3983,8 @@ Public Sub ImprimeTransferencia00(ByVal nota As Double)
    nomeEmpresa = RsDados("LO_Razao")
    impressoraRelatorio nomeEmpresa
    
-   cnpj = "CNPJ: " & RsDados("LO_CGC") & " I.E.: " & RsDados("LO_InscricaoEstadual")
-   impressoraRelatorio cnpj
+   CNPJ = "CNPJ: " & RsDados("LO_CGC") & " I.E.: " & RsDados("LO_InscricaoEstadual")
+   impressoraRelatorio CNPJ
    
    Endereco = UCase(RsDados("LO_Endereco")) & ", " & RsDados("LO_numero")
    impressoraRelatorio Endereco
@@ -3994,19 +4012,19 @@ Public Sub ImprimeTransferencia00(ByVal nota As Double)
    RsDados.Close
 
    
-   Sql = "Select * from Nfitens " _
+   sql = "Select * from Nfitens " _
        & "Where numeroped = " & frmControlaCaixa.txtPedido.text
        
       
        RsDados.CursorLocation = adUseClient
-       RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
        
        If Not RsDados.EOF Then
           Do While Not RsDados.EOF
-             Sql = "Select PR_Descricao from Produtoloja Where PR_Referencia ='" & RsDados("Referencia") & "'"
+             sql = "Select PR_Descricao from Produtoloja Where PR_Referencia ='" & RsDados("Referencia") & "'"
              rdoProduto.CursorLocation = adUseClient
-             rdoProduto.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+             rdoProduto.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
              
              ValorlItem = (RsDados("vlunit") * RsDados("Qtde"))
@@ -4065,12 +4083,12 @@ End Sub
 
 Public Function CriaMovimentoCaixa(ByVal Nf As Double, ByVal Serie As String, ByVal TotalNota As Double, ByVal loja As String, ByVal Grupo As Double, ByVal NroProtocolo As Integer, ByVal nroCaixa As Integer, ByVal NroPedido As Double)
     
-    Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
+    sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
         & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo, MC_NroCaixa, MC_DataProcesso, MC_Pedido) values(" & GLB_ECF & ",'0','" & Trim(loja) & "', " _
         & " '" & Format(Date, "yyyy/mm/dd") & "'," & Grupo & ", " & Nf & ",'" & Serie & "', " _
         & "" & ConverteVirgula(Format(TotalNota, "##,###0.00")) & ", " _
         & "0,0,0,0,0,9,'A'," & NroProtocolo & "," & nroCaixa & ",'" & Format(Date, "yyyy/mm/dd") & "'," & NroPedido & ")"
-        adoCNLoja.Execute (Sql)
+        adoCNLoja.Execute (sql)
 
 End Function
 
@@ -4184,12 +4202,12 @@ Public Sub CarregaMovimento(grid, protocolo As String)
  wTotalFatFin = 0
  grid.Row = 1
 
- Sql = ("select mc_Grupo,sum(MC_Valor) as TotalModalidade,Count(*) as Quantidade from movimentocaixa" _
+ sql = ("select mc_Grupo,sum(MC_Valor) as TotalModalidade,Count(*) as Quantidade from movimentocaixa" _
        & " Where MC_Protocolo in (" & protocolo _
        & ") and  MC_Serie <> '00' and (MC_Grupo like '10%' or MC_Grupo like '11%'" _
        & " or MC_Grupo like '50%' or MC_Grupo like '20%') AND MC_TipoNota in ('V','T','E','S') group by mc_grupo")
        rdoFormaPagamento.CursorLocation = adUseClient
-       rdoFormaPagamento.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rdoFormaPagamento.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
        
  If Not rdoFormaPagamento.EOF Then
      Do While Not rdoFormaPagamento.EOF
@@ -4395,11 +4413,11 @@ Public Sub CarregaMovimento(grid, protocolo As String)
   End If
   rdoFormaPagamento.Close
   
- Sql = ("select mc_Grupo,sum(MC_Valor) as TotalModalidade,Count(*) as Quantidade from movimentocaixa" _
+ sql = ("select mc_Grupo,sum(MC_Valor) as TotalModalidade,Count(*) as Quantidade from movimentocaixa" _
        & " Where MC_Protocolo in (" & protocolo _
        & ") and  MC_Serie <> '00' and MC_tiponota = 'C' and MC_Grupo like '20%' group by mc_grupo")
        rdoFormaPagamento.CursorLocation = adUseClient
-       rdoFormaPagamento.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rdoFormaPagamento.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
        
   If Not rdoFormaPagamento.EOF Then
      Do While Not rdoFormaPagamento.EOF
@@ -4434,14 +4452,14 @@ End Sub
 
 Private Sub CarregaMovimentoZERO(grid, protocolo As String)
     
-    Dim Sql As String
+    Dim sql As String
 
-    Sql = ("select mc_Grupo,sum(MC_Valor) as TotalModalidade,Count(*) as Quantidade from movimentocaixa" _
+    sql = ("select mc_Grupo,sum(MC_Valor) as TotalModalidade,Count(*) as Quantidade from movimentocaixa" _
           & " Where MC_Protocolo in (" & protocolo _
           & ") and  MC_Serie = '00' and (MC_Grupo like '20105') AND MC_TipoNota in ('V','T','E','S') group by mc_grupo")
           
     rdoFormaPagamento.CursorLocation = adUseClient
-    rdoFormaPagamento.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rdoFormaPagamento.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     If Not rdoFormaPagamento.EOF Then
     
@@ -4454,12 +4472,12 @@ Private Sub CarregaMovimentoZERO(grid, protocolo As String)
     
     rdoFormaPagamento.Close
     
-     Sql = ("select mc_Grupo,sum(MC_Valor) as TotalModalidade,Count(*) as Quantidade from movimentocaixa" _
+     sql = ("select mc_Grupo,sum(MC_Valor) as TotalModalidade,Count(*) as Quantidade from movimentocaixa" _
           & " Where MC_Protocolo in (" & protocolo _
           & ") and  MC_Serie = '00' and (MC_Grupo like '20105') AND MC_TipoNota in ('C') group by mc_grupo")
           
     rdoFormaPagamento.CursorLocation = adUseClient
-    rdoFormaPagamento.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rdoFormaPagamento.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     If Not rdoFormaPagamento.EOF Then
     
@@ -4476,14 +4494,14 @@ End Sub
 
 Public Function carregaControleCaixa() As Boolean
 
-    Dim Sql As String
+    Dim sql As String
     carregaControleCaixa = False
 
-    Sql = "Select ControleCaixa.*,USU_Codigo,USU_Nome from ControleCaixa,UsuarioCaixa" _
+    sql = "Select ControleCaixa.*,USU_Codigo,USU_Nome from ControleCaixa,UsuarioCaixa" _
      & " Where CTR_Supervisor <> 99 and CTR_Operador = USU_Codigo and CTR_SituacaoCaixa='A' and CTR_NumeroCaixa = " & GLB_Caixa
     
      RsDados.CursorLocation = adUseClient
-     RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+     RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
      If RsDados.EOF = False Then
         GLB_USU_Nome = RsDados("USU_Nome")
         GLB_USU_Codigo = RsDados("USU_Codigo")
@@ -4722,6 +4740,7 @@ Public Sub impressoraRelatorio(Texto As String)
             'Print #1, " "
             'Print #1, " "
             Printer.EndDoc
+            'Printer.
             'Close #1
             
         Else
@@ -4749,12 +4768,12 @@ Public Sub CarregaValoresTransfNumerario(protocolo As Long)
     wTNOutros = 0
     wTNTotal = 0
    
-   Sql = ("SELECT MC_GrupoAuxiliar,MO_Descricao,SUM(MC_Valor) as Valor FROM MOVIMENTOCAIXA,MODALIDADE WHERE Mo_GRUPO=MC_GrupoAuxiliar" _
+   sql = ("SELECT MC_GrupoAuxiliar,MO_Descricao,SUM(MC_Valor) as Valor FROM MOVIMENTOCAIXA,MODALIDADE WHERE Mo_GRUPO=MC_GrupoAuxiliar" _
         & " AND MC_PROTOCOLO in (" & protocolo & ") AND MC_GRUPOAUXILIAR LIKE '30%'" _
         & "GROUP BY MC_GrupoAuxiliar,MO_DESCRICAO order by MC_GrupoAuxiliar")
     
        rdoTransfNumerario.CursorLocation = adUseClient
-       rdoTransfNumerario.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rdoTransfNumerario.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
        
   If Not rdoTransfNumerario.EOF Then
      Do While Not rdoTransfNumerario.EOF
@@ -4843,30 +4862,30 @@ Public Sub notificacaoEmail(Mensagem As String)
     Mensagem = Replace(Mensagem, "'", "''")
     ')
     
-    Sql = "insert into alerta_movimento_email" & vbNewLine & _
+    sql = "insert into alerta_movimento_email" & vbNewLine & _
           "(AME_Numero,AME_NroCaixa, AME_Mensagem, AME_Usuario, AME_DataHora, AME_Situacao, AME_Loja)" & vbNewLine & _
           "values (" & GLB_ADMProtocolo & ", " & GLB_Caixa & ", '" & Mensagem & "', '" & GLB_ADMNome & "'," & vbNewLine & _
           "'" & Format(Date, "YYYY/MM/DD") & " " & Time & "', '" & "A" & "', '" & GLB_Loja & "')" & vbNewLine & _
           ""
-    rdoCNRetaguarda.Execute (Sql)
+    rdoCNRetaguarda.Execute (sql)
 End Sub
 
 
 Public Function validaNumeroCupom() As Boolean
 
     Dim rdoValida As New ADODB.Recordset
-    Dim Sql As String
+    Dim sql As String
 
     Screen.MousePointer = vbHourglass
 
     validaNumeroCupom = False
 
     
-    Sql = "Select count(nf) as qtdeNF from nfcapa " _
+    sql = "Select count(nf) as qtdeNF from nfcapa " _
     & "where NF = " & wNumeroCupom & " AND serie = '" & GLB_SerieCF & "'"
     
     rdoValida.CursorLocation = adUseClient
-    rdoValida.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rdoValida.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
         If rdoValida("qtdeNF") < 1 Then
             validaNumeroCupom = True
@@ -4895,7 +4914,7 @@ End Sub
 
 Public Function EnviaEmail(ByVal numped)
     
-    Dim Sql As String
+    Dim sql As String
     Dim rsEmail As New ADODB.Recordset
     
     Dim Nf As String
@@ -4906,17 +4925,17 @@ Public Function EnviaEmail(ByVal numped)
     On Error GoTo TrataErro
 
     
-    Sql = "select lojaOrigem, nf, serie, condpag from nfcapa where numeroped = " & numped & " and condpag >= 3"
+    sql = "select lojaOrigem, nf, serie, condpag from nfcapa where numeroped = " & numped & " and condpag >= 3"
     
     rsEmail.CursorLocation = adUseClient
-    rsEmail.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsEmail.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     If Not rsEmail.EOF Then
         Nf = Trim(rsEmail("nf"))
         Serie = Trim(rsEmail("serie"))
         loja = Trim(rsEmail("lojaOrigem"))
-        Sql = "Exec SP_ALERTA_FATURADA '" & loja & "', " & Nf & ",'" & Serie & "'"
-        rdoCNLoja.Execute (Sql)
+        sql = "Exec SP_ALERTA_FATURADA '" & loja & "', " & Nf & ",'" & Serie & "'"
+        rdoCNLoja.Execute (sql)
     End If
 
 Exit Function
@@ -4973,19 +4992,19 @@ Public Function CriaNotaCredito1(ByVal Nf As Double, ByVal Serie As String, ByVa
         End If
     Next
     
-    Sql = "Select * from NfCapa, fin_cliente " _
+    sql = "Select * from NfCapa, fin_cliente " _
         & "where Nf=" & Nf & " and cliente = ce_codigocliente " _
         & "and Serie='" & Serie & "'"
     rsDadosNfCapa.CursorLocation = adUseClient
-    rsDadosNfCapa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsDadosNfCapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
     If Not rsDadosNfCapa.EOF Then
         If ReImpressao = True Then
-            Sql = "Select DataEmi From NfCapa Where NF = '" & NfDev & "' and " _
+            sql = "Select DataEmi From NfCapa Where NF = '" & NfDev & "' and " _
                 & "Serie = '" & SerieDev & "' and Lojaorigem = '" & Trim(GLB_Loja) & "'"
                 
              rsDataEmiDevol.CursorLocation = adUseClient
-             rsDataEmiDevol.Open Sql, rdoCNRetaguarda, adOpenForwardOnly, adLockPessimistic
+             rsDataEmiDevol.Open sql, rdoCNRetaguarda, adOpenForwardOnly, adLockPessimistic
             
             If rsDataEmiDevol.EOF Then
                 rsDataEmiDevol.Close
@@ -4993,12 +5012,12 @@ Public Function CriaNotaCredito1(ByVal Nf As Double, ByVal Serie As String, ByVa
                 MsgBox "Irei conectar na Retaguarda para localizar a nota." & Chr(10) & "Pois a mesma não foi encontrado no BANCO LOCAL", vbInformation + vbOKOnly
                 
                 If GLB_ConectouOK = True Then
-                    Sql = ""
-                    Sql = "Select DataEmi From NfCapa Where NF = " & rsDadosNfCapa("NfDevolucao") & " and " _
+                    sql = ""
+                    sql = "Select DataEmi From NfCapa Where NF = " & rsDadosNfCapa("NfDevolucao") & " and " _
                         & "Serie = '" & rsDadosNfCapa("SerieDevolucao") & "' and Lojaorigem = '" & Trim(GLB_Loja) & "'"
     
                     rsDataEmiDevol.CursorLocation = adUseClient
-                    rsDataEmiDevol.Open Sql, rdoCNRetaguarda, adOpenForwardOnly, adLockPessimistic
+                    rsDataEmiDevol.Open sql, rdoCNRetaguarda, adOpenForwardOnly, adLockPessimistic
              
                     If rsDataEmiDevol.EOF Then
                         wDataEmiDevolucao = Date
@@ -5016,11 +5035,11 @@ Public Function CriaNotaCredito1(ByVal Nf As Double, ByVal Serie As String, ByVa
                 wDataEmiDevolucao = DataDev
         End If
             
-        Sql = ""
-        Sql = "Select CTS_Loja,LO_Razao,CTS_numeroNCredito,LO_Razao,Loja.* from ControleSistema,Loja " _
+        sql = ""
+        sql = "Select CTS_Loja,LO_Razao,CTS_numeroNCredito,LO_Razao,Loja.* from ControleSistema,Loja " _
             & "where LO_Loja=CTS_Loja"
         rsVerLoja.CursorLocation = adUseClient
-        rsVerLoja.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        rsVerLoja.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
        
         If Not rsVerLoja.EOF Then
@@ -5101,16 +5120,16 @@ End Function
 
 
 Public Function obterReferenciaPorItem(numeroPed As String, Item As String) As String
-    Dim Sql As String
+    Dim sql As String
     Dim rsNFECapa As New ADODB.Recordset
     
-    Sql = "select REFERENCIA" & vbNewLine & _
+    sql = "select REFERENCIA" & vbNewLine & _
           "from nfitens " & vbNewLine & _
           "where NUMEROPED = '" & numeroPed & "' " & vbNewLine & _
           "AND item = '" & Item & "'"
     
     rsNFECapa.CursorLocation = adUseClient
-    rsNFECapa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsNFECapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
         If rsNFECapa.EOF = False Then
             obterReferenciaPorItem = rsNFECapa("REFERENCIA")
@@ -5125,8 +5144,8 @@ End Function
 Public Sub criaDuplicataBanco()
     On Error GoTo TrataErro
 
-    Sql = "exec Sp_Cria_Duplicatas '" & Format(Date, "YYYY/MM/DD") & "','" & Format(Date, "YYYY/MM/DD") & "'"
-    rdoCNLoja.Execute (Sql)
+    sql = "exec Sp_Cria_Duplicatas '" & Format(Date, "YYYY/MM/DD") & "','" & Format(Date, "YYYY/MM/DD") & "'"
+    rdoCNLoja.Execute (sql)
     
 Exit Sub
 

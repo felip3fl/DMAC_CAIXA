@@ -95,7 +95,7 @@ Begin VB.Form frmBilheteGarantia
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin Balcao2010.chameleonButton cmdImprimirTodos 
       Height          =   600
@@ -159,14 +159,14 @@ Begin VB.Form frmBilheteGarantia
       NoFolders       =   0   'False
       Transparent     =   0   'False
       ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   "http:///"
+      Location        =   ""
    End
    Begin VB.Label lblStatusImpressao 
       Alignment       =   2  'Center
       BackStyle       =   0  'Transparent
       Caption         =   "Status Impressao"
       BeginProperty Font 
-         Name            =   "Arial Narrow"
+         Name            =   "Arial"
          Size            =   15.75
          Charset         =   0
          Weight          =   400
@@ -202,21 +202,21 @@ Dim codigoBilheteDMACHTML As String
 Dim codigoTermoHTML As String
 
 Public Sub statusFuncionamento()
-    Dim mensagem As String
+    Dim Mensagem As String
     
-    mensagem = "Imprimindo Garantia Estendida" & " "
-    If lblStatusImpressao.Caption = mensagem & "  . . . ." Then
-        lblStatusImpressao.Caption = mensagem & ".   . . ."
-    ElseIf lblStatusImpressao.Caption = mensagem & ".   . . ." Then
-        lblStatusImpressao.Caption = mensagem & ". .   . ."
-    ElseIf lblStatusImpressao.Caption = mensagem & ". .   . ." Then
-        lblStatusImpressao.Caption = mensagem & ". . .   ."
-    ElseIf lblStatusImpressao.Caption = mensagem & ". . .   ." Then
-        lblStatusImpressao.Caption = mensagem & ". . . .  "
-    ElseIf lblStatusImpressao.Caption = mensagem & ". . . .  " Then
-        lblStatusImpressao.Caption = mensagem & "  . . . ."
+    Mensagem = "Imprimindo Garantia Estendida" & " "
+    If lblStatusImpressao.Caption = Mensagem & "  . . . ." Then
+        lblStatusImpressao.Caption = Mensagem & ".   . . ."
+    ElseIf lblStatusImpressao.Caption = Mensagem & ".   . . ." Then
+        lblStatusImpressao.Caption = Mensagem & ". .   . ."
+    ElseIf lblStatusImpressao.Caption = Mensagem & ". .   . ." Then
+        lblStatusImpressao.Caption = Mensagem & ". . .   ."
+    ElseIf lblStatusImpressao.Caption = Mensagem & ". . .   ." Then
+        lblStatusImpressao.Caption = Mensagem & ". . . .  "
+    ElseIf lblStatusImpressao.Caption = Mensagem & ". . . .  " Then
+        lblStatusImpressao.Caption = Mensagem & "  . . . ."
     Else
-        lblStatusImpressao.Caption = mensagem & "  . . . ."
+        lblStatusImpressao.Caption = Mensagem & "  . . . ."
     End If
 End Sub
 

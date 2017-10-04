@@ -17,9 +17,9 @@ Public Declare Function Bematech_FI_VendeItem Lib "BEMAFI32.DLL" (ByVal Codigo A
 Public Declare Function Bematech_FI_CancelaItemAnterior Lib "BEMAFI32.DLL" () As Integer
 Public Declare Function Bematech_FI_CancelaItemGenerico Lib "BEMAFI32.DLL" (ByVal NumeroItem As String) As Integer
 Public Declare Function Bematech_FI_CancelaCupom Lib "BEMAFI32.DLL" () As Integer
-Public Declare Function Bematech_FI_FechaCupomResumido Lib "BEMAFI32.DLL" (ByVal FormaPagamento As String, ByVal mensagem As String) As Integer
+Public Declare Function Bematech_FI_FechaCupomResumido Lib "BEMAFI32.DLL" (ByVal FormaPagamento As String, ByVal Mensagem As String) As Integer
 Public Declare Function Bematech_FI_ReducaoZ Lib "BEMAFI32.DLL" (ByVal Data As String, ByVal hora As String) As Integer
-Public Declare Function Bematech_FI_FechaCupom Lib "BEMAFI32.DLL" (ByVal FormaPagamento As String, ByVal DiscontoAcrecimo As String, ByVal TipoDescontoAcrecimo As String, ByVal ValorAcrecimoDesconto As String, ByVal ValorPago As String, ByVal mensagem As String) As Integer
+Public Declare Function Bematech_FI_FechaCupom Lib "BEMAFI32.DLL" (ByVal FormaPagamento As String, ByVal DiscontoAcrecimo As String, ByVal TipoDescontoAcrecimo As String, ByVal ValorAcrecimoDesconto As String, ByVal ValorPago As String, ByVal Mensagem As String) As Integer
 Public Declare Function Bematech_FI_VendeItemDepartamento Lib "BEMAFI32.DLL" (ByVal Codigo As String, ByVal Descricao As String, ByVal Aliquota As String, ByVal valorUnitario As String, ByVal quantidade As String, ByVal Acrescimo As String, ByVal Desconto As String, ByVal IndiceDepartamento As String, ByVal UnidadeMedida As String) As Integer
 Public Declare Function Bematech_FI_AumentaDescricaoItem Lib "BEMAFI32.DLL" (ByVal Descricao As String) As Integer
 Public Declare Function Bematech_FI_UsaUnidadeMedida Lib "BEMAFI32.DLL" (ByVal UnidadeMedida As String) As Integer
@@ -59,8 +59,8 @@ Public Declare Function Bematech_FI_ClicheProprietario Lib "BEMAFI32.DLL" (ByVal
 Public Declare Function Bematech_FI_NumeroCaixa Lib "BEMAFI32.DLL" (ByVal NumeroCaixa As String) As Integer
 Public Declare Function Bematech_FI_NumeroLoja Lib "BEMAFI32.DLL" (ByVal NumeroLoja As String) As Integer
 Public Declare Function Bematech_FI_SimboloMoeda Lib "BEMAFI32.DLL" (ByVal SimboloMoeda As String) As Integer
-Public Declare Function Bematech_FI_MinutosLigada Lib "BEMAFI32.DLL" (ByVal minutos As String) As Integer
-Public Declare Function Bematech_FI_MinutosImprimindo Lib "BEMAFI32.DLL" (ByVal minutos As String) As Integer
+Public Declare Function Bematech_FI_MinutosLigada Lib "BEMAFI32.DLL" (ByVal Minutos As String) As Integer
+Public Declare Function Bematech_FI_MinutosImprimindo Lib "BEMAFI32.DLL" (ByVal Minutos As String) As Integer
 Public Declare Function Bematech_FI_VerificaModoOperacao Lib "BEMAFI32.DLL" (ByVal Modo As String) As Integer
 Public Declare Function Bematech_FI_VerificaEpromConectada Lib "BEMAFI32.DLL" (ByVal Flag As String) As Integer
 Public Declare Function Bematech_FI_FlagsFiscais Lib "BEMAFI32.DLL" (ByRef Flag As Integer) As Integer
@@ -91,7 +91,7 @@ Public Declare Function Bematech_FI_ProgramaMoedaSingular Lib "BEMAFI32.DLL" (By
 Public Declare Function Bematech_FI_ProgramaMoedaPlural Lib "BEMAFI32.DLL" (ByVal MoedaPlural As String) As Integer
 Public Declare Function Bematech_FI_CancelaImpressaoCheque Lib "BEMAFI32.DLL" () As Integer
 Public Declare Function Bematech_FI_VerificaStatusCheque Lib "BEMAFI32.DLL" (ByRef StatusCheque As Integer) As Integer
-Public Declare Function Bematech_FI_ImprimeCheque Lib "BEMAFI32.DLL" (ByVal Banco As String, ByVal valor As String, ByVal Favorecido As String, ByVal Cidade As String, ByVal Data As String, ByVal mensagem As String) As Integer
+Public Declare Function Bematech_FI_ImprimeCheque Lib "BEMAFI32.DLL" (ByVal Banco As String, ByVal valor As String, ByVal Favorecido As String, ByVal Cidade As String, ByVal Data As String, ByVal Mensagem As String) As Integer
 Public Declare Function Bematech_FI_IncluiCidadeFavorecido Lib "BEMAFI32.DLL" (ByVal Cidade As String, ByVal Favorecido As String) As Integer
 Public Declare Function Bematech_FI_EstornoFormasPagamento Lib "BEMAFI32.DLL" (ByVal FormaOrigem As String, ByVal FormaDestino As String, ByVal valor As String) As Integer
 
@@ -102,7 +102,7 @@ Public Declare Function Bematech_FI_VerificaImpressoraLigada Lib "BEMAFI32.DLL" 
 Public Declare Function Bematech_FI_IniciaFechamentoCupom Lib "BEMAFI32.DLL" (ByVal AcrescimoDesconto As String, ByVal TipoAcrescimoDesconto As String, ByVal ValorAcrescimoDesconto As String) As Integer
 Public Declare Function Bematech_FI_EfetuaFormaPagamento Lib "BEMAFI32.DLL" (ByVal FormaPagamento As String, ByVal ValorFormaPagamento As String) As Integer
 Public Declare Function Bematech_FI_EfetuaFormaPagamentoDescricaoForma Lib "BEMAFI32.DLL" (ByVal FormaPagamento As String, ByVal ValorFormaPagamento As String, ByVal DescricaoOpcional As String) As Integer
-Public Declare Function Bematech_FI_TerminaFechamentoCupom Lib "BEMAFI32.DLL" (ByVal mensagem As String) As Integer
+Public Declare Function Bematech_FI_TerminaFechamentoCupom Lib "BEMAFI32.DLL" (ByVal Mensagem As String) As Integer
 Public Declare Function Bematech_FI_AbreBilhetePassagem Lib "BEMAFI32.DLL" (ByVal ImprimeValorFinal As String, ByVal ImprimeEnfatizado As String, ByVal LocalEmbarque As String, ByVal Destino As String, ByVal Linha As String, ByVal Prefixo As String, ByVal Agente As String, ByVal Agencia As String, ByVal Data As String, ByVal hora As String, ByVal Poltrona As String, ByVal Plataforma As String) As Integer
 Public Declare Function Bematech_FI_MapaResumo Lib "BEMAFI32.DLL" () As Integer
 Public Declare Function Bematech_FI_RelatorioTipo60Analitico Lib "BEMAFI32.DLL" () As Integer
@@ -132,8 +132,8 @@ Public Declare Function Bematech_FIR_RelatorioMesasAbertasSerial Lib "BEMAFI32.D
 Public Declare Function Bematech_FIR_CardapioPelaSerial Lib "BEMAFI32.DLL" () As Integer
 Public Declare Function Bematech_FIR_RegistroVendaSerial Lib "BEMAFI32.DLL" (ByVal Mesa As String) As Integer
 Public Declare Function Bematech_FIR_VerificaMemoriaLivre Lib "BEMAFI32.DLL" (ByVal Bytes As String) As Integer
-Public Declare Function Bematech_FIR_FechaCupomRestaurante Lib "BEMAFI32.DLL" (ByVal FormaPagamento As String, ByVal DiscontoAcrecimo As String, ByVal TipoDescontoAcrecimo As String, ByVal ValorAcrecimoDesconto As String, ByVal ValorPago As String, ByVal mensagem As String) As Integer
-Public Declare Function Bematech_FIR_FechaCupomResumidoRestaurante Lib "BEMAFI32.DLL" (ByVal FormaPagamento As String, ByVal mensagem As String) As Integer
+Public Declare Function Bematech_FIR_FechaCupomRestaurante Lib "BEMAFI32.DLL" (ByVal FormaPagamento As String, ByVal DiscontoAcrecimo As String, ByVal TipoDescontoAcrecimo As String, ByVal ValorAcrecimoDesconto As String, ByVal ValorPago As String, ByVal Mensagem As String) As Integer
+Public Declare Function Bematech_FIR_FechaCupomResumidoRestaurante Lib "BEMAFI32.DLL" (ByVal FormaPagamento As String, ByVal Mensagem As String) As Integer
 
 ' Funções para o TEF
 
@@ -366,7 +366,7 @@ Global wCodigo As String
 Global wValoraPagarNORMAL As Double
 Global wNomeservidor As String
 Global wNomeBanco As String
-Global i As Integer
+Global I As Integer
 Global wNomeservidorMatriz As String
 Global wNomeBancoMatriz As String
 
@@ -446,4 +446,50 @@ Global NotaCredito_Dev As Double
 Global ReImpressao_Dev As Boolean
 
 'Global GLB_EnderecoPortal As String
+
+'Global  Tef Emerson
+Global tef_usuario As String
+Global tef_senha As String
+Global tef_servico As String
+Global tef_retorno As String
+Global tef_sql As String
+Global tef_bandeira As String
+Global tef_NumeroCartao As String
+Global tef_ As String
+Global tef_terminal As String
+Global tef_versao_ac As String
+Global tef_nome_ac As String
+Global tef_num_sites As String
+Global tef_lista_ips As String
+Global tef_criptografia As String
+Global tef_log As String
+Global tef_interativo As String
+Global tef_strBuffer As String
+Global tef_parametros As String
+Global tef_operacao As String
+Global tef_valor As String
+Global tef_num_doc As String
+Global tef_data_cli As String
+Global tef_num_trans As String
+Global tef_comando   As String
+Global tef_num_sc As String
+Global tef_p_sc As String
+Global tef_tam_sc As String
+Global tef_aux As String
+Global tef_menssagem As String
+Global tef_dados As String
+Global tef_confirmar As String
+Global tef_cupom As String
+Global tef_tempo As Integer
+Global tef_minutoAntigo As String
+Global tef_nsu_ctf As String
+Global verifica_tef As Boolean
+Global verifica_pos As Boolean
+Global data_tef As String
+Global pedido_tef As String
+Global Tef_Confrima As Boolean
+Global RsNum_Trnas As New ADODB.Recordset
+Global ADOTef As New ADODB.Recordset
+Global ADOTef_C As New ADODB.Recordset
+Global verefica As New ADODB.Recordset
 

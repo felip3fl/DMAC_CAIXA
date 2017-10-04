@@ -3,13 +3,13 @@ Begin VB.Form frmStartaProcessos
    BackColor       =   &H80000007&
    BorderStyle     =   0  'None
    Caption         =   "Starta Processos"
-   ClientHeight    =   5925
+   ClientHeight    =   6660
    ClientLeft      =   255
    ClientTop       =   3630
    ClientWidth     =   15120
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
-   ScaleHeight     =   5925
+   ScaleHeight     =   6660
    ScaleMode       =   0  'User
    ScaleWidth      =   15120
    ShowInTaskbar   =   0   'False
@@ -89,10 +89,10 @@ TrataErro:
 End Sub
 
 
-Sub Esperar(ByVal tempo As Integer)
+Sub Esperar(ByVal Tempo As Integer)
     Dim StartTime As Long
     StartTime = Timer
-    Do While Timer < StartTime + tempo
+    Do While Timer < StartTime + Tempo
        DoEvents
     Loop
 End Sub
