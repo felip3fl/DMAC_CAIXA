@@ -6,8 +6,8 @@ Begin VB.Form frmEmissaoNFe
    BorderStyle     =   0  'None
    Caption         =   "Emissão NFe"
    ClientHeight    =   9240
-   ClientLeft      =   780
-   ClientTop       =   930
+   ClientLeft      =   1020
+   ClientTop       =   1290
    ClientWidth     =   19035
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
@@ -1077,6 +1077,8 @@ End Sub
 
 Private Sub Form_Activate()
     
+    Verifica_Tef_Pos
+    
    frmAdministrador.Visible = GLB_Administrador
     
    qtdeLinhaAnterior = 0
@@ -2068,7 +2070,7 @@ Private Sub ImprimirNota(Nf As notaFiscal, tiponota As String)
                 ElseIf MsgBox("Deseja imprimir a nota " & Nf.numero & "? ", vbQuestion + vbYesNo, "Impressão de Nota") = vbYes Then
                     If tiponota = "NOTA" Then criarArquivorDanfe Nf, rsNFE("chave")
                     If tiponota = "SAT" Then criarArquivorDACTE Nf, rsNFE("chave")
-                ElseIf IsTef(Nf, tiponota) Then
+                ElseIf IsTef(Nf, tiponota) And verifica_tef = True Then
                 If MsgBox("Deseja Reimprimir a TEF da Nota " & Nf.numero & "? ", vbQuestion + vbYesNo, "Impressão de Nota") = vbYes Then
                 Screen.MousePointer = 11
                 Call Reimprimir_Tef(Nf)
@@ -2408,7 +2410,11 @@ Public Function carregaArquivoUnico()
              
              Esperar 2
              'Emerson
-             Imprimir_Tef
+             
+            If verifica_tef = True Then
+                Imprimir_Tef
+            End If
+
         ElseIf resultado = 101 Or resultado = 9005 Or resultado = 4005 Then 'Para cancelamentos
              
              cancelaNotaResultado = True
@@ -2945,7 +2951,8 @@ Private Sub numeroCopiaImpressao()
         End If
     ado_rotulo.Close
     
-    rdoCNLoja.Execute SQLLinhaImpressora
+    'Deixa comentado se é apenas para imprimir 1 via
+    'rdoCNLoja.Execute SQLLinhaImpressora
     
 End Sub
 
@@ -2979,12 +2986,11 @@ sql = "Select * from  MovimentoCaixa where mc_data='" & Format(Date, "yyyy/mm/dd
  ADOTef_C.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
  If Not ADOTef_C.EOF Then
  
-            qtdCartao = 1
             tef_num_doc = Format(ADOTef_C("Mc_SequenciaTef"), "000000")
             tef_nsu_ctf = Format(ADOTef_C("Mc_SequenciaTef"), "000000")
             tef_data_cli = Format(Date, "dd/mm/yy")
             data_tef = Date
-            tef_num_trans = Format(qtdCartao, "00")
+
             tef_valor = Format(ADOTef_C("mc_valor"), "##,##0.00")
             tef_Parcelas = Trim(ADOTef_C("mc_parcelas"))
             If Trim(ADOTef_C("MC_Grupo")) = "10203" Or Trim(ADOTef_C("MC_Grupo")) = "10206" Then
@@ -3171,12 +3177,10 @@ Private Sub Conclui_Tef()
        ADOTef_C.MoveNext
        If Not ADOTef_C.EOF Then
             tef_dados = ""
-            qtdCartao = 1
             tef_num_doc = Format(ADOTef_C("Mc_SequenciaTef"), "000000")
             tef_nsu_ctf = Format(ADOTef_C("Mc_SequenciaTef"), "000000")
             tef_data_cli = Format(Date, "dd/mm/yy")
             data_tef = Date
-            tef_num_trans = Format(qtdCartao, "00")
             tef_valor = Format(ADOTef_C("mc_valor"), "##,##0.00")
             tef_Parcelas = Trim(ADOTef_C("mc_parcelas"))
             If Trim(ADOTef_C("MC_Grupo")) = "10203" Or Trim(ADOTef_C("MC_Grupo")) = "10206" Then
