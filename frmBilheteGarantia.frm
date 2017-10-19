@@ -5,8 +5,8 @@ Begin VB.Form frmBilheteGarantia
    BorderStyle     =   0  'None
    Caption         =   "Bilhete Garantia Estendida"
    ClientHeight    =   7605
-   ClientLeft      =   180
-   ClientTop       =   945
+   ClientLeft      =   240
+   ClientTop       =   1905
    ClientWidth     =   19830
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
@@ -15,6 +15,31 @@ Begin VB.Form frmBilheteGarantia
    ScaleHeight     =   7605
    ScaleWidth      =   19830
    ShowInTaskbar   =   0   'False
+   Begin SHDocVwCtl.WebBrowser WebNavegadorTermo 
+      Height          =   1620
+      Left            =   16245
+      TabIndex        =   6
+      Top             =   3585
+      Width           =   3195
+      ExtentX         =   5636
+      ExtentY         =   2857
+      ViewMode        =   0
+      Offline         =   0
+      Silent          =   0
+      RegisterAsBrowser=   0
+      RegisterAsDropTarget=   1
+      AutoArrange     =   0   'False
+      NoClientEdge    =   0   'False
+      AlignLeft       =   0   'False
+      NoWebView       =   0   'False
+      HideFileNames   =   0   'False
+      SingleClick     =   0   'False
+      SingleSelection =   0   'False
+      NoFolders       =   0   'False
+      Transparent     =   0   'False
+      ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
+      Location        =   ""
+   End
    Begin VB.Timer timerImprimir 
       Left            =   15
       Top             =   0
@@ -28,7 +53,7 @@ Begin VB.Form frmBilheteGarantia
       Left            =   0
       ScaleHeight     =   915
       ScaleWidth      =   1215
-      TabIndex        =   5
+      TabIndex        =   4
       Top             =   0
       Visible         =   0   'False
       Width           =   1215
@@ -48,7 +73,7 @@ Begin VB.Form frmBilheteGarantia
       ForeColor       =   &H00FFFFFF&
       Height          =   885
       Left            =   285
-      TabIndex        =   2
+      TabIndex        =   1
       Top             =   6510
       Width           =   1905
       Begin VB.TextBox txtNumeroPedido 
@@ -72,35 +97,10 @@ Begin VB.Form frmBilheteGarantia
          Width           =   1680
       End
    End
-   Begin SHDocVwCtl.WebBrowser webNavegador 
-      Height          =   5985
-      Left            =   300
-      TabIndex        =   1
-      Top             =   300
-      Width           =   12675
-      ExtentX         =   22357
-      ExtentY         =   10557
-      ViewMode        =   0
-      Offline         =   0
-      Silent          =   0
-      RegisterAsBrowser=   0
-      RegisterAsDropTarget=   1
-      AutoArrange     =   0   'False
-      NoClientEdge    =   0   'False
-      AlignLeft       =   0   'False
-      NoWebView       =   0   'False
-      HideFileNames   =   0   'False
-      SingleClick     =   0   'False
-      SingleSelection =   0   'False
-      NoFolders       =   0   'False
-      Transparent     =   0   'False
-      ViewID          =   "{0057D0E0-3573-11CF-AE69-08002B2E1262}"
-      Location        =   ""
-   End
    Begin Balcao2010.chameleonButton cmdImprimirTodos 
       Height          =   600
       Left            =   11025
-      TabIndex        =   3
+      TabIndex        =   2
       Top             =   6630
       Visible         =   0   'False
       Width           =   1875
@@ -136,14 +136,14 @@ Begin VB.Form frmBilheteGarantia
       CHECK           =   0   'False
       VALUE           =   0   'False
    End
-   Begin SHDocVwCtl.WebBrowser WebNavegadorTermo 
-      Height          =   1845
-      Left            =   16215
-      TabIndex        =   6
-      Top             =   1185
-      Width           =   3180
-      ExtentX         =   5609
-      ExtentY         =   3254
+   Begin SHDocVwCtl.WebBrowser webNavegador 
+      Height          =   5985
+      Left            =   300
+      TabIndex        =   5
+      Top             =   300
+      Width           =   12675
+      ExtentX         =   22357
+      ExtentY         =   10557
       ViewMode        =   0
       Offline         =   0
       Silent          =   0
@@ -177,7 +177,7 @@ Begin VB.Form frmBilheteGarantia
       ForeColor       =   &H00FFFFFF&
       Height          =   765
       Left            =   0
-      TabIndex        =   4
+      TabIndex        =   3
       Top             =   6645
       Visible         =   0   'False
       Width           =   15210

@@ -835,19 +835,20 @@ Private Sub cmdCancelar_Click()
     cancelaNota = False
     
     If Nf.eSerie = "NE" Then
-        Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & Nf.numero & "#" & Nf.CNPJ & ".txt", vbDirectory)
-        If Arquivo <> "" Then
-            deletaArquivo GLB_EnderecoPastaRESP & Arquivo
-        End If
+    
+        'Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & Nf.numero & "#" & Nf.CNPJ & ".txt", vbDirectory)
+        'If Arquivo <> "" Then
+        deletaArquivo GLB_EnderecoPastaRESP & "*" & Nf.numero & "#" & Nf.CNPJ & ".txt"
+        'End If
         
         finalizaProcesso "Cancelando Nota Fiscal Eletrônico " & Nf.numero, True
         cancelaNE Nf
         
     ElseIf Nf.eSerie = "CE" Then
-        Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & Nf.pedido & "#" & Nf.CNPJ & ".txt", vbDirectory)
-        If Arquivo <> "" Then
-            deletaArquivo GLB_EnderecoPastaRESP & Arquivo
-        End If
+        'Arquivo = Dir(, vbDirectory)
+        'If Arquivo <> "" Then
+            deletaArquivo GLB_EnderecoPastaRESP & "*" & Nf.pedido & "#" & Nf.CNPJ & ".txt"
+        'End If
         
         finalizaProcesso "Cancelando Cupom Fiscal Eletrônico " & Nf.numero, True
         cancelaSAT Nf
@@ -2700,7 +2701,7 @@ Public Function mensagemLOG2(grid, Data As Date, tipoStatus As Integer, loja As 
     
     
     Select Case tipoStatus
-        Case 100, 4012, 4016, 124, 4014, 101, 9016, 9005
+        Case 100, 4012, 4016, 124, 4014, 101, 9016, 9005, 4005
             status = "Sucesso"
         Case Else
             status = "Erro"
