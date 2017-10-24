@@ -3113,6 +3113,7 @@ End Function
 
 
 Private Sub Continua(ByVal sequecial As String)
+'ok
 Dim retornoLocal As String
 Dim sequencialLocal As String
 Dim informacao As String
@@ -3122,6 +3123,7 @@ tef_servico = "executar"
         
         
         If tef_menssagem = "Valor" Or tef_menssagem = "Valor da Transacao" Then
+        
             informacao = Replace(Format(tef_valor, "#####.00"), ",", ".")
         ElseIf tef_menssagem = "Produto" Then
             informacao = tef_operacao & "-Stone"
@@ -3133,6 +3135,8 @@ tef_servico = "executar"
             informacao = "Administradora"
         ElseIf tef_menssagem = "Parcelas" Then
            informacao = tef_Parcelas
+        ElseIf tef_menssagem = "Taxa de Embarque" Then
+           informacao = 0
         ElseIf tef_menssagem = "Usuario de acesso" Then
            informacao = tef_usuario
         ElseIf tef_menssagem = "Senha de acesso" Then
@@ -3141,8 +3145,6 @@ tef_servico = "executar"
            informacao = Format(Date, "dd/mm/yy")
         ElseIf tef_menssagem = "Numero do Documento" Then
            informacao = tef_nsu_ctf
-        ElseIf tef_menssagem = "Reimprimir" Then
-           informacao = "Todos"
         ElseIf InStr(tef_menssagem, "?") >= 1 Then
            informacao = "Sim"
         Else
@@ -3150,6 +3152,7 @@ tef_servico = "executar"
         End If
         tef_dados = "automacao_coleta_retorno=""" + retornoLocal + """" + vbCrLf
         tef_dados = tef_dados + "automacao_coleta_sequencial=""" + sequencialLocal + """" + vbCrLf
+
     If informacao <> "" Then
             tef_dados = tef_dados + "automacao_coleta_informacao=""" + informacao + """" + vbCrLf
             wskTef.SendData tef_dados
@@ -3158,6 +3161,7 @@ tef_servico = "executar"
             wskTef.SendData tef_dados
     End If
 End Sub
+
 
 
 Private Sub valida()
@@ -3209,23 +3213,26 @@ Private Sub Conclui_Tef()
 End Sub
 
 Private Sub Grava_Campos_Tef(ByVal resp As String)
-    'tef_nsu_ctf = getMenssagem(resp, "_nsu=", 6)
-    'tef_bandeira = getMenssagem(resp, "_administradora=", 17)
-    'tef_operacao = getMenssagem(resp, "_cartao=", 9)
+    'ok
+    tef_nsu_ctf = getMenssagem(resp, "_nsu=", 6)
+    tef_bandeira = getMenssagem(resp, "_administradora=", 17)
+    tef_operacao = getMenssagem(resp, "_cartao=", 9)
     tef_nome_ac = getMenssagem(resp, "o_rede=", 8)
-    tef_cupom_1 = getComprovantes(resp, tef_nome_ac, "comprovante_1via")
+    tef_cupom_1 = getComprovantes(resp, "transacao_", "comprovante_1via")
     Call Grava_Cupom(tef_cupom_1)
-    tef_cupom_2 = getComprovantes(resp, tef_nome_ac, "comprovante_2via")
+    tef_cupom_2 = getComprovantes(resp, "transacao_", "comprovante_2via")
     Call Grava_Cupom(tef_cupom_2)
 End Sub
 
-Private Function getComprovantes(ByVal resp As String, ByVal blc As String, ByVal copum As String) As String
 
+Private Function getComprovantes(ByVal resp As String, ByVal blc As String, ByVal copum As String) As String
+'ok
 resp = Mid$(resp, InStr(resp, copum) + 17)
-getComprovantes = Mid$(resp, InStr(resp, vbCrLf), InStr(resp, blc) - 8)
+getComprovantes = Mid$(resp, InStr(resp, vbCrLf), InStr(resp, blc) - 42)
 getComprovantes = Replace(getComprovantes, vbCrLf, ";")
 
 End Function
+
 
 Private Sub Finalizar_Tef()
 tef_servico = "finalizar"
