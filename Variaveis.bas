@@ -490,6 +490,8 @@ Global pedido_tef As String
 Global Tef_Confrima As Boolean
 Global RsNum_Trnas As New ADODB.Recordset
 Global ADOTef As New ADODB.Recordset
+Global ADOTef_par As New ADODB.Recordset
 Global ADOTef_C As New ADODB.Recordset
+Global ADOTef_C1 As New ADODB.Recordset
 Global verefica As New ADODB.Recordset
 

@@ -2,15 +2,14 @@ VERSION 5.00
 Begin VB.Form frmControlaCaixa 
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
-   ClientHeight    =   13485
-   ClientLeft      =   885
-   ClientTop       =   1635
+   ClientHeight    =   11235
+   ClientLeft      =   630
+   ClientTop       =   2250
    ClientWidth     =   15300
    Icon            =   "frmControlaCaixa.frx":0000
    LinkTopic       =   "Form1"
-   LockControls    =   -1  'True
    Picture         =   "frmControlaCaixa.frx":23FA
-   ScaleHeight     =   13485
+   ScaleHeight     =   11235
    ScaleWidth      =   15300
    ShowInTaskbar   =   0   'False
    WindowState     =   2  'Maximized

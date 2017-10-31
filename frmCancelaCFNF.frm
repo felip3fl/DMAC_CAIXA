@@ -23,6 +23,27 @@ Begin VB.Form frmCancelaCFNF
       TabIndex        =   0
       Top             =   30
       Width           =   4935
+      Begin VB.CheckBox ChkTef 
+         BackColor       =   &H80000012&
+         Caption         =   "Somente Cancelar o TEF"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H000000BB&
+         Height          =   315
+         Left            =   480
+         MaskColor       =   &H00FFFFFF&
+         TabIndex        =   13
+         Top             =   2040
+         Visible         =   0   'False
+         Width           =   2535
+      End
       Begin MSWinsockLib.Winsock wskTef 
          Left            =   4440
          Top             =   360
@@ -227,7 +248,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Dim sql As String
+Dim Sql As String
 Dim wUltimoCupom As Double
 Dim WGrupoAtualzado As Double
 Dim wNumeroPedido As Double
@@ -284,6 +305,34 @@ Private Sub finalizarCancelamento()
          txtSenha.SetFocus
          Exit Sub
       End If
+      If ChkTef.Value = 1 Then
+      ChkTef.Visible = False
+      tef_sql = "select * from  nfcapa where tiponota='E' and  NfDevolucao=" & Trim(txtNotaFiscal.text) & "" _
+       & "and SerieDevolucao='" & txtSerie.text & "' and TOTALNOTA= " & ConverteVirgula(txtValorNF.text) & " "
+      'MsgBox tef_sql
+        ADOTef_C1.CursorLocation = adUseClient
+        ADOTef_C1.Open tef_sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+      If Not ADOTef_C1.EOF Then
+             If verifica_tef Then
+                  tef_dados = ""
+                  Call Cancela_Tef(0)
+                      If wskTef.State <> 0 Then
+                      ADOCancela.Clone
+                     ADOTef_C1.Close
+                          Exit Sub
+                      End If
+            ADOTef_C1.Close
+            Exit Sub
+            End If
+        Else
+        
+        MsgBox "TEF não pode ser Cancelado!!", vbCritical, "ERRO"
+        Call LimpaCampos
+        ADOTef_C1.Close
+        Exit Sub
+      End If
+   
+    End If
       
       If MsgBox("Deseja realmente Cancelar? NF --> " & txtNotaFiscal.text & ", Serie --> " & txtSerie.text & "," _
          & " Valor --> " & txtValorNF.text & "", vbQuestion + vbYesNo, "Atenção") = vbNo Then
@@ -301,11 +350,11 @@ Private Sub finalizarCancelamento()
         wWhere = " "
   '      End If
 
-        sql = "SELECT CTR_DATAINICIAL, CTR_SITUACAOCAIXA FROM  CONTROLECAIXA " _
+        Sql = "SELECT CTR_DATAINICIAL, CTR_SITUACAOCAIXA FROM  CONTROLECAIXA " _
             & " WHERE CTR_Supervisor <> 99 and CTR_SITUACAOCAIXA = 'A'"
      
         ADOSituacao.CursorLocation = adUseClient
-        ADOSituacao.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        ADOSituacao.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                                           
         If Not ADOSituacao.EOF Then
            wData = ADOSituacao("CTR_DATAINICIAL")
@@ -318,13 +367,13 @@ Private Sub finalizarCancelamento()
           
         ADOSituacao.Close
      
-        sql = "SELECT TOP 1 TIPONOTA,NumeroPed, SERIE, NF, TOTALNOTA, DATAEMI, rtrim(CHAVENFE) as CHAVENFE " _
+        Sql = "SELECT TOP 1 TIPONOTA,NumeroPed, SERIE, NF, TOTALNOTA, DATAEMI, rtrim(CHAVENFE) as CHAVENFE " _
             & " FROM NFCAPA WHERE " _
             & " SERIE = '" & txtSerie.text & "' AND " _
             & " NF = " & txtNotaFiscal.text & " " & Where
          
         ADOCancela.CursorLocation = adUseClient
-        ADOCancela.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        ADOCancela.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
  
 
         If Not ADOCancela.EOF Then
@@ -347,15 +396,16 @@ Private Sub finalizarCancelamento()
             If cancelaNotaResultado = True Then
                 'Emerson
             If verifica_tef Then
+            ChkTef.Visible = False
             tef_dados = ""
-            Cancela_Tef
+            Call Cancela_Tef(0)
                 If wskTef.State <> 0 Then
                 ADOCancela.Clone
                     Exit Sub
                 End If
             End If
-                sql = "exec SP_Cancela_NotaFiscal " & txtNotaFiscal.text & ",'" & txtSerie.text & "'"
-                rdoCNLoja.Execute (sql)
+                Sql = "exec SP_Cancela_NotaFiscal " & txtNotaFiscal.text & ",'" & txtSerie.text & "'"
+                rdoCNLoja.Execute (Sql)
             Else
                 MsgBox "Cancelamento não realizado", vbCritical, "DMAC Caixa"
             End If
@@ -378,10 +428,16 @@ Private Sub cmdRetorna_Click()
 Unload Me
 End Sub
 
+
+
 Private Sub Form_Activate()
  txtNotaFiscal.SetFocus
   'Emerson
  Verifica_Tef_Pos
+ If verifica_tef Then
+ ChkTef.Visible = True
+ End If
+ 
 End Sub
 
 Private Sub Form_Load()
@@ -487,11 +543,11 @@ End If
 
 txtSerie.text = UCase(txtSerie.text)
     
-sql = "SELECT TOTALNOTA, NF, SERIE,TipoNota,numeroped FROM NFCAPA WHERE NF = " & txtNotaFiscal.text & " " _
+Sql = "SELECT TOTALNOTA, NF, SERIE,TipoNota,numeroped FROM NFCAPA WHERE NF = " & txtNotaFiscal.text & " " _
     & "AND SERIE = '" & UCase(Trim(txtSerie.text)) & "' and TIPONOTA <> 'C' and Dataemi = '" & Format(Date, "yyyy/mm/dd") & "'"
     
  ADOCancela.CursorLocation = adUseClient
- ADOCancela.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+ ADOCancela.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
 If Not ADOCancela.EOF Then
        txtValorNF.text = Format(ADOCancela("TOTALNOTA"), "0.00")
@@ -517,6 +573,8 @@ Sub LimpaCampos()
         txtNotaFiscal.text = ""
         txtPedido.text = ""
        lblDiplay.Visible = False
+       ChkTef.Visible = True
+       ChkTef.Value = 0
         Exit Sub
 
 End Sub
@@ -524,12 +582,12 @@ End Sub
 
 
 
-Private Sub Cancela_Tef()
-sql = "Select * from  MovimentoCaixa where mc_data='" & Format(Date, "yyyy/mm/dd") & "' and mc_pedido=" & txtPedido.text & " and  mc_documento=" & txtNotaFiscal.text & "" _
-& " and MC_TipoNota='V' and MC_SequenciaTEF > 0 and MC_Grupo in (10203,10205,10206,10301,10302,10303) order by MC_SequenciaTEF "
+Private Sub Cancela_Tef(ByVal sequecial As Integer)
+Sql = "Select * from  MovimentoCaixa where mc_data='" & Format(Date, "yyyy/mm/dd") & "' and mc_pedido=" & txtPedido.text & " and  mc_documento=" & txtNotaFiscal.text & "" _
+& " and MC_TipoNota='V' and MC_SequenciaTEF > " & Trim(sequecial) & " and MC_Grupo in (10203,10205,10206,10301,10302,10303) order by MC_SequenciaTEF "
 
  ADOTef_C.CursorLocation = adUseClient
- ADOTef_C.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+ ADOTef_C.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
  If Not ADOTef_C.EOF Then
  
    qtdCartao = 1
@@ -561,6 +619,7 @@ End Sub
 'Emerson_Tef_Vbi
 Private Sub wskTef_Close()
 wskTef.Close
+ tef_dados = ""
 End Sub
 
 Private Sub wskTef_Connect()
@@ -599,11 +658,12 @@ Public Function IniciaTEF()
 End Function
 Private Sub wskTef_DataArrival(ByVal bytesTotal As Long)
 Dim resp As String
-
+Dim resp1 As String
 tef_menssagem = ""
 wskTef.GetData resp, vbString
+resp1 = resp
 tef_retorno = getMenssagem(resp, "retorno=", 9)
- Call Grava_Log_Diario(resp)
+ Call Grava_Log_Diario(resp1)
 If tef_servico = "iniciar" Then
     tef_menssagem = getMenssagem(resp, "estado", 8)
     If tef_menssagem = "7" And tef_retorno = "1" Then
@@ -646,6 +706,7 @@ ElseIf tef_servico = "confirma" Then
             End If
 ElseIf tef_servico = "finalizar" Then
         Call Conclui_Tef
+         lblDiplay.Caption = ""
 ElseIf tef_retorno > 1 Then
         MsgBox "Erro NO Tef - " & getMenssagem(resp, "mensagem", 10), vbCritical, "ERRO"
         tef_servico = ""
@@ -675,17 +736,25 @@ tef_servico = "executar"
         sequencialLocal = sequecial
         
         
+         
+        
         If tef_menssagem = "Valor" Or tef_menssagem = "Valor da Transacao" Then
         
             informacao = Replace(Format(tef_valor, "#####.00"), ",", ".")
         ElseIf tef_menssagem = "Produto" Then
             informacao = tef_operacao & "-Stone"
+        ElseIf tef_menssagem = "Forma de Pagamento" And tef_operacao = "Debito" Then
+            informacao = "A vista"
+            tef_Parcelas = 0
+             MsgBox "A vista"
         ElseIf tef_menssagem = "Forma de Pagamento" And tef_Parcelas <= 1 Then
             informacao = "A vista"
+            MsgBox "A vista"
         ElseIf tef_menssagem = "Forma de Pagamento" And tef_Parcelas >= 2 Then
             informacao = "Parcelado"
+            MsgBox "Parcelado"
         ElseIf tef_menssagem = "Financiado pelo" Then
-            informacao = "Administradora"
+            informacao = "Estabelecimento"
         ElseIf tef_menssagem = "Parcelas" Then
            informacao = tef_Parcelas
         ElseIf tef_menssagem = "Taxa de Embarque" Then
@@ -694,15 +763,25 @@ tef_servico = "executar"
            informacao = tef_usuario
         ElseIf tef_menssagem = "Senha de acesso" Then
            informacao = tef_senha
+        ElseIf tef_menssagem = "Reimprimir" Then
+           informacao = "Todos"
         ElseIf tef_menssagem = "Data Transacao Original" Then
            informacao = Format(Date, "dd/mm/yy")
         ElseIf tef_menssagem = "Numero do Documento" Then
            informacao = tef_nsu_ctf
+        ElseIf tef_menssagem = "Quatro ultimos digito" Then
+           informacao = InputBox(Trim(tef_menssagem) & ":")
+        ElseIf tef_menssagem = "Codigo de Seguranca" Then
+           informacao = InputBox(Trim(tef_menssagem) & ":")
+        ElseIf tef_menssagem = "Validade do Cartao(MM/AA)" Then
+           informacao = InputBox(Trim(tef_menssagem) & ":")
         ElseIf InStr(tef_menssagem, "?") >= 1 Then
            informacao = "Sim"
+        
         Else
             informacao = ""
         End If
+        
         tef_dados = "automacao_coleta_retorno=""" + retornoLocal + """" + vbCrLf
         tef_dados = tef_dados + "automacao_coleta_sequencial=""" + sequencialLocal + """" + vbCrLf
 
@@ -731,16 +810,28 @@ Private Sub Conclui_Tef()
    Fecha_Log_Diario
     If Tef_Confrima = True Then
         tef_dados = ""
-        sql = "update movimentocaixa set mc_tiponota='C' where mc_sequenciatef=" & Trim(tef_num_doc) & " and mc_serie='" & Trim(txtSerie.text) & "' and mc_documento=" & Trim(txtNotaFiscal.text)
-        rdoCNLoja.Execute (sql)
+        If ChkTef.Value = 0 Then
         
-        Cancela_Tef
+        Sql = "update movimentocaixa set mc_tiponota='C',mc_sequenciatef1 = " & Trim(tef_nsu_ctf) & " where mc_sequenciatef=" & Trim(tef_num_doc) & " and mc_serie='" & Trim(txtSerie.text) & "' and mc_documento=" & Trim(txtNotaFiscal.text)
+        rdoCNLoja.Execute (Sql)
+        
+        Call Cancela_Tef(tef_nsu_ctf)
         If wskTef.State <> 0 Then
            Exit Sub
         End If
-        sql = ""
-        sql = "exec SP_Cancela_NotaFiscal " & txtNotaFiscal.text & ",'" & txtSerie.text & "'"
-        rdoCNLoja.Execute (sql)
+        Sql = ""
+        Sql = "exec SP_Cancela_NotaFiscal " & txtNotaFiscal.text & ",'" & txtSerie.text & "'"
+        rdoCNLoja.Execute (Sql)
+        
+        ElseIf ChkTef.Value = 1 Then
+             Sql = "update movimentocaixa set mc_sequenciatef1 = " & Trim(tef_nsu_ctf) & " where mc_sequenciatef=" & Trim(tef_num_doc) & " and mc_serie='" & Trim(txtSerie.text) & "' and mc_documento=" & Trim(txtNotaFiscal.text)
+                rdoCNLoja.Execute (Sql)
+                 Call Cancela_Tef(tef_nsu_ctf)
+                If wskTef.State <> 0 Then
+                   Exit Sub
+                End If
+            
+        End If
         LimpaCampos
         Imprimir_Tef
         
