@@ -1584,7 +1584,7 @@ Public Sub txtNFe_KeyPress(KeyAscii As Integer)
 
     End If
 
-    If KeyAscii = 27 Then
+    If KeyAscii = 27 And wskTef.State = 0 Then
         Unload Me
     End If
     
@@ -3276,7 +3276,7 @@ Private Sub Conclui_Tef()
             
             Tef_Confrima = False
             
-             If tef_dados = "" Then
+             If tef_dados = "" And wskTef.State = 0 Then
              IniciaTEF
              End If
              

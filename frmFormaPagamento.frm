@@ -3447,7 +3447,7 @@ Private Sub txtValorModalidade_GotFocus()
 End Sub
 
 Private Sub txtValorModalidade_KeyPress(KeyAscii As Integer)
-
+If wskTef.State = 0 Then
 If KeyAscii = 27 Then
     lblModalidade.Caption = " "
 '    chbvalortroco.Visible = False
@@ -3522,7 +3522,7 @@ If KeyAscii = 27 Then
     End If
 
 End If
-
+End If
 
 End Sub
 
@@ -3758,30 +3758,30 @@ End Function
 
 
 Public Sub Cartao_Tef()
-
-     
-    Tef_Confrima = True
-    txtPedido.text = pedido
-    lblDiplay.Caption = ""
-    tef_bandeira = ""
-    tef_nsu_ctf = ""
-If tef_operacao <> "" And chbPOS.Value = 0 And cValorPago <= (chbValoraPagar.Caption - chbValorPago.Caption) Then
-    tef_cupom = ""
-    Tef_Confrima = False
-    lblDiplay.top = chbDebito.top + 50
-    lblDiplay.left = chbDebito.left
-    lblDiplay.Visible = True
-    chbDebito.Visible = False
-    chbCredito.Visible = False
-    Screen.MousePointer = 11
-    tef_Parcelas = getParcelas
-    If tef_Parcelas = "" Then
-    tef_Parcelas = 1
+    
+    If wskTef.State = 0 Then
+        Tef_Confrima = True
+        txtPedido.text = pedido
+        lblDiplay.Caption = ""
+        tef_bandeira = ""
+        tef_nsu_ctf = ""
+    If tef_operacao <> "" And chbPOS.Value = 0 And cValorPago <= (chbValoraPagar.Caption - chbValorPago.Caption) Then
+        tef_cupom = ""
+        Tef_Confrima = False
+        lblDiplay.top = chbDebito.top + 50
+        lblDiplay.left = chbDebito.left
+        lblDiplay.Visible = True
+        chbDebito.Visible = False
+        chbCredito.Visible = False
+        Screen.MousePointer = 11
+        tef_Parcelas = getParcelas
+        If tef_Parcelas = "" Then
+        tef_Parcelas = 1
+        End If
+        pagamento_Cartao
+         
     End If
-    pagamento_Cartao
- 
 End If
-
 End Sub
  Private Sub GravaMovimentoCaixa_tef()
    Wecf = GLB_ECF
@@ -3944,7 +3944,6 @@ End Function
 
 Public Function IniciaTEF()
  tef_sequencia = sequencial_Tef_Vbi
- frmFormaPagamento.Enabled = False
  ususrio_senha_Tef_Vbi
     wskTef.Connect "localhost", 60906
     tef_dados = "versao=""v" & App.Major & "." & App.Minor & "." & App.Revision & """" + vbCrLf
@@ -4226,7 +4225,6 @@ End If
 End Sub
 
 Private Sub Finalizar_Tef()
- frmFormaPagamento.Enabled = True
 tef_servico = "finalizar"
 tef_dados = "sequencial=""" & tef_sequencia + 3 & """" + vbCrLf
 tef_dados = tef_dados + "retorno=""0""" + vbCrLf

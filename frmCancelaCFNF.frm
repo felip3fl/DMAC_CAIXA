@@ -613,7 +613,7 @@ sql = "Select * from  MovimentoCaixa where mc_data='" & Format(Date, "yyyy/mm/dd
             
             Tef_Confrima = False
             
-             If tef_dados = "" Then
+             If tef_dados = "" And wskTef.State = 0 Then
              IniciaTEF
              End If
 End If
