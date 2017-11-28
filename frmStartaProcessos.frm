@@ -52,7 +52,7 @@ Private Sub Form_Activate()
         Esperar 1
     ElseIf rsComplementoVenda("serie") = "NE" Then
         Call CriaNFE(NroNotaFiscal, pedido)
-    ElseIf rsComplementoVenda("serie") = "CE" Then
+    ElseIf rsComplementoVenda("serie") Like "CE*" Then
         Call CriaSAT(NroNotaFiscal, pedido)
     Else
         Esperar 1

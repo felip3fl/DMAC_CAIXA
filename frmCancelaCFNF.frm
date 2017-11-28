@@ -395,7 +395,7 @@ Private Sub finalizarCancelamento()
             If cancelaNotaResultado = True Then
                 'Emerson
             If verifica_tef Then
-            ChkTef.Visible = False
+            ChkTef.top = 4040
             tef_dados = ""
             Call Cancela_Tef(0)
                 If wskTef.State <> 0 Then
@@ -528,8 +528,8 @@ If txtNotaFiscal.text = "" Then
    Exit Sub
 End If
 
-If UCase(txtSerie.text) <> "CE" Then
-    If UCase(txtSerie.text) = GLB_SerieCF Then
+If Not UCase(txtSerie.text) Like "CE*" Then
+    If UCase(txtSerie.text) Like GLB_SerieCF & "*" Then
        MsgBox "Para cancelamento de Cupom Fiscal selecione Operações ECF", vbCritical, "Atenção"
        txtSerie.text = ""
        txtNotaFiscal.SelStart = 0
@@ -573,11 +573,9 @@ Sub LimpaCampos()
         txtPedido.text = ""
         If verifica_tef Then
             lblDiplay.Visible = False
-            ChkTef.Visible = True
             ChkTef.top = 2040
             ChkTef.Value = 0
         End If
-       
         Exit Sub
 
 End Sub
@@ -595,8 +593,6 @@ sql = "Select * from  MovimentoCaixa where mc_data='" & Format(Date, "yyyy/mm/dd
  
    qtdCartao = 1
     lblDiplay.Visible = True
-    ChkTef.top = 20403
-    ChkTef.Visible = False
     tef_operacao = "Administracao Cancelar"
             tef_num_doc = Format(ADOTef_C("Mc_SequenciaTef"), "000000")
             tef_nsu_ctf = Format(ADOTef_C("Mc_SequenciaTef"), "000000")
@@ -613,7 +609,7 @@ sql = "Select * from  MovimentoCaixa where mc_data='" & Format(Date, "yyyy/mm/dd
             
             Tef_Confrima = False
             
-             If tef_dados = "" And wskTef.State = 0 Then
+             If tef_dados = "" Then
              IniciaTEF
              End If
 End If
@@ -651,7 +647,6 @@ End Function
 
 Public Function IniciaTEF()
  tef_sequencia = sequencial_Tef_Vbi
- frmCancelaCFNF.Enabled = False
  ususrio_senha_Tef_Vbi
     wskTef.Connect "localhost", 60906
     tef_dados = "versao=""v" & App.Major & "." & App.Minor & "." & App.Revision & """" + vbCrLf
@@ -823,7 +818,6 @@ Private Sub Conclui_Tef()
         
         Call Cancela_Tef(tef_nsu_ctf)
         If wskTef.State <> 0 Then
-         ADOCancela.Close
            Exit Sub
         End If
         sql = ""
@@ -835,7 +829,6 @@ Private Sub Conclui_Tef()
                 rdoCNLoja.Execute (sql)
                  Call Cancela_Tef(tef_nsu_ctf)
                 If wskTef.State <> 0 Then
-                 ADOCancela.Close
                    Exit Sub
                 End If
             
@@ -843,7 +836,7 @@ Private Sub Conclui_Tef()
         LimpaCampos
         Imprimir_Tef
         
-
+ ADOCancela.Close
     
  End If
 
@@ -873,7 +866,6 @@ End Function
 
 
 Private Sub Finalizar_Tef()
-frmCancelaCFNF.Enabled = True
 tef_servico = "finalizar"
 tef_dados = "sequencial=""" & tef_sequencia + 3 & """" + vbCrLf
 tef_dados = tef_dados + "retorno=""0""" + vbCrLf

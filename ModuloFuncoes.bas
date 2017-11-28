@@ -3265,7 +3265,7 @@ Public Sub VerificaSeEmiteCupom()
         If tipoCupomEmite Like "CF*" Then
             tipoCupomEmite = "CF"
         ElseIf tipoCupomEmite Like "CE*" Then
-            tipoCupomEmite = "CE"
+            tipoCupomEmite = GLB_SerieCF
         Else
             tipoCupomEmite = ""
         End If
@@ -3952,7 +3952,7 @@ Public Sub ImprimeTransferencia00(ByVal nota As Double)
     Dim TotalVenda As Double
 
     Dim nomeEmpresa As String * 48
-    Dim CNPJ As String * 48
+    Dim cnpj As String * 48
     Dim Data As String * 48
     Dim Endereco As String * 48
     Dim Telefone As String * 48
@@ -3983,8 +3983,8 @@ Public Sub ImprimeTransferencia00(ByVal nota As Double)
    nomeEmpresa = RsDados("LO_Razao")
    impressoraRelatorio nomeEmpresa
    
-   CNPJ = "CNPJ: " & RsDados("LO_CGC") & " I.E.: " & RsDados("LO_InscricaoEstadual")
-   impressoraRelatorio CNPJ
+   cnpj = "CNPJ: " & RsDados("LO_CGC") & " I.E.: " & RsDados("LO_InscricaoEstadual")
+   impressoraRelatorio cnpj
    
    Endereco = UCase(RsDados("LO_Endereco")) & ", " & RsDados("LO_numero")
    impressoraRelatorio Endereco

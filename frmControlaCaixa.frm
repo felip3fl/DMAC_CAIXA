@@ -1430,7 +1430,7 @@ End If
           wVerificaNotaManual = False
           wVerificaNotaFiscal = False
           If txtPedido.text = "0" Then
-            If tipoCupomEmite = "CE" Then
+            If tipoCupomEmite Like "CE*" Then
               frmCaixaSATDireto.Show vbModal
               Exit Sub
             ElseIf tipoCupomEmite = "CF" Then
@@ -1510,7 +1510,7 @@ End If
                      frmCaixaNotaManual.Show vbModal
                  
                  ElseIf rdoParametro("Cliente") = "999999" And wVerificaNotaFiscal = False Then
-                    If tipoCupomEmite = "CE" Then
+                    If tipoCupomEmite Like "CE*" Then
                         frmCaixaSAT.Show vbModal
                     ElseIf tipoCupomEmite = "CF" Then
                         frmCaixaTEFPedido.Show vbModal

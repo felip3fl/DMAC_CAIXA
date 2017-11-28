@@ -871,7 +871,7 @@ Private Sub cmdCancelar_Click()
         finalizaProcesso "Cancelando Nota Fiscal Eletrônico " & Nf.numero, True
         cancelaNE Nf
         
-    ElseIf Nf.eSerie = "CE" Then
+    ElseIf Nf.eSerie Like "CE*" Then
         'Arquivo = Dir(, vbDirectory)
         'If Arquivo <> "" Then
             deletaArquivo GLB_EnderecoPastaRESP & "*" & Nf.pedido & "#" & Nf.cnpj & ".txt"
@@ -958,7 +958,7 @@ Public Sub cmdTransmitir_Click()
      
     If Nf.eSerie = "NE" Then
         Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & Nf.numero & "#" & Nf.cnpj & ".txt", vbDirectory)
-    ElseIf Nf.eSerie = "CE" Then
+    ElseIf Nf.eSerie Like "CE*" Then
         Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & Nf.pedido & "#" & Nf.cnpj & ".txt", vbDirectory)
     End If
     
@@ -988,7 +988,7 @@ Public Sub cmdTransmitir_Click()
         criaTXT "nota", Nf
         atualizaNota "IDE"
         
-    ElseIf Nf.eSerie = "CE" Then
+    ElseIf Nf.eSerie Like "CE*" Then
         
         finalizaProcesso "Emitindo Cupom Fiscal Eletrônico", True
         criaTXTSAT "sat", Nf
@@ -1002,7 +1002,7 @@ Private Sub cmdImprimir_Click()
     If Nf.eSerie = "NE" Then
         finalizaProcesso "Imprimindo Nota Fiscal Eletrônico " & Nf.numero, False
         Call ImprimirNota(Nf, "NOTA")
-    ElseIf Nf.eSerie = "CE" Then
+    ElseIf Nf.eSerie Like "CE*" Then
         finalizaProcesso "Imprimindo Cupom Fiscal Eletrônico " & Nf.numero, False
         Call ImprimirNota(Nf, "SAT")
     End If
@@ -1040,7 +1040,8 @@ Private Sub notaPedentes()
           "from nfcapa " & vbNewLine & _
           "where tm not in (4012,4016,9016,100,101,9005,4005,9012,204,124,4014)   " & vbNewLine & _
           "and tiponota in ('V','T','E','S','R') " & vbNewLine & _
-          "and serie in ('CE','NE')" & vbNewLine & _
+          "and serie in ('NE') " & vbNewLine & _
+          "and serie like 'CE%' " & vbNewLine & _
           "and dataemi >= '" & Format(GLB_DataInicial, "YYYY/MM") & "/01'"
 
     ado_estrutura.CursorLocation = adUseClient
@@ -2213,7 +2214,7 @@ Private Function obterNumNFArquivo(Arquivo, Nf As notaFiscal) As String
     Dim numNF As String
     Dim ado_loja As New ADODB.Recordset
     
-    If Nf.eSerie = "CE" Then
+    If Nf.eSerie Like "CE*" Then
         numNF = Mid(Nf.chave, 32, 6)
         
         If numNF = "" Or numNF = "0" Then
@@ -2243,7 +2244,7 @@ End Function
 
 Private Function obterNumPedidoArquivo(Arquivo As String, Nf As notaFiscal) As String
 
-    If Nf.eSerie = "CE" Then
+    If Nf.eSerie Like "CE*" Then
         obterNumPedidoArquivo = Val(Mid(Arquivo, InStr(Arquivo, "#") - 6, 6))
     Else
     
@@ -2410,7 +2411,7 @@ Public Function carregaArquivoUnico()
         Nf.cnpj = obterCNJPArquivo(Arquivo)
         Nf.loja = obterLoja(Nf.cnpj)
         
-        If Nf.eSerie = "CE" Then
+        If Nf.eSerie Like "CE*" Then
             Nf.pedido = obterNumPedidoArquivo(Arquivo, Nf)
             Nf.chave = lerCampo(informacaoArquivo, "ChaveSAT")
             Nf.numero = obterNumNFArquivo(Arquivo, Nf)
@@ -2435,7 +2436,7 @@ Public Function carregaArquivoUnico()
              statusFuncionamento "Nota emitida e autorizada com sucesso"
              
              atualizaChaveNF Nf.pedido, Nf.chave, Nf.loja
-             If Nf.eSerie = "CE" Then atualizaNumeroNF Nf.pedido, Nf.numero
+             If Nf.eSerie Like "CE*" Then atualizaNumeroNF Nf.pedido, Nf.numero
              atualizaArquivo GLB_EnderecoPastaRESP, Arquivo, informacaoArquivo, "DMAC=Atualizado"
              
              Call Devolucao(Nf.pedido)
@@ -2645,7 +2646,7 @@ Public Function carregaArquivo()
                     Nf.loja = obterLoja(Nf.cnpj)
                     
                     If UCase(Arquivo) Like "*SAT*" Then
-                        Nf.eSerie = "CE"
+                        Nf.eSerie = GLB_SerieCF
                         Nf.pedido = obterNumPedidoArquivo(Arquivo, Nf)
                         Nf.chave = lerCampo(informacaoArquivo, "ChaveSAT")
                         Nf.numero = obterNumNFArquivo(Arquivo, Nf)
@@ -2662,7 +2663,7 @@ Public Function carregaArquivo()
                     
                         atualizaCodigoNF Nf.pedido, resultado, Nf.loja
                         atualizaChaveNF Nf.pedido, Nf.chave, Nf.loja
-                        If Nf.eSerie = "CE" Then atualizaNumeroNF Nf.pedido, Nf.numero
+                        If Nf.eSerie Like "CE*" Then atualizaNumeroNF Nf.pedido, Nf.numero
                         
                         atualizaArquivoDestalhesNF Nf, Arquivo, informacaoArquivo
                         'atualizaArquivo GLB_EnderecoPastaRESP, ARQUIVO, informacaoArquivo, "DMAC=Atualizado BD pelo segundo metodo"
