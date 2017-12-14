@@ -5,13 +5,13 @@ Begin VB.Form frmEmissaoNFe
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    Caption         =   "Emissão NFe"
-   ClientHeight    =   9240
-   ClientLeft      =   1020
-   ClientTop       =   1290
+   ClientHeight    =   9225
+   ClientLeft      =   720
+   ClientTop       =   1035
    ClientWidth     =   19035
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
-   ScaleHeight     =   9240
+   ScaleHeight     =   9225
    ScaleWidth      =   19035
    ShowInTaskbar   =   0   'False
    Visible         =   0   'False
@@ -1040,8 +1040,8 @@ Private Sub notaPedentes()
           "from nfcapa " & vbNewLine & _
           "where tm not in (4012,4016,9016,100,101,9005,4005,9012,204,124,4014)   " & vbNewLine & _
           "and tiponota in ('V','T','E','S','R') " & vbNewLine & _
-          "and serie in ('NE') " & vbNewLine & _
-          "and serie like 'CE%' " & vbNewLine & _
+          "and (serie in ('NE') " & vbNewLine & _
+          "or serie like 'CE%') " & vbNewLine & _
           "and dataemi >= '" & Format(GLB_DataInicial, "YYYY/MM") & "/01'"
 
     ado_estrutura.CursorLocation = adUseClient
