@@ -69,10 +69,10 @@ Attribute VB_Exposed = False
 Private Sub cmb_loja_Click()
 
 
-Sql = "Select CXA_NumeroCaixa from ParametroSistema order by CXA_NumeroCaixa"
+sql = "Select CXA_NumeroCaixa from ParametroSistema order by CXA_NumeroCaixa"
 
 rdoParametroINI.CursorLocation = adUseClient
-rdoParametroINI.Open Sql, adoCNAccess, adOpenForwardOnly, adLockPessimistic
+rdoParametroINI.Open sql, adoCNAccess, adOpenForwardOnly, adLockPessimistic
 
         If Not rdoParametroINI.EOF Then
             cmb_Caixa.Clear
@@ -107,10 +107,10 @@ lsDSN = "Driver={Microsoft Access Driver (*.mdb)};" & _
           "Uid=Admin; Pwd=astap36"
   adoCNAccess.Open lsDSN
  
-Sql = "Select * from ConexaoSistema where GLB_Loja = '" & Trim(cmb_loja.text) & "'"
+sql = "Select * from ConexaoSistema where GLB_Loja = '" & Trim(cmb_loja.text) & "'"
  
 rdoConexaoINI.CursorLocation = adUseClient
-rdoConexaoINI.Open Sql, adoCNAccess, adOpenForwardOnly, adLockPessimistic
+rdoConexaoINI.Open sql, adoCNAccess, adOpenForwardOnly, adLockPessimistic
  
   If Not rdoConexaoINI.EOF Then
        GLB_Servidor = Trim(rdoConexaoINI("GLB_ServidorRetaguarda"))
@@ -131,12 +131,12 @@ Continua:
     If GLB_ConectouOK = True Then
        Call DadosLoja
        
-       Sql = "Select * from ControleCaixa Where CTR_Supervisor = 99 and CTR_SituacaoCaixa='F' " _
+       sql = "Select * from ControleCaixa Where CTR_Supervisor = 99 and CTR_SituacaoCaixa='F' " _
            & "and CTR_datainicial >= '" & Format(Date, "yyyy/mm/dd") & "'"
             RsDados.CursorLocation = adUseClient
             
             
-            RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+            RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
             If Not RsDados.EOF Then
                MsgBox "Fechamento Geral de hoje já foi efetuado. Não é possivel abrir o Caixa."
                wPermitirVenda = False
@@ -170,10 +170,10 @@ Private Sub Form_Load()
 'Skin1.LoadSkin "c:\WINDOWS\system\skin.skn"
 'Skin1.ApplySkin Me.Hwnd
 
-Sql = "Select GLB_LOJA from ConexaoSistema GROUP BY GLB_LOJA"
+sql = "Select GLB_LOJA from ConexaoSistema GROUP BY GLB_LOJA"
  
 rdoConexaoINI.CursorLocation = adUseClient
-rdoConexaoINI.Open Sql, adoCNAccess, adOpenForwardOnly, adLockPessimistic
+rdoConexaoINI.Open sql, adoCNAccess, adOpenForwardOnly, adLockPessimistic
  
         If Not rdoConexaoINI.EOF Then
             cmb_loja.Clear
