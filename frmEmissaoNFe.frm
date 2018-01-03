@@ -6,8 +6,8 @@ Begin VB.Form frmEmissaoNFe
    BorderStyle     =   0  'None
    Caption         =   "Emissão NFe"
    ClientHeight    =   9225
-   ClientLeft      =   720
-   ClientTop       =   1035
+   ClientLeft      =   -45
+   ClientTop       =   1245
    ClientWidth     =   19035
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
@@ -1038,7 +1038,7 @@ Private Sub notaPedentes()
 
     sql = "select HORA, DATAEMI, lojaorigem, NUMEROPED, nf, tm, serie, tiponota " & vbNewLine & _
           "from nfcapa " & vbNewLine & _
-          "where tm not in (4012,4016,9016,100,101,9005,4005,9012,204,124,4014)   " & vbNewLine & _
+          "where tm not in (4012,4016,9016,100,101,9005,4005,9012,204,124,4014,4017)   " & vbNewLine & _
           "and tiponota in ('V','T','E','S','R') " & vbNewLine & _
           "and (serie in ('NE') " & vbNewLine & _
           "or serie like 'CE%') " & vbNewLine & _
@@ -2431,7 +2431,7 @@ Public Function carregaArquivoUnico()
         If resultado = 4014 Then
              statusFuncionamento "Email enviado com sucesso"
              Esperar 4
-        ElseIf resultado = 100 Or resultado = 4012 Or resultado = 9016 Then
+        ElseIf resultado = 100 Or resultado = 4012 Or resultado = 9016 Or resultado = 124 Or resultado = 4017 Then
         
              statusFuncionamento "Nota emitida e autorizada com sucesso"
              
@@ -2737,7 +2737,7 @@ Public Function mensagemLOG2(grid, Data As Date, tipoStatus As Integer, loja As 
     
     
     Select Case tipoStatus
-        Case 100, 4012, 4016, 124, 4014, 101, 9016, 9005, 4005
+        Case 100, 4012, 4016, 124, 4014, 101, 9016, 9005, 4005, 4017
             status = "Sucesso"
         Case Else
             status = "Erro"
