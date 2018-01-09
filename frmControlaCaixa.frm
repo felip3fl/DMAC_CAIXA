@@ -3,8 +3,8 @@ Begin VB.Form frmControlaCaixa
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    ClientHeight    =   11235
-   ClientLeft      =   630
-   ClientTop       =   2250
+   ClientLeft      =   3555
+   ClientTop       =   345
    ClientWidth     =   15300
    Icon            =   "frmControlaCaixa.frx":0000
    LinkTopic       =   "Form1"
@@ -207,13 +207,13 @@ Begin VB.Form frmControlaCaixa
       End
    End
    Begin Balcao2010.chameleonButton cmdProtocolo 
-      Height          =   450
+      Height          =   0
       Left            =   12975
       TabIndex        =   14
       Top             =   2085
       Width           =   2145
       _ExtentX        =   3784
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Protocolo"
       ENAB            =   -1  'True
@@ -245,13 +245,13 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdLoja 
-      Height          =   450
+      Height          =   0
       Left            =   165
       TabIndex        =   13
       Top             =   2085
       Width           =   1200
       _ExtentX        =   2117
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Loja"
       ENAB            =   -1  'True
@@ -283,13 +283,13 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdNroCaixa 
-      Height          =   450
+      Height          =   0
       Left            =   1845
       TabIndex        =   12
       Top             =   2085
       Width           =   1245
       _ExtentX        =   2196
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "NroCaixa"
       ENAB            =   -1  'True
@@ -321,13 +321,13 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdOperador 
-      Height          =   450
+      Height          =   0
       Left            =   4665
       TabIndex        =   11
       Top             =   2085
       Width           =   5355
       _ExtentX        =   9446
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Operador"
       ENAB            =   -1  'True
@@ -359,14 +359,14 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdReRomaneio 
-      Height          =   450
+      Height          =   0
       Left            =   4440
       TabIndex        =   10
       Top             =   10770
       Visible         =   0   'False
       Width           =   1095
       _ExtentX        =   1931
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Re Romaneio"
       ENAB            =   -1  'True
@@ -398,14 +398,14 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdReimprimeNF 
-      Height          =   450
+      Height          =   0
       Left            =   1995
       TabIndex        =   9
       Top             =   10815
       Visible         =   0   'False
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "ReEmiNF"
       ENAB            =   -1  'True
@@ -438,14 +438,14 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdBotoesParte2 
-      Height          =   450
+      Height          =   0
       Index           =   4
       Left            =   13695
       TabIndex        =   7
       Top             =   10815
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "T. Numerário"
       ENAB            =   -1  'True
@@ -478,7 +478,7 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdBotoesParte2 
-      Height          =   450
+      Height          =   0
       Index           =   5
       Left            =   14505
       TabIndex        =   6
@@ -486,7 +486,7 @@ Begin VB.Form frmControlaCaixa
       Top             =   10815
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Consulta"
       ENAB            =   -1  'True
@@ -518,20 +518,20 @@ Begin VB.Form frmControlaCaixa
       CHECK           =   0   'False
       VALUE           =   0   'False
    End
-   Begin VB.Timer Timer1 
-      Enabled         =   0   'False
-      Left            =   1335
+   Begin VB.Timer tmrImpressaoPromocaoDemeo 
+      Interval        =   1000
+      Left            =   1320
       Top             =   3810
    End
    Begin Balcao2010.chameleonButton cmdBotoesParte2 
-      Height          =   450
+      Height          =   0
       Index           =   2
       Left            =   12105
       TabIndex        =   8
       Top             =   10815
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Cancelar"
       ENAB            =   -1  'True
@@ -564,14 +564,14 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdBotoesParte2 
-      Height          =   450
+      Height          =   0
       Index           =   3
       Left            =   12900
       TabIndex        =   16
       Top             =   10815
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Movimento"
       ENAB            =   -1  'True
@@ -604,13 +604,13 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdVersao 
-      Height          =   555
+      Height          =   0
       Left            =   6795
       TabIndex        =   17
       Top             =   10740
       Width           =   1920
       _ExtentX        =   3387
-      _ExtentY        =   979
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   ""
       ENAB            =   -1  'True
@@ -643,14 +643,14 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdBotoesParte2 
-      Height          =   450
+      Height          =   0
       Index           =   1
       Left            =   11295
       TabIndex        =   19
       Top             =   10815
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Portal"
       ENAB            =   -1  'True
@@ -683,14 +683,14 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdBotoesParte2 
-      Height          =   450
+      Height          =   0
       Index           =   0
       Left            =   10500
       TabIndex        =   20
       Top             =   10815
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Menu ECF"
       ENAB            =   -1  'True
@@ -723,7 +723,7 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdBotoesParte2 
-      Height          =   450
+      Height          =   0
       Index           =   6
       Left            =   390
       TabIndex        =   21
@@ -731,7 +731,7 @@ Begin VB.Form frmControlaCaixa
       Top             =   10815
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Fecha Caixa"
       ENAB            =   -1  'True
@@ -764,7 +764,7 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdBotoesParte2 
-      Height          =   450
+      Height          =   0
       Index           =   7
       Left            =   1185
       TabIndex        =   1
@@ -772,7 +772,7 @@ Begin VB.Form frmControlaCaixa
       Top             =   10815
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Garantia"
       ENAB            =   -1  'True
@@ -805,7 +805,7 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdBotoesParte2 
-      Height          =   450
+      Height          =   0
       Index           =   8
       Left            =   2505
       TabIndex        =   22
@@ -814,7 +814,7 @@ Begin VB.Form frmControlaCaixa
       Visible         =   0   'False
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   ""
       ENAB            =   -1  'True
@@ -847,7 +847,7 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdBotoesParte2 
-      Height          =   450
+      Height          =   0
       Index           =   9
       Left            =   2790
       TabIndex        =   23
@@ -856,7 +856,7 @@ Begin VB.Form frmControlaCaixa
       Visible         =   0   'False
       Width           =   450
       _ExtentX        =   794
-      _ExtentY        =   794
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   ""
       ENAB            =   -1  'True
@@ -1093,6 +1093,7 @@ Dim Controle As Integer
 Dim wVerificaRomaneio As Boolean
 Dim wVerificaNotaManual As Boolean
 Dim wVerificaNotaFiscal As Boolean
+Dim ativaImpressaoPromocaoDemeo As Boolean
 
 Public wSequencia As String
 Public wTipoNota As String
@@ -1309,33 +1310,35 @@ If rdoParametro.EOF Then
    Unload Me
 End If
 
-lblNroCaixa.Caption = GLB_Caixa
-cmdNroCaixa.Caption = "Caixa  " & GLB_Caixa
-lblloja.Caption = rdoParametro("PAR_Loja")
-cmdLoja.Caption = "Loja " & rdoParametro("PAR_Loja")
-lblOperador.Caption = Trim(GLB_USU_Nome)
-cmdOperador.Caption = "Operador  " & Trim(GLB_USU_Nome)
+    lblNroCaixa.Caption = GLB_Caixa
+    cmdNroCaixa.Caption = "Caixa  " & GLB_Caixa
+    lblloja.Caption = rdoParametro("PAR_Loja")
+    cmdLoja.Caption = "Loja " & rdoParametro("PAR_Loja")
+    lblOperador.Caption = Trim(GLB_USU_Nome)
+    cmdOperador.Caption = "Operador  " & Trim(GLB_USU_Nome)
+    
+    tipoZero = False
+    If VerificaSeEmiteCodigoZero = "S" Then
+        tipoZero = True
+    End If
+    
+    lblProtocolo.Caption = GLB_CTR_Protocolo
+    cmdProtocolo.Caption = "Protocolo  " & GLB_CTR_Protocolo
+    rdoParametro.Close
+    
+    sql = "select CS_SerieCF as serie from ControleSerie where CS_NroCaixa = '" & GLB_Caixa & "'"
+    rdoParametro.CursorLocation = adUseClient
+    rdoParametro.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        GLB_SerieCF = rdoParametro("Serie")
+    rdoParametro.Close
+    
+    abilitaFuncoesCF
+    
+    ativaImpressaoPromocaoDemeo = verificaPromocaoLoja
+    tmrImpressaoPromocaoDemeo.Enabled = ativaImpressaoPromocaoDemeo
 
-tipoZero = False
-If VerificaSeEmiteCodigoZero = "S" Then
-    tipoZero = True
-End If
+    'txtPedido.SetFocus
 
-lblProtocolo.Caption = GLB_CTR_Protocolo
-cmdProtocolo.Caption = "Protocolo  " & GLB_CTR_Protocolo
-rdoParametro.Close
-
-sql = "select CS_SerieCF as serie from ControleSerie where CS_NroCaixa = '" & GLB_Caixa & "'"
-rdoParametro.CursorLocation = adUseClient
-rdoParametro.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
-    GLB_SerieCF = rdoParametro("Serie")
-rdoParametro.Close
-
-abilitaFuncoesCF
-
-
-
-'txtPedido.SetFocus
 End Sub
 
 
@@ -1368,6 +1371,146 @@ Private Sub Timer2_Timer()
         lblBotao.Visible = True
         Timer2.Enabled = False
     End If
+End Sub
+
+Private Sub tmrImpressaoPromocaoDemeo_Timer()
+    
+    Call verificaImpressaoPromocaoPendente
+    
+End Sub
+
+Function verificaPromocaoLoja() As Boolean
+
+On Error GoTo TrataErro
+
+    Dim sql As String
+    Dim rdoSorteioAtivado As New ADODB.Recordset
+    
+    sql = "SELECT count(*) as quantidadeLinhas FROM vda_impressao_sorteio"
+
+    rdoSorteioAtivado.CursorLocation = adUseClient
+    rdoSorteioAtivado.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    
+        If rdoSorteioAtivado("quantidadeLinhas") > 0 Then
+            verificaPromocaoLoja = True
+        Else
+            verificaPromocaoLoja = False
+        End If
+    
+    rdoSorteioAtivado.Close
+    
+    Exit Function
+
+TrataErro:
+    
+    verificaPromocaoLoja = False
+    MsgBox "Não foi possível carregar a tabela de impressão de sorteio." & vbNewLine & Err.Number & " - " & Err.Description, vbExclamation
+
+End Function
+
+
+Sub verificaImpressaoPromocaoPendente()
+
+On Error GoTo TrataErro
+
+    Dim sql As String
+    Dim rdoSorteioAtivado As New ADODB.Recordset
+    
+    sql = "SELECT top 1 idCliente AS idCliente FROM vda_impressao_sorteio where situacao = 'A'"
+
+    rdoSorteioAtivado.CursorLocation = adUseClient
+    rdoSorteioAtivado.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    
+        If Not rdoSorteioAtivado.EOF Then
+        
+            imprimirInformacoesPromocaoDemeo (rdoSorteioAtivado("idCliente"))
+
+        End If
+        
+    rdoSorteioAtivado.Close
+
+    Exit Sub
+
+TrataErro:
+    
+    MsgBox "Não foi possível verificar a tabela de impressão de sorteio." & vbNewLine & Err.Number & " - " & Err.Description, vbExclamation
+
+End Sub
+
+
+Private Sub InformacoesPromocaoDemeoAtualizacaoStatus(idCliente As String)
+    
+    On Error GoTo TrataErro
+
+    Dim sql As String
+    Dim rdoInfoSorteio As New ADODB.Recordset
+    Dim infoImpressao As String
+    
+    Screen.MousePointer = 11
+    
+    idCliente = "354"
+    
+    sql = "update vda_impressao_sorteio set situacao = 'A' --where lo_loja = '" & idCliente & "'"
+
+    rdoInfoSorteio.CursorLocation = adUseClient
+    rdoInfoSorteio.Open sql, rdoCNRetaguarda, adOpenForwardOnly, adLockPessimistic
+    
+       impressoraRelatorio "[INICIO]"
+       impressoraRelatorio "________________________________________________"
+       
+       impressoraRelatorio rdoInfoSorteio("nomeFantasia")
+       impressoraRelatorio rdoInfoSorteio("numero")
+       
+       impressoraRelatorio "[FIM]"
+
+    rdoInfoSorteio.Close
+    Screen.MousePointer = 0
+
+    Exit Sub
+
+TrataErro:
+    
+    impressoraRelatorio "[FIM]"
+    Screen.MousePointer = 0
+    
+    
+End Sub
+
+Private Sub imprimirInformacoesPromocaoDemeo(idCliente As String)
+    
+On Error GoTo TrataErro
+
+    Dim sql As String
+    Dim rdoInfoSorteio As New ADODB.Recordset
+    Dim infoImpressao As String
+    
+    Screen.MousePointer = 11
+    
+    idCliente = "354"
+    
+    sql = "select top 1 LO_NomeFantasia as nomeFantasia, LO_Numero as numero from loja where lo_loja = '" & idCliente & "'"
+
+    rdoInfoSorteio.CursorLocation = adUseClient
+    rdoInfoSorteio.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    
+       impressoraRelatorio "[INICIO]"
+       impressoraRelatorio "________________________________________________"
+       
+       impressoraRelatorio rdoInfoSorteio("nomeFantasia")
+       impressoraRelatorio rdoInfoSorteio("numero")
+       
+       impressoraRelatorio "[FIM]"
+
+    rdoInfoSorteio.Close
+    Screen.MousePointer = 0
+
+    Exit Sub
+
+TrataErro:
+    
+    impressoraRelatorio "[FIM]"
+    Screen.MousePointer = 0
+    
 End Sub
 
 Private Sub txtPedido_GotFocus()

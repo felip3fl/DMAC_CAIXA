@@ -31,8 +31,6 @@ Dim wVICMSFECP As Double
 Dim wTotalVICMSFECP As Double
 
 
-
-
 Sub ConectaODBC()
 
 On Error GoTo ConexaoErro:

@@ -2,13 +2,13 @@ VERSION 5.00
 Begin VB.Form frmBandeja 
    BackColor       =   &H00000000&
    Caption         =   "DMAC Caixa"
-   ClientHeight    =   13830
+   ClientHeight    =   11235
    ClientLeft      =   7650
    ClientTop       =   345
    ClientWidth     =   18375
    Icon            =   "frmBandeja.frx":0000
    LinkTopic       =   "Form1"
-   ScaleHeight     =   13830
+   ScaleHeight     =   11235
    ScaleWidth      =   18375
    Begin VB.Image imgTarefas 
       Height          =   11520

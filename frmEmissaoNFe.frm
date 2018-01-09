@@ -36,37 +36,29 @@ Begin VB.Form frmEmissaoNFe
          TabIndex        =   26
          Top             =   645
          Width           =   3435
-         _ExtentX        =   6059
-         _ExtentY        =   979
-         BTYPE           =   14
-         TX              =   "Cancelar NFe / CFe"
-         ENAB            =   -1  'True
-         BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-            Name            =   "Arial"
-            Size            =   12
-            Charset         =   0
-            Weight          =   700
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         COLTYPE         =   2
-         FOCUSR          =   -1  'True
-         BCOL            =   2500134
-         BCOLO           =   4210752
-         FCOL            =   16777215
-         FCOLO           =   16777215
-         MCOL            =   5263440
-         MPTR            =   1
-         MICON           =   "frmEmissaoNFe.frx":0000
-         UMCOL           =   -1  'True
-         SOFT            =   0   'False
-         PICPOS          =   0
-         NGREY           =   0   'False
-         FX              =   0
-         HAND            =   0   'False
-         CHECK           =   0   'False
-         VALUE           =   0   'False
+         _extentx        =   6059
+         _extenty        =   979
+         btype           =   14
+         tx              =   "Cancelar NFe / CFe"
+         enab            =   -1  'True
+         font            =   "frmEmissaoNFe.frx":0000
+         coltype         =   2
+         focusr          =   -1  'True
+         bcol            =   2500134
+         bcolo           =   4210752
+         fcol            =   16777215
+         fcolo           =   16777215
+         mcol            =   5263440
+         mptr            =   1
+         micon           =   "frmEmissaoNFe.frx":0024
+         umcol           =   -1  'True
+         soft            =   0   'False
+         picpos          =   0
+         ngrey           =   0   'False
+         fx              =   0
+         hand            =   0   'False
+         check           =   0   'False
+         value           =   0   'False
       End
       Begin Balcao2010.chameleonButton cmdLiberar 
          Height          =   555
@@ -74,37 +66,29 @@ Begin VB.Form frmEmissaoNFe
          TabIndex        =   27
          Top             =   1185
          Width           =   3435
-         _ExtentX        =   6059
-         _ExtentY        =   979
-         BTYPE           =   14
-         TX              =   "Atualizar TM "
-         ENAB            =   -1  'True
-         BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-            Name            =   "Arial"
-            Size            =   12
-            Charset         =   0
-            Weight          =   700
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         COLTYPE         =   2
-         FOCUSR          =   -1  'True
-         BCOL            =   2500134
-         BCOLO           =   4210752
-         FCOL            =   16777215
-         FCOLO           =   16777215
-         MCOL            =   5263440
-         MPTR            =   1
-         MICON           =   "frmEmissaoNFe.frx":001C
-         UMCOL           =   -1  'True
-         SOFT            =   0   'False
-         PICPOS          =   0
-         NGREY           =   0   'False
-         FX              =   0
-         HAND            =   0   'False
-         CHECK           =   0   'False
-         VALUE           =   0   'False
+         _extentx        =   6059
+         _extenty        =   979
+         btype           =   14
+         tx              =   "Atualizar TM "
+         enab            =   -1  'True
+         font            =   "frmEmissaoNFe.frx":0042
+         coltype         =   2
+         focusr          =   -1  'True
+         bcol            =   2500134
+         bcolo           =   4210752
+         fcol            =   16777215
+         fcolo           =   16777215
+         mcol            =   5263440
+         mptr            =   1
+         micon           =   "frmEmissaoNFe.frx":0066
+         umcol           =   -1  'True
+         soft            =   0   'False
+         picpos          =   0
+         ngrey           =   0   'False
+         fx              =   0
+         hand            =   0   'False
+         check           =   0   'False
+         value           =   0   'False
       End
       Begin VB.Label Label2 
          AutoSize        =   -1  'True
@@ -234,37 +218,29 @@ Begin VB.Form frmEmissaoNFe
             TabIndex        =   15
             Top             =   210
             Width           =   2115
-            _ExtentX        =   3731
-            _ExtentY        =   556
-            BTYPE           =   14
-            TX              =   "Atualizar"
-            ENAB            =   -1  'True
-            BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-               Name            =   "Arial"
-               Size            =   9.75
-               Charset         =   0
-               Weight          =   400
-               Underline       =   0   'False
-               Italic          =   0   'False
-               Strikethrough   =   0   'False
-            EndProperty
-            COLTYPE         =   2
-            FOCUSR          =   -1  'True
-            BCOL            =   2500134
-            BCOLO           =   4210752
-            FCOL            =   16777215
-            FCOLO           =   16777215
-            MCOL            =   5263440
-            MPTR            =   1
-            MICON           =   "frmEmissaoNFe.frx":0038
-            UMCOL           =   -1  'True
-            SOFT            =   0   'False
-            PICPOS          =   0
-            NGREY           =   0   'False
-            FX              =   0
-            HAND            =   0   'False
-            CHECK           =   0   'False
-            VALUE           =   0   'False
+            _extentx        =   3731
+            _extenty        =   556
+            btype           =   14
+            tx              =   "Atualizar"
+            enab            =   -1  'True
+            font            =   "frmEmissaoNFe.frx":0084
+            coltype         =   2
+            focusr          =   -1  'True
+            bcol            =   2500134
+            bcolo           =   4210752
+            fcol            =   16777215
+            fcolo           =   16777215
+            mcol            =   5263440
+            mptr            =   1
+            micon           =   "frmEmissaoNFe.frx":00A8
+            umcol           =   -1  'True
+            soft            =   0   'False
+            picpos          =   0
+            ngrey           =   0   'False
+            fx              =   0
+            hand            =   0   'False
+            check           =   0   'False
+            value           =   0   'False
          End
          Begin VB.Label Label3 
             AutoSize        =   -1  'True
@@ -340,7 +316,7 @@ Begin VB.Form frmEmissaoNFe
          ColWidthMin     =   0
          ColWidthMax     =   0
          ExtendLastCol   =   0   'False
-         FormatString    =   $"frmEmissaoNFe.frx":0054
+         FormatString    =   $"frmEmissaoNFe.frx":00C6
          ScrollTrack     =   0   'False
          ScrollBars      =   2
          ScrollTips      =   0   'False
@@ -440,7 +416,7 @@ Begin VB.Form frmEmissaoNFe
          ColWidthMin     =   0
          ColWidthMax     =   0
          ExtendLastCol   =   0   'False
-         FormatString    =   $"frmEmissaoNFe.frx":0172
+         FormatString    =   $"frmEmissaoNFe.frx":01E4
          ScrollTrack     =   0   'False
          ScrollBars      =   2
          ScrollTips      =   0   'False
@@ -548,37 +524,29 @@ Begin VB.Form frmEmissaoNFe
          TabIndex        =   9
          Top             =   2250
          Width           =   3435
-         _ExtentX        =   6059
-         _ExtentY        =   1270
-         BTYPE           =   14
-         TX              =   "Transmitir"
-         ENAB            =   -1  'True
-         BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-            Name            =   "Arial"
-            Size            =   12
-            Charset         =   0
-            Weight          =   700
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         COLTYPE         =   2
-         FOCUSR          =   -1  'True
-         BCOL            =   2500134
-         BCOLO           =   4210752
-         FCOL            =   16777215
-         FCOLO           =   16777215
-         MCOL            =   5263440
-         MPTR            =   1
-         MICON           =   "frmEmissaoNFe.frx":0295
-         UMCOL           =   -1  'True
-         SOFT            =   0   'False
-         PICPOS          =   0
-         NGREY           =   0   'False
-         FX              =   0
-         HAND            =   0   'False
-         CHECK           =   0   'False
-         VALUE           =   0   'False
+         _extentx        =   6059
+         _extenty        =   1270
+         btype           =   14
+         tx              =   "Transmitir"
+         enab            =   -1  'True
+         font            =   "frmEmissaoNFe.frx":0307
+         coltype         =   2
+         focusr          =   -1  'True
+         bcol            =   2500134
+         bcolo           =   4210752
+         fcol            =   16777215
+         fcolo           =   16777215
+         mcol            =   5263440
+         mptr            =   1
+         micon           =   "frmEmissaoNFe.frx":032B
+         umcol           =   -1  'True
+         soft            =   0   'False
+         picpos          =   0
+         ngrey           =   0   'False
+         fx              =   0
+         hand            =   0   'False
+         check           =   0   'False
+         value           =   0   'False
       End
       Begin Balcao2010.chameleonButton cmdImprimir 
          Height          =   720
@@ -586,37 +554,29 @@ Begin VB.Form frmEmissaoNFe
          TabIndex        =   10
          Top             =   2970
          Width           =   3435
-         _ExtentX        =   6059
-         _ExtentY        =   1270
-         BTYPE           =   14
-         TX              =   "Imprimir"
-         ENAB            =   -1  'True
-         BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-            Name            =   "Arial"
-            Size            =   12
-            Charset         =   0
-            Weight          =   700
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         COLTYPE         =   2
-         FOCUSR          =   -1  'True
-         BCOL            =   2500134
-         BCOLO           =   4210752
-         FCOL            =   16777215
-         FCOLO           =   16777215
-         MCOL            =   5263440
-         MPTR            =   1
-         MICON           =   "frmEmissaoNFe.frx":02B1
-         UMCOL           =   -1  'True
-         SOFT            =   0   'False
-         PICPOS          =   0
-         NGREY           =   0   'False
-         FX              =   0
-         HAND            =   0   'False
-         CHECK           =   0   'False
-         VALUE           =   0   'False
+         _extentx        =   6059
+         _extenty        =   1270
+         btype           =   14
+         tx              =   "Imprimir"
+         enab            =   -1  'True
+         font            =   "frmEmissaoNFe.frx":0349
+         coltype         =   2
+         focusr          =   -1  'True
+         bcol            =   2500134
+         bcolo           =   4210752
+         fcol            =   16777215
+         fcolo           =   16777215
+         mcol            =   5263440
+         mptr            =   1
+         micon           =   "frmEmissaoNFe.frx":036D
+         umcol           =   -1  'True
+         soft            =   0   'False
+         picpos          =   0
+         ngrey           =   0   'False
+         fx              =   0
+         hand            =   0   'False
+         check           =   0   'False
+         value           =   0   'False
       End
       Begin Balcao2010.chameleonButton cmdEmail 
          Height          =   720
@@ -624,37 +584,29 @@ Begin VB.Form frmEmissaoNFe
          TabIndex        =   23
          Top             =   3690
          Width           =   3435
-         _ExtentX        =   6059
-         _ExtentY        =   1270
-         BTYPE           =   14
-         TX              =   "Enviar Email"
-         ENAB            =   -1  'True
-         BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-            Name            =   "Arial"
-            Size            =   12
-            Charset         =   0
-            Weight          =   700
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         COLTYPE         =   2
-         FOCUSR          =   -1  'True
-         BCOL            =   2500134
-         BCOLO           =   4210752
-         FCOL            =   16777215
-         FCOLO           =   16777215
-         MCOL            =   5263440
-         MPTR            =   1
-         MICON           =   "frmEmissaoNFe.frx":02CD
-         UMCOL           =   -1  'True
-         SOFT            =   0   'False
-         PICPOS          =   0
-         NGREY           =   0   'False
-         FX              =   0
-         HAND            =   0   'False
-         CHECK           =   0   'False
-         VALUE           =   0   'False
+         _extentx        =   6059
+         _extenty        =   1270
+         btype           =   14
+         tx              =   "Enviar Email"
+         enab            =   -1  'True
+         font            =   "frmEmissaoNFe.frx":038B
+         coltype         =   2
+         focusr          =   -1  'True
+         bcol            =   2500134
+         bcolo           =   4210752
+         fcol            =   16777215
+         fcolo           =   16777215
+         mcol            =   5263440
+         mptr            =   1
+         micon           =   "frmEmissaoNFe.frx":03AF
+         umcol           =   -1  'True
+         soft            =   0   'False
+         picpos          =   0
+         ngrey           =   0   'False
+         fx              =   0
+         hand            =   0   'False
+         check           =   0   'False
+         value           =   0   'False
       End
       Begin VB.Label Label4 
          Caption         =   "Label4"
@@ -834,6 +786,7 @@ Dim tempoVerificacaoResposta As Long
 Dim endArquivoResposta As String
 
 Dim icms41 As Boolean
+Dim icms50 As Boolean
 
 Private Declare Function ShellExecute Lib "shell32.dll" Alias "ShellExecuteA" (ByVal Hwnd As Long, ByVal lpOperation As String, ByVal lpFile As String, ByVal lpParameters As String, ByVal lpDirectory As String, ByVal nShowCmd As Long) As Long
 
@@ -1649,7 +1602,7 @@ Public Sub leituraEstrutura(campo As String)
         Loop
 
         ado_campo.Close
-    ElseIf campo = "ICMS00" Or campo = "ICMS10" Or campo = "ICMS20" Or campo = "ICMS30" Or campo = "ICMS40" Or campo = "ICMS50" Or campo = "ICMS60" Or campo = "ICMS70" Or campo = "ICMS90" Or campo = "DUP" Or campo = "ICMSSN102" Then
+    ElseIf campo = "ICMS00" Or campo = "ICMS10" Or campo = "ICMS20" Or campo = "ICMS30" Or campo = "ICMS40" Or campo = "ICMS51" Or campo = "ICMS60" Or campo = "ICMS70" Or campo = "ICMS90" Or campo = "DUP" Or campo = "ICMSSN102" Then
     
     Else
         sql = insertTabelaNFLojas & Trim(ado_estrutura("etr_sequencia")) - 1 & "','[" & campo & "]','','" & _
@@ -1659,7 +1612,7 @@ Public Sub leituraEstrutura(campo As String)
 
     
     Do While Not ado_estrutura.EOF
-        If campo = "PROD" Or campo = "DET" Or campo = "ICMS00" Or campo = "ICMS10" Or campo = "ICMS20" Or campo = "ICMS30" Or campo = "ICMS40" Or campo = "ICMS50" Or campo = "ICMS60" Or campo = "ICMS70" Or campo = "ICMS90" Or campo = "PISALIQ" Or campo = "COFINSALIQ" Or campo = "IPI" Or campo = "IPITRIB" Or campo = "ICMSUFDEST" Or campo = "ICMSSN102" Then
+        If campo = "PROD" Or campo = "DET" Or campo = "ICMS00" Or campo = "ICMS10" Or campo = "ICMS20" Or campo = "ICMS30" Or campo = "ICMS40" Or campo = "ICMS51" Or campo = "ICMS60" Or campo = "ICMS70" Or campo = "ICMS90" Or campo = "PISALIQ" Or campo = "COFINSALIQ" Or campo = "IPI" Or campo = "IPITRIB" Or campo = "ICMSUFDEST" Or campo = "ICMSSN102" Then
             gravaVariosDado campo, ado_estrutura
         ElseIf campo = "DUP" Then
             gravaDadosDUP campo, ado_estrutura
@@ -1733,7 +1686,7 @@ Private Sub montaCamposRotulo()
     vetCampos(13) = "INFADIC":      vetCampos(14) = "OBSCONT"
     vetCampos(15) = "FAT":          vetCampos(16) = "DUP":          vetCampos(17) = "PROD"
     vetCampos(18) = "ICMS00":       vetCampos(19) = "ICMS10":       vetCampos(20) = "ICMS20":
-    vetCampos(21) = "ICMS30":       vetCampos(22) = "ICMS40":       vetCampos(23) = "ICMS50":
+    vetCampos(21) = "ICMS30":       vetCampos(22) = "ICMS40":       vetCampos(23) = "ICMS51":
     vetCampos(24) = "ICMS60":       vetCampos(25) = "ICMS70":       vetCampos(26) = "ICMS90":
     vetCampos(27) = "ICMSSN102":
     vetCampos(28) = "IPI":          vetCampos(29) = "IPITRIB":      vetCampos(30) = "PISALIQ":
@@ -1787,7 +1740,8 @@ Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
                 If Not (Trim(ado_estrutura("ETR_CAMPO")) = "ORIG" And Mid(campo, 1, 6) = "ICMSSN") Then
                     Dim cst As String
                     cst = Format(Trim(ado_campo("informacao")), "00")
-                    If cst = "41" Then cst = "40"
+                    If cst = "41" Or cst = "50" Then cst = "40"
+                    
                     
                     
                       sql = sql & vbNewLine & insertTabelaNFLojas & _
@@ -1817,6 +1771,13 @@ Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
         If Mid(campo, 1, 4) = "ICMS" And Format(ado_campo("CST"), "00") = "41" And icms41 = False Then
             If LTrim(ado_estrutura("etr_campo")) = "ORIG" Then
                 icms41 = True
+                rdoCNLoja.Execute sql
+                Exit Sub
+            End If
+            rdoCNLoja.Execute sql
+        ElseIf Mid(campo, 1, 4) = "ICMS" And Format(ado_campo("CST"), "00") = "50" And icms50 = False Then
+            If LTrim(ado_estrutura("etr_campo")) = "ORIG" Then
+                icms50 = True
                 rdoCNLoja.Execute sql
                 Exit Sub
             End If
