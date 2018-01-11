@@ -1496,7 +1496,7 @@ If KeyAscii = 13 Then
                      wPedido = 0
                      pedido = 0
                      frmStartaProcessos.Show vbModal
-                        Call Fecha_Log
+                     'Call Fecha_Log
                         
                      Unload Me
                      Unload frmControlaCaixa
