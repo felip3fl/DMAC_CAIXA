@@ -6,8 +6,8 @@ Begin VB.Form frmEmissaoNFe
    BorderStyle     =   0  'None
    Caption         =   "Emissão NFe"
    ClientHeight    =   9225
-   ClientLeft      =   -45
-   ClientTop       =   1245
+   ClientLeft      =   330
+   ClientTop       =   1320
    ClientWidth     =   19035
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
@@ -1565,7 +1565,7 @@ Public Sub txtNFe_KeyPress(KeyAscii As Integer)
             Nf.cfop = RTrim(rsNFE("cfop"))
             wPedido = RTrim(rsNFE("pedido"))
             pedido = RTrim(rsNFE("pedido"))
-            If Format(rsNFE("data"), "YYYY/MM/DD") <> GLB_DataInicial And GLB_Administrador = False Then
+            If Format(rsNFE("data"), "YYYY/MM/DD") <= GLB_DataInicial And GLB_Administrador = False Then
                 MsgBox "Não é permitido emitir NFe/Cupom fora da data do movimento", vbExclamation, "Emissão de NFe/Cupom"
                 cmdTransmitir.Enabled = False
             Else
@@ -2435,6 +2435,7 @@ Public Function carregaArquivoUnico()
         If resultado <> "4014" Then
             atualizaArquivoDestalhesNF Nf, Arquivo, informacaoArquivo
             atualizaCodigoNF Nf.pedido, resultado, Nf.loja
+            atualizaChaveNF Nf.pedido, Nf.chave, Nf.loja
         End If
                      
         If resultado = 4014 Then

@@ -5,8 +5,8 @@ Begin VB.Form frmCaixaSAT
    BorderStyle     =   0  'None
    Caption         =   "frmCaixaSAT"
    ClientHeight    =   8745
-   ClientLeft      =   3420
-   ClientTop       =   1665
+   ClientLeft      =   915
+   ClientTop       =   1545
    ClientWidth     =   12345
    ControlBox      =   0   'False
    LinkTopic       =   "Form1"
@@ -341,7 +341,7 @@ Attribute VB_Exposed = False
 
 Option Explicit
 Dim wQuantidade As Integer
-Dim Sql As String
+Dim sql As String
 Dim wValorVenda As Double
 Dim SomaTotalVenda As Double
 Dim PrecoVenda As Double
@@ -565,12 +565,12 @@ Private Sub txtCGC_CPF_KeyPress(KeyAscii As Integer)
       If GravaNumeroCupomCgcCpf = False Then Exit Sub
     
 
-      Sql = "Select nfitens.Referencia,nfitens.QTDE,nfitens.VLUnit,PR_Descricao,PR_icmpdv,pr_substituicaotributaria " _
+      sql = "Select nfitens.Referencia,nfitens.QTDE,nfitens.VLUnit,PR_Descricao,PR_icmpdv,pr_substituicaotributaria " _
           & "From nfitens,Produtoloja  " _
           & "Where PR_referencia = Referencia and NumeroPed = " _
           & txtPedido.text & " and Tiponota = 'PA' order by Item"
            RsDadosTef.CursorLocation = adUseClient
-           RsDadosTef.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+           RsDadosTef.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
          
           If Not RsDadosTef.EOF Then
              Do While Not RsDadosTef.EOF
@@ -690,16 +690,16 @@ Private Function GravaNumeroCupomCgcCpf() As Boolean
     'If validaNumeroCupom = True Then
         Screen.MousePointer = vbHourglass
         rdoCNLoja.BeginTrans
-        Sql = "Update nfitens set nf = " & "0" & ",Serie = '" & GLB_SerieCF & "' Where NumeroPed = " & txtPedido.text
-              rdoCNLoja.Execute Sql, rdExecDirect
+        sql = "Update nfitens set nf = " & "0" & ",Serie = '" & GLB_SerieCF & "' Where NumeroPed = " & txtPedido.text
+              rdoCNLoja.Execute sql, rdExecDirect
         Screen.MousePointer = vbNormal
         rdoCNLoja.CommitTrans
         rdoCNLoja.BeginTrans
         Screen.MousePointer = vbHourglass
         
-        Sql = "Update nfcapa set nf = " & "0" & ",Serie = '" & GLB_SerieCF & "', ECF = " & GLB_ECF & " , CPFNFP = '" & txtCGC_CPF & "'" _
+        sql = "Update nfcapa set nf = " & "0" & ",Serie = '" & GLB_SerieCF & "', ECF = " & GLB_ECF & " , CPFNFP = '" & txtCGC_CPF & "'" _
               & " Where NumeroPed = " & txtPedido.text
-              rdoCNLoja.Execute Sql, rdExecDirect
+              rdoCNLoja.Execute sql, rdExecDirect
         Screen.MousePointer = vbNormal
         rdoCNLoja.CommitTrans
         Screen.MousePointer = vbNormal
@@ -728,11 +728,11 @@ Private Sub CarregaGrid()
         
         pedido = txtPedido
             
-        Sql = "Select Desconto,Fretecobr From Nfcapa Where NumeroPed = " _
+        sql = "Select Desconto,Fretecobr From Nfcapa Where NumeroPed = " _
              & txtPedido.text & " and tiponota = 'PA' "
                
         RsDadosCapa.CursorLocation = adUseClient
-        RsDadosCapa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        RsDadosCapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
           
              
         If Not RsDadosCapa.EOF Then
@@ -744,12 +744,12 @@ Private Sub CarregaGrid()
         RsDadosCapa.Close
             
        
-        Sql = "Select nfitens.VLUnit,nfitens.QTDE,nfitens.Item,nfitens.Referencia,PR_Descricao " _
+        sql = "Select nfitens.VLUnit,nfitens.QTDE,nfitens.Item,nfitens.Referencia,PR_Descricao " _
              & "From nfitens,Produtoloja " _
              & "Where referencia = PR_Referencia and NumeroPed = " _
              & txtPedido.text & " and Tiponota = 'PA' order by Item"
             RsDadosTef.CursorLocation = adUseClient
-            RsDadosTef.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+            RsDadosTef.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
            
              pedido = txtPedido
              If Not RsDadosTef.EOF Then

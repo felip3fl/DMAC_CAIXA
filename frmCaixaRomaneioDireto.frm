@@ -5,8 +5,8 @@ Begin VB.Form frmCaixaRomaneioDireto
    BorderStyle     =   0  'None
    Caption         =   "Romaneio"
    ClientHeight    =   8235
-   ClientLeft      =   2880
-   ClientTop       =   1680
+   ClientLeft      =   1125
+   ClientTop       =   2115
    ClientWidth     =   12360
    ControlBox      =   0   'False
    LinkTopic       =   "Form1"
@@ -840,13 +840,13 @@ Function GravaItensPedido(ByVal NumeroPedido As Double, ByVal TipoMovimentacao A
           
      sql = "Insert into NfItens (nf, NUMEROPED,Serie, DATAEMI, REFERENCIA, QTDE, VLUNIT, " _
         & "VLTOTITEM, ICMS, DESCONTO, PLISTA,  " _
-        & "LOJAORIGEM,  TIPONOTA,  Item, situacaoprocesso, dataprocesso, baseicms,ICMSAplicado) " _
+        & "LOJAORIGEM,  TIPONOTA,  Item, situacaoprocesso, dataprocesso, baseicms,ICMSAplicado,Cest) " _
         & "Values (" & wNumeroCupom & "," & NroPedido & ",'00', '" & Format(Date, "yyyy/mm/dd") & "', '" _
         & wCodigoProduto & "', " & wQtde & ", " _
         & "" & ConverteVirgula(Format(wItemPrecoVenda, "0.00")) & ", " _
         & ConverteVirgula(Format(wVlTotItem, "0.00")) & ", " & ConverteVirgula(Format(wICMS, "0.00")) & ",0, " _
         & "  " & ConverteVirgula(Format(wPLISTA, "0.00")) & ",  " _
-        & wLoja & ",'PA'," & NroItens & ",'A','" & Format(Date, "yyyy/mm/dd") & "', 0.00,0)"
+        & wLoja & ",'PA'," & NroItens & ",'A','" & Format(Date, "yyyy/mm/dd") & "', 0.00,0,'')"
         rdoCNLoja.Execute (sql)
 
 End Function
