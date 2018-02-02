@@ -403,6 +403,7 @@ Global WMunicipio As String
 Global westado As String
 Global WCep As String
 Global WFone As String
+Global WQtdeCopiaNE As Integer
 Global wDDDLoja As String
 Global WFax As String
 Global wtxtCGC_CPF As String

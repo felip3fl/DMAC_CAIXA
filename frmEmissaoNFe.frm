@@ -976,13 +976,13 @@ Public Sub cmdTransmitir_Click()
         sql = "exec sp_vda_cria_nfe '" & Nf.loja & "', '" & Nf.numero & "', 'NE', ''"
         rdoCNLoja.Execute sql
     
-        Dim I As Byte
+        Dim i As Byte
     
-        For I = 0 To UBound(vetCampos)
-            If vetCampos(I) <> "" Then
-                leituraEstrutura vetCampos(I)
+        For i = 0 To UBound(vetCampos)
+            If vetCampos(i) <> "" Then
+                leituraEstrutura vetCampos(i)
             End If
-        Next I
+        Next i
     
         numeroCopiaImpressao
     
@@ -1030,7 +1030,7 @@ End Sub
 Private Sub notaPedentes()
 
     Dim ado_estrutura As New ADODB.Recordset
-    Dim I As Integer
+    Dim i As Integer
     Dim add As Boolean
     'Dim dataPesquisa As String
     Dim tiponota As String
@@ -1565,7 +1565,7 @@ Public Sub txtNFe_KeyPress(KeyAscii As Integer)
             Nf.cfop = RTrim(rsNFE("cfop"))
             wPedido = RTrim(rsNFE("pedido"))
             pedido = RTrim(rsNFE("pedido"))
-            If Format(rsNFE("data"), "YYYY/MM/DD") <= GLB_DataInicial And GLB_Administrador = False Then
+            If Format(rsNFE("data"), "YYYY/MM/DD") < GLB_DataInicial And GLB_Administrador = False Then
                 MsgBox "Não é permitido emitir NFe/Cupom fora da data do movimento", vbExclamation, "Emissão de NFe/Cupom"
                 cmdTransmitir.Enabled = False
             Else
@@ -1938,9 +1938,9 @@ Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
 
     Dim ado_campo As New ADODB.Recordset
     Dim informacao As String
-    Dim I As Byte
+    Dim i As Byte
     
-    I = 0
+    i = 0
     
     sql = "select " & RTrim(ado_estrutura("etr_campo_de")) & " as Informacao " & vbNewLine & _
           "from " & ado_estrutura("etr_tabela_de") & " " & vbNewLine & _
@@ -1969,7 +1969,7 @@ Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
         
         
         sql = insertTabelaNFLojas & _
-              Trim(ado_estrutura("etr_sequencia") + (I)) & "', '" & ado_estrutura("etr_campo") & _
+              Trim(ado_estrutura("etr_sequencia") + (i)) & "', '" & ado_estrutura("etr_campo") & _
               "', '" & RTrim(informacao) & "', '" & _
               Nf.loja & "', '" & Nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
               
@@ -1977,7 +1977,7 @@ Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
         
         If ado_estrutura("etr_campo") = "    NDUP" Then
             sql = insertTabelaNFLojas & _
-            Trim(ado_estrutura("etr_sequencia") + (I) - 1) & "', '[" & RTrim(ado_estrutura("etr_ROTULO")) & _
+            Trim(ado_estrutura("etr_sequencia") + (i) - 1) & "', '[" & RTrim(ado_estrutura("etr_ROTULO")) & _
             "]', '" & "" & "', '" & _
             Nf.loja & "', '" & Nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
               
@@ -1986,7 +1986,7 @@ Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
         End If
               
         ado_campo.MoveNext
-        I = I + 5
+        i = i + 5
     Loop
     ado_campo.Close
     ado_estrutura.MoveNext
@@ -2602,6 +2602,8 @@ Public Function carregaArquivo()
     Static Arquivo As String
     On Error GoTo TrataErro
     
+   
+    
     If verificaNovoArquivo = True Then
     
         Dim informacaoArquivo As String
@@ -2616,8 +2618,8 @@ Public Function carregaArquivo()
                
         Arquivo = Dir(endArquivoResposta, vbDirectory)
                 
-        notaPedentes
         
+         notaPedentes
 
         
         Do While Arquivo <> ""
@@ -2743,7 +2745,7 @@ Public Function mensagemLOG2(grid, Data As Date, tipoStatus As Integer, loja As 
 
     Dim status As String
     Dim corLinha As ColorConstants
-    Dim I As Byte
+    Dim i As Byte
     
     
     Select Case tipoStatus
@@ -2780,18 +2782,18 @@ End Function
 
 Public Sub pintaLinha(grid, Cor, Linha As Integer)
     grid.Row = Linha
-    For I = 0 To grid.Cols - 1
-        grid.Col = I
+    For i = 0 To grid.Cols - 1
+        grid.Col = i
         grid.CellForeColor = Cor
-    Next I
+    Next i
 End Sub
 
 Public Sub pintaFonteLinha(grid, Cor, Linha As Integer)
     grid.Row = Linha
-    For I = 0 To grid.Cols - 1
-        grid.Col = I
+    For i = 0 To grid.Cols - 1
+        grid.Col = i
         grid.s = Cor
-    Next I
+    Next i
 End Sub
 
 
@@ -2976,6 +2978,7 @@ Private Sub numeroCopiaImpressao()
 
     Dim SQLLinhaImpressora As String
     Dim ado_rotulo As New ADODB.Recordset
+    Dim i As Integer
 
     SQLLinhaImpressora = "INSERT INTO NFE_NFLOJAS " & vbNewLine & _
                          "SELECT TOP 1 * " & vbNewLine & _
@@ -2993,9 +2996,15 @@ Private Sub numeroCopiaImpressao()
     ado_rotulo.CursorLocation = adUseClient
     ado_rotulo.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
         
-        If Val(ado_rotulo("condpag")) > 3 Then
-            rdoCNLoja.Execute SQLLinhaImpressora
-        End If
+    If Val(ado_rotulo("condpag")) > 3 Then
+        rdoCNLoja.Execute SQLLinhaImpressora
+    End If
+    
+    For i = 2 To WQtdeCopiaNE
+        rdoCNLoja.Execute SQLLinhaImpressora
+    Next i
+        
+        
     ado_rotulo.Close
     
     'Deixa comentado se é apenas para imprimir 1 via

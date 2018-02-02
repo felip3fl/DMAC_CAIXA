@@ -1449,7 +1449,7 @@ End Function
 Public Function DadosLoja()
 
     'SQL = ""
-    sql = "Select CTS_Loja,CTS_SenhaLiberacao,CTS_LogoPedido,Loja.* from loja,Controlesistema " & _
+    sql = "Select CTS_Loja,CTS_SenhaLiberacao,CTS_LogoPedido,CTS_QtdeViaNE as QtdeViaNE,Loja.* from loja,Controlesistema " & _
           "where lo_loja=CTS_Loja"
 
     rsNFELoja.CursorLocation = adUseClient
@@ -1473,6 +1473,7 @@ Public Function DadosLoja()
        GLB_Loja = rsNFELoja("CTS_Loja")
        wNovaRazao = IIf(IsNull(rsNFELoja("lo_Razao")), "0", rsNFELoja("lo_Razao"))
        GLB_Logo = RTrim(rsNFELoja("CTS_LogoPedido"))
+       WQtdeCopiaNE = RTrim(rsNFELoja("QtdeViaNE"))
        'wMensagemECF = rsNFELoja("CTS_MensagemECF")
     End If
     
@@ -2955,6 +2956,7 @@ Function BuscaQtdeViaImpressaoMovimento()
     rdocontrole.Close
     
 End Function
+
 
 
 Function BuscaQtdeViaImpressaoRomaneio()
