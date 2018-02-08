@@ -528,9 +528,10 @@ Private Function controlaNotasEmitidas() As Integer
 
     Sql = "select count(*) as NFpedente " & vbNewLine & _
           "from nfcapa " & vbNewLine & _
-          "where tm not in (4012,4016,9016,101,100,9005,4005,9012,204,124,4014) " & vbNewLine & _
+          "where tm not in (4012,4016,9016,101,100,9005,4005,9012,204,124,4014,4017) " & vbNewLine & _
           "and tiponota in ('V','T','E','S','R')" & vbNewLine & _
-          "and serie in ('CE','NE')" & vbNewLine & _
+          "and (serie in ('NE')" & vbNewLine & _
+          "OR serie like 'CE%') " & vbNewLine & _
           "and dataemi >= '" & Format(GLB_DataInicial, "YYYY/MM") & "/01'"
     
     rdoNotas.CursorLocation = adUseClient

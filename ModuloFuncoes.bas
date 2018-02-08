@@ -1451,7 +1451,7 @@ End Function
 Public Function DadosLoja()
 
     'SQL = ""
-    Sql = "Select CTS_Loja,CTS_SenhaLiberacao,CTS_LogoPedido,Loja.* from loja,Controlesistema " & _
+    Sql = "Select CTS_Loja,CTS_SenhaLiberacao,CTS_LogoPedido,CTS_QtdeViaNE as QtdeViaNE,Loja.* from loja,Controlesistema " & _
           "where lo_loja=CTS_Loja"
 
     rsNFELoja.CursorLocation = adUseClient
@@ -1475,6 +1475,7 @@ Public Function DadosLoja()
        GLB_Loja = rsNFELoja("CTS_Loja")
        wNovaRazao = IIf(IsNull(rsNFELoja("lo_Razao")), "0", rsNFELoja("lo_Razao"))
        GLB_Logo = RTrim(rsNFELoja("CTS_LogoPedido"))
+       WQtdeCopiaNE = RTrim(rsNFELoja("QtdeViaNE"))
        'wMensagemECF = rsNFELoja("CTS_MensagemECF")
     End If
     
@@ -3247,7 +3248,7 @@ Public Sub VerificaSeEmiteCupom()
         If tipoCupomEmite Like "CF*" Then
             tipoCupomEmite = "CF"
         ElseIf tipoCupomEmite Like "CE*" Then
-            tipoCupomEmite = "CE"
+            tipoCupomEmite = GLB_SerieCF
         Else
             tipoCupomEmite = ""
         End If
@@ -3934,7 +3935,7 @@ Public Sub ImprimeTransferencia00(ByVal nota As Double)
     Dim TotalVenda As Double
 
     Dim nomeEmpresa As String * 48
-    Dim cnpj As String * 48
+    Dim CNPJ As String * 48
     Dim Data As String * 48
     Dim Endereco As String * 48
     Dim Telefone As String * 48
@@ -3965,8 +3966,8 @@ Public Sub ImprimeTransferencia00(ByVal nota As Double)
    nomeEmpresa = RsDados("LO_Razao")
    impressoraRelatorio nomeEmpresa
    
-   cnpj = "CNPJ: " & RsDados("LO_CGC") & " I.E.: " & RsDados("LO_InscricaoEstadual")
-   impressoraRelatorio cnpj
+   CNPJ = "CNPJ: " & RsDados("LO_CGC") & " I.E.: " & RsDados("LO_InscricaoEstadual")
+   impressoraRelatorio CNPJ
    
    Endereco = UCase(RsDados("LO_Endereco")) & ", " & RsDados("LO_numero")
    impressoraRelatorio Endereco

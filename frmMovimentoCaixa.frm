@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "vsflex7u.ocx"
+Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "Vsflex7u.ocx"
 Begin VB.Form frmMovimentoCaixa 
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
@@ -293,8 +293,8 @@ Dim wTR As Double
 Dim wSubTotalEntfin As Double
 Dim wSubTotalEntFat As Double
 
-Dim i As Long
-Dim sql As String
+Dim I As Long
+Dim Sql As String
 Dim Cor As String
 Dim Cor1 As String
 Dim Cor2 As String
@@ -324,7 +324,7 @@ Private Sub Form_Load()
  wSubTotalEntFat = 0
  wControlacor = 0
  wConfigCor = 0
- sql = ""
+ Sql = ""
  Cor = ""
  Cor1 = ""
  Cor2 = ""
@@ -412,9 +412,9 @@ If rdoDataFechamentoRetaguarda.State = 1 Then
 End If
      
      
-sql = ("Select Max(CTr_DataInicial)as DataMov,Max(Ctr_Protocolo) as Seq from ControleCaixa where CTR_Supervisor <> 99 and CTr_NumeroCaixa = " & GLB_Caixa & "")
+Sql = ("Select Max(CTr_DataInicial)as DataMov,Max(Ctr_Protocolo) as Seq from ControleCaixa where CTR_Supervisor <> 99 and CTr_NumeroCaixa = " & GLB_Caixa & "")
        rdoDataFechamentoRetaguarda.CursorLocation = adUseClient
-       rdoDataFechamentoRetaguarda.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rdoDataFechamentoRetaguarda.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
      
     If rdoDataFechamentoRetaguarda.EOF Then
        MsgBox "Não foi possível abrir a tabela FechamentoRetaguarda. Contate o CPD.", vbCritical, "Atenção"
@@ -422,10 +422,10 @@ sql = ("Select Max(CTr_DataInicial)as DataMov,Max(Ctr_Protocolo) as Seq from Con
     End If
      
 sklDataMovimento = Format(rdoDataFechamentoRetaguarda("DataMov"), "dd/mm/yyyy")
-sql = ("Select totalnota,Numeroped,* from nfcapa Where ecf = " & GLB_ECF & " and Protocolo = " & rdoDataFechamentoRetaguarda("seq") _
+Sql = ("Select totalnota,Numeroped,* from nfcapa Where ecf = " & GLB_ECF & " and Protocolo = " & rdoDataFechamentoRetaguarda("seq") _
      & " and TipoNota <> 'PA'  and Serie <> '00' and  DataEmi = '" & Format(rdoDataFechamentoRetaguarda("datamov"), "yyyy/mm/dd") & "' ")
      rdoItensVenda.CursorLocation = adUseClient
-     rdoItensVenda.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+     rdoItensVenda.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
      
      
   If Not rdoItensVenda.EOF Then
@@ -459,12 +459,12 @@ sql = ("Select totalnota,Numeroped,* from nfcapa Where ecf = " & GLB_ECF & " and
   wSubTotal = 0
   
  
- sql = ("select mc_Grupo,sum(MC_Valor) as TotalModalidade,Count(*) as Quantidade from movimentocaixa" _
+ Sql = ("select mc_Grupo,sum(MC_Valor) as TotalModalidade,Count(*) as Quantidade from movimentocaixa" _
        & " Where MC_NumeroEcf = " & GLB_ECF & " and MC_NroCaixa=" & GLB_Caixa & " and MC_Protocolo=" & GLB_CTR_Protocolo _
        & " and MC_Data >='" & Format(rdoDataFechamentoRetaguarda("DataMov"), "yyyy/mm/dd") & "' and  MC_Serie <> '00' and (MC_Grupo like '10%' or MC_Grupo like '11%'" _
        & " or MC_Grupo like '50%' or MC_Grupo like '20%') and MC_TipoNota <> 'C' group by mc_grupo")
        rdoFormaPagamento.CursorLocation = adUseClient
-       rdoFormaPagamento.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rdoFormaPagamento.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
        
  wData = Format(rdoDataFechamentoRetaguarda("datamov"), "yyyy/mm/dd")
 
@@ -520,18 +520,18 @@ sql = ("Select totalnota,Numeroped,* from nfcapa Where ecf = " & GLB_ECF & " and
   rdoFormaPagamento.Close
   wSubTotal = 0
 
- sql = ("Select Serie, sum(totalnota) as TotalSerieNota, count(Serie) as QtdeSerie from nfcapa Where ecf = " & GLB_ECF & "" _
+ Sql = ("Select Serie, sum(totalnota) as TotalSerieNota, count(Serie) as QtdeSerie from nfcapa Where ecf = " & GLB_ECF & "" _
      & " and  TipoNota not in ('PD','PA','C') and Serie <> '00' and  DataEmi = '" & Format(rdoDataFechamentoRetaguarda("datamov"), "yyyy/mm/dd") _
      & "' " & " and Protocolo = " & rdoDataFechamentoRetaguarda("seq") & " group by Serie ")
      rdoCapa.CursorLocation = adUseClient
-     rdoCapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+     rdoCapa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
      
      
 
       If Not rdoCapa.EOF Then
          Do While Not rdoCapa.EOF
 
-                  If rdoCapa("Serie") = GLB_SerieCF Then
+                  If rdoCapa("Serie") Like GLB_SerieCF & "*" Then
                      grdMovimentoCaixa.TextMatrix(19, 1) = Format(rdoCapa("TotalSerieNota"), "###,###,###,##0.00")
                      wSubTotal = (wSubTotal + rdoCapa("TotalSerieNota"))
                      grdMovimentoCaixa.TextMatrix(19, 2) = Format(rdoCapa("QtdeSerie"), "###0")
@@ -565,7 +565,7 @@ sql = ("Select totalnota,Numeroped,* from nfcapa Where ecf = " & GLB_ECF & " and
         
   rdoCapa.Close
   
-sql = ("Select Serie, sum(totalnota) as TotalSerieNota, count(Serie) as QtdeSerie from nfcapa Where ecf = " & GLB_ECF & "" _
+Sql = ("Select Serie, sum(totalnota) as TotalSerieNota, count(Serie) as QtdeSerie from nfcapa Where ecf = " & GLB_ECF & "" _
      & " and  TipoNota = 'V' and Serie = '00' and  DataEmi = '" & Format(Date, "yyyy/mm/dd") _
      & "' " & " and Protocolo = " & GLB_CTR_Protocolo & " group by Serie ")
      
@@ -573,7 +573,7 @@ sql = ("Select Serie, sum(totalnota) as TotalSerieNota, count(Serie) as QtdeSeri
 '     & " and  TipoNota <> 'PD' and TipoNota <> 'PA' and Serie = '00' and  DataEmi = '" & Format(rdoDataFechamentoRetaguarda("datamov"), "yyyy/mm/dd") _
 '     & "' " & " and Protocolo = " & rdoDataFechamentoRetaguarda("seq") & " group by Serie ")
      rdoCapa.CursorLocation = adUseClient
-     rdoCapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+     rdoCapa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
      grdMovimento00.AddItem "  "
      grdMovimento00.AddItem "00"
 
@@ -642,10 +642,10 @@ Private Sub sklDataMovimento_DragDrop(Source As Control, X As Single, Y As Singl
 '    wData = Format(Date, "yyyy/mm/dd")
 '    sklDataMovimento = wData
 
-  sql = ("Select Max(CTr_DataInicial)as DataMov,Max(Ctr_Protocolo) as Seq " _
+  Sql = ("Select Max(CTr_DataInicial)as DataMov,Max(Ctr_Protocolo) as Seq " _
        & "from ControleCaixa where CTR_Supervisor <> 99 and CTr_NumeroCaixa = " & GLB_Caixa)
         rdoDataFechamento.CursorLocation = adUseClient
-        rdoDataFechamento.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        rdoDataFechamento.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
   sklDataMovimento = Format(rdoDataFechamento("DataMov"), "dd/mm/yyyy")
   
   rdoDataFechamento.Close

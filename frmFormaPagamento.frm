@@ -1765,7 +1765,7 @@ End Sub
 
 Private Sub chbSaiPagamento_Click()
 
-If txtSerie.text = GLB_SerieCF Then
+If txtSerie.text Like GLB_SerieCF & "*" Then
  
    If MsgBox("Está operação permite reiniciar o procedimento de Recebimento. Deseja Continuar?", vbQuestion + vbYesNo, "Atenção") = vbYes Then
        wTipoQuantidade = "I"
@@ -2530,7 +2530,7 @@ lblTootip.Visible = False
               
   
               
-              If txtSerie.text = GLB_SerieCF Then
+              If txtSerie.text Like GLB_SerieCF & "*" Then
                  wGrupo = 20101
               ElseIf txtSerie.text = PegaSerieNota Then
                  wGrupo = 20102
@@ -2709,7 +2709,7 @@ If KeyAscii = 13 Then
 End If
 
  If KeyAscii = 27 Then
-    If Trim(txtSerie.text) = GLB_SerieCF Then
+    If Trim(txtSerie.text) Like GLB_SerieCF & "*" Then
        If chbValorPago.Caption > 0 Then
           Exit Sub
        Else
@@ -2898,7 +2898,7 @@ rsComplementoVenda.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
 'txtSerie.Text = rsComplementoVenda("serie")
 
- If txtSerie.text <> "NE" And txtSerie.text <> GLB_SerieCF Then
+ If txtSerie.text <> "NE" And (Not txtSerie.text Like GLB_SerieCF & "*") Then
        txtSerie.text = PegaSerieNota
  End If
  
@@ -3216,7 +3216,7 @@ If KeyAscii = 13 Then
 End If
 
  If KeyAscii = 27 Then
-    If Trim(txtSerie.text) = GLB_SerieCF Then
+    If Trim(txtSerie.text) Like GLB_SerieCF & "*" Then
        If chbValorPago.Caption > 0 Then
           Exit Sub
        Else

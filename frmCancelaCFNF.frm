@@ -198,7 +198,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Dim sql As String
+Dim Sql As String
 Dim wUltimoCupom As Double
 Dim WGrupoAtualzado As Double
 Dim wNumeroPedido As Double
@@ -263,11 +263,11 @@ Private Sub finalizarCancelamento()
         wWhere = " "
   '      End If
 
-        sql = "SELECT CTR_DATAINICIAL, CTR_SITUACAOCAIXA FROM  CONTROLECAIXA " _
+        Sql = "SELECT CTR_DATAINICIAL, CTR_SITUACAOCAIXA FROM  CONTROLECAIXA " _
             & " WHERE CTR_Supervisor <> 99 and CTR_SITUACAOCAIXA = 'A'"
      
         ADOSituacao.CursorLocation = adUseClient
-        ADOSituacao.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        ADOSituacao.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                                           
         If Not ADOSituacao.EOF Then
            wData = ADOSituacao("CTR_DATAINICIAL")
@@ -280,13 +280,13 @@ Private Sub finalizarCancelamento()
           
         ADOSituacao.Close
      
-        sql = "SELECT TOP 1 TIPONOTA,NumeroPed, SERIE, NF, TOTALNOTA, DATAEMI, rtrim(CHAVENFE) as CHAVENFE " _
+        Sql = "SELECT TOP 1 TIPONOTA,NumeroPed, SERIE, NF, TOTALNOTA, DATAEMI, rtrim(CHAVENFE) as CHAVENFE " _
             & " FROM NFCAPA WHERE " _
             & " SERIE = '" & txtSerie.text & "' AND " _
             & " NF = " & txtNotaFiscal.text & " " & Where
          
         ADOCancela.CursorLocation = adUseClient
-        ADOCancela.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        ADOCancela.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
  
 
         If Not ADOCancela.EOF Then
@@ -307,8 +307,8 @@ Private Sub finalizarCancelamento()
             End If
               
             If cancelaNotaResultado = True Then
-                sql = "exec SP_Cancela_NotaFiscal " & txtNotaFiscal.text & ",'" & txtSerie.text & "'"
-                rdoCNLoja.Execute (sql)
+                Sql = "exec SP_Cancela_NotaFiscal " & txtNotaFiscal.text & ",'" & txtSerie.text & "'"
+                rdoCNLoja.Execute (Sql)
             Else
                 MsgBox "Cancelamento não realizado", vbCritical, "DMAC Caixa"
             End If
@@ -424,8 +424,8 @@ If txtNotaFiscal.text = "" Then
    Exit Sub
 End If
 
-If UCase(txtSerie.text) <> "CE" Then
-    If UCase(txtSerie.text) = GLB_SerieCF Then
+If Not UCase(txtSerie.text) Like "CE*" Then
+    If UCase(txtSerie.text) Like GLB_SerieCF & "*" Then
        MsgBox "Para cancelamento de Cupom Fiscal selecione Operações ECF", vbCritical, "Atenção"
        txtSerie.text = ""
        txtNotaFiscal.SelStart = 0
@@ -438,11 +438,11 @@ End If
 
 txtSerie.text = UCase(txtSerie.text)
     
-sql = "SELECT TOTALNOTA, NF, SERIE,TipoNota,numeroped FROM NFCAPA WHERE NF = " & txtNotaFiscal.text & " " _
+Sql = "SELECT TOTALNOTA, NF, SERIE,TipoNota,numeroped FROM NFCAPA WHERE NF = " & txtNotaFiscal.text & " " _
     & "AND SERIE = '" & UCase(Trim(txtSerie.text)) & "' and TIPONOTA <> 'C' and Dataemi = '" & Format(Date, "yyyy/mm/dd") & "'"
     
  ADOCancela.CursorLocation = adUseClient
- ADOCancela.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+ ADOCancela.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
 If Not ADOCancela.EOF Then
        txtValorNF.text = Format(ADOCancela("TOTALNOTA"), "0.00")

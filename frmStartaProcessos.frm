@@ -44,15 +44,15 @@ Private Sub Form_Activate()
  
     wPedido = pedido
     
-    sql = "Select top 1 serie from nfcapa where numeroped = " & pedido
+    Sql = "Select top 1 serie from nfcapa where numeroped = " & pedido
     rsComplementoVenda.CursorLocation = adUseClient
-    rsComplementoVenda.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsComplementoVenda.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     If rsComplementoVenda.EOF Then
         Esperar 1
     ElseIf rsComplementoVenda("serie") = "NE" Then
         Call CriaNFE(NroNotaFiscal, pedido)
-    ElseIf rsComplementoVenda("serie") = "CE" Then
+    ElseIf rsComplementoVenda("serie") Like "CE*" Then
         Call CriaSAT(NroNotaFiscal, pedido)
     Else
         Esperar 1
@@ -66,17 +66,17 @@ End Sub
 
 Private Sub StatusAtualizacao()
 
-   sql = "exec sp_totaliza_capa_nota_fiscal_Loja " & pedido
+   Sql = "exec sp_totaliza_capa_nota_fiscal_Loja " & pedido
          RsDadosTef.CursorLocation = adUseClient
-         RsDadosTef.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+         RsDadosTef.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
   
-   sql = "exec SP_Atualiza_Processos_Venda " & pedido & ", " & NroNotaFiscal & ", " & GLB_CTR_Protocolo & ", " & GLB_Caixa
-          rdoCNLoja.Execute sql
+   Sql = "exec SP_Atualiza_Processos_Venda " & pedido & ", " & NroNotaFiscal & ", " & GLB_CTR_Protocolo & ", " & GLB_Caixa
+          rdoCNLoja.Execute Sql
 
 On Error GoTo TrataErro
 
-   sql = "exec SP_Atualiza_Processos_Venda_Central"
-          rdoCNLoja.Execute sql
+   Sql = "exec SP_Atualiza_Processos_Venda_Central"
+          rdoCNLoja.Execute Sql
           
 Exit Sub
 TrataErro:
@@ -89,10 +89,10 @@ TrataErro:
 End Sub
 
 
-Sub Esperar(ByVal tempo As Integer)
+Sub Esperar(ByVal Tempo As Integer)
     Dim StartTime As Long
     StartTime = Timer
-    Do While Timer < StartTime + tempo
+    Do While Timer < StartTime + Tempo
        DoEvents
     Loop
 End Sub
