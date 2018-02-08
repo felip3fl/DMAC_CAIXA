@@ -656,6 +656,14 @@ Begin VB.Form frmEmissaoNFe
          CHECK           =   0   'False
          VALUE           =   0   'False
       End
+      Begin VB.Label Label4 
+         Caption         =   "Label4"
+         Height          =   15
+         Left            =   0
+         TabIndex        =   28
+         Top             =   4560
+         Width           =   3855
+      End
       Begin VB.Label Label1 
          AutoSize        =   -1  'True
          BackStyle       =   0  'Transparent
@@ -709,6 +717,25 @@ Begin VB.Form frmEmissaoNFe
       TabIndex        =   1
       Top             =   780
       Width           =   3735
+   End
+   Begin VB.Label lblDiplay 
+      BackStyle       =   0  'Transparent
+      BeginProperty Font 
+         Name            =   "MS Sans Serif"
+         Size            =   8.25
+         Charset         =   0
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H000000BB&
+      Height          =   375
+      Left            =   360
+      TabIndex        =   29
+      Top             =   120
+      Visible         =   0   'False
+      Width           =   4095
    End
    Begin VB.Label cmdIgnorarResultado 
       Alignment       =   2  'Center
@@ -838,16 +865,16 @@ Private Sub cmdCancelar_Click()
     
         'Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & Nf.numero & "#" & Nf.CNPJ & ".txt", vbDirectory)
         'If Arquivo <> "" Then
-        deletaArquivo GLB_EnderecoPastaRESP & "*" & Nf.numero & "#" & Nf.CNPJ & ".txt"
+        deletaArquivo GLB_EnderecoPastaRESP & "*" & Nf.numero & "#" & Nf.cnpj & ".txt"
         'End If
         
         finalizaProcesso "Cancelando Nota Fiscal Eletrônico " & Nf.numero, True
         cancelaNE Nf
         
-    ElseIf Nf.eSerie = "CE" Then
+    ElseIf Nf.eSerie Like "CE*" Then
         'Arquivo = Dir(, vbDirectory)
         'If Arquivo <> "" Then
-            deletaArquivo GLB_EnderecoPastaRESP & "*" & Nf.pedido & "#" & Nf.CNPJ & ".txt"
+            deletaArquivo GLB_EnderecoPastaRESP & "*" & Nf.pedido & "#" & Nf.cnpj & ".txt"
         'End If
         
         finalizaProcesso "Cancelando Cupom Fiscal Eletrônico " & Nf.numero, True
@@ -930,9 +957,9 @@ Public Sub cmdTransmitir_Click()
     If optPesquisaPedido.Value = True Then Nf.pedido = txtNFe.text
      
     If Nf.eSerie = "NE" Then
-        Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & Nf.numero & "#" & Nf.CNPJ & ".txt", vbDirectory)
-    ElseIf Nf.eSerie = "CE" Then
-        Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & Nf.pedido & "#" & Nf.CNPJ & ".txt", vbDirectory)
+        Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & Nf.numero & "#" & Nf.cnpj & ".txt", vbDirectory)
+    ElseIf Nf.eSerie Like "CE*" Then
+        Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & Nf.pedido & "#" & Nf.cnpj & ".txt", vbDirectory)
     End If
     
     If Arquivo <> "" Then
@@ -961,7 +988,7 @@ Public Sub cmdTransmitir_Click()
         criaTXT "nota", Nf
         atualizaNota "IDE"
         
-    ElseIf Nf.eSerie = "CE" Then
+    ElseIf Nf.eSerie Like "CE*" Then
         
         finalizaProcesso "Emitindo Cupom Fiscal Eletrônico", True
         criaTXTSAT "sat", Nf
@@ -975,7 +1002,7 @@ Private Sub cmdImprimir_Click()
     If Nf.eSerie = "NE" Then
         finalizaProcesso "Imprimindo Nota Fiscal Eletrônico " & Nf.numero, False
         Call ImprimirNota(Nf, "NOTA")
-    ElseIf Nf.eSerie = "CE" Then
+    ElseIf Nf.eSerie Like "CE*" Then
         finalizaProcesso "Imprimindo Cupom Fiscal Eletrônico " & Nf.numero, False
         Call ImprimirNota(Nf, "SAT")
     End If
@@ -1013,7 +1040,8 @@ Private Sub notaPedentes()
           "from nfcapa " & vbNewLine & _
           "where tm not in (4012,4016,9016,100,101,9005,4005,9012,204,124,4014)   " & vbNewLine & _
           "and tiponota in ('V','T','E','S','R') " & vbNewLine & _
-          "and serie in ('CE','NE')" & vbNewLine & _
+          "and serie in ('NE') " & vbNewLine & _
+          "and serie like 'CE%' " & vbNewLine & _
           "and dataemi >= '" & Format(GLB_DataInicial, "YYYY/MM") & "/01'"
 
     ado_estrutura.CursorLocation = adUseClient
@@ -1187,7 +1215,7 @@ Private Sub carregaInfoLoja()
     rsNotaFiscal.CursorLocation = adUseClient
     rsNotaFiscal.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
-        Nf.CNPJ = rsNotaFiscal("lo_cgc")
+        Nf.cnpj = rsNotaFiscal("lo_cgc")
         Nf.loja = wLoja
         
     rsNotaFiscal.Close
@@ -1256,8 +1284,8 @@ Private Sub acaoDblGrid(grid, tiponota As String)
             Exit Sub
         End If
         
-        Nf.CNPJ = obterCNPJloja
-        If Nf.CNPJ = Empty Then
+        Nf.cnpj = obterCNPJloja
+        If Nf.cnpj = Empty Then
             
             lblMSGNota.Caption = "CNPJ não encontrado"
             Exit Sub
@@ -1270,6 +1298,14 @@ Private Sub acaoDblGrid(grid, tiponota As String)
             If grid.CellForeColor <> vbRed And Not grid.TextMatrix(grid.Row, 4) Like "*Cancelamento*" Then
                 ImprimirNota Nf, tiponota
             Else
+                If IsTef(Nf, tiponota) And verifica_tef = True Then
+                    If MsgBox("Deseja Reimprimir o Cancelamento  TEF da Nota " & Nf.numero & "? ", vbQuestion + vbYesNo, "Impressão de Nota") = vbYes Then
+                        Screen.MousePointer = 11
+                        tef_dados = ""
+                        Call Reimprimir_Tef(Nf)
+                        Exit Sub
+                    End If
+                End If
                 abrirArquivoResposta Nf, tiponota
             End If
         
@@ -1379,9 +1415,9 @@ Private Sub abrirArquivoResposta(Nf As notaFiscal, tiponota As String)
     Dim fso As New FileSystemObject
     
     If tiponota = "NOTA" Then
-        Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & Nf.numero & "#" & Nf.CNPJ & ".txt", vbDirectory)
+        Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & Nf.numero & "#" & Nf.cnpj & ".txt", vbDirectory)
     Else
-        Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & Nf.pedido & "#" & Nf.CNPJ & ".txt", vbDirectory)
+        Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & Nf.pedido & "#" & Nf.cnpj & ".txt", vbDirectory)
     End If
     
      If Arquivo <> "" Then
@@ -1523,7 +1559,7 @@ Public Sub txtNFe_KeyPress(KeyAscii As Integer)
             Nf.numero = RTrim(rsNFE("NF"))
             Nf.chave = RTrim(rsNFE("chave"))
             Nf.eSerie = RTrim(rsNFE("serie"))
-            Nf.CNPJ = RTrim(rsNFE("cgc"))
+            Nf.cnpj = RTrim(rsNFE("cgc"))
             Nf.pedido = RTrim(rsNFE("pedido"))
             Nf.cfop = RTrim(rsNFE("cfop"))
             wPedido = RTrim(rsNFE("pedido"))
@@ -1549,7 +1585,7 @@ Public Sub txtNFe_KeyPress(KeyAscii As Integer)
 
     End If
 
-    If KeyAscii = 27 Then
+    If KeyAscii = 27 And wskTef.State = 0 Then
         Unload Me
     End If
     
@@ -1879,7 +1915,7 @@ Private Sub criarArquivorDACTE(Nf As notaFiscal, chaveAcesso As String)
 
     Open GLB_EnderecoPastaFIL & _
     "dacfesat" & (Format(Nf.pedido, "000000000")) & "#" & _
-    Nf.CNPJ & ".txt" For Output As #1
+    Nf.cnpj & ".txt" For Output As #1
             
         Print #1, "CHAVESAT     = " & chaveAcesso
         Print #1, "IMPRESSORA   = " & GLB_Impressora00
@@ -1953,7 +1989,7 @@ Private Sub criarArquivorEmail(Nf As notaFiscal, chaveAcesso As String, email As
 
     Open GLB_EnderecoPastaFIL & _
     "email" & (Format(Nf.numero, "000000000")) & "#" & _
-    Nf.CNPJ & ".txt" For Output As #1
+    Nf.cnpj & ".txt" For Output As #1
             
         Print #1, "CHAVENFE     = " & chaveAcesso
         Print #1, "DESTINATARIO   = " & email
@@ -1971,7 +2007,7 @@ Private Sub criarArquivorDanfe(Nf As notaFiscal, chaveAcesso As String)
 
     Open GLB_EnderecoPastaFIL & _
     "danfe" & (Format(Nf.numero, "000000000")) & "#" & _
-    Nf.CNPJ & ".txt" For Output As #1
+    Nf.cnpj & ".txt" For Output As #1
             
         Print #1, "CHAVENFE     = " & chaveAcesso
         Print #1, "IMPRESSORA   = " & Glb_ImpNotaFiscal
@@ -1995,7 +2031,7 @@ Private Sub cancelaNE(Nf As notaFiscal)
           
         Open GLB_EnderecoPastaFIL & _
         "cancel" & (Format(Nf.numero, "000000000")) & "#" & _
-        Nf.CNPJ & ".txt" For Output As #1
+        Nf.cnpj & ".txt" For Output As #1
                 
             Print #1, "CHAVENFE      = " & Nf.chave
             Print #1, "JUSTIFICATIVA = " & xJust
@@ -2026,7 +2062,7 @@ Private Sub cancelaSAT(Nf As notaFiscal)
                       
                 Open GLB_EnderecoPastaFIL & _
                 "cancelsat" & (Format(Nf.pedido, "000000000")) & "#" & _
-                Nf.CNPJ & ".txt" For Output As #1
+                Nf.cnpj & ".txt" For Output As #1
                 
                 Print #1, "CHAVESAT     = " & Nf.chave
                 Print #1, "IMPRESSORA   = " & GLB_Impressora00
@@ -2178,7 +2214,7 @@ Private Function obterNumNFArquivo(Arquivo, Nf As notaFiscal) As String
     Dim numNF As String
     Dim ado_loja As New ADODB.Recordset
     
-    If Nf.eSerie = "CE" Then
+    If Nf.eSerie Like "CE*" Then
         numNF = Mid(Nf.chave, 32, 6)
         
         If numNF = "" Or numNF = "0" Then
@@ -2208,7 +2244,7 @@ End Function
 
 Private Function obterNumPedidoArquivo(Arquivo As String, Nf As notaFiscal) As String
 
-    If Nf.eSerie = "CE" Then
+    If Nf.eSerie Like "CE*" Then
         obterNumPedidoArquivo = Val(Mid(Arquivo, InStr(Arquivo, "#") - 6, 6))
     Else
     
@@ -2233,14 +2269,14 @@ Private Function obterNumPedidoArquivo(Arquivo As String, Nf As notaFiscal) As S
     
 End Function
 
-Public Function obterLoja(CNPJ As String) As String
+Public Function obterLoja(cnpj As String) As String
 On Error GoTo TrataErro
     Dim ado_loja As New ADODB.Recordset
     
     With ado_loja
         sql = "select lo_loja as loja " & vbNewLine & _
         "from loja " & vbNewLine & _
-        "where lo_cgc like '%" & CNPJ & "%'"
+        "where lo_cgc like '%" & cnpj & "%'"
         
         .CursorLocation = adUseClient
         .Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
@@ -2352,9 +2388,9 @@ Public Function carregaArquivoUnico()
     
     
     If Nf.eSerie = "NE" Then
-        Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & Nf.numero & "#" & Nf.CNPJ & ".txt", vbDirectory)
+        Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & Nf.numero & "#" & Nf.cnpj & ".txt", vbDirectory)
     Else
-        Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & pedido & "#" & Nf.CNPJ & ".txt", vbDirectory)
+        Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & pedido & "#" & Nf.cnpj & ".txt", vbDirectory)
     End If
     
     If Arquivo <> "" Then
@@ -2372,10 +2408,10 @@ Public Function carregaArquivoUnico()
     
         resultado = lerCampo(informacaoArquivo, "Resultado")
         
-        Nf.CNPJ = obterCNJPArquivo(Arquivo)
-        Nf.loja = obterLoja(Nf.CNPJ)
+        Nf.cnpj = obterCNJPArquivo(Arquivo)
+        Nf.loja = obterLoja(Nf.cnpj)
         
-        If Nf.eSerie = "CE" Then
+        If Nf.eSerie Like "CE*" Then
             Nf.pedido = obterNumPedidoArquivo(Arquivo, Nf)
             Nf.chave = lerCampo(informacaoArquivo, "ChaveSAT")
             Nf.numero = obterNumNFArquivo(Arquivo, Nf)
@@ -2400,7 +2436,7 @@ Public Function carregaArquivoUnico()
              statusFuncionamento "Nota emitida e autorizada com sucesso"
              
              atualizaChaveNF Nf.pedido, Nf.chave, Nf.loja
-             If Nf.eSerie = "CE" Then atualizaNumeroNF Nf.pedido, Nf.numero
+             If Nf.eSerie Like "CE*" Then atualizaNumeroNF Nf.pedido, Nf.numero
              atualizaArquivo GLB_EnderecoPastaRESP, Arquivo, informacaoArquivo, "DMAC=Atualizado"
              
              Call Devolucao(Nf.pedido)
@@ -2606,11 +2642,11 @@ Public Function carregaArquivo()
                     
                 Else
               
-                    Nf.CNPJ = obterCNJPArquivo(Arquivo)
-                    Nf.loja = obterLoja(Nf.CNPJ)
+                    Nf.cnpj = obterCNJPArquivo(Arquivo)
+                    Nf.loja = obterLoja(Nf.cnpj)
                     
                     If UCase(Arquivo) Like "*SAT*" Then
-                        Nf.eSerie = "CE"
+                        Nf.eSerie = GLB_SerieCF
                         Nf.pedido = obterNumPedidoArquivo(Arquivo, Nf)
                         Nf.chave = lerCampo(informacaoArquivo, "ChaveSAT")
                         Nf.numero = obterNumNFArquivo(Arquivo, Nf)
@@ -2627,7 +2663,7 @@ Public Function carregaArquivo()
                     
                         atualizaCodigoNF Nf.pedido, resultado, Nf.loja
                         atualizaChaveNF Nf.pedido, Nf.chave, Nf.loja
-                        If Nf.eSerie = "CE" Then atualizaNumeroNF Nf.pedido, Nf.numero
+                        If Nf.eSerie Like "CE*" Then atualizaNumeroNF Nf.pedido, Nf.numero
                         
                         atualizaArquivoDestalhesNF Nf, Arquivo, informacaoArquivo
                         'atualizaArquivo GLB_EnderecoPastaRESP, ARQUIVO, informacaoArquivo, "DMAC=Atualizado BD pelo segundo metodo"
@@ -2802,7 +2838,7 @@ Private Sub abrirTXT(Nf As notaFiscal, tiponota As String)
      
     Screen.MousePointer = 11
     
-    enderecoArquivoTXT = criaTXTtemporario(GLB_EnderecoPastaFIL, tiponota, Nf.pedido, Nf.CNPJ, Nf.loja)
+    enderecoArquivoTXT = criaTXTtemporario(GLB_EnderecoPastaFIL, tiponota, Nf.pedido, Nf.cnpj, Nf.loja)
     If enderecoArquivoTXT <> "" Then
         ShellExecute Hwnd, "open", (enderecoArquivoTXT), "", "", 1
         Shell "explorer " & GLB_EnderecoPastaFIL, vbHide
@@ -2841,7 +2877,7 @@ End Function
 
 
 
-Public Function criaTXTtemporario(Endereco As String, tiponota As String, pedido As String, CNPJ As String, loja As String) As String
+Public Function criaTXTtemporario(Endereco As String, tiponota As String, pedido As String, cnpj As String, loja As String) As String
 
     Dim corpoMensagem As String
     Dim nota As notaFiscal
@@ -2852,7 +2888,7 @@ On Error GoTo TrataErro
     If tiponota = "SAT" Then corpoMensagem = montaTXTSAT(pedido)
     
     If corpoMensagem <> Empty Then
-        criaTXTtemporario = Endereco & LCase(tiponota) & (Format(pedido, "000000000")) & "#" & CNPJ & ".txt"
+        criaTXTtemporario = Endereco & LCase(tiponota) & (Format(pedido, "000000000")) & "#" & cnpj & ".txt"
         Open criaTXTtemporario For Output As #1
              Print #1, corpoMensagem
         Close #1
@@ -2981,14 +3017,20 @@ End Function
 
 Private Sub Reimprimir_Tef(Nf As notaFiscal)
 sql = "Select * from  MovimentoCaixa where mc_data='" & Format(Date, "yyyy/mm/dd") & "' and mc_pedido=" & Nf.pedido & "" _
-& " and MC_TipoNota='V' and MC_SequenciaTEF > 0 and MC_Grupo in (10203,10205,10206,10301,10302,10303) order by MC_SequenciaTEF "
+& " and  MC_SequenciaTEF > 0 and MC_Grupo in (10203,10205,10206,10301,10302,10303) order by MC_SequenciaTEF "
 
  ADOTef_C.CursorLocation = adUseClient
  ADOTef_C.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
  If Not ADOTef_C.EOF Then
- 
-            tef_num_doc = Format(ADOTef_C("Mc_SequenciaTef"), "000000")
-            tef_nsu_ctf = Format(ADOTef_C("Mc_SequenciaTef"), "000000")
+            If ADOTef_C("Mc_SequenciaTef1") > 1 Then
+  
+                tef_num_doc = Format(ADOTef_C("Mc_SequenciaTef1"), "000000")
+                tef_nsu_ctf = Format(ADOTef_C("Mc_SequenciaTef1"), "000000")
+            Else
+                tef_num_doc = Format(ADOTef_C("Mc_SequenciaTef"), "000000")
+                tef_nsu_ctf = Format(ADOTef_C("Mc_SequenciaTef"), "000000")
+            End If
+            
             tef_data_cli = Format(Date, "dd/mm/yy")
             data_tef = Date
 
@@ -3012,6 +3054,7 @@ End Sub
 'Emerson_Tef_Vbi
 Private Sub wskTef_Close()
 wskTef.Close
+ tef_dados = ""
 End Sub
 
 Private Sub wskTef_Connect()
@@ -3037,8 +3080,12 @@ End If
 End Function
 
 Public Function IniciaTEF()
+frmEmissaoNFe.Enabled = False
  tef_sequencia = sequencial_Tef_Vbi
  ususrio_senha_Tef_Vbi
+ lblDiplay.Visible = True
+ lblDiplay.Caption = "Iniciar"
+ Screen.MousePointer = 11
     wskTef.Connect "localhost", 60906
     tef_dados = "versao=""v" & App.Major & "." & App.Minor & "." & App.Revision & """" + vbCrLf
     tef_dados = tef_dados + "sequencial=""" & tef_sequencia + 1 & """" + vbCrLf
@@ -3046,15 +3093,17 @@ Public Function IniciaTEF()
     tef_dados = tef_dados + "servico=""iniciar""" + vbCrLf
     tef_dados = tef_dados + "aplicacao="" De Meo """ + vbCrLf
     tef_dados = tef_dados + "aplicacao_tela=""Dmac Caixa"""
+   'MsgBox tef_dados
     tef_servico = "iniciar"
 End Function
 Private Sub wskTef_DataArrival(ByVal bytesTotal As Long)
 Dim resp As String
-
+Dim resp1 As String
 tef_menssagem = ""
 wskTef.GetData resp, vbString
+resp1 = resp
 tef_retorno = getMenssagem(resp, "retorno=", 9)
- Call Grava_Log_Diario(resp)
+ Call Grava_Log_Diario(resp1)
 If tef_servico = "iniciar" Then
     tef_menssagem = getMenssagem(resp, "estado", 8)
     If tef_menssagem = "7" And tef_retorno = "1" Then
@@ -3065,11 +3114,13 @@ If tef_servico = "iniciar" Then
         Conclui_Tef
     End If
 ElseIf tef_servico = "executar" Then
+ lblDiplay.Caption = "executar"
     tef_retorno = getMenssagem(resp, "retorno=", 9)
     If tef_retorno <= 1 Then
             If InStr(resp, "_sequencial=") >= 1 Then
                     tef_menssagem = getMenssagem(resp, "mensagem", 10)
                     Call Continua(getMenssagem(resp, "_sequencial=", 13))
+                    lblDiplay.Caption = tef_menssagem
           ElseIf InStr(resp, "o_rede=") >= 1 Then
                     Call Grava_Campos_Tef(resp)
                     Tef_Confrima = True
@@ -3078,6 +3129,7 @@ ElseIf tef_servico = "executar" Then
                     
             End If
     ElseIf tef_retorno > 1 Then
+    MsgBox "Erro NO Tef - " & getMenssagem(resp, "mensagem", 10), vbCritical, "ERRO"
         tef_servico = ""
          Call Finalizar_Tef
     End If
@@ -3093,6 +3145,7 @@ ElseIf tef_servico = "confirma" Then
                 Finalizar_Tef
             End If
 ElseIf tef_servico = "finalizar" Then
+        lblDiplay.Caption = ""
         Call Conclui_Tef
 ElseIf tef_retorno > 1 Then
         MsgBox "Erro NO Tef - " & getMenssagem(resp, "mensagem", 10), vbCritical, "ERRO"
@@ -3113,6 +3166,7 @@ End Function
 
 
 Private Sub Continua(ByVal sequecial As String)
+'ok
 Dim retornoLocal As String
 Dim sequencialLocal As String
 Dim informacao As String
@@ -3121,35 +3175,55 @@ tef_servico = "executar"
         sequencialLocal = sequecial
         
         
+       
+        
         If tef_menssagem = "Valor" Or tef_menssagem = "Valor da Transacao" Then
+        
             informacao = Replace(Format(tef_valor, "#####.00"), ",", ".")
         ElseIf tef_menssagem = "Produto" Then
             informacao = tef_operacao & "-Stone"
+        ElseIf tef_menssagem = "Forma de Pagamento" And tef_operacao = "Debito" Then
+            informacao = "A vista"
+            tef_Parcelas = 0
+             'MsgBox "A vista"
         ElseIf tef_menssagem = "Forma de Pagamento" And tef_Parcelas <= 1 Then
             informacao = "A vista"
+            'MsgBox "A vista"
         ElseIf tef_menssagem = "Forma de Pagamento" And tef_Parcelas >= 2 Then
             informacao = "Parcelado"
+           ' MsgBox "Parcelado"
         ElseIf tef_menssagem = "Financiado pelo" Then
-            informacao = "Administradora"
+            informacao = "Estabelecimento"
         ElseIf tef_menssagem = "Parcelas" Then
            informacao = tef_Parcelas
+        ElseIf tef_menssagem = "Taxa de Embarque" Then
+           informacao = 0
         ElseIf tef_menssagem = "Usuario de acesso" Then
            informacao = tef_usuario
         ElseIf tef_menssagem = "Senha de acesso" Then
            informacao = tef_senha
+        ElseIf tef_menssagem = "Reimprimir" Then
+           informacao = "Todos"
         ElseIf tef_menssagem = "Data Transacao Original" Then
            informacao = Format(Date, "dd/mm/yy")
         ElseIf tef_menssagem = "Numero do Documento" Then
            informacao = tef_nsu_ctf
-        ElseIf tef_menssagem = "Reimprimir" Then
-           informacao = "Todos"
+        ElseIf tef_menssagem = "Quatro ultimos digito" Then
+           informacao = InputBox(Trim(tef_menssagem) & ":")
+        ElseIf tef_menssagem = "Codigo de Seguranca" Then
+           informacao = InputBox(Trim(tef_menssagem) & ":")
+        ElseIf tef_menssagem = "Validade do Cartao(MM/AA)" Then
+           informacao = InputBox(Trim(tef_menssagem) & ":")
         ElseIf InStr(tef_menssagem, "?") >= 1 Then
            informacao = "Sim"
+        
         Else
             informacao = ""
         End If
+        
         tef_dados = "automacao_coleta_retorno=""" + retornoLocal + """" + vbCrLf
         tef_dados = tef_dados + "automacao_coleta_sequencial=""" + sequencialLocal + """" + vbCrLf
+
     If informacao <> "" Then
             tef_dados = tef_dados + "automacao_coleta_informacao=""" + informacao + """" + vbCrLf
             wskTef.SendData tef_dados
@@ -3158,6 +3232,7 @@ tef_servico = "executar"
             wskTef.SendData tef_dados
     End If
 End Sub
+
 
 
 Private Sub valida()
@@ -3170,6 +3245,8 @@ tef_servico = "confirma"
 End Sub
 Private Sub Conclui_Tef()
     wskTef.Close
+    tef_dados = ""
+    
    Screen.MousePointer = 0
    Fecha_Log_Diario
     If Tef_Confrima = True Then
@@ -3178,8 +3255,16 @@ Private Sub Conclui_Tef()
        ADOTef_C.MoveNext
        If Not ADOTef_C.EOF Then
             tef_dados = ""
-            tef_num_doc = Format(ADOTef_C("Mc_SequenciaTef"), "000000")
-            tef_nsu_ctf = Format(ADOTef_C("Mc_SequenciaTef"), "000000")
+            
+            If ADOTef_C("Mc_SequenciaTef1") > 1 Then
+  
+                tef_num_doc = Format(ADOTef_C("Mc_SequenciaTef1"), "000000")
+                tef_nsu_ctf = Format(ADOTef_C("Mc_SequenciaTef1"), "000000")
+            Else
+                tef_num_doc = Format(ADOTef_C("Mc_SequenciaTef"), "000000")
+                tef_nsu_ctf = Format(ADOTef_C("Mc_SequenciaTef"), "000000")
+            End If
+            
             tef_data_cli = Format(Date, "dd/mm/yy")
             data_tef = Date
             tef_valor = Format(ADOTef_C("mc_valor"), "##,##0.00")
@@ -3192,7 +3277,7 @@ Private Sub Conclui_Tef()
             
             Tef_Confrima = False
             
-             If tef_dados = "" Then
+             If tef_dados = "" And wskTef.State = 0 Then
              IniciaTEF
              End If
              
@@ -3209,35 +3294,40 @@ Private Sub Conclui_Tef()
 End Sub
 
 Private Sub Grava_Campos_Tef(ByVal resp As String)
-    'tef_nsu_ctf = getMenssagem(resp, "_nsu=", 6)
-    'tef_bandeira = getMenssagem(resp, "_administradora=", 17)
-    'tef_operacao = getMenssagem(resp, "_cartao=", 9)
+    'ok
+    tef_nsu_ctf = getMenssagem(resp, "_nsu=", 6)
+    tef_bandeira = getMenssagem(resp, "_administradora=", 17)
+    tef_operacao = getMenssagem(resp, "_cartao=", 9)
     tef_nome_ac = getMenssagem(resp, "o_rede=", 8)
-    tef_cupom_1 = getComprovantes(resp, tef_nome_ac, "comprovante_1via")
+    tef_cupom_1 = getComprovantes(resp, "transacao_", "comprovante_1via")
     Call Grava_Cupom(tef_cupom_1)
-    tef_cupom_2 = getComprovantes(resp, tef_nome_ac, "comprovante_2via")
+    tef_cupom_2 = getComprovantes(resp, "transacao_", "comprovante_2via")
     Call Grava_Cupom(tef_cupom_2)
 End Sub
 
-Private Function getComprovantes(ByVal resp As String, ByVal blc As String, ByVal copum As String) As String
 
+Private Function getComprovantes(ByVal resp As String, ByVal blc As String, ByVal copum As String) As String
+'ok
 resp = Mid$(resp, InStr(resp, copum) + 17)
-getComprovantes = Mid$(resp, InStr(resp, vbCrLf), InStr(resp, blc) - 8)
+getComprovantes = Mid$(resp, InStr(resp, vbCrLf), InStr(resp, blc) - 42)
 getComprovantes = Replace(getComprovantes, vbCrLf, ";")
 
 End Function
 
+
 Private Sub Finalizar_Tef()
+frmEmissaoNFe.Enabled = True
 tef_servico = "finalizar"
 tef_dados = "sequencial=""" & tef_sequencia + 3 & """" + vbCrLf
 tef_dados = tef_dados + "retorno=""0""" + vbCrLf
 tef_dados = tef_dados + "servico=""finalizar"""
 wskTef.SendData tef_dados
+lblDiplay.Visible = False
 End Sub
 
 Private Function IsTef(Nf As notaFiscal, tiponota As String) As Boolean
 sql = "Select * from  MovimentoCaixa where mc_data='" & Format(Date, "yyyy/mm/dd") & "' and mc_pedido=" & Nf.pedido & "" _
-& " and MC_TipoNota='V' and MC_SequenciaTEF > 0 and MC_Grupo in (10203,10205,10206,10301,10302,10303) order by MC_SequenciaTEF "
+& " and  MC_SequenciaTEF > 0 and MC_Grupo in (10203,10205,10206,10301,10302,10303) order by MC_SequenciaTEF "
 
  ADOTef_C.CursorLocation = adUseClient
  ADOTef_C.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
@@ -3250,4 +3340,5 @@ sql = "Select * from  MovimentoCaixa where mc_data='" & Format(Date, "yyyy/mm/dd
  
  
 End Function
+
 

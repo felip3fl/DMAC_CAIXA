@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "vsflex7u.ocx"
+Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "Vsflex7u.ocx"
 Begin VB.Form frmMovimentoCaixa 
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
@@ -293,7 +293,7 @@ Dim wTR As Double
 Dim wSubTotalEntfin As Double
 Dim wSubTotalEntFat As Double
 
-Dim i As Long
+Dim I As Long
 Dim sql As String
 Dim Cor As String
 Dim Cor1 As String
@@ -531,7 +531,7 @@ sql = ("Select totalnota,Numeroped,* from nfcapa Where ecf = " & GLB_ECF & " and
       If Not rdoCapa.EOF Then
          Do While Not rdoCapa.EOF
 
-                  If rdoCapa("Serie") = GLB_SerieCF Then
+                  If rdoCapa("Serie") Like GLB_SerieCF & "*" Then
                      grdMovimentoCaixa.TextMatrix(19, 1) = Format(rdoCapa("TotalSerieNota"), "###,###,###,##0.00")
                      wSubTotal = (wSubTotal + rdoCapa("TotalSerieNota"))
                      grdMovimentoCaixa.TextMatrix(19, 2) = Format(rdoCapa("QtdeSerie"), "###0")

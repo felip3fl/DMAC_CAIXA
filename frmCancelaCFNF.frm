@@ -1,4 +1,5 @@
 VERSION 5.00
+Object = "{248DD890-BB45-11CF-9ABC-0080C7E7B78D}#1.0#0"; "MSWINSCK.OCX"
 Begin VB.Form frmCancelaCFNF 
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
@@ -22,6 +23,34 @@ Begin VB.Form frmCancelaCFNF
       TabIndex        =   0
       Top             =   30
       Width           =   4935
+      Begin VB.CheckBox ChkTef 
+         BackColor       =   &H80000012&
+         Caption         =   "Somente Cancelar o TEF"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H000000BB&
+         Height          =   315
+         Left            =   480
+         MaskColor       =   &H00FFFFFF&
+         TabIndex        =   13
+         Top             =   2040
+         Visible         =   0   'False
+         Width           =   2535
+      End
+      Begin MSWinsockLib.Winsock wskTef 
+         Left            =   4440
+         Top             =   360
+         _ExtentX        =   741
+         _ExtentY        =   741
+         _Version        =   393216
+      End
       Begin VB.TextBox txtNotaFiscal 
          BackColor       =   &H00FFFFFF&
          Height          =   315
@@ -65,6 +94,27 @@ Begin VB.Form frmCancelaCFNF
          TabIndex        =   5
          Top             =   1695
          Width           =   1035
+      End
+      Begin VB.Label lblDiplay 
+         AutoSize        =   -1  'True
+         BackColor       =   &H00AE7411&
+         BackStyle       =   0  'Transparent
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   12
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H000000BB&
+         Height          =   300
+         Left            =   120
+         TabIndex        =   12
+         Top             =   2040
+         Visible         =   0   'False
+         Width           =   4650
       End
       Begin VB.Label lblnroNFCF 
          AutoSize        =   -1  'True
@@ -204,6 +254,15 @@ Dim WGrupoAtualzado As Double
 Dim wNumeroPedido As Double
 Dim wWhere As String
 
+'-------------------Emerson Tef--------------
+Dim tef_cupom_1 As String
+Dim tef_cupom_2 As String
+Dim tef_modelidade As String
+Dim tef_mensssagem As String
+Dim tef_sequencia As String
+Dim tef_Parcelas As String
+
+
 Private Sub cmbSair_Click()
  Unload Me
 End Sub
@@ -246,6 +305,33 @@ Private Sub finalizarCancelamento()
          txtSenha.SetFocus
          Exit Sub
       End If
+      If ChkTef.Value = 1 Then
+      ChkTef.Visible = False
+      tef_sql = "select * from  nfcapa where tiponota='E' and  NfDevolucao=" & Trim(txtNotaFiscal.text) & "" _
+       & "and SerieDevolucao='" & txtSerie.text & "' and TOTALNOTA= " & ConverteVirgula(txtValorNF.text) & " "
+      'MsgBox tef_sql
+        ADOTef_C1.CursorLocation = adUseClient
+        ADOTef_C1.Open tef_sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+      If Not ADOTef_C1.EOF Then
+             If verifica_tef Then
+                  tef_dados = ""
+                  Call Cancela_Tef(0)
+                      If wskTef.State <> 0 Then
+                      ADOTef_C1.Close
+                      Exit Sub
+                      End If
+            ADOTef_C1.Close
+            Exit Sub
+            End If
+        Else
+        
+        MsgBox "TEF não pode ser Cancelado!!", vbCritical, "ERRO"
+        Call LimpaCampos
+        ADOTef_C1.Close
+        Exit Sub
+      End If
+   
+    End If
       
       If MsgBox("Deseja realmente Cancelar? NF --> " & txtNotaFiscal.text & ", Serie --> " & txtSerie.text & "," _
          & " Valor --> " & txtValorNF.text & "", vbQuestion + vbYesNo, "Atenção") = vbNo Then
@@ -307,6 +393,16 @@ Private Sub finalizarCancelamento()
             End If
               
             If cancelaNotaResultado = True Then
+                'Emerson
+            If verifica_tef Then
+            ChkTef.top = 4040
+            tef_dados = ""
+            Call Cancela_Tef(0)
+                If wskTef.State <> 0 Then
+                ADOCancela.Clone
+                    Exit Sub
+                End If
+            End If
                 sql = "exec SP_Cancela_NotaFiscal " & txtNotaFiscal.text & ",'" & txtSerie.text & "'"
                 rdoCNLoja.Execute (sql)
             Else
@@ -331,8 +427,16 @@ Private Sub cmdRetorna_Click()
 Unload Me
 End Sub
 
+
+
 Private Sub Form_Activate()
  txtNotaFiscal.SetFocus
+  'Emerson
+ Verifica_Tef_Pos
+ If verifica_tef Then
+ ChkTef.Visible = True
+ End If
+ 
 End Sub
 
 Private Sub Form_Load()
@@ -424,8 +528,8 @@ If txtNotaFiscal.text = "" Then
    Exit Sub
 End If
 
-If UCase(txtSerie.text) <> "CE" Then
-    If UCase(txtSerie.text) = GLB_SerieCF Then
+If Not UCase(txtSerie.text) Like "CE*" Then
+    If UCase(txtSerie.text) Like GLB_SerieCF & "*" Then
        MsgBox "Para cancelamento de Cupom Fiscal selecione Operações ECF", vbCritical, "Atenção"
        txtSerie.text = ""
        txtNotaFiscal.SelStart = 0
@@ -462,12 +566,312 @@ ADOCancela.Close
 End Sub
 
 Sub LimpaCampos()
-
         txtSerie.text = ""
         txtValorNF.text = ""
         txtSenha.text = ""
         txtNotaFiscal.text = ""
         txtPedido.text = ""
+        If verifica_tef Then
+            lblDiplay.Visible = False
+            ChkTef.top = 2040
+            ChkTef.Value = 0
+        End If
         Exit Sub
 
 End Sub
+'---------Emerson_Tef_VBI
+
+
+
+Private Sub Cancela_Tef(ByVal sequecial As Integer)
+sql = "Select * from  MovimentoCaixa where mc_data='" & Format(Date, "yyyy/mm/dd") & "' and mc_pedido=" & txtPedido.text & " and  mc_documento=" & txtNotaFiscal.text & "" _
+& " and MC_TipoNota='V' and MC_SequenciaTEF > " & Trim(sequecial) & " and MC_Grupo in (10203,10205,10206,10301,10302,10303) order by MC_SequenciaTEF "
+
+ ADOTef_C.CursorLocation = adUseClient
+ ADOTef_C.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+ If Not ADOTef_C.EOF Then
+ 
+   qtdCartao = 1
+    lblDiplay.Visible = True
+    tef_operacao = "Administracao Cancelar"
+            tef_num_doc = Format(ADOTef_C("Mc_SequenciaTef"), "000000")
+            tef_nsu_ctf = Format(ADOTef_C("Mc_SequenciaTef"), "000000")
+            tef_data_cli = Format(Date, "dd/mm/yy")
+            data_tef = Date
+            tef_num_trans = Format(qtdCartao, "00")
+            tef_valor = Format(ADOTef_C("mc_valor"), "##,##0.00")
+            tef_Parcelas = Trim(ADOTef_C("mc_parcelas"))
+            If Trim(ADOTef_C("MC_Grupo")) = "10203" Or Trim(ADOTef_C("MC_Grupo")) = "10206" Then
+            tef_operacao = "Debito"
+            Else
+            tef_operacao = "Credito"
+            End If
+            
+            Tef_Confrima = False
+            
+             If tef_dados = "" Then
+             IniciaTEF
+             End If
+End If
+   ADOTef_C.Close
+
+End Sub
+
+'Emerson_Tef_Vbi
+Private Sub wskTef_Close()
+wskTef.Close
+ tef_dados = ""
+End Sub
+
+Private Sub wskTef_Connect()
+wskTef.SendData tef_dados
+End Sub
+
+
+Private Sub wskTef_Error(ByVal Number As Integer, Description As String, ByVal Scode As Long, ByVal Source As String, ByVal HelpFile As String, ByVal HelpContext As Long, CancelDisplay As Boolean)
+MsgBox "Erro NO Tef - " & Number & " - " & Description, vbCritical, "ERRO"
+Conclui_Tef
+wskTef.Close
+End Sub
+Private Function getMenssagem(ByVal testoInteiro As String, ByVal textoBusca As String, ByVal Maximo As Integer) As String
+Dim Texto As String
+
+If InStr(testoInteiro, textoBusca) >= 1 Then
+    Texto = Mid$(testoInteiro, InStr(testoInteiro, textoBusca) + Maximo)
+    Texto = Mid$(testoInteiro, InStr(testoInteiro, textoBusca) + Maximo, InStr(Texto, """") - 1)
+    getMenssagem = Texto
+Else
+    getMenssagem = ""
+End If
+End Function
+
+Public Function IniciaTEF()
+ tef_sequencia = sequencial_Tef_Vbi
+ ususrio_senha_Tef_Vbi
+    wskTef.Connect "localhost", 60906
+    tef_dados = "versao=""v" & App.Major & "." & App.Minor & "." & App.Revision & """" + vbCrLf
+    tef_dados = tef_dados + "sequencial=""" & tef_sequencia + 1 & """" + vbCrLf
+    tef_dados = tef_dados + "retorno=""1""" + vbCrLf
+    tef_dados = tef_dados + "servico=""iniciar""" + vbCrLf
+    tef_dados = tef_dados + "aplicacao="" De Meo """ + vbCrLf
+    tef_dados = tef_dados + "aplicacao_tela=""Dmac Caixa"""
+    tef_servico = "iniciar"
+End Function
+Private Sub wskTef_DataArrival(ByVal bytesTotal As Long)
+Dim resp As String
+Dim resp1 As String
+tef_menssagem = ""
+wskTef.GetData resp, vbString
+resp1 = resp
+tef_retorno = getMenssagem(resp, "retorno=", 9)
+ Call Grava_Log_Diario(resp1)
+If tef_servico = "iniciar" Then
+    tef_menssagem = getMenssagem(resp, "estado", 8)
+    If tef_menssagem = "7" And tef_retorno = "1" Then
+        executarTEF
+    ElseIf tef_retorno > 1 Then
+        MsgBox "Erro NO Tef - " & getMenssagem(resp, "mensagem", 10), vbCritical, "ERRO"
+        tef_servico = ""
+        Conclui_Tef
+    End If
+ElseIf tef_servico = "executar" Then
+    tef_retorno = getMenssagem(resp, "retorno=", 9)
+    If tef_retorno <= 1 Then
+            If InStr(resp, "_sequencial=") >= 1 Then
+                    tef_menssagem = getMenssagem(resp, "mensagem", 10)
+                    lblDiplay.Caption = tef_menssagem
+                    Call Continua(getMenssagem(resp, "_sequencial=", 13))
+          ElseIf InStr(resp, "_nsu=") >= 1 Then
+                    Call Grava_Campos_Tef(resp)
+                    Tef_Confrima = True
+                    Call valida
+                    lblDiplay.Caption = "Retire o Cartão"
+            End If
+    ElseIf tef_retorno > 1 Then
+        lblDiplay.Caption = getMenssagem(resp, "mensagem", 10)
+        tef_servico = ""
+          MsgBox "Erro NO Tef - " & getMenssagem(resp, "mensagem", 10), vbCritical, "ERRO"
+        lblDiplay.Caption = "Retire o Cartão"
+         Call Finalizar_Tef
+    End If
+
+ElseIf tef_servico = "confirma" Then
+         If InStr(resp, "sequencial=") >= 1 Then
+          Call Finalizar_Tef
+          Tef_Confrima = True
+          ElseIf tef_retorno > 1 Then
+          
+                MsgBox "Erro NO Tef - " & getMenssagem(resp, "mensagem", 10), vbCritical, "ERRO"
+                tef_servico = ""
+                Finalizar_Tef
+            End If
+ElseIf tef_servico = "finalizar" Then
+        Call Conclui_Tef
+         lblDiplay.Caption = ""
+ElseIf tef_retorno > 1 Then
+        MsgBox "Erro NO Tef - " & getMenssagem(resp, "mensagem", 10), vbCritical, "ERRO"
+        tef_servico = ""
+        Conclui_Tef
+End If
+
+End Sub
+Public Function executarTEF()
+    tef_servico = "executar" '
+    tef_dados = "sequencial=""" & tef_sequencia + 2 & """" + vbCrLf
+    tef_dados = tef_dados + "servico=""executar""" + vbCrLf
+    tef_dados = tef_dados + "retorno=""1""" + vbCrLf
+    tef_dados = tef_dados + "transacao=""Administracao Cancelar""" + vbCrLf
+    tef_dados = tef_dados + "transacao_tipo_cartao=""" & tef_operacao & """"
+    wskTef.SendData tef_dados
+
+End Function
+
+
+Private Sub Continua(ByVal sequecial As String)
+'ok
+Dim retornoLocal As String
+Dim sequencialLocal As String
+Dim informacao As String
+tef_servico = "executar"
+        retornoLocal = "0"
+        sequencialLocal = sequecial
+        
+        
+         
+        
+        If tef_menssagem = "Valor" Or tef_menssagem = "Valor da Transacao" Then
+        
+            informacao = Replace(Format(tef_valor, "#####.00"), ",", ".")
+        ElseIf tef_menssagem = "Produto" Then
+            informacao = tef_operacao & "-Stone"
+        ElseIf tef_menssagem = "Forma de Pagamento" And tef_operacao = "Debito" Then
+            informacao = "A vista"
+            tef_Parcelas = 0
+             MsgBox "A vista"
+        ElseIf tef_menssagem = "Forma de Pagamento" And tef_Parcelas <= 1 Then
+            informacao = "A vista"
+            MsgBox "A vista"
+        ElseIf tef_menssagem = "Forma de Pagamento" And tef_Parcelas >= 2 Then
+            informacao = "Parcelado"
+            MsgBox "Parcelado"
+        ElseIf tef_menssagem = "Financiado pelo" Then
+            informacao = "Estabelecimento"
+        ElseIf tef_menssagem = "Parcelas" Then
+           informacao = tef_Parcelas
+        ElseIf tef_menssagem = "Taxa de Embarque" Then
+           informacao = 0
+        ElseIf tef_menssagem = "Usuario de acesso" Then
+           informacao = tef_usuario
+        ElseIf tef_menssagem = "Senha de acesso" Then
+           informacao = tef_senha
+        ElseIf tef_menssagem = "Reimprimir" Then
+           informacao = "Todos"
+        ElseIf tef_menssagem = "Data Transacao Original" Then
+           informacao = Format(Date, "dd/mm/yy")
+        ElseIf tef_menssagem = "Numero do Documento" Then
+           informacao = tef_nsu_ctf
+        ElseIf tef_menssagem = "Quatro ultimos digito" Then
+           informacao = InputBox(Trim(tef_menssagem) & ":")
+        ElseIf tef_menssagem = "Codigo de Seguranca" Then
+           informacao = InputBox(Trim(tef_menssagem) & ":")
+        ElseIf tef_menssagem = "Validade do Cartao(MM/AA)" Then
+           informacao = InputBox(Trim(tef_menssagem) & ":")
+        ElseIf InStr(tef_menssagem, "?") >= 1 Then
+           informacao = "Sim"
+        
+        Else
+            informacao = ""
+        End If
+        
+        tef_dados = "automacao_coleta_retorno=""" + retornoLocal + """" + vbCrLf
+        tef_dados = tef_dados + "automacao_coleta_sequencial=""" + sequencialLocal + """" + vbCrLf
+
+    If informacao <> "" Then
+            tef_dados = tef_dados + "automacao_coleta_informacao=""" + informacao + """" + vbCrLf
+            wskTef.SendData tef_dados
+        
+    Else
+            wskTef.SendData tef_dados
+    End If
+End Sub
+
+
+
+Private Sub valida()
+tef_servico = "confirma"
+    tef_dados = "sequencial=""" & tef_sequencia + 2 & """" + vbCrLf
+    tef_dados = tef_dados + "servico=""executar""" + vbCrLf
+    tef_dados = tef_dados + "retorno=""0""" + vbCrLf
+    tef_dados = tef_dados + "transacao=""Administracao Cancelar"""
+    wskTef.SendData tef_dados
+End Sub
+Private Sub Conclui_Tef()
+    wskTef.Close
+   Screen.MousePointer = 0
+   Fecha_Log_Diario
+    If Tef_Confrima = True Then
+        tef_dados = ""
+        If ChkTef.Value = 0 Then
+        
+        sql = "update movimentocaixa set mc_tiponota='C',mc_sequenciatef1 = " & Trim(tef_nsu_ctf) & " where mc_sequenciatef=" & Trim(tef_num_doc) & " and mc_serie='" & Trim(txtSerie.text) & "' and mc_documento=" & Trim(txtNotaFiscal.text)
+        rdoCNLoja.Execute (sql)
+        
+        Call Cancela_Tef(tef_nsu_ctf)
+        If wskTef.State <> 0 Then
+           Exit Sub
+        End If
+        sql = ""
+        sql = "exec SP_Cancela_NotaFiscal " & txtNotaFiscal.text & ",'" & txtSerie.text & "'"
+        rdoCNLoja.Execute (sql)
+        
+        ElseIf ChkTef.Value = 1 Then
+             sql = "update movimentocaixa set mc_sequenciatef1 = " & Trim(tef_nsu_ctf) & " where mc_sequenciatef=" & Trim(tef_num_doc) & " and mc_serie='" & Trim(txtSerie.text) & "' and mc_documento=" & Trim(txtNotaFiscal.text)
+                rdoCNLoja.Execute (sql)
+                 Call Cancela_Tef(tef_nsu_ctf)
+                If wskTef.State <> 0 Then
+                   Exit Sub
+                End If
+            
+        End If
+        LimpaCampos
+        Imprimir_Tef
+        
+ ADOCancela.Close
+    
+ End If
+
+   
+End Sub
+
+Private Sub Grava_Campos_Tef(ByVal resp As String)
+    'ok
+    tef_nsu_ctf = getMenssagem(resp, "_nsu=", 6)
+    tef_bandeira = getMenssagem(resp, "_administradora=", 17)
+    tef_operacao = getMenssagem(resp, "_cartao=", 9)
+    tef_nome_ac = getMenssagem(resp, "o_rede=", 8)
+    tef_cupom_1 = getComprovantes(resp, "transacao_", "comprovante_1via")
+    Call Grava_Cupom(tef_cupom_1)
+    tef_cupom_2 = getComprovantes(resp, "transacao_", "comprovante_2via")
+    Call Grava_Cupom(tef_cupom_2)
+End Sub
+
+
+Private Function getComprovantes(ByVal resp As String, ByVal blc As String, ByVal copum As String) As String
+'ok
+resp = Mid$(resp, InStr(resp, copum) + 17)
+getComprovantes = Mid$(resp, InStr(resp, vbCrLf), InStr(resp, blc) - 42)
+getComprovantes = Replace(getComprovantes, vbCrLf, ";")
+
+End Function
+
+
+Private Sub Finalizar_Tef()
+tef_servico = "finalizar"
+tef_dados = "sequencial=""" & tef_sequencia + 3 & """" + vbCrLf
+tef_dados = tef_dados + "retorno=""0""" + vbCrLf
+tef_dados = tef_dados + "servico=""finalizar"""
+wskTef.SendData tef_dados
+End Sub
+
+
+

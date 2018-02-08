@@ -2,15 +2,14 @@ VERSION 5.00
 Begin VB.Form frmControlaCaixa 
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
-   ClientHeight    =   10440
-   ClientLeft      =   885
-   ClientTop       =   1635
+   ClientHeight    =   11235
+   ClientLeft      =   630
+   ClientTop       =   2250
    ClientWidth     =   15300
    Icon            =   "frmControlaCaixa.frx":0000
    LinkTopic       =   "Form1"
-   LockControls    =   -1  'True
    Picture         =   "frmControlaCaixa.frx":23FA
-   ScaleHeight     =   10440
+   ScaleHeight     =   11235
    ScaleWidth      =   15300
    ShowInTaskbar   =   0   'False
    WindowState     =   2  'Maximized
@@ -219,7 +218,7 @@ Begin VB.Form frmControlaCaixa
       TX              =   "Protocolo"
       ENAB            =   -1  'True
       BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "Arial Narrow"
+         Name            =   "Arial"
          Size            =   12
          Charset         =   0
          Weight          =   700
@@ -257,7 +256,7 @@ Begin VB.Form frmControlaCaixa
       TX              =   "Loja"
       ENAB            =   -1  'True
       BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "Arial Narrow"
+         Name            =   "Arial"
          Size            =   12
          Charset         =   0
          Weight          =   700
@@ -295,7 +294,7 @@ Begin VB.Form frmControlaCaixa
       TX              =   "NroCaixa"
       ENAB            =   -1  'True
       BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "Arial Narrow"
+         Name            =   "Arial"
          Size            =   12
          Charset         =   0
          Weight          =   700
@@ -333,7 +332,7 @@ Begin VB.Form frmControlaCaixa
       TX              =   "Operador"
       ENAB            =   -1  'True
       BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
-         Name            =   "Arial Narrow"
+         Name            =   "Arial"
          Size            =   12
          Charset         =   0
          Weight          =   700
@@ -963,7 +962,7 @@ Begin VB.Form frmControlaCaixa
       BackStyle       =   0  'Transparent
       Caption         =   "Movimento Caixa"
       BeginProperty Font 
-         Name            =   "Arial Narrow"
+         Name            =   "Arial"
          Size            =   8.25
          Charset         =   0
          Weight          =   400
@@ -1087,7 +1086,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 Dim ControlaMenu As Integer
-Dim Sql As String
+Dim sql As String
 Dim X As Integer
 Dim Y As Integer
 Dim Controle As Integer
@@ -1300,10 +1299,10 @@ Call AlterarResolucao(1024, 768)
   cmdVersao.Caption = ""
   ControlaMenu = 0
  
-Sql = "Select * from ParametroCaixa where PAR_NroCaixa = " & GLB_Caixa
+sql = "Select * from ParametroCaixa where PAR_NroCaixa = " & GLB_Caixa
 
 rdoParametro.CursorLocation = adUseClient
-rdoParametro.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+rdoParametro.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 If rdoParametro.EOF Then
    rdoParametro.Close
    MsgBox "Problema com os Parametros avise ao CPD", vbCritical, "Aviso"
@@ -1326,9 +1325,9 @@ lblProtocolo.Caption = GLB_CTR_Protocolo
 cmdProtocolo.Caption = "Protocolo  " & GLB_CTR_Protocolo
 rdoParametro.Close
 
-Sql = "select CS_SerieCF as serie from ControleSerie where CS_NroCaixa = '" & GLB_Caixa & "'"
+sql = "select CS_SerieCF as serie from ControleSerie where CS_NroCaixa = '" & GLB_Caixa & "'"
 rdoParametro.CursorLocation = adUseClient
-rdoParametro.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+rdoParametro.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     GLB_SerieCF = rdoParametro("Serie")
 rdoParametro.Close
 
@@ -1356,8 +1355,8 @@ Private Sub Form_Unload(Cancel As Integer)
     
     If GLB_Administrador = True Then
         notificacaoEmail "Sessão encerrada"
-        Sql = "EXEc SP_Alerta_Modificacao_MovimentoCaixa ''"
-        rdoCNRetaguarda.Execute (Sql)
+        sql = "EXEc SP_Alerta_Modificacao_MovimentoCaixa ''"
+        rdoCNRetaguarda.Execute (sql)
     End If
     End
     
@@ -1386,17 +1385,17 @@ If rdoCNRetaguarda = "" Then
 ConectaODBCMatriz
 End If
 
-     Sql = "Select * from  Vendedor where  VE_CodigoVendedor like '4%' and ve_senha is not null and VE_Nome like 'VENDA%' AND VE_Loja='" & GLB_Loja & "'"
+     sql = "Select * from  Vendedor where  VE_CodigoVendedor like '4%' and ve_senha is not null and VE_Nome like 'VENDA%' AND VE_Loja='" & GLB_Loja & "'"
 
                             If rdoTrans.State <> 0 Then rdoTrans.Close
                             rdoTrans.CursorLocation = adUseClient
-                            rdoTrans.Open Sql, rdoCNRetaguarda, adOpenForwardOnly, adLockPessimistic
+                            rdoTrans.Open sql, rdoCNRetaguarda, adOpenForwardOnly, adLockPessimistic
             If Not rdoTrans.EOF Then
             Vendedor = rdoTrans("VE_CodigoVendedor")
             End If
                  rdoTrans.Close
-        Sql = "update nfcapa set  TIPONOTA='PA',VENDEDOR=" & Vendedor & " ,OUTROVEND=" & Vendedor & ",VendedorLojaVenda=" & Vendedor & ",vendedorGarantia=" & Vendedor & " where NUMEROPED= " & txtPedido.text
-        rdoCNLoja.Execute Sql
+        sql = "update nfcapa set  TIPONOTA='PA',VENDEDOR=" & Vendedor & " ,OUTROVEND=" & Vendedor & ",VendedorLojaVenda=" & Vendedor & ",vendedorGarantia=" & Vendedor & " where NUMEROPED= " & txtPedido.text
+        rdoCNLoja.Execute sql
         txtPedido.text = ""
         frmTrans.Visible = False
 End If
@@ -1431,7 +1430,7 @@ End If
           wVerificaNotaManual = False
           wVerificaNotaFiscal = False
           If txtPedido.text = "0" Then
-            If tipoCupomEmite = "CE" Then
+            If tipoCupomEmite Like "CE*" Then
               frmCaixaSATDireto.Show vbModal
               Exit Sub
             ElseIf tipoCupomEmite = "CF" Then
@@ -1492,13 +1491,13 @@ End If
             Exit Sub
          End If
 
-        Sql = ""
+        sql = ""
         'sql = "Select cliente from nfcapa where tiponota = 'PA' and numeroped = " & txtPedido.Text
-        Sql = "Select tiponota,Cliente,totalnota,serie,numeroped from nfcapa where tiponota in ('PA','TA','T0') and numeroped = " & txtPedido.text
+        sql = "Select tiponota,Cliente,totalnota,serie,numeroped from nfcapa where tiponota in ('PA','TA','T0') and numeroped = " & txtPedido.text
 
         If rdoParametro.State <> 0 Then rdoParametro.Close
         rdoParametro.CursorLocation = adUseClient
-        rdoParametro.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        rdoParametro.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
         
         If Not rdoParametro.EOF Then
         
@@ -1511,7 +1510,7 @@ End If
                      frmCaixaNotaManual.Show vbModal
                  
                  ElseIf rdoParametro("Cliente") = "999999" And wVerificaNotaFiscal = False Then
-                    If tipoCupomEmite = "CE" Then
+                    If tipoCupomEmite Like "CE*" Then
                         frmCaixaSAT.Show vbModal
                     ElseIf tipoCupomEmite = "CF" Then
                         frmCaixaTEFPedido.Show vbModal
@@ -1532,11 +1531,11 @@ End If
             Else
                         If frmTrans.Visible = False Then
             
-                            Sql = "select LO_Numero,LO_Endereco,TipoTransporte from  nfcapa,loja where lojat=lo_loja and NUMEROPED= " & txtPedido.text
+                            sql = "select LO_Numero,LO_Endereco,TipoTransporte from  nfcapa,loja where lojat=lo_loja and NUMEROPED= " & txtPedido.text
 
                             If rdoTrans.State <> 0 Then rdoTrans.Close
                             rdoTrans.CursorLocation = adUseClient
-                            rdoTrans.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+                            rdoTrans.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
         
                             frmTrans.Visible = True
                             lblRetiradoPor.Caption = Mid$(rdoTrans("TipoTransporte"), 1, (InStr(rdoTrans("TipoTransporte"), "/") - 1))
@@ -1592,12 +1591,12 @@ End Sub
 
 Function CriaMovimentoCaixa(ByVal Nf As Double, ByVal Serie As String, ByVal TotalNota As Double, ByVal loja As String, ByVal Grupo As Double, ByVal NroProtocolo As Double, ByVal nroCaixa As Integer, ByVal NroPedido As Double, ByVal tiponota As String)
     
-    Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
+    sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
         & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo, MC_NroCaixa, MC_DataProcesso, MC_Pedido,MC_TipoNota) values(" & GLB_ECF & ",'0','" & Trim(loja) & "', " _
         & " '" & Format(Date, "yyyy/mm/dd") & "'," & Grupo & ", " & Nf & ",'" & Serie & "', " _
         & "" & ConverteVirgula(Format(TotalNota, "##,###0.00")) & ", " _
         & "0,0,0,0,0,9,'A'," & NroProtocolo & "," & nroCaixa & ",'" & Format(Date, "yyyy/mm/dd") & "'," & NroPedido & ",'" & tiponota & "')"
-        rdoCNLoja.Execute (Sql)
+        rdoCNLoja.Execute (sql)
 
 End Function
 
@@ -1648,12 +1647,12 @@ Private Function notaTrans()
                                     
                                     
                                     '**************** CRIA MOVIMENTO CAIXA
-                                    Sql = ""
-                                    Sql = "Select TotalNota, Protocolo, NroCaixa From NFCapa Where TipoNota = '" & Trim(wTipoNota) & _
+                                    sql = ""
+                                    sql = "Select TotalNota, Protocolo, NroCaixa From NFCapa Where TipoNota = '" & Trim(wTipoNota) & _
                                           "' and Serie = '" & "00" & "' and " & _
                                           "NF = " & wSequencia & " and NumeroPed = " & wSequencia
                                     
-                                    rdocontrole.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+                                    rdocontrole.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                                     
                                     If rdocontrole.EOF = False Then
                                         wTotalNota = rdocontrole("TotalNota")
@@ -1671,10 +1670,10 @@ Private Function notaTrans()
                                     wSequencia = txtPedido.text
                                     ImprimeTransferencia00 wSequencia
                                     ImprimeTransferencia00 wSequencia
-                                    Sql = "exec sp_totaliza_capa_nota_fiscal_Loja " & txtPedido.text
-                                    rdoCNLoja.Execute Sql
-                                    Sql = "Select TotalNota, tiponota,serie From NFCapa Where NumeroPed = " & txtPedido.text
-                                    rdocontrole.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+                                    sql = "exec sp_totaliza_capa_nota_fiscal_Loja " & txtPedido.text
+                                    rdoCNLoja.Execute sql
+                                    sql = "Select TotalNota, tiponota,serie From NFCapa Where NumeroPed = " & txtPedido.text
+                                    rdocontrole.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                                     
                                     If rdocontrole.EOF = False Then
                                         CriaMovimentoCaixa NroNotaFiscal, rdocontrole("serie"), rdocontrole("TotalNota"), GLB_Loja, "20109", Trim(lblProtocolo.Caption), Trim(lblNroCaixa.Caption), Trim(txtPedido.text), Trim(rdocontrole("tiponota"))
@@ -1707,11 +1706,11 @@ Private Function notaTrans()
                                                '''''rdoCNLoja.Execute sql
                             
                                               '**************** CRIA MOVIMENTO CAIXA
-                                              Sql = "exec sp_totaliza_capa_nota_fiscal_Loja " & txtPedido.text
-                                              rdoCNLoja.Execute Sql
+                                              sql = "exec sp_totaliza_capa_nota_fiscal_Loja " & txtPedido.text
+                                              rdoCNLoja.Execute sql
                                               
-                                              Sql = "Select TotalNota, tiponota From NFCapa Where NumeroPed = " & txtPedido.text
-                                              rdocontrole.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+                                              sql = "Select TotalNota, tiponota From NFCapa Where NumeroPed = " & txtPedido.text
+                                              rdocontrole.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                             
                                             If rdocontrole.EOF = False Then
                                                CriaMovimentoCaixa NroNotaFiscal, PegaSerieNota, rdocontrole("TotalNota"), GLB_Loja, "20109", Trim(lblProtocolo.Caption), Trim(lblNroCaixa.Caption), Trim(txtPedido.text), Trim(rdocontrole("tiponota"))
