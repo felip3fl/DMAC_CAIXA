@@ -4,8 +4,8 @@ Begin VB.Form frmFormaPagamento
    BorderStyle     =   0  'None
    Caption         =   "Forma de Pagamento"
    ClientHeight    =   8640
-   ClientLeft      =   3975
-   ClientTop       =   1485
+   ClientLeft      =   2835
+   ClientTop       =   1590
    ClientWidth     =   13425
    BeginProperty Font 
       Name            =   "Arial Black"
@@ -592,7 +592,7 @@ Begin VB.Form frmFormaPagamento
             EndProperty
             Height          =   750
             Left            =   0
-            Picture         =   "frmFormaPagamento.frx":12291
+            Picture         =   "frmFormaPagamento.frx":12B53
             Style           =   1  'Graphical
             TabIndex        =   0
             Top             =   45
@@ -611,7 +611,7 @@ Begin VB.Form frmFormaPagamento
             EndProperty
             Height          =   750
             Left            =   1185
-            Picture         =   "frmFormaPagamento.frx":151B3
+            Picture         =   "frmFormaPagamento.frx":15A75
             Style           =   1  'Graphical
             TabIndex        =   1
             Top             =   45
@@ -630,7 +630,7 @@ Begin VB.Form frmFormaPagamento
             EndProperty
             Height          =   750
             Left            =   3555
-            Picture         =   "frmFormaPagamento.frx":17CB5
+            Picture         =   "frmFormaPagamento.frx":18577
             Style           =   1  'Graphical
             TabIndex        =   3
             Top             =   45
@@ -649,7 +649,7 @@ Begin VB.Form frmFormaPagamento
             EndProperty
             Height          =   750
             Left            =   2370
-            Picture         =   "frmFormaPagamento.frx":1A637
+            Picture         =   "frmFormaPagamento.frx":1AEF9
             Style           =   1  'Graphical
             TabIndex        =   4
             Top             =   45
@@ -683,7 +683,7 @@ Begin VB.Form frmFormaPagamento
             FCOLO           =   16777215
             MCOL            =   5263440
             MPTR            =   1
-            MICON           =   "frmFormaPagamento.frx":1D2B9
+            MICON           =   "frmFormaPagamento.frx":1DB7B
             UMCOL           =   -1  'True
             SOFT            =   0   'False
             PICPOS          =   0
@@ -696,7 +696,7 @@ Begin VB.Form frmFormaPagamento
          Begin VB.CommandButton chbRede 
             Appearance      =   0  'Flat
             BackColor       =   &H00FFC0C0&
-            DownPicture     =   "frmFormaPagamento.frx":1D2D5
+            DownPicture     =   "frmFormaPagamento.frx":1DB97
             BeginProperty Font 
                Name            =   "MS Sans Serif"
                Size            =   8.25
@@ -708,7 +708,7 @@ Begin VB.Form frmFormaPagamento
             EndProperty
             Height          =   750
             Left            =   0
-            Picture         =   "frmFormaPagamento.frx":1E0CF
+            Picture         =   "frmFormaPagamento.frx":1E991
             Style           =   1  'Graphical
             TabIndex        =   54
             Top             =   825
@@ -744,9 +744,9 @@ Begin VB.Form frmFormaPagamento
          FCOLO           =   0
          MCOL            =   12632256
          MPTR            =   1
-         MICON           =   "frmFormaPagamento.frx":1F40A
-         PICN            =   "frmFormaPagamento.frx":1F426
-         PICH            =   "frmFormaPagamento.frx":2083E
+         MICON           =   "frmFormaPagamento.frx":20753
+         PICN            =   "frmFormaPagamento.frx":2076F
+         PICH            =   "frmFormaPagamento.frx":21B87
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -784,7 +784,7 @@ Begin VB.Form frmFormaPagamento
          FCOLO           =   4210752
          MCOL            =   12632256
          MPTR            =   1
-         MICON           =   "frmFormaPagamento.frx":22C70
+         MICON           =   "frmFormaPagamento.frx":23FB9
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -822,7 +822,7 @@ Begin VB.Form frmFormaPagamento
          FCOLO           =   4210752
          MCOL            =   12632256
          MPTR            =   1
-         MICON           =   "frmFormaPagamento.frx":22C8C
+         MICON           =   "frmFormaPagamento.frx":23FD5
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -860,7 +860,7 @@ Begin VB.Form frmFormaPagamento
          FCOLO           =   4210752
          MCOL            =   12632256
          MPTR            =   1
-         MICON           =   "frmFormaPagamento.frx":22CA8
+         MICON           =   "frmFormaPagamento.frx":23FF1
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -898,7 +898,7 @@ Begin VB.Form frmFormaPagamento
          FCOLO           =   0
          MCOL            =   12632256
          MPTR            =   1
-         MICON           =   "frmFormaPagamento.frx":22CC4
+         MICON           =   "frmFormaPagamento.frx":2400D
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -936,7 +936,7 @@ Begin VB.Form frmFormaPagamento
          FCOLO           =   4210752
          MCOL            =   12632256
          MPTR            =   1
-         MICON           =   "frmFormaPagamento.frx":22CE0
+         MICON           =   "frmFormaPagamento.frx":24029
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -1761,6 +1761,7 @@ End Sub
 Private Sub chbRede_Click()
     frameCartoes.Visible = True
     Agencia = "012"
+    EfetuaPagamento
 End Sub
 
 Private Sub chbSaiPagamento_Click()
@@ -3513,6 +3514,89 @@ frmFormaPagamento.txtValorModalidade.text = ""
  wTEFRedeShop = ""
  wTEFHiperCard = ""
  WCodigoModalidadeVISA = ""
+End Sub
+
+Public Sub EfetuaPagamento()
+
+  Dim Retorno        As Long
+  Dim Buffer         As String * 20000
+  Dim ProximoComando As Long
+  Dim TipoCampo      As Long
+  Dim TamanhoMinimo  As Integer
+  Dim TamanhoMaximo  As Integer
+  Dim ContinuaNavegacao  As Long
+  Dim VARIAVEL As String
+
+  Screen.MousePointer = vbHourglass
+  Retorno = IniciaFuncaoSiTefInterativo(3, "0,10" & Chr(0), "12345" & Chr(0), "20011022" & Chr(0), "091800" & Chr(0), "Rubens" & Chr(0), Chr(0))
+  Screen.MousePointer = vbDefault
+
+  ProximoComando = 0
+  TipoCampo = 0
+  TamanhoMinimo = 0
+  TamanhoMaximo = 0
+  ContinuaNavegacao = 0
+  Resultado = 0
+  Buffer = String(20000, 0)
+
+    lblParcelas.Caption = ""
+
+  Do
+
+    Screen.MousePointer = vbHourglass
+    
+    Retorno = ContinuaFuncaoSiTefInterativo(ProximoComando, TipoCampo, TamanhoMinimo, TamanhoMaximo, Buffer, Len(Buffer), Resultado)
+    Screen.MousePointer = vbDefault
+
+    If (Retorno = 10000) Then
+
+      If lblParcelas.Caption <> Buffer Then
+        lblParcelas.Caption = Buffer
+      End If
+     
+      'lblParcelas.Caption = Buffer
+
+      VARIAVEL = VARIAVEL & ProximoComando & " - " & Buffer & vbNewLine
+
+      Select Case ProximoComando
+        Case 0
+
+        Case 1
+        
+        Case 21
+            'Retorno = IniciaFuncaoSiTefInterativo(3, 10, 10, "20180216", "101010", "ACASD", "")
+            'Retorno = ContinuaFuncaoSiTefInterativo(ProximoComando, TipoCampo, TamanhoMinimo, TamanhoMaximo, Buffer, Len(Buffer), Resultado)
+
+      End Select
+
+    End If
+
+  Loop Until Not (Retorno = 10000)
+
+  If (Retorno = 0) Then
+    MsgBox "Retorno Ok!"
+  Else
+    'Retorno = IniciaFuncaoSiTefInterativo(3, 10, 10, "20180216", "101010", "ACASD", "")
+    'Retorno = ContinuaFuncaoSiTefInterativo(ProximoComando, TipoCampo, TamanhoMinimo, TamanhoMaximo, Buffer, Len(Buffer), Resultado)
+    'FrmSiTef.TxtDisplay.Text = FrmSiTef.TxtDisplay.Text & Buffer
+
+    MsgBox "Erro: Retorno -> " & CStr(Retorno)
+  End If
+
+     FinalizaTransacaoSiTefInterativo 1, "12345", "20011022", "091800"
+    criarLOG (VARIAVEL)
+
+End Sub
+
+
+Private Sub criarLOG(VARIAVEL As String)
+
+    Open "C:\Users\felipelima\Desktop\LOG.txt" For Output As #1
+            
+        Print #1, VARIAVEL
+    
+    Close #1
+
 End Sub
 
 

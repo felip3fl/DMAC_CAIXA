@@ -3,8 +3,8 @@ Begin VB.Form frmControlaCaixa
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    ClientHeight    =   10440
-   ClientLeft      =   885
-   ClientTop       =   1635
+   ClientLeft      =   3030
+   ClientTop       =   225
    ClientWidth     =   15300
    Icon            =   "frmControlaCaixa.frx":0000
    LinkTopic       =   "Form1"
@@ -285,11 +285,11 @@ Begin VB.Form frmControlaCaixa
    End
    Begin Balcao2010.chameleonButton cmdNroCaixa 
       Height          =   450
-      Left            =   1845
+      Left            =   1785
       TabIndex        =   12
       Top             =   2085
-      Width           =   1245
-      _ExtentX        =   2196
+      Width           =   2400
+      _ExtentX        =   4233
       _ExtentY        =   794
       BTYPE           =   11
       TX              =   "NroCaixa"
@@ -889,6 +889,44 @@ Begin VB.Form frmControlaCaixa
       CHECK           =   0   'False
       VALUE           =   0   'False
    End
+   Begin Balcao2010.chameleonButton lblMensagensTEF 
+      Height          =   870
+      Left            =   2490
+      TabIndex        =   35
+      Top             =   9405
+      Width           =   10365
+      _ExtentX        =   18283
+      _ExtentY        =   1535
+      BTYPE           =   11
+      TX              =   "TEXTO TEXTO TEXTO TEXTO TEXTO TEXTO TEXTO TEXTO TEXTO TEXTO TEXTO TEXTO TEXTO TEXTO TEXTO TEXTO TEXTO TEXTO "
+      ENAB            =   -1  'True
+      BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+         Name            =   "Arial Narrow"
+         Size            =   12
+         Charset         =   0
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      COLTYPE         =   2
+      FOCUSR          =   -1  'True
+      BCOL            =   0
+      BCOLO           =   0
+      FCOL            =   12632256
+      FCOLO           =   12632256
+      MCOL            =   12632256
+      MPTR            =   1
+      MICON           =   "frmControlaCaixa.frx":11E5E
+      UMCOL           =   -1  'True
+      SOFT            =   0   'False
+      PICPOS          =   4
+      NGREY           =   0   'False
+      FX              =   0
+      HAND            =   0   'False
+      CHECK           =   0   'False
+      VALUE           =   0   'False
+   End
    Begin VB.Label cmdTotalPedidoGE 
       Alignment       =   1  'Right Justify
       BackColor       =   &H00FFFFFF&
@@ -1250,6 +1288,8 @@ End Sub
 Private Sub Form_Activate()
     'txtPedido.Visible = False
     'webAviso.Navigate "https://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx?versao=0.00&tipoConteudo=Skeuqr8PQBY="
+    
+    
     Dim statusContingencia As Byte
 
     
@@ -1283,6 +1323,8 @@ Private Sub Form_GotFocus()
 End Sub
 
 Private Sub Form_Load()
+            
+    
         
 'Call criaIconeBarra(TrayAdd, Me.Hwnd, "DMAC Caixa", imgIconBandeja.Picture)
         
@@ -1311,7 +1353,8 @@ If rdoParametro.EOF Then
 End If
 
 lblNroCaixa.Caption = GLB_Caixa
-cmdNroCaixa.Caption = "Caixa  " & GLB_Caixa
+cmdNroCaixa.Caption = "Caixa " & GLB_Caixa
+If GLB_TefHabilidado Then cmdNroCaixa.Caption = cmdNroCaixa.Caption & " (TEF)"
 lblloja.Caption = rdoParametro("PAR_Loja")
 cmdLoja.Caption = "Loja " & rdoParametro("PAR_Loja")
 lblOperador.Caption = Trim(GLB_USU_Nome)
@@ -1332,9 +1375,9 @@ rdoParametro.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     GLB_SerieCF = rdoParametro("Serie")
 rdoParametro.Close
 
-abilitaFuncoesCF
+    abilitaFuncoesCF
 
-
+    conectarTEF
 
 'txtPedido.SetFocus
 End Sub
@@ -1408,6 +1451,9 @@ Dim letra As Integer
     KeyAscii = campoCaixa(KeyAscii)
 
 If KeyAscii = 27 Then
+
+
+
     If txtPedido.text = "" Then
        'Call criaIconeBarra(TrayDelete, Me.Hwnd, "DMAC Caixa", imgIconBandeja.Picture)
        Call AlterarResolucao(resolucaoOriginal.Colunas, resolucaoOriginal.Linhas)
@@ -1423,7 +1469,7 @@ End If
    
    If KeyAscii = vbKeyReturn Then
         
-        
+        lblMensagensTEF.Caption = ""
         
         If wPermitirVenda = True Then
           txtPedido.text = UCase(txtPedido.text)
@@ -1742,4 +1788,39 @@ Private Function notaTrans()
 End Function
 
 
+
+Private Sub conectarTEF()
+  Dim Retorno As Long
+  Dim Ip As String
+        
+  On Error GoTo TrataErro
+  
+  If Not GLB_TefHabilidado Then
+    lblMensagensTEF.Caption = ""
+    Exit Sub
+  End If
+  
+  Ip = "127.0.0.1"
+        
+  Screen.MousePointer = vbHourglass
+    
+  Retorno = ConfiguraIntSiTefInterativo(Ip & Chr(0), "00000000" & Chr(0), "SE000001" & Chr(0), 0)
+  Screen.MousePointer = vbDefault
+
+  If (Retorno = 0) Then
+    lblMensagensTEF.Caption = "Conexão com o TEF realizada com sucesso"
+  Else
+    lblMensagensTEF.Caption = "TEF Erro: Retorno -> " & CStr(Retorno)
+  End If
+  
+TrataErro:
+    Screen.MousePointer = vbDefault
+    If Err.Number <> 0 Then
+        lblMensagensTEF.Caption = "Erro no TEF " & Err.Number & vbNewLine & Err.Description
+        cmdNroCaixa.ForeOver = vbRed
+        cmdNroCaixa.ForeColor = vbRed
+        cmdNroCaixa.Caption = Replace(cmdNroCaixa.Caption, "(TEF)", "(Erro no TEF)")
+    End If
+  
+End Sub
 

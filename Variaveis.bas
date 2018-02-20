@@ -448,3 +448,4 @@ Global ReImpressao_Dev As Boolean
 
 'Global GLB_EnderecoPortal As String
 
+Global GLB_TefHabilidado As Boolean

@@ -1451,7 +1451,7 @@ End Function
 Public Function DadosLoja()
 
     'SQL = ""
-    Sql = "Select CTS_Loja,CTS_SenhaLiberacao,CTS_LogoPedido,CTS_QtdeViaNE as QtdeViaNE,Loja.* from loja,Controlesistema " & _
+    Sql = "Select CTS_Loja,CTS_SenhaLiberacao,CTS_LogoPedido,CTS_QtdeViaNE as QtdeViaNE,cts_tef,Loja.* from loja,Controlesistema " & _
           "where lo_loja=CTS_Loja"
 
     rsNFELoja.CursorLocation = adUseClient
@@ -1476,6 +1476,8 @@ Public Function DadosLoja()
        wNovaRazao = IIf(IsNull(rsNFELoja("lo_Razao")), "0", rsNFELoja("lo_Razao"))
        GLB_Logo = RTrim(rsNFELoja("CTS_LogoPedido"))
        WQtdeCopiaNE = RTrim(rsNFELoja("QtdeViaNE"))
+       
+       If RTrim(rsNFELoja("cts_tef")) = "S" Then GLB_TefHabilidado = True
        'wMensagemECF = rsNFELoja("CTS_MensagemECF")
     End If
     

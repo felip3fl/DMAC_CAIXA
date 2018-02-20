@@ -1,5 +1,5 @@
 VERSION 5.00
-Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "vsflex7u.ocx"
+Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "Vsflex7u.ocx"
 Begin VB.Form frmCaixaNF 
    BackColor       =   &H80000007&
    BorderStyle     =   0  'None
@@ -341,7 +341,7 @@ Attribute VB_Exposed = False
 
 Option Explicit
 Dim wQuantidade As Integer
-Dim sql As String
+Dim Sql As String
 Dim wValorVenda As Double
 Dim SomaTotalVenda As Double
 Dim PrecoVenda As Double
@@ -421,10 +421,10 @@ If RsDados.State = 1 Then
 End If
 
  
-sql = "Select * from ParametroCaixa where PAR_NroCaixa = " & GLB_Caixa
+Sql = "Select * from ParametroCaixa where PAR_NroCaixa = " & GLB_Caixa
 
  RsDados.CursorLocation = adUseClient
- RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+ RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
 If RsDados.EOF Then
    RsDados.Close
@@ -440,11 +440,11 @@ wlblloja = Trim(RsDados("PAR_Loja"))
 
 RsDados.Close
 
-sql = "Select ControleCaixa.*,USU_Codigo,USU_Nome from ControleCaixa,UsuarioCaixa" _
+Sql = "Select ControleCaixa.*,USU_Codigo,USU_Nome from ControleCaixa,UsuarioCaixa" _
             & " Where CTR_Operador = USU_Codigo and CTR_SituacaoCaixa='A' AND CTR_Supervisor <> '99' and CTR_NumeroCaixa = " & GLB_Caixa
           
              RsDados.CursorLocation = adUseClient
-             RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+             RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
             
             If RsDados.EOF = False Then
                GLB_USU_Nome = RsDados("USU_Nome")
@@ -529,9 +529,9 @@ Private Sub txtCGC_CPF_KeyPress(KeyAscii As Integer)
            End If
         End If
         
-        sql = "Update nfcapa set cpfnfp =  " & txtCGC_CPF & " where NumeroPed = " _
+        Sql = "Update nfcapa set cpfnfp =  " & txtCGC_CPF & " where NumeroPed = " _
               & txtPedido.text & " and tiponota = 'PA'"
-        rdoCNLoja.Execute sql
+        rdoCNLoja.Execute Sql
         
       End If
       txtPedido.Enabled = True
@@ -557,12 +557,12 @@ If KeyCode = vbKeyF2 Then
        Exit Sub
     End If
 
-     sql = "Select * From Nfitens " _
+     Sql = "Select * From Nfitens " _
              & "Where numeroped  = " & txtPedido.text & "" _
              & " order by Item"
 
              RsDados.CursorLocation = adUseClient
-             RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+             RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
              If RsDados.EOF = False Then
                  wNotaFiscalReemissao = RsDados("NF")
@@ -638,21 +638,21 @@ Private Sub CarregaGrid()
         grdItens.Visible = True
         
         
-        sql = "Select NFItens.*,PR_Descricao " _
+        Sql = "Select NFItens.*,PR_Descricao " _
              & "From NFItens,Produtoloja " _
              & "Where Referencia = pr_Referencia and NumeroPed = " _
              & txtPedido.text & " and tiponota = 'PA' order by Item"
                
                RsDados.CursorLocation = adUseClient
-               RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+               RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
             
         pedido = txtPedido
             
-        sql = "Select * From Nfcapa Where NumeroPed = " _
+        Sql = "Select * From Nfcapa Where NumeroPed = " _
              & txtPedido.text & " and tiponota = 'PA' "
                
                 RsDadosCapa.CursorLocation = adUseClient
-                RsDadosCapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+                RsDadosCapa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
              
              
              If Not RsDadosCapa.EOF Then
@@ -730,12 +730,12 @@ Private Sub carregaCliente(Codigo As String, NomeVendedor As String, CodigoVende
     Dim rsCliente As New ADODB.Recordset
     Dim Cliente As String
     
-    sql = "Select ce_razao " & vbNewLine & _
+    Sql = "Select ce_razao " & vbNewLine & _
     "from fin_cliente " & vbNewLine & _
     "where ce_codigocliente = '" & Codigo & "'"
                    
     rsCliente.CursorLocation = adUseClient
-    rsCliente.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsCliente.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                    
     If Not rsCliente.EOF Then
         Cliente = rsCliente("ce_razao")
@@ -756,11 +756,11 @@ End Sub
 Private Sub ClienteConsumidor()
         
         
-        sql = "Select top 1 cliente,ve_nome as nomeVendedor,ve_codigo as condigoVendedor from nfcapa,vende where NumeroPed = " _
+        Sql = "Select top 1 cliente,ve_nome as nomeVendedor,ve_codigo as condigoVendedor from nfcapa,vende where NumeroPed = " _
              & txtPedido.text & " and tiponota = 'PA' and vendedor = ve_codigo"
                
                RsDadosCapa.CursorLocation = adUseClient
-               RsDadosCapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+               RsDadosCapa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                
                If Not RsDadosCapa.EOF Then
                    If RsDadosCapa("cliente") = "999999" Then
