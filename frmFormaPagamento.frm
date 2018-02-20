@@ -3974,7 +3974,7 @@ If tef_servico = "iniciar" Then
 ElseIf tef_servico = "executar" Then
     tef_retorno = getMenssagem(resp, "retorno=", 9)
     If tef_retorno <= 1 Then
-   ' MsgBox resp
+    'MsgBox resp
             If InStr(resp, "_sequencial=") >= 1 Then
                     tef_menssagem = getMenssagem(resp, "mensagem", 10)
                     lblDiplay.Caption = tef_menssagem
@@ -4034,7 +4034,7 @@ Dim informacao As String
 tef_servico = "executar"
         retornoLocal = "0"
         sequencialLocal = sequecial
-        
+        'MsgBox tef_menssagem
         
         If tef_menssagem = "Valor" Or tef_menssagem = "Valor da Transacao" Then
         
@@ -4056,6 +4056,8 @@ tef_servico = "executar"
         ElseIf tef_menssagem = "Parcelas" Then
            informacao = tef_Parcelas
         ElseIf tef_menssagem = "Taxa de Embarque" Then
+           informacao = 0
+        ElseIf tef_menssagem = "Valor do Saque" Then
            informacao = 0
         ElseIf tef_menssagem = "Usuario de acesso" Then
            informacao = tef_usuario
@@ -4081,7 +4083,7 @@ tef_servico = "executar"
         End If
         tef_dados = "automacao_coleta_retorno=""" + retornoLocal + """" + vbCrLf
         tef_dados = tef_dados + "automacao_coleta_sequencial=""" + sequencialLocal + """" + vbCrLf
-
+   ' MsgBox informacao
     If informacao <> "" Then
             tef_dados = tef_dados + "automacao_coleta_informacao=""" + informacao + """" + vbCrLf
             wskTef.SendData tef_dados
