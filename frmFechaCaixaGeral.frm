@@ -625,7 +625,7 @@ Private Sub Form_Load()
     'Dim rdoDataFechamentoRetaguarda As New ADODB.Recordset
     'Dim rdoDataFechamentoRetaguarda As New ADODB.Recordset
     
-    defineImpressora
+    'defineImpressora
   left = 100
   top = 2900
   Call AjustaTela(frmFechaCaixaGeral)

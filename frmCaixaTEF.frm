@@ -627,6 +627,10 @@ Private Sub Frame2_DragDrop(Source As Control, X As Single, Y As Single)
 
 End Sub
 
+Private Sub Form_Unload(Cancel As Integer)
+    exibirMensagemPadraoTEF
+End Sub
+
 Private Sub grdItens_KeyPress(KeyAscii As Integer)
    
     If KeyAscii = 27 Then
@@ -1005,13 +1009,13 @@ Sub PegaNumeroPedido()
 Screen.MousePointer = vbNormal
 End Sub
 
-Function CriaCapaPedido(ByVal NumeroPedido As Double)
+Function CriaCapaPedido(ByVal numeroPedido As Double)
  
     wLoja = PegaLojaControle
       
       Sql = ""
       Sql = "Select count(referencia) as NumeroItem from NfItens " _
-          & "where NumeroPed=" & NumeroPedido & ""
+          & "where NumeroPed=" & numeroPedido & ""
           
           rdoContaItens.CursorLocation = adUseClient
           rdoContaItens.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
@@ -1033,7 +1037,7 @@ Function CriaCapaPedido(ByVal NumeroPedido As Double)
         & "LOJAORIGEM, TIPONOTA, Vendedor, DATAPED, HORA, " _
         & " VendedorLojaVenda, LojaVenda,TM,CodOper,ECF,nf,Condpag,CPFNFP, qtditem,situacaoprocesso,outraloja, dataprocesso, " _
         & "OUTROVEND,MODALIDADEVENDA,TIPOFRETE, FRETECOBR,CLIENTE) " _
-        & "Values (" & NumeroPedido & ",'" & GLB_SerieCF & "' , '" & Format(Date, "yyyy/mm/dd") & "', " _
+        & "Values (" & numeroPedido & ",'" & GLB_SerieCF & "' , '" & Format(Date, "yyyy/mm/dd") & "', " _
         & "'" & wLoja & "','PA',725, " _
         & "'" & Format(Date, "yyyy/mm/dd") & "', '" & Format(Time, "hh:mm:ss") & "', " _
         & "725, '" & wLoja & "',0,5012," & GLB_ECF & "," & wNumeroCupom & ",01,'" & txtCGC_CPF.text & "'," _
@@ -1045,7 +1049,7 @@ Function CriaCapaPedido(ByVal NumeroPedido As Double)
      
 End Function
 
-Function GravaItensPedido(ByVal NumeroPedido As Double, ByVal TipoMovimentacao As Double, ByVal Vendedor As Integer)
+Function GravaItensPedido(ByVal numeroPedido As Double, ByVal TipoMovimentacao As Double, ByVal Vendedor As Integer)
 
     wLoja = PegaLojaControle
           

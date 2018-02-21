@@ -3,15 +3,15 @@ Begin VB.Form frmControlaCaixa
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    ClientHeight    =   10440
-   ClientLeft      =   3030
-   ClientTop       =   225
-   ClientWidth     =   15300
+   ClientLeft      =   1770
+   ClientTop       =   90
+   ClientWidth     =   15630
    Icon            =   "frmControlaCaixa.frx":0000
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
    Picture         =   "frmControlaCaixa.frx":23FA
    ScaleHeight     =   10440
-   ScaleWidth      =   15300
+   ScaleWidth      =   15630
    ShowInTaskbar   =   0   'False
    WindowState     =   2  'Maximized
    Begin VB.Frame frmTrans 
@@ -1323,8 +1323,8 @@ Private Sub Form_GotFocus()
 End Sub
 
 Private Sub Form_Load()
-            
-    
+        
+    defineImpressora
         
 'Call criaIconeBarra(TrayAdd, Me.Hwnd, "DMAC Caixa", imgIconBandeja.Picture)
         
@@ -1402,6 +1402,9 @@ Private Sub Form_Unload(Cancel As Integer)
         Sql = "EXEc SP_Alerta_Modificacao_MovimentoCaixa ''"
         rdoCNRetaguarda.Execute (Sql)
     End If
+    
+        exibirMensagemTEF ""
+    
     End
     
 End Sub
@@ -1476,6 +1479,7 @@ End If
           wVerificaRomaneio = False
           wVerificaNotaManual = False
           wVerificaNotaFiscal = False
+          
           If txtPedido.text = "0" Then
             If tipoCupomEmite Like "CE*" Then
               frmCaixaSATDireto.Show vbModal
@@ -1711,7 +1715,7 @@ Private Function notaTrans()
                                     
                                 ElseIf Trim(rdoParametro("tiponota")) = "TA" And Trim(rdoParametro("serie")) = "CT" Then
                                 
-                                    defineImpressora
+                                    ''defineImpressora
                                 
                                     NroNotaFiscal = ExtraiSeq00Controle
                                     wSequencia = txtPedido.text
@@ -1813,6 +1817,8 @@ Private Sub conectarTEF()
     lblMensagensTEF.Caption = "TEF Erro: Retorno -> " & CStr(Retorno)
   End If
   
+  exibirMensagemPadraoTEF
+  
 TrataErro:
     Screen.MousePointer = vbDefault
     If Err.Number <> 0 Then
@@ -1823,4 +1829,5 @@ TrataErro:
     End If
   
 End Sub
+
 

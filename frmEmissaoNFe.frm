@@ -5,8 +5,8 @@ Begin VB.Form frmEmissaoNFe
    BorderStyle     =   0  'None
    Caption         =   "Emissão NFe"
    ClientHeight    =   9240
-   ClientLeft      =   780
-   ClientTop       =   930
+   ClientLeft      =   900
+   ClientTop       =   1095
    ClientWidth     =   19035
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
@@ -948,9 +948,9 @@ Public Sub cmdTransmitir_Click()
         
     ElseIf Nf.eSerie Like "CE*" Then
 
-        
         finalizaProcesso "Emitindo Cupom Fiscal Eletrônico", True
         criaTXTSAT "sat", Nf
+        
         
     End If
 
@@ -968,9 +968,9 @@ Private Sub cmdImprimir_Click()
 End Sub
 
 
-Private Sub finalizaProcesso(Mensagem As String, esperaResposta As Boolean)
+Private Sub finalizaProcesso(mensagem As String, esperaResposta As Boolean)
             
-    mensagemStatus = Mensagem
+    mensagemStatus = mensagem
     frameDadosNotaFiscal.Visible = False
     frmAdministrador.Visible = False
     frameNFE.Visible = False
@@ -1119,21 +1119,21 @@ Private Sub Form_Activate()
     
 End Sub
 
-Public Sub statusFuncionamento(Mensagem As String)
+Public Sub statusFuncionamento(mensagem As String)
     
    ' mensagem = "Imprimindo Garantia Estendida" & " "
-    If lblStatusImpressao.Caption = Mensagem & " " & "  . . . ." Then
-        lblStatusImpressao.Caption = Mensagem & " " & ".   . . ."
-    ElseIf lblStatusImpressao.Caption = Mensagem & " " & ".   . . ." Then
-        lblStatusImpressao.Caption = Mensagem & " " & ". .   . ."
-    ElseIf lblStatusImpressao.Caption = Mensagem & " " & ". .   . ." Then
-        lblStatusImpressao.Caption = Mensagem & " " & ". . .   ."
-    ElseIf lblStatusImpressao.Caption = Mensagem & " " & ". . .   ." Then
-        lblStatusImpressao.Caption = Mensagem & " " & ". . . .  "
-    ElseIf lblStatusImpressao.Caption = Mensagem & " " & ". . . .  " Then
-        lblStatusImpressao.Caption = Mensagem & " " & "  . . . ."
+    If lblStatusImpressao.Caption = mensagem & " " & "  . . . ." Then
+        lblStatusImpressao.Caption = mensagem & " " & ".   . . ."
+    ElseIf lblStatusImpressao.Caption = mensagem & " " & ".   . . ." Then
+        lblStatusImpressao.Caption = mensagem & " " & ". .   . ."
+    ElseIf lblStatusImpressao.Caption = mensagem & " " & ". .   . ." Then
+        lblStatusImpressao.Caption = mensagem & " " & ". . .   ."
+    ElseIf lblStatusImpressao.Caption = mensagem & " " & ". . .   ." Then
+        lblStatusImpressao.Caption = mensagem & " " & ". . . .  "
+    ElseIf lblStatusImpressao.Caption = mensagem & " " & ". . . .  " Then
+        lblStatusImpressao.Caption = mensagem & " " & "  . . . ."
     Else
-        lblStatusImpressao.Caption = Mensagem & " " & "  . . . ."
+        lblStatusImpressao.Caption = mensagem & " " & "  . . . ."
     End If
     
 End Sub
@@ -1308,6 +1308,7 @@ Private Sub grdLogSig_KeyUp(KeyCode As Integer, Shift As Integer)
         abrirAqruivo = False
         grdLogSig.BackColorSel = &H343434
     End If
+    
 End Sub
 
 Private Function procuraArquivo(pedido As String, loja As String) As String
@@ -1356,7 +1357,7 @@ Private Sub abrirArquivoResposta(Nf As notaFiscal, tiponota As String)
     
     Dim informacaoArquivo As String
     Dim mensagemArquivoTXT As TextStream
-    Dim resultado As String
+    Dim Resultado As String
     Dim fso As New FileSystemObject
     
     If tiponota = "NOTA" Then
@@ -1449,8 +1450,9 @@ Private Sub timerSairSistema_Timer()
     Tempo = Tempo + 1
     statusFuncionamento mensagemStatus
     carregaArquivoUnico
-    If Tempo > 60 Then
+    If Tempo > 3 Then
         timerExibirMSG.Enabled = False
+        ImprimeComprovanteTEF ComprovantePagamento
         Unload Me
     End If
 End Sub
@@ -2248,14 +2250,14 @@ TrataErro:
     End Select
 End Function
 
-Private Sub atualizaNumeroNF(NumeroPedido, numeroNF)
+Private Sub atualizaNumeroNF(numeroPedido, numeroNF)
     Dim Sql As String
     
     If numeroNF <> "" Then
     
         Sql = "update nfCapa" & vbNewLine & _
               "set nf = '" & numeroNF & "'" & vbNewLine & _
-              "where numeroped = '" & NumeroPedido & "'" & vbNewLine & _
+              "where numeroped = '" & numeroPedido & "'" & vbNewLine & _
               "and serie like 'CE%'" & vbNewLine & _
               "and NF = '0' " & vbNewLine & _
               "and lojaOrigem in " & lojasWhere & "" & vbNewLine & vbNewLine
@@ -2264,7 +2266,7 @@ Private Sub atualizaNumeroNF(NumeroPedido, numeroNF)
         
         Sql = "update nfitens" & vbNewLine & _
               "set nf = '" & numeroNF & "'" & vbNewLine & _
-              "where numeroped = '" & NumeroPedido & "'" & vbNewLine & _
+              "where numeroped = '" & numeroPedido & "'" & vbNewLine & _
               "and serie like 'CE%'" & vbNewLine & _
               "and NF = '0' " & vbNewLine & _
               "and lojaOrigem in " & lojasWhere & "" & vbNewLine & vbNewLine
@@ -2273,7 +2275,7 @@ Private Sub atualizaNumeroNF(NumeroPedido, numeroNF)
         
         Sql = "update movimentocaixa" & vbNewLine & _
               "set mc_documento = '" & numeroNF & "'" & vbNewLine & _
-              "where mc_pedido = '" & NumeroPedido & "'" & vbNewLine & _
+              "where mc_pedido = '" & numeroPedido & "'" & vbNewLine & _
               "and MC_serie like 'CE%'" & vbNewLine & _
               "and MC_documento = '0' " & vbNewLine & _
               "and mc_loja in " & lojasWhere & "" & vbNewLine & vbNewLine
@@ -2282,7 +2284,7 @@ Private Sub atualizaNumeroNF(NumeroPedido, numeroNF)
         
         Sql = "update CarimboNotaFiscal" & vbNewLine & _
               "set CNF_nf = '" & numeroNF & "'" & vbNewLine & _
-              "where CNF_NumeroPed = '" & NumeroPedido & "'" & vbNewLine & _
+              "where CNF_NumeroPed = '" & numeroPedido & "'" & vbNewLine & _
               "and cnf_serie like 'CE%'" & vbNewLine & _
               "and CNF_nf = '0' " & vbNewLine & _
               "and CNF_loja in " & lojasWhere & "" & vbNewLine & vbNewLine
@@ -2293,12 +2295,12 @@ Private Sub atualizaNumeroNF(NumeroPedido, numeroNF)
     
 End Sub
 
-Private Sub atualizaCodigoNF(NumeroPedido, Codigo, lojaNF)
+Private Sub atualizaCodigoNF(numeroPedido, codigo, lojaNF)
     Dim Sql As String
     
     Sql = "update nfCapa" & vbNewLine & _
-          "set tm = '" & Codigo & "'" & vbNewLine & _
-          "where numeroped = '" & NumeroPedido & "'" & vbNewLine & _
+          "set tm = '" & codigo & "'" & vbNewLine & _
+          "where numeroped = '" & numeroPedido & "'" & vbNewLine & _
           "and lojaOrigem in " & lojasWhere & "" & vbNewLine & vbNewLine
 
     'Debug.Print sql
@@ -2308,14 +2310,14 @@ Private Sub atualizaCodigoNF(NumeroPedido, Codigo, lojaNF)
     
 End Sub
 
-Private Sub atualizaChaveNF(NumeroPedido, chaveNF, lojaNF)
+Private Sub atualizaChaveNF(numeroPedido, chaveNF, lojaNF)
     Dim Sql As String
     
     If chaveNF <> "" Then
     
         Sql = "update nfCapa" & vbNewLine & _
               "set ChaveNFe = '" & chaveNF & "'" & vbNewLine & _
-              "where numeroped = '" & NumeroPedido & "'" & vbNewLine & _
+              "where numeroped = '" & numeroPedido & "'" & vbNewLine & _
               "and ChaveNFe = ''" & vbNewLine & _
               "and lojaOrigem in " & lojasWhere & "" & vbNewLine & vbNewLine
     
@@ -2336,7 +2338,7 @@ Public Function carregaArquivoUnico()
     
     Dim informacaoArquivo As String
     Dim mensagemArquivoTXT As TextStream
-    Dim resultado As String
+    Dim Resultado As String
     Dim fso As New FileSystemObject
     
     
@@ -2359,7 +2361,7 @@ Public Function carregaArquivoUnico()
           deletaArquivo GLB_EnderecoPastaRESP & Arquivo
     Else
     
-        resultado = lerCampo(informacaoArquivo, "Resultado")
+        Resultado = lerCampo(informacaoArquivo, "Resultado")
         
         Nf.CNPJ = obterCNJPArquivo(Arquivo)
         Nf.loja = obterLoja(Nf.CNPJ)
@@ -2377,17 +2379,17 @@ Public Function carregaArquivoUnico()
             Nf.chave = lerCampo(informacaoArquivo, "ChaveNFe")
         End If
              
-        If resultado <> "4014" Then
+        If Resultado <> "4014" Then
             atualizaArquivoDestalhesNF Nf, Arquivo, informacaoArquivo
-            atualizaCodigoNF Nf.pedido, resultado, Nf.loja
+            atualizaCodigoNF Nf.pedido, Resultado, Nf.loja
             atualizaChaveNF Nf.pedido, Nf.chave, Nf.loja
 
         End If
                      
-        If resultado = 4014 Then
+        If Resultado = 4014 Then
              statusFuncionamento "Email enviado com sucesso"
              Esperar 4
-        ElseIf resultado = 100 Or resultado = 4012 Or resultado = 9016 Or resultado = 124 Or resultado = 4017 Then
+        ElseIf Resultado = 100 Or Resultado = 4012 Or Resultado = 9016 Or Resultado = 124 Or Resultado = 4017 Then
 
         
              statusFuncionamento "Nota emitida e autorizada com sucesso"
@@ -2404,18 +2406,18 @@ Public Function carregaArquivoUnico()
              
              Esperar 2
              
-        ElseIf resultado = 101 Or resultado = 9005 Or resultado = 4005 Then 'Para cancelamentos
+        ElseIf Resultado = 101 Or Resultado = 9005 Or Resultado = 4005 Then 'Para cancelamentos
              
              cancelaNotaResultado = True
              statusFuncionamento "Nota cancelada com sucesso"
              Esperar 4
              
-        ElseIf resultado = 9012 Then 'Para cancelamentos
+        ElseIf Resultado = 9012 Then 'Para cancelamentos
              
              statusFuncionamento "Impressão concluida com sucesso"
              Esperar 4
              
-        ElseIf resultado = 695 Or resultado = 521 Then 'Erro de ICMS irregular
+        ElseIf Resultado = 695 Or Resultado = 521 Then 'Erro de ICMS irregular
              statusFuncionamento "Nota Rejeitada. Tentado transmitir novamente"
              Esperar 3
              cmdTransmitir_Click
@@ -2423,7 +2425,7 @@ Public Function carregaArquivoUnico()
              timerSairSistema.Enabled = True
              timerSairSistema_Timer
              
-        ElseIf resultado = 778 Then 'ERRO NCM
+        ElseIf Resultado = 778 Then 'ERRO NCM
             
              Dim itemErro As String
              
@@ -2432,7 +2434,7 @@ Public Function carregaArquivoUnico()
              statusFuncionamento "Erro de NCM na referência " & obterReferenciaPorItem(Nf.pedido, itemErro) & "; Contate a Área Fiscal"
              Esperar 7
              
-        ElseIf resultado = 4016 Then
+        ElseIf Resultado = 4016 Then
              statusFuncionamento "Nota " & Nf.numero & " já autorizada"
              Esperar 4
         Else
@@ -2550,7 +2552,7 @@ Public Function carregaArquivo()
         Dim mensagemArquivoTXT As TextStream
         Dim fso As New FileSystemObject
         Dim arq As File
-        Dim resultado As String
+        Dim Resultado As String
         
         limpaGrid grdLogSig
         limpaGrid grdLogSigSAT
@@ -2576,7 +2578,7 @@ Public Function carregaArquivo()
                deletaArquivo GLB_EnderecoPastaRESP & Arquivo
             Else
         
-                resultado = lerCampo(informacaoArquivo, "Resultado")
+                Resultado = lerCampo(informacaoArquivo, "Resultado")
         
                 Set arq = fso.GetFile(GLB_EnderecoPastaRESP & Arquivo)
             
@@ -2611,9 +2613,9 @@ Public Function carregaArquivo()
                         Nf.chave = lerCampo(informacaoArquivo, "ChaveNFe")
                     End If
                     
-                    If lerCampo(informacaoArquivo, "DMAC") = "" And resultado <> 101 Then
+                    If lerCampo(informacaoArquivo, "DMAC") = "" And Resultado <> 101 Then
                     
-                        atualizaCodigoNF Nf.pedido, resultado, Nf.loja
+                        atualizaCodigoNF Nf.pedido, Resultado, Nf.loja
                         atualizaChaveNF Nf.pedido, Nf.chave, Nf.loja
                         If Nf.eSerie Like "CE*" Then atualizaNumeroNF Nf.pedido, Nf.numero
                         
@@ -2631,7 +2633,7 @@ Public Function carregaArquivo()
                                 Nf.loja, _
                                 Nf.numero, _
                                 Nf.pedido, _
-                                resultado & " - " & lerCampo(informacaoArquivo, "Mensagem")
+                                Resultado & " - " & lerCampo(informacaoArquivo, "Mensagem")
                                 
                     Else
                     
@@ -2641,13 +2643,14 @@ Public Function carregaArquivo()
                                 Nf.loja, _
                                 Nf.numero, _
                                 Nf.pedido, _
-                                resultado & " - " & lerCampo(informacaoArquivo, "Mensagem")
+                                Resultado & " - " & lerCampo(informacaoArquivo, "Mensagem")
                     End If
                     
 
                     
                 End If
                 
+
                     Screen.MousePointer = 0
                     
                 End If
@@ -2681,7 +2684,7 @@ Private Sub atualizaArquivo(ByRef enderecoArquivo As String, Arquivo As String, 
     
 End Sub
 
-Public Function mensagemLOG2(grid, Data As Date, tipoStatus As Integer, loja As String, numeroNotaFiscal As String, pedido As String, Mensagem As String)
+Public Function mensagemLOG2(grid, Data As Date, tipoStatus As Integer, loja As String, numeroNotaFiscal As String, pedido As String, mensagem As String)
 
     Dim status As String
     Dim corLinha As ColorConstants
@@ -2697,11 +2700,11 @@ Public Function mensagemLOG2(grid, Data As Date, tipoStatus As Integer, loja As 
     End Select
                
     If chkMostraLogErro.Value = 1 And chkMostraLogSucesso = 1 Then
-        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & Mensagem
+        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & mensagem
     ElseIf chkMostraLogErro = 1 And status = "Erro" Then
-        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & Mensagem
+        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & mensagem
     ElseIf chkMostraLogSucesso = 1 And status <> "Erro" Then
-        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & Mensagem
+        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & mensagem
     End If
         
     

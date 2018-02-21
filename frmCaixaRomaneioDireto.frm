@@ -569,6 +569,10 @@ wlblloja = GLB_Loja
 End Sub
 
 
+Private Sub Form_Unload(Cancel As Integer)
+    exibirMensagemPadraoTEF
+End Sub
+
 Private Sub grdItens_KeyPress(KeyAscii As Integer)
    
     If KeyAscii = 27 Then
@@ -797,7 +801,7 @@ Sub PegaNumeroPedido()
  GravaItensPedido NroPedido, 11, 725
 Screen.MousePointer = vbNormal
 End Sub
-Function CriaCapaPedido(ByVal NumeroPedido As Double)
+Function CriaCapaPedido(ByVal numeroPedido As Double)
  
     wLoja = PegaLojaControle
       
@@ -822,7 +826,7 @@ Function CriaCapaPedido(ByVal NumeroPedido As Double)
     Sql = "Insert into NfCapa (NUMEROPED,Serie, DATAEMI,LOJAORIGEM, TIPONOTA, Vendedor, DATAPED, HORA, " _
         & " VendedorLojaVenda, LojaVenda,TM,CodOper,ECF,nf,Condpag,qtditem,situacaoprocesso,outraloja, dataprocesso, " _
         & "OUTROVEND,MODALIDADEVENDA,TIPOFRETE, FRETECOBR) " _
-        & "Values (" & NumeroPedido & ",'00' , '" & Format(Date, "yyyy/mm/dd") & "', " _
+        & "Values (" & numeroPedido & ",'00' , '" & Format(Date, "yyyy/mm/dd") & "', " _
         & "'" & wLoja & "','PA',725, " _
         & "'" & Format(Date, "yyyy/mm/dd") & "', '" & Format(Time, "hh:mm:ss") & "', " _
         & "725, '" & wLoja & "',0,512," & GLB_ECF & "," & wNumeroCupom & ",01," _
@@ -834,7 +838,7 @@ Function CriaCapaPedido(ByVal NumeroPedido As Double)
      rdoContaItens.Close
      
 End Function
-Function GravaItensPedido(ByVal NumeroPedido As Double, ByVal TipoMovimentacao As Double, ByVal Vendedor As Integer)
+Function GravaItensPedido(ByVal numeroPedido As Double, ByVal TipoMovimentacao As Double, ByVal Vendedor As Integer)
 
     wLoja = PegaLojaControle
           

@@ -2422,7 +2422,7 @@ Public Function VerificaRetornoImpressora(Label As String, RetornoFuncao As Stri
     Dim StringRetorno As String
     Dim ValorRetorno As String
     Dim RetornoStatus As Integer
-    Dim Mensagem As String
+    Dim mensagem As String
     
     wVerificaImpressoraFiscal = False
     
@@ -2525,24 +2525,24 @@ Public Function VerificaRetornoImpressora(Label As String, RetornoFuncao As Stri
                 End If
                 
                 If RetornaMensagem Then
-                    Mensagem = "Status da Impressora: " & ValorRetorno & _
+                    mensagem = "Status da Impressora: " & ValorRetorno & _
                            vbCr & vbLf & StringRetorno & vbCr & vbLf & _
                            Label & RetornoFuncao
                 Else
-                    Mensagem = "Status da Impressora: " & ValorRetorno & _
+                    mensagem = "Status da Impressora: " & ValorRetorno & _
                        vbCr & vbLf & StringRetorno
                 End If
                 wValorRetorno = ValorRetorno
-                MsgBox Mensagem, vbOKOnly + vbInformation, TituloJanela
+                MsgBox mensagem, vbOKOnly + vbInformation, TituloJanela
                 Exit Function
         End If 'fim do ST1 <> 0 and ST2 <> 0
         
         If RetornaMensagem Then
-            Mensagem = Label & RetornoFuncao
+            mensagem = Label & RetornoFuncao
         End If
         
-        If Mensagem <> "" Then
-            MsgBox Mensagem, vbOKOnly + vbInformation, TituloJanela
+        If mensagem <> "" Then
+            MsgBox mensagem, vbOKOnly + vbInformation, TituloJanela
         End If
         Exit Function
     ElseIf Retorno = -1 Then
@@ -4838,17 +4838,17 @@ Public Function endIMG(nomeBotao As String) As String
     
 End Function
 
-Public Sub notificacaoEmail(Mensagem As String)
+Public Sub notificacaoEmail(mensagem As String)
     
     ConectaODBCMatriz
     
     Dim teste As String
-    Mensagem = Replace(Mensagem, "'", "''")
+    mensagem = Replace(mensagem, "'", "''")
     ')
     
     Sql = "insert into alerta_movimento_email" & vbNewLine & _
           "(AME_Numero,AME_NroCaixa, AME_Mensagem, AME_Usuario, AME_DataHora, AME_Situacao, AME_Loja)" & vbNewLine & _
-          "values (" & GLB_ADMProtocolo & ", " & GLB_Caixa & ", '" & Mensagem & "', '" & GLB_ADMNome & "'," & vbNewLine & _
+          "values (" & GLB_ADMProtocolo & ", " & GLB_Caixa & ", '" & mensagem & "', '" & GLB_ADMNome & "'," & vbNewLine & _
           "'" & Format(Date, "YYYY/MM/DD") & " " & Time & "', '" & "A" & "', '" & GLB_Loja & "')" & vbNewLine & _
           ""
     rdoCNRetaguarda.Execute (Sql)

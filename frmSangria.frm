@@ -1,7 +1,7 @@
 VERSION 5.00
-Object = "{C932BA88-4374-101B-A56C-00AA003668DC}#1.1#0"; "MSMASK32.OCX"
 Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "Vsflex7u.ocx"
 Object = "{D76D7130-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "Vsflex7d.ocx"
+Object = "{C932BA88-4374-101B-A56C-00AA003668DC}#1.1#0"; "MSMASK32.OCX"
 Begin VB.Form frmSangria 
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
@@ -1109,7 +1109,7 @@ Dim wTotalSaldo As Double
 Dim wTotalSaldo_S As Double
 Dim wControlacor As Long
 Dim wConfigCor As Long
-Dim sql As String
+Dim Sql As String
 Dim Cor As String
 Dim Cor1 As String
 Dim Cor2 As String
@@ -1165,18 +1165,18 @@ End Sub
 Private Sub cmdAtualizarSaldo_Click()
 
     If chkAtualizaSaldoFuturo.Value = 0 Then
-        sql = "update movimentocaixa set mc_valor = " & ConverteVirgula(Format(txtSaldoNovo.text, "##,###0.00")) & vbNewLine & _
+        Sql = "update movimentocaixa set mc_valor = " & ConverteVirgula(Format(txtSaldoNovo.text, "##,###0.00")) & vbNewLine & _
               "where mc_grupo = '11006' and mc_protocolo = " & rdoDataFechamentoRetaguarda("protocolo") & " and mc_data = '" & Format(mskData.text, "YYYY/MM/DD") & "'"
         notificacaoEmail "Modificação de saldo realizado! Data: " & Format(mskData.text, "DD/MM/YYYY") & " - Valor: " & Format(txtSaldoNovo.text, "##,###0.00")
     Else
-        sql = "update movimentocaixa set mc_valor = mc_valor + (" & Replace(txtSaldoDiferenca.text, ",", ".") & ")" & vbNewLine & _
+        Sql = "update movimentocaixa set mc_valor = mc_valor + (" & Replace(txtSaldoDiferenca.text, ",", ".") & ")" & vbNewLine & _
               "where mc_grupo = '11006' and mc_nroCaixa = " & GLB_Caixa & " and mc_data >= '" & Format(mskData.text, "YYYY/MM/DD") & "'"
         notificacaoEmail "Modificação de saldo realizado! Data: " & Format(mskData.text, "DD/MM/YYYY") & " até " & Format(GLB_DataInicial, "DD/MM/YYYY") & " - Valor: " & Format(txtSaldoDiferenca.text, "##,###0.00")
     End If
     'MsgBox sql
-    rdoCNLoja.Execute sql
+    rdoCNLoja.Execute Sql
     
-    notificacaoEmail sql
+    notificacaoEmail Sql
     
     frmSaldo.Visible = False
         Call CarregaMovimentocaixa
@@ -1189,7 +1189,7 @@ End Sub
 
 Private Sub Form_Load()
   
-    defineImpressora
+    'defineImpressora
   
     frmSaldo.BackColor = vbBlack
   
@@ -1209,10 +1209,10 @@ Private Sub Form_Load()
   Call AjustaTela(frmSangria)
   
   grdMovimentoCaixa.Row = 14
-  For i = 0 To grdMovimentoCaixa.Cols - 1
-    grdMovimentoCaixa.Col = i
+  For I = 0 To grdMovimentoCaixa.Cols - 1
+    grdMovimentoCaixa.Col = I
     grdMovimentoCaixa.CellBackColor = &HC0C0FF
-  Next i
+  Next I
 
   Call CarregaMovimentocaixa
   Call BuscaTransNumerico
@@ -1278,27 +1278,27 @@ Private Sub CarregaMovimentocaixa()
     End If
 
     If GLB_Administrador = False Then
-        sql = "Select Max(CTr_DataInicial)as DataMov,Max(Ctr_Protocolo) as protocolo " _
+        Sql = "Select Max(CTr_DataInicial)as DataMov,Max(Ctr_Protocolo) as protocolo " _
         & "from ControleCaixa where CTR_Supervisor <> 99 and CTr_NumeroCaixa = " & GLB_Caixa
     Else
-        sql = "Select Max(CTr_DataInicial)as DataMov,Max(Ctr_Protocolo) as protocolo " _
+        Sql = "Select Max(CTr_DataInicial)as DataMov,Max(Ctr_Protocolo) as protocolo " _
         & "from ControleCaixa where CTR_Supervisor <> 99 and CTr_NumeroCaixa = " & GLB_Caixa _
         & "and substring(convert(char(10),CTr_DataInicial,111),1,10) = '" & Format(mskData.text, "YYYY/MM/DD") & "'"
     End If
         
         rdoDataFechamentoRetaguarda.CursorLocation = adUseClient
-        rdoDataFechamentoRetaguarda.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        rdoDataFechamentoRetaguarda.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
  
         If IsNull(rdoDataFechamentoRetaguarda("DataMov")) = True Then
             Exit Sub
         End If
  
- sql = ("select mc_Grupo,sum(MC_Valor) as TotalModalidade,Count(*) as Quantidade from movimentocaixa" _
+ Sql = ("select mc_Grupo,sum(MC_Valor) as TotalModalidade,Count(*) as Quantidade from movimentocaixa" _
        & " Where MC_NumeroEcf = " & GLB_ECF & " and MC_NroCaixa=" & GLB_Caixa & " and MC_Protocolo = " & rdoDataFechamentoRetaguarda("protocolo") _
        & " and MC_Data ='" & Format(rdoDataFechamentoRetaguarda("DataMov"), "yyyy/mm/dd") & "' and  MC_Serie <> '00' and (MC_Grupo like '10%' or MC_Grupo like '11%'" _
        & " or MC_Grupo like '50%' or MC_Grupo like '20%') and MC_TipoNota in ('V','T','E','S') group by mc_grupo")
        rdoFormaPagamento.CursorLocation = adUseClient
-       rdoFormaPagamento.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rdoFormaPagamento.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
        
   wData = Format(rdoDataFechamentoRetaguarda("datamov"), "yyyy/mm/dd")
  'rdoDataFechamentoRetaguarda.Close
@@ -1467,13 +1467,13 @@ End Sub
 Private Sub grdAnaliticoSangria_KeyUp(KeyCode As Integer, Shift As Integer)
   If KeyCode = 46 And GLB_Administrador = True Then
         If MsgBox("Deseja deleta a Transferencia de valor R$ " & grdAnaliticoSangria.TextMatrix(grdAnaliticoSangria.Row, 0) & " do movimento?", vbYesNo + vbQuestion, "Atenção") = vbYes Then
-            sql = "delete movimentocaixa " & vbNewLine & _
+            Sql = "delete movimentocaixa " & vbNewLine & _
                   "where mc_grupo = '" & grdMovimentoCaixa.TextMatrix(grdMovimentoCaixa.Row, 4) & "'" & vbNewLine & _
                   "and mc_nrocaixa = '" & GLB_Caixa & "'" & vbNewLine & _
                   "and MC_Protocolo = '" & rdoDataFechamentoRetaguarda("protocolo") & "'" & vbNewLine & _
                   "and MC_Sequencia = '" & grdAnaliticoSangria.TextMatrix(grdAnaliticoSangria.Row, 2) & "'" & vbNewLine & _
                   "and MC_valor = " & ConverteVirgula(grdAnaliticoSangria.TextMatrix(grdAnaliticoSangria.Row, 0)) & ""
-            rdoCNLoja.Execute (sql)
+            rdoCNLoja.Execute (Sql)
             grdMovimentoCaixa_DblClick
         End If
   End If
@@ -1650,13 +1650,13 @@ Private Sub verificarValorNegativo()
 'ricardo versao 01
      Dim rdoSelectCapa As New ADODB.Recordset
 
-    sql = ("Select * from Movimentocaixa Where MC_NumeroECF = " & GLB_ECF & "" _
+    Sql = ("Select * from Movimentocaixa Where MC_NumeroECF = " & GLB_ECF & "" _
      & " and  mc_tipoNota = 'V' and mc_data = '" & Format(Date, "yyyy/mm/dd") _
      & "' " & " and MC_Protocolo = " & GLB_CTR_Protocolo & " ")
 
 
      rdoSelectCapa.CursorLocation = adUseClient
-     rdoSelectCapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+     rdoSelectCapa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
      
    If Not rdoSelectCapa.EOF Then
         Do While Not rdoSelectCapa.EOF
@@ -1784,65 +1784,7 @@ Private Sub txtTNnumero_KeyPress(KeyAscii As Integer)
     
 End Sub
 
-Private Sub ImprimeReforcoSangria()
-  Dim wSangrialinha1 As String
-  Dim wSangrialinha2 As String
-    
-    Screen.MousePointer = 11
-    
-    impressoraRelatorio "[INICIO]"
-    
-    impressoraRelatorio "________________________________________________"
-    impressoraRelatorio "         RETIRADA / REFORÇO DE CAIXA            "
-    impressoraRelatorio "                                                "
-    impressoraRelatorio left("Loja         " & GLB_Loja & Space(48), 48)
-    impressoraRelatorio left("Caixa Nro.   " & GLB_Caixa & Space(48), 48)
-    impressoraRelatorio left("Operador     " & GLB_USU_Nome & Space(48), 48)
-    impressoraRelatorio left("Protocolo    " & GLB_CTR_Protocolo & Space(48), 48)
-    impressoraRelatorio left("Data/Hora    " & Format(Date, "DD/MM/YYYY") & " - " & Format(Time, "HH:MM") & Space(48), 48)
-    impressoraRelatorio "                                                "
-    impressoraRelatorio "________________________________________________"
- 
-   
-   If txtReforco.text > 0 Then
-     
-        impressoraRelatorio "                                                "
-        impressoraRelatorio "::::::::::::::  REFORÇO DE CAIXA  ::::::::::::::"
-        impressoraRelatorio "                                                "
-        impressoraRelatorio "                                                "
-        impressoraRelatorio left(Space(10) & "R$ " & Format(txtReforco.text, "###,###,##0.00") & Space(38), 48)
-        impressoraRelatorio "                                                "
 
-        imprimeCampoGerenteOperador
- 
-    ElseIf txtRetirada.text > 0 Then
-    
-        impressoraRelatorio "                                                "
-        impressoraRelatorio "::::::::::::  " & UCase(Mid(cmbGrupoAuxiliar.text, 7, 20)) & "  ::::::::::::"
-        impressoraRelatorio "                                                "
-        impressoraRelatorio "                                                "
-        impressoraRelatorio left(Space(10) & "R$ " & Format(txtRetirada.text, "###,###,##0.00") & Space(38), 48)
-        impressoraRelatorio "                                                "
-
-        imprimeCampoGerenteOperador
-        
-    End If
-   
-   
-   
-   
-   
-   
-   'TxtFormatado = “Teste de formatação relatório gerencial !!!” + Chr(10) + cItalico + cNegrito + cCondensado + cSublinhado + cExpandido
-   'Abre relatório gerencial
-        'Retorno = Bematech_FI_AbreRelatorioGerencialMFD("01")
-   'impressão texto formatado
-
-   'Encerra relatório gerencial
-    impressoraRelatorio "[FIM]"
- 
-    Screen.MousePointer = 0
-End Sub
 
 
 Private Sub grdMovimentoCaixa_EnterCell()
@@ -1883,17 +1825,17 @@ Private Sub GravaMovimentoCaixa()
     If GLB_Administrador = True And CDbl(txtRetirada.text) = 0 Then
     
         If MsgBox("Deseja deleta todas as Transferencia desse grupo?", vbYesNo + vbQuestion, "Atenção") = vbYes Then
-            sql = "delete movimentocaixa " & vbNewLine & _
+            Sql = "delete movimentocaixa " & vbNewLine & _
                   "where mc_grupo = '" & grdMovimentoCaixa.TextMatrix(grdMovimentoCaixa.Row, 4) & "'" & vbNewLine & _
                   "and mc_nrocaixa = '" & GLB_Caixa & "'" & vbNewLine & _
                   "and MC_Protocolo = '" & rdoDataFechamentoRetaguarda("protocolo") & "'"
                   
-                  rdoCNLoja.Execute (sql)
+                  rdoCNLoja.Execute (Sql)
         End If
     
     Else
     
-        sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja, MC_Data, MC_Grupo,MC_SubGrupo, MC_Documento,MC_Serie," _
+        Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja, MC_Data, MC_Grupo,MC_SubGrupo, MC_Documento,MC_Serie," _
                      & "MC_Valor, MC_banco, MC_Agencia,MC_Contacorrente, MC_bomPara, MC_Parcelas, MC_Remessa,MC_SituacaoEnvio," _
                      & "MC_NroCaixa,MC_Protocolo,MC_GrupoAuxiliar,MC_Pedido,MC_DataProcesso,MC_TipoNota)" _
                      & " values(" & GLB_ECF & ",'" & GLB_USU_Codigo & "','" & GLB_Loja & "','" _
@@ -1902,20 +1844,20 @@ Private Sub GravaMovimentoCaixa()
                      & ConverteVirgula(Format(txtRetirada.text, "##,###0.00")) & ", " _
                      & "0,0,0,0,0,9,'A','" & GLB_Caixa & "'," & rdoDataFechamentoRetaguarda("protocolo") & "," & Mid(cmbGrupoAuxiliar.text, 1, 5) & "," _
                      & "'" & pedido & "','" & Format(wData, "yyyy/mm/dd") & "','V')"
-        rdoCNLoja.Execute (sql)
+        rdoCNLoja.Execute (Sql)
         
     End If
       
 End Sub
 Private Sub GravaReforcoCaixa()
-  sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja, MC_Data, MC_Grupo,MC_SubGrupo, MC_Documento,MC_Serie," _
+  Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja, MC_Data, MC_Grupo,MC_SubGrupo, MC_Documento,MC_Serie," _
                & "MC_Valor, MC_banco, MC_Agencia,MC_Contacorrente, MC_bomPara, MC_Parcelas, MC_Remessa,MC_SituacaoEnvio," _
                & "MC_NroCaixa,MC_Protocolo,MC_Pedido, MC_DataProcesso,MC_TipoNota)" _
                & " values(" & GLB_ECF & ",'" & GLB_USU_Codigo & "','" & GLB_Loja & "','" _
                & Format(wData, "yyyy/mm/dd") & "',10801,'',0,'RC'," _
                & ConverteVirgula(Format(txtReforco.text, "##,###0.00")) & ", " _
                & "0,0,0,0,0,9,'A','" & GLB_Caixa & "'," & GLB_CTR_Protocolo & ",'" & pedido & "','" & Format(wData, "yyyy/mm/dd") & "','V')"
-      rdoCNLoja.Execute (sql)
+      rdoCNLoja.Execute (Sql)
 End Sub
 Private Sub CarregaGrupoAuxiliar()
  '"50701"
@@ -1946,9 +1888,9 @@ Private Sub CarregaGrupoAuxiliar()
       wWhere = " and MO_Grupo in(50205)"
   End If
   'txtRetirada
-  sql = "select * From Modalidade WHERE MO_Grupo LIKE '30%'" & wWhere & " order by Mo_Grupo"
+  Sql = "select * From Modalidade WHERE MO_Grupo LIKE '30%'" & wWhere & " order by Mo_Grupo"
        rdoModalidade.CursorLocation = adUseClient
-       rdoModalidade.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rdoModalidade.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
   If Not rdoModalidade.EOF Then
      Do While Not rdoModalidade.EOF
            cmbGrupoAuxiliar.AddItem rdoModalidade("MO_Grupo") & "-" & rdoModalidade("MO_Descricao")
@@ -1968,9 +1910,9 @@ Private Sub BuscaTransNumerico()
 
     If IsNull(rdoDataFechamentoRetaguarda("protocolo")) = True Then Exit Sub
 
-   sql = "select (max(mc_documento) + 1) as TNum from movimentocaixa where mc_serie = 'TN' and mc_protocolo = " & rdoDataFechamentoRetaguarda("protocolo")
+   Sql = "select (max(mc_documento) + 1) as TNum from movimentocaixa where mc_serie = 'TN' and mc_protocolo = " & rdoDataFechamentoRetaguarda("protocolo")
    rdoModalidade.CursorLocation = adUseClient
-   rdoModalidade.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+   rdoModalidade.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
    If IsNull(rdoModalidade("TNum")) = True Then
        txtTNnumero.text = 1
    Else
@@ -1988,11 +1930,11 @@ Sub CarregaAnaliticoVenda()
     grdAnaliticoVenda.Visible = False
     lblAnalitico.Visible = False
     
-    sql = "select mc_documento,mc_serie,mo_descricao,mc_valor,mc_Sequencia from movimentocaixa,Modalidade" _
+    Sql = "select mc_documento,mc_serie,mo_descricao,mc_valor,mc_Sequencia from movimentocaixa,Modalidade" _
         & " where MC_Grupo=mo_grupo and MC_grupo='" & "1" + Mid(grdMovimentoCaixa.TextMatrix(grdMovimentoCaixa.Row, 4), 2, 5) _
         & "' and MC_Data ='" & Format(wData, "yyyy/mm/dd") & "' and MC_Protocolo = " & rdoDataFechamentoRetaguarda("protocolo") & " and MC_TipoNota in ('V','T','E','S')"
     RsMovimentoCaixa.CursorLocation = adUseClient
-    RsMovimentoCaixa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    RsMovimentoCaixa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
    
     If Not RsMovimentoCaixa.EOF Then
         Do While Not RsMovimentoCaixa.EOF
@@ -2024,11 +1966,11 @@ Sub CarregaAnaliticoSangria()
     End If
     
     
-    sql = "select MC_Valor,MO_Descricao,MC_Sequencia from movimentocaixa, Modalidade" _
+    Sql = "select MC_Valor,MO_Descricao,MC_Sequencia from movimentocaixa, Modalidade" _
         & " where MC_GrupoAuxiliar=mo_grupo and MC_grupo in (" & Grupo _
         & ") and MC_Data ='" & Format(wData, "yyyy/mm/dd") & "' and MC_Protocolo = " & rdoDataFechamentoRetaguarda("protocolo") & " and MC_tipoNota not in ('C')"
     RsMovimentoCaixa.CursorLocation = adUseClient
-    RsMovimentoCaixa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    RsMovimentoCaixa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
    
     If Not RsMovimentoCaixa.EOF Then
         Do While Not RsMovimentoCaixa.EOF
@@ -2076,9 +2018,9 @@ Screen.MousePointer = 11
      
 End Sub
 Private Sub CarregaModalidadeVenda()
-    sql = "SELECT MO_Grupo,MO_Descricao FROM Modalidade WHERE MO_Grupo between '10101' and '10701'"
+    Sql = "SELECT MO_Grupo,MO_Descricao FROM Modalidade WHERE MO_Grupo between '10101' and '10701'"
     adoConsulta.CursorLocation = adUseClient
-    adoConsulta.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    adoConsulta.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
              
     If Not adoConsulta.EOF Then
         grdModalidadeVenda.Rows = 1
@@ -2091,19 +2033,19 @@ Private Sub CarregaModalidadeVenda()
     adoConsulta.Close
 End Sub
 Private Sub TrocaModalidade()
-        sql = "update MovimentoCaixa set mc_grupo = " & grdModalidadeVenda.TextMatrix(grdModalidadeVenda.Row, 0) _
+        Sql = "update MovimentoCaixa set mc_grupo = " & grdModalidadeVenda.TextMatrix(grdModalidadeVenda.Row, 0) _
             & " where MC_Sequencia = " & grdAnaliticoVenda.TextMatrix(grdAnaliticoVenda.Row, 4)
-        rdoCNLoja.Execute sql
+        rdoCNLoja.Execute Sql
         Unload Me
         frmSangria.Show vbModal
 End Sub
 
 Private Sub DividiModalidade()
-        sql = "exec SP_alterar_dividir_modalidade " & grdAnaliticoVenda.TextMatrix(grdAnaliticoVenda.Row, 4) & "," _
+        Sql = "exec SP_alterar_dividir_modalidade " & grdAnaliticoVenda.TextMatrix(grdAnaliticoVenda.Row, 4) & "," _
               & grdModalidadeVenda.TextMatrix(grdModalidadeVenda.Row, 0) & "," _
               & ConverteVirgula(txtValorNovoModalidade.text) & ""
               
-        rdoCNLoja.Execute sql
+        rdoCNLoja.Execute Sql
         
         notificacaoEmail "Modificação de modalidade realizada! NF " & grdAnaliticoVenda.TextMatrix(grdAnaliticoVenda.Row, 0) _
                          & " - Serie: " & grdAnaliticoVenda.TextMatrix(grdAnaliticoVenda.Row, 1)
@@ -2111,7 +2053,7 @@ Private Sub DividiModalidade()
                          & "Valor Original: " & grdAnaliticoVenda.TextMatrix(grdAnaliticoVenda.Row, 3)
         notificacaoEmail "Nova Modalidade: " & grdModalidadeVenda.TextMatrix(grdModalidadeVenda.Row, 1) _
                          & "Novo Valor: " & txtValorNovoModalidade.text
-        notificacaoEmail sql
+        notificacaoEmail Sql
         
         Unload Me
         frmSangria.Show vbModal
@@ -2129,23 +2071,23 @@ Private Sub carregaGridAuditor()
         
         grdAuditorMovimento.Rows = 1
 
-        sql = "select CTR_DataInicial, CTR_DataFinal, CTR_NumeroCaixa, CTR_Protocolo, USU_Nome from controlecaixa,UsuarioCaixa " _
+        Sql = "select CTR_DataInicial, CTR_DataFinal, CTR_NumeroCaixa, CTR_Protocolo, USU_Nome from controlecaixa,UsuarioCaixa " _
         & "where CTR_Operador = USU_Codigo and CTR_Supervisor <> 99 and  USU_TipoUsuario = 'O' and CTR_NumeroCaixa = '" & GLB_Caixa & "' " _
         & "and CTR_DataInicial >= '" & Format(mskData.text, "YYYY/MM/DD") & "' " _
         & "order by CTR_Protocolo"
         
         rdoDataFechamentoRetaguarda2.CursorLocation = adUseClient
-        rdoDataFechamentoRetaguarda2.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        rdoDataFechamentoRetaguarda2.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
         
         Do While Not rdoDataFechamentoRetaguarda2.EOF
         
-                sql = ("select mc_Grupo,mc_GrupoAuxiliar,sum(MC_Valor) as TotalModalidade,Count(*) as Quantidade from movimentocaixa" _
+                Sql = ("select mc_Grupo,mc_GrupoAuxiliar,sum(MC_Valor) as TotalModalidade,Count(*) as Quantidade from movimentocaixa" _
                       & " Where MC_Protocolo in (" & rdoDataFechamentoRetaguarda2("CTR_Protocolo") _
                       & ") and  MC_Serie <> '00' and MC_tiponota <> 'C' and mc_grupo in ('10101','50101','11006','50806','50009','10801','50801') group by mc_grupo,mc_GrupoAuxiliar")
                 
                 rdoFechamentoGeral.CursorLocation = adUseClient
-                rdoFechamentoGeral.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+                rdoFechamentoGeral.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                 
                 saldo = 0
                 saldoAnterior = 0
@@ -2204,10 +2146,10 @@ Private Sub carregaGridAuditor()
                                             
             If msgStatus <> "OK" Then
                 grdAuditorMovimento.Row = grdAuditorMovimento.Rows - 1
-                For i = 0 To grdAuditorMovimento.Cols - 1
-                    grdAuditorMovimento.Col = i
+                For I = 0 To grdAuditorMovimento.Cols - 1
+                    grdAuditorMovimento.Col = I
                     grdAuditorMovimento.CellForeColor = vbRed
-                Next i
+                Next I
             End If
                                             
             rdoDataFechamentoRetaguarda2.MoveNext

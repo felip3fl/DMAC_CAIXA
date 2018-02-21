@@ -464,7 +464,7 @@ Private Sub Form_Activate()
 
     Dim qtdeNotasEmitida As Integer
 
-    defineImpressora
+    'defineImpressora
 
     wControlaSaldoCaixa = 0
 

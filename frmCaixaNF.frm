@@ -472,7 +472,7 @@ Private Sub lblNroCaixa_Click()
 End Sub
 
 Public Sub Form_Unload(Cancel As Integer)
-''
+    exibirMensagemPadraoTEF
 End Sub
 
 Private Sub grdItens_KeyPress(KeyAscii As Integer)
@@ -631,79 +631,89 @@ End Sub
 
 Private Sub CarregaGrid()
 
-        wTotalVenda = 0
-        wtotalitens = 0
-        wtotalGarantia = 0
-        grdItens.Rows = 0
-        grdItens.Visible = True
-        
-        
-        Sql = "Select NFItens.*,PR_Descricao " _
-             & "From NFItens,Produtoloja " _
-             & "Where Referencia = pr_Referencia and NumeroPed = " _
-             & txtPedido.text & " and tiponota = 'PA' order by Item"
-               
-               RsDados.CursorLocation = adUseClient
-               RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
-            
-        pedido = txtPedido
-            
-        Sql = "Select * From Nfcapa Where NumeroPed = " _
-             & txtPedido.text & " and tiponota = 'PA' "
-               
-                RsDadosCapa.CursorLocation = adUseClient
-                RsDadosCapa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
-             
-             
-             If Not RsDadosCapa.EOF Then
-                wPegaDesconto = RsDadosCapa("Desconto")
-                wPegaFrete = RsDadosCapa("FreteCobr")
-                wtotalGarantia = RsDadosCapa("TotalGarantia")
-             End If
-                
-              RsDadosCapa.Close
-             
-             If Not RsDados.EOF Then
-                  
-                  Do While Not RsDados.EOF
-                        wValorVenda = (RsDados("vlunit") * RsDados("Qtde"))
-                        wValorItem = right(Trim(Format(RsDados("vlunit"), "###,##0.00")), 10)
-                        wValorTotalItem = Format((RsDados("vlunit") * RsDados("Qtde")), "###,##0.00")
-                               
-                         grdItens.AddItem " " & left(Format(RsDados("Item"), "000") & Space(5), 5) _
-                           & "         " & left(RsDados("Referencia") & Space(7), 7) _
-                           & "           " & right(Space(6) & Format(RsDados("Qtde"), "000"), 6) _
-                           & "                   " & "" & right(Space(11) & Format(RsDados("vlunit"), "###,##0.00"), 11) & "" _
-                           & "                   " & right(Space(11) & Format(wValorTotalItem, "###,##0.00"), 11)
-                                                                    
-                                                                    
-                        grdItens.AddItem " " & Trim(RsDados("pr_Descricao"))
-                        
-                        txtPedido.SelStart = 0
-                        
-                        
-                        wtotalitens = (wtotalitens + 1)
-                        wTotalVenda = (wTotalVenda + (Format((RsDados("vlunit") * RsDados("Qtde")), "###,##0.00")))
-                                               
-                        grdItens.TopRow = grdItens.Rows - 1
-                        'grdItens.ZOrder
-                        RsDados.MoveNext
-                  Loop
-                        lblTotalvenda.Caption = Format(wTotalVenda, "###,##0.00") - Format(wPegaDesconto, "###,##0.00")
-                        lblTotalvenda.Caption = Format((lblTotalvenda.Caption + wPegaFrete), "###,##0.00")
-                        lblTotalItens.Caption = Format(wtotalitens, "#,##0")
-                        lblTotalGarantia.Caption = "+ G.E " & Format(wtotalGarantia, "###,##0.00")
-                        Call GravaValorCarrinho(frmCaixaNF, lblTotalItens.Caption)
+    Dim wParcelas As Byte
 
-     
-             Else
-                        MsgBox "Pedido não Existe ou Nota Fiscal já foi emitida.", vbCritical, "Aviso"
-                        txtPedido.SelStart = 0
-                        txtPedido.SelLength = Len(txtPedido.text)
-                         
-             End If
+    wTotalVenda = 0
+    wtotalitens = 0
+    wtotalGarantia = 0
+    grdItens.Rows = 0
+    grdItens.Visible = True
+    
+    Sql = "Select NFItens.*,PR_Descricao " _
+    & "From NFItens,Produtoloja " _
+    & "Where Referencia = pr_Referencia and NumeroPed = " _
+    & txtPedido.text & " and tiponota = 'PA' order by Item"
+    
+    RsDados.CursorLocation = adUseClient
+    RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    
+    pedido = txtPedido
+    
+    Sql = "Select * From Nfcapa Where NumeroPed = " _
+        & txtPedido.text & " and tiponota = 'PA' "
+    
+    RsDadosCapa.CursorLocation = adUseClient
+    RsDadosCapa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    
+    
+    If Not RsDadosCapa.EOF Then
+        wPegaDesconto = RsDadosCapa("Desconto")
+        wPegaFrete = RsDadosCapa("FreteCobr")
+        wtotalGarantia = RsDadosCapa("TotalGarantia")
+    End If
+    
+    wParcelas = RsDadosCapa("Parcelas")
+    
+    RsDadosCapa.Close
+    
+    If Not RsDados.EOF Then
+    
+        Do While Not RsDados.EOF
+            wValorVenda = (RsDados("vlunit") * RsDados("Qtde"))
+            wValorItem = right(Trim(Format(RsDados("vlunit"), "###,##0.00")), 10)
+            wValorTotalItem = Format((RsDados("vlunit") * RsDados("Qtde")), "###,##0.00")
+            
+            grdItens.AddItem " " & left(Format(RsDados("Item"), "000") & Space(5), 5) _
+            & "         " & left(RsDados("Referencia") & Space(7), 7) _
+            & "           " & right(Space(6) & Format(RsDados("Qtde"), "000"), 6) _
+            & "                   " & "" & right(Space(11) & Format(RsDados("vlunit"), "###,##0.00"), 11) & "" _
+            & "                   " & right(Space(11) & Format(wValorTotalItem, "###,##0.00"), 11)
+                                             
+                                             
+            grdItens.AddItem " " & Trim(RsDados("pr_Descricao"))
+            
+            txtPedido.SelStart = 0
+            
+            
+            wtotalitens = (wtotalitens + 1)
+            wTotalVenda = (wTotalVenda + (Format((RsDados("vlunit") * RsDados("Qtde")), "###,##0.00")))
+                        
+            grdItens.TopRow = grdItens.Rows - 1
+            'grdItens.ZOrder
+            RsDados.MoveNext
+        Loop
+        
+        lblTotalvenda.Caption = Format(wTotalVenda, "###,##0.00") - Format(wPegaDesconto, "###,##0.00")
+        lblTotalvenda.Caption = Format((lblTotalvenda.Caption + wPegaFrete), "###,##0.00")
+        lblTotalItens.Caption = Format(wtotalitens, "#,##0")
+        lblTotalGarantia.Caption = "+ G.E " & Format(wtotalGarantia, "###,##0.00")
+        Call GravaValorCarrinho(frmCaixaNF, lblTotalItens.Caption)
+        
+        exibirMensagemPedidoTEF txtPedido.text, wParcelas
+        
+    
+    Else
+    
+        MsgBox "Pedido não Existe ou Nota Fiscal já foi emitida.", vbCritical, "Aviso"
+        txtPedido.SelStart = 0
+        txtPedido.SelLength = Len(txtPedido.text)
+        
+    End If
+    
+    
+    
     RsDados.Close
-
+    
 
 
 End Sub
@@ -725,14 +735,14 @@ Public Sub txtPedido_KeyPress(KeyAscii As Integer)
  
 End Sub
 
-Private Sub carregaCliente(Codigo As String, NomeVendedor As String, CodigoVendedor As String)
+Private Sub carregaCliente(codigo As String, NomeVendedor As String, CodigoVendedor As String)
     
     Dim rsCliente As New ADODB.Recordset
     Dim Cliente As String
     
     Sql = "Select ce_razao " & vbNewLine & _
     "from fin_cliente " & vbNewLine & _
-    "where ce_codigocliente = '" & Codigo & "'"
+    "where ce_codigocliente = '" & codigo & "'"
                    
     rsCliente.CursorLocation = adUseClient
     rsCliente.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic

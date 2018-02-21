@@ -281,7 +281,7 @@ Attribute VB_Exposed = False
 
 Option Explicit
 Dim wQuantidade As Integer
-Dim sql As String
+Dim Sql As String
 Dim wValorVenda As Double
 Dim SomaTotalVenda As Double
 Dim PrecoVenda As Double
@@ -344,10 +344,10 @@ wTotalVenda = 0
 
 Call AjustaTela(frmCaixaRomaneio)
  
-sql = "Select * from ParametroCaixa where PAR_NroCaixa = " & GLB_Caixa
+Sql = "Select * from ParametroCaixa where PAR_NroCaixa = " & GLB_Caixa
 
  RsDados.CursorLocation = adUseClient
- RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+ RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
 If RsDados.EOF Then
    RsDados.Close
@@ -363,11 +363,11 @@ wlblloja = Trim(RsDados("PAR_Loja"))
 
 RsDados.Close
 
-sql = "Select ControleCaixa.*,USU_Codigo,USU_Nome from ControleCaixa,UsuarioCaixa" _
+Sql = "Select ControleCaixa.*,USU_Codigo,USU_Nome from ControleCaixa,UsuarioCaixa" _
             & " Where CTR_Supervisor <> 99 and CTR_Operador = USU_Codigo and CTR_SituacaoCaixa='A' and CTR_NumeroCaixa = " & GLB_Caixa
           
              RsDados.CursorLocation = adUseClient
-             RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+             RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
             
             If RsDados.EOF = False Then
                GLB_USU_Nome = RsDados("USU_Nome")
@@ -377,6 +377,10 @@ sql = "Select ControleCaixa.*,USU_Codigo,USU_Nome from ControleCaixa,UsuarioCaix
 RsDados.Close
 Call CarregaGrid
 
+End Sub
+
+Private Sub Form_Unload(Cancel As Integer)
+    exibirMensagemPadraoTEF
 End Sub
 
 Private Sub grdItens_KeyPress(KeyAscii As Integer)
@@ -390,7 +394,7 @@ End Sub
 
 Private Sub txtPedido_GotFocus()
 txtPedido.SelStart = 0
-txtPedido.SelLength = Len(txtPedido.Text)
+txtPedido.SelLength = Len(txtPedido.text)
 
 End Sub
 
@@ -405,9 +409,9 @@ If KeyCode = vbKeyF1 Then
        
        frmFormaPagamento.txtIdentificadequeTelaqueveio = "FRMCAIXAROMANEIO"
        
-       frmFormaPagamento.txtPedido.Text = frmCaixaNF.txtPedido
-       frmFormaPagamento.txtTipoNota.Text = "Romaneio"
-       frmFormaPagamento.txtSerie.Text = "00"
+       frmFormaPagamento.txtPedido.text = frmCaixaNF.txtPedido
+       frmFormaPagamento.txtTipoNota.text = "Romaneio"
+       frmFormaPagamento.txtSerie.text = "00"
        frmFormaPagamento.Show vbModal
     '   frmFormaPagamento.ZOrder
 
@@ -427,7 +431,7 @@ Private Sub txtPedido_KeyPress(KeyAscii As Integer)
    End If
    
    If KeyAscii = 13 Then
-      txtPedido.Text = frmControlaCaixa.txtPedido.Text
+      txtPedido.text = frmControlaCaixa.txtPedido.text
    End If
   
 End Sub
@@ -436,25 +440,25 @@ Private Sub CarregaGrid()
 
         wTotalVenda = 0
         wtotalitens = 0
-        txtPedido.Text = frmControlaCaixa.txtPedido.Text
+        txtPedido.text = frmControlaCaixa.txtPedido.text
         grdItens.Rows = 0
         grdItens.Visible = True
 
-        sql = "Select NFItens.*,PR_Descricao " _
+        Sql = "Select NFItens.*,PR_Descricao " _
              & "From NFItens,Produtoloja " _
              & "Where Referencia = pr_Referencia and NumeroPed = " _
-             & txtPedido.Text & " and tiponota = 'PA' order by Item"
+             & txtPedido.text & " and tiponota = 'PA' order by Item"
                
                RsDados.CursorLocation = adUseClient
-               RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+               RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
             
-        pedido = txtPedido.Text
+        pedido = txtPedido.text
             
-        sql = "Select * From Nfcapa Where NumeroPed = " _
-             & txtPedido.Text & " and tiponota = 'PA'"
+        Sql = "Select * From Nfcapa Where NumeroPed = " _
+             & txtPedido.text & " and tiponota = 'PA'"
                
                 RsDadosCapa.CursorLocation = adUseClient
-                RsDadosCapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+                RsDadosCapa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
              
              
              If Not RsDadosCapa.EOF Then
@@ -468,7 +472,7 @@ Private Sub CarregaGrid()
                    wPegaDesconto = 0
                    wPegaFrete = 0
                    txtPedido.SelStart = 0
-                   txtPedido.SelLength = Len(txtPedido.Text)
+                   txtPedido.SelLength = Len(txtPedido.text)
                    Exit Sub
                 End If
                 
@@ -510,7 +514,7 @@ Private Sub CarregaGrid()
              Else
                         MsgBox "Pedido não Exite ou Nota Fiscal já foi emitida.", vbCritical, "Aviso"
                         txtPedido.SelStart = 0
-                        txtPedido.SelLength = Len(txtPedido.Text)
+                        txtPedido.SelLength = Len(txtPedido.text)
                          
              End If
     RsDados.Close

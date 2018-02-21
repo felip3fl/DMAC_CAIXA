@@ -11,8 +11,8 @@ Begin VB.Form frmCaixaSAT
    ControlBox      =   0   'False
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
-   ScaleHeight     =   8745
-   ScaleWidth      =   12345
+   ScaleHeight     =   10575
+   ScaleWidth      =   20490
    ShowInTaskbar   =   0   'False
    Begin VB.Frame Frame1 
       BackColor       =   &H00000000&
@@ -466,6 +466,10 @@ Private Sub Form_QueryUnload(Cancel As Integer, UnloadMode As Integer)
 End Sub
 
 Private Sub lblDisplayTotal_Click()
+End Sub
+
+Private Sub Form_Unload(Cancel As Integer)
+    exibirMensagemPadraoTEF
 End Sub
 
 Private Sub grdItens_KeyDown(KeyCode As Integer, Shift As Integer)

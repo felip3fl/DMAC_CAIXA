@@ -12,8 +12,8 @@ Begin VB.Form frmReimpressaoMovimento
    LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   10575
-   ScaleWidth      =   20490
+   ScaleHeight     =   8505
+   ScaleWidth      =   15300
    ShowInTaskbar   =   0   'False
    Begin VSFlex7UCtl.VSFlexGrid grdMovimentoCaixa 
       Height          =   1185
@@ -649,7 +649,7 @@ Dim wMovimentoPeriodo As Double
 
 Dim wQtdeGrid As Integer
 Dim Idx As Long
-Dim sql As String
+Dim Sql As String
 Dim Cor As String
 Dim Cor1 As String
 Dim Cor2 As String
@@ -753,7 +753,7 @@ Private Sub Form_Load()
     'fraAlteraDia.Height = Image1.Height
     'fraAlteraDia.Visible = False
 
-    defineImpressora
+    ''defineImpressora
 
 End Sub
 
@@ -796,7 +796,7 @@ Private Sub grdMovimentoCaixa_DblClick()
         wQdteViasImpressao = 1
         Call BuscaQtdeViaImpressaoMovimento
         
-        For i = 1 To wQdteViasImpressao
+        For I = 1 To wQdteViasImpressao
 
         
             Call NOVO_ImprimeMovimento(grdMovimentoCaixa, "FECHAMENTO DE CAIXA (" & msgTipoMovimento & ")", wOperadorImpressao, wNroCaixaImpressao, _
@@ -809,7 +809,7 @@ Private Sub grdMovimentoCaixa_DblClick()
                                              wDataInicioFechamento, Format(wHoraInicioFechamento, "HH:MM:SS"), _
                                              wDataFinalFechamento, Format(wHoraFinalFechamento, ""), _
                                              CStr(wProtocoloImpressao))
-        Next i
+        Next I
         Screen.MousePointer = 0
     End If
  
@@ -856,7 +856,7 @@ Private Sub grdMovimentosDisponiveis_Click()
           lblMsgMovimentoCaixa.Visible = True
           'grdAnaliticoVenda.Visible = True
            
-          sql = ("Select Max(CTr_DataInicial)as DataMov,Max(Ctr_Protocolo) as Seq " _
+          Sql = ("Select Max(CTr_DataInicial)as DataMov,Max(Ctr_Protocolo) as Seq " _
               & "from ControleCaixa where CTR_Supervisor <> 99 and CTr_NumeroCaixa = " & GLB_Caixa)
              
           Call CarregaAnaliticoVenda(wDataInicioFechamento)
@@ -918,7 +918,7 @@ Private Sub gridImpressao_DblClick()
         wHoraFinalFechamento = Format(gridImpressao.TextMatrix(gridImpressao.Row, 1), "HH:MM")
         
         
-        sql = ("Select Max(CTr_DataInicial)as DataMov,Max(Ctr_Protocolo) as Seq " _
+        Sql = ("Select Max(CTr_DataInicial)as DataMov,Max(Ctr_Protocolo) as Seq " _
         & "from ControleCaixa where CTR_Supervisor <> 99 and CTr_NumeroCaixa = " & GLB_Caixa)
         
         Call CarregaMovimento(grdMovimentoCaixa, CLng(wProtocoloImpressao))
@@ -1110,12 +1110,12 @@ Sub CarregaMovimentosDisponiveis()
     
     'Image1.Width = grdMovimentosDisponiveis.Width
 
-    sql = "select CTR_DataInicial, CTR_DataFinal, CTR_NumeroCaixa, CTR_Protocolo, USU_Nome from controlecaixa,UsuarioCaixa " _
+    Sql = "select CTR_DataInicial, CTR_DataFinal, CTR_NumeroCaixa, CTR_Protocolo, USU_Nome from controlecaixa,UsuarioCaixa " _
         & "where CTR_Operador = USU_Codigo and CTR_Supervisor <> 99 and  USU_TipoUsuario = 'O' AND " _
         & "CTR_DataInicial between '" & Format(Date - wDiasCarregaMov, "YYYY/MM/DD") & "' and '" & Format(Date + 3, "YYYY/MM/DD") & "' " _
         & "order by CTR_Protocolo"
        rdoDataFechamentoRetaguarda.CursorLocation = adUseClient
-       rdoDataFechamentoRetaguarda.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rdoDataFechamentoRetaguarda.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
        
        msgCarregarMaisMovimento = ""
        
@@ -1131,12 +1131,12 @@ Sub CarregaMovimentosDisponiveis()
        If Not rdoDataFechamentoRetaguarda.EOF Then
           Do While Not rdoDataFechamentoRetaguarda.EOF
           
-            sql = "select sum(MC_Valor) as TotalCaixa from movimentocaixa " _
+            Sql = "select sum(MC_Valor) as TotalCaixa from movimentocaixa " _
                 & "Where MC_NroCaixa= " & rdoDataFechamentoRetaguarda("CTR_NumeroCaixa") & " " _
                 & "and MC_Serie <> '00' and mc_protocolo = " & rdoDataFechamentoRetaguarda("CTR_Protocolo") & " " _
                 & "and MC_Grupo like '10%' group by  MC_Protocolo "
                 rdoFechamentoGeral.CursorLocation = adUseClient
-                rdoFechamentoGeral.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+                rdoFechamentoGeral.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                 
                 If Not rdoFechamentoGeral.EOF Then
                   wTotalCaixa = rdoFechamentoGeral("TotalCaixa")
@@ -1414,16 +1414,16 @@ Sub CarregaAnaliticoVenda(ByVal wData As Date)
           'optControleMovimento.Visible = False
           'optAnaliticoVenda.Visible = False
           
-          sql = ""
+          Sql = ""
           'sql = "select NF,Serie,TOTALNOTA from nfcapa,movimentocaixa " & _
           '"WHERE NF = MC_Documento and mc_serie = serie and " & _
           '" tiponota = 'V' and dataemi = '" & Format(wData, "yyyy/mm/dd") & "' and MC_Grupo like '10%'  " _
           '    & "order by mc_grupo,Serie,NF"
-          sql = "select NF,Serie,TOTALNOTA from nfcapa where tiponota = 'V' and dataemi = '" & Format(wData, "yyyy/mm/dd") & "' " _
+          Sql = "select NF,Serie,TOTALNOTA from nfcapa where tiponota = 'V' and dataemi = '" & Format(wData, "yyyy/mm/dd") & "' " _
               & "order by Serie,NF"
               
           RsCarimbo.CursorLocation = adUseClient
-          RsCarimbo.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+          RsCarimbo.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
           
           If Not RsCarimbo.EOF Then
                Do While Not RsCarimbo.EOF
@@ -1431,14 +1431,14 @@ Sub CarregaAnaliticoVenda(ByVal wData As Date)
                    wNF = RsCarimbo("NF")
                    wTotalNf = RsCarimbo("totalnota")
                     
-                    sql = ""
-                    sql = "select (rtrim(ltrim(MO_Descricao)) + ' ' + rtrim(ltrim(mc_SubGrupo))) as Descricao, " _
+                    Sql = ""
+                    Sql = "select (rtrim(ltrim(MO_Descricao)) + ' ' + rtrim(ltrim(mc_SubGrupo))) as Descricao, " _
                         & "MC_Valor From MovimentoCaixa, Modalidade " _
                         & "where MC_Documento = " & RsCarimbo("nf") & " and " _
                         & "mc_serie = '" & Trim(RsCarimbo("serie")) & "' " _
                         & "and MC_Grupo = mo_grupo and mc_grupo like '10%' order by mo_descricao "
                     rsComplementoVenda.CursorLocation = adUseClient
-                    rsComplementoVenda.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+                    rsComplementoVenda.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                         
                     Do While Not rsComplementoVenda.EOF
                         If wSerieAnterior <> RsCarimbo("serie") Then
