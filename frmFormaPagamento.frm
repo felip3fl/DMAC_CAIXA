@@ -4,8 +4,8 @@ Begin VB.Form frmFormaPagamento
    BorderStyle     =   0  'None
    Caption         =   "Forma de Pagamento"
    ClientHeight    =   8640
-   ClientLeft      =   3570
-   ClientTop       =   1755
+   ClientLeft      =   3675
+   ClientTop       =   1785
    ClientWidth     =   13425
    BeginProperty Font 
       Name            =   "Arial Black"
@@ -1608,7 +1608,7 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
       
       'TEF ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
       If lblModalidade.Caption = "CREDITO" Then
-          If EfetuaPagamentoTEF("3", txtValorModalidade.text) Then
+          If EfetuaOperacaoTEF("3", txtValorModalidade.text, lblMensagemTEF) Then
             
             numeroTef = lerCamporResultadoTEF(ComprovantePagamento, "Host")
             TotPago = TotPago + Modalidade
@@ -1618,7 +1618,7 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
       End If
 
       If lblModalidade.Caption = "DEBITO" Then
-          If EfetuaPagamentoTEF("2", txtValorModalidade.text) Then
+          If EfetuaOperacaoTEF("2", txtValorModalidade.text, lblMensagemTEF) Then
             numeroTef = lerCamporResultadoTEF(ComprovantePagamento, "NSU SiTef")
             TotPago = TotPago + Modalidade
             ValTEFVisaElectron = ValTEFVisaElectron + Modalidade
@@ -3713,7 +3713,7 @@ frmFormaPagamento.txtValorModalidade.text = ""
  WCodigoModalidadeVISA = ""
 End Sub
 
-Public Function EfetuaPagamentoTEF(codigoPagamento As String, valorCobrado As String) As Boolean
+Public Function EfetuaPagamentoTEFOLD(codigoPagamento As String, valorCobrado As String) As Boolean
 
   Dim Retorno        As Long
   Dim Buffer         As String * 20000
@@ -3723,7 +3723,7 @@ Public Function EfetuaPagamentoTEF(codigoPagamento As String, valorCobrado As St
   Dim TamanhoMaximo  As Integer
   Dim ContinuaNavegacao  As Long
   Dim Mensagem As String
-  Dim VARIAVEL As String
+  Dim logOperacoesTEF As String
   
   valorCobrado = Format(valorCobrado, "###,###,##0.00")
 
@@ -3761,13 +3761,16 @@ Public Function EfetuaPagamentoTEF(codigoPagamento As String, valorCobrado As St
      
       'lblParcelas.Caption = Buffer
 
-      VARIAVEL = VARIAVEL & ProximoComando & " - " & Resultado & " - " & Buffer & vbNewLine
+            logOperacoesTEF = logOperacoesTEF & "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
+                              "[Resu:" & Space(4 - Len(Trim(Resultado))) & Resultado & "]" & _
+                              "[Tipo:" & Space(4 - Len(Trim(TipoCampo))) & TipoCampo & "] " & Trim(Buffer) & vbNewLine
 
      Select Case ProximoComando
           Case 0
               If Buffer Like ".....S.O.F.T.W.A.R.E*" Then
                   ComprovantePagamento = Buffer
               End If
+              
           Case 21
               If Buffer Like "*1:Magnetico/Chip;2:Digitado;*" Then
                   Buffer = "1"
@@ -3805,7 +3808,7 @@ Public Function EfetuaPagamentoTEF(codigoPagamento As String, valorCobrado As St
   End If
 
      FinalizaTransacaoSiTefInterativo 1, pedido & Chr(0), Format(Date, "YYYYMMDD"), Format(Time, "HHMMSS")
-     criaLogTef (VARIAVEL)
+     criaLogTef (logOperacoesTEF)
 
 End Function
 

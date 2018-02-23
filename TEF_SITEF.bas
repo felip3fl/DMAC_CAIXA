@@ -15,6 +15,17 @@ Global ComprovantePagamento As String
 Global GLB_TefHabilidado As Boolean
 Private Const endereco = ""
 
+Type notaFiscalTEF
+    numero As String
+    loja As String
+    eSerie As String
+    'serie As String
+    CNPJ As String
+    chave As String
+    pedido As String
+    cfop As String
+End Type
+
 Public Sub criaLogTef(Mensagem As String)
     Open "C:\Sistemas\DMAC Caixa\Sitef\log.txt" For Output As #1
             
@@ -189,4 +200,115 @@ Public Function lerCamporResultadoTEF(informacoes As String, campo As String) As
     End If
     
 End Function
+
+
+Public Function EfetuaOperacaoTEF(codigoOperacao As String, valorCobrado As String, ByRef campoExibirMensagem As Label) As Boolean
+
+    Dim Retorno        As Long
+    Dim Buffer         As String * 20000
+    Dim ProximoComando As Long
+    Dim TipoCampo      As Long
+    Dim TamanhoMinimo  As Integer
+    Dim TamanhoMaximo  As Integer
+    Dim ContinuaNavegacao  As Long
+    
+    Dim Mensagem As String
+    Dim logOperacoesTEF As String
+    
+    valorCobrado = Format(valorCobrado, "###,###,##0.00")
+    
+    Screen.MousePointer = 11
+    
+    Retorno = IniciaFuncaoSiTefInterativo(codigoOperacao, _
+                                          valorCobrado & Chr(0), _
+                                          pedido & Chr(0), _
+                                          Format(Date, "YYYYMMDD") & Chr(0), _
+                                          Format(Time, "HHMMSS") & Chr(0), _
+                                          Trim(GLB_USU_Nome) & Chr(0), _
+                                          Chr(0))
+                                        
+    
+    ProximoComando = 0
+    TipoCampo = 0
+    TamanhoMinimo = 0
+    TamanhoMaximo = 0
+    ContinuaNavegacao = 0
+    Resultado = 0
+    Buffer = String(20000, 0)
+    campoExibirMensagem.Caption = ""
+    
+    Do
+        
+        Retorno = ContinuaFuncaoSiTefInterativo(ProximoComando, _
+                                                TipoCampo, _
+                                                TamanhoMinimo, _
+                                                TamanhoMaximo, _
+                                                Buffer, _
+                                                Len(Buffer), _
+                                                Resultado)
+                                                
+        logOperacoesTEF = logOperacoesTEF & "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
+                              "[Resu:" & Space(4 - Len(Trim(Resultado))) & Resultado & "]" & _
+                              "[Tipo:" & Space(4 - Len(Trim(TipoCampo))) & TipoCampo & "] " & Trim(Buffer) & vbNewLine
+                                                
+        
+        If (Retorno = 10000) Then
+        
+            If ProximoComando > 0 And ProximoComando < 4 Then
+                campoExibirMensagem.Caption = UCase(Trim(Buffer))
+                campoExibirMensagem.Refresh
+            End If
+        
+            Select Case TipoCampo
+            Case -1
+            
+                If ProximoComando = 21 Then
+                    If Buffer Like "1:A Vista;2:Parcelado pelo Estabelecimento;3:Parcelado pela Administradora;*" Then
+                        Buffer = "1"
+                        If wParcelas > 1 Then Buffer = wParcelas
+                    End If
+                        
+                    If Buffer Like "Forneca o numero de parcela*" And wParcelas > 1 Then
+                        Buffer = Format(wParcelas, "0")
+                    End If
+                    
+                    If Buffer Like "1:Magnetico/Chip;2:Digitado*" Then
+                        Buffer = "1"
+                    End If
+                End If
+            
+            
+            Case 121 'Buffer contém a primeira via do comprovante de pagamento
+                    ComprovantePagamento = ComprovantePagamento & Buffer & vbNewLine
+            Case 515 'Data da transação a ser cancelada (DDMMAAAA) ou a ser re-impressa
+                    Buffer = "23022018"
+            Case 516 'Número do documento a ser cancelado ou a ser re-impresso
+                    Buffer = "999230151" 'numero tef
+            Case 146 'A rotina está sendo chamada para ler o Valor a ser cancelado.
+                    Buffer = "0,90"
+            End Select
+            
+            logOperacoesTEF = logOperacoesTEF + Buffer & vbNewLine
+        
+        End If
+    
+    Loop Until Not (Retorno = 10000)
+    
+    If (Retorno = 0) Then
+        campoExibirMensagem.Caption = "Operação completada com sucesso"
+        EfetuaOperacaoTEF = True
+    End If
+    
+    FinalizaTransacaoSiTefInterativo 1, _
+                                     pedido, _
+                                     Format("2018/02/23", "YYYYMMDD"), _
+                                     Format("09:44:00", "HHMMSS")
+                                     
+    criaLogTef (logOperacoesTEF)
+    Screen.MousePointer = 0
+ 
+End Function
+
+
+
 

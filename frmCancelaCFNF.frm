@@ -404,7 +404,7 @@ Private Sub txtSenha_KeyPress(KeyAscii As Integer)
 
 If KeyAscii = 13 Then
   
-  EfetuaCancelarTEF "210", ""
+  EfetuaOperacaoTEF "210", "", lblMensagensTEF
   
   If txtSenha.text <> "" Then
      Call finalizarCancelamento
@@ -502,102 +502,4 @@ Sub LimpaCampos()
         Exit Sub
 
 End Sub
-
-Public Function EfetuaCancelarTEF(codigoPagamento As String, valorCobrado As String) As Boolean
-
-  Dim Retorno        As Long
-  Dim Buffer         As String * 20000
-  Dim ProximoComando As Long
-  Dim TipoCampo      As Long
-  Dim TamanhoMinimo  As Integer
-  Dim TamanhoMaximo  As Integer
-  Dim ContinuaNavegacao  As Long
-  Dim Mensagem As String
-  Dim VARIAVEL As String
-  
-  valorCobrado = Format(valorCobrado, "###,###,##0.00")
-
-  Screen.MousePointer = vbHourglass
-  pedido = "1233456"
-  valorCobrado = "1,80"
-  Retorno = IniciaFuncaoSiTefInterativo(codigoPagamento, valorCobrado & Chr(0), pedido & Chr(0), Format("2018/02/23", "YYYYMMDD") & Chr(0), Format("09:44:00", "HHMMSS") & Chr(0), Trim(GLB_USU_Nome) & Chr(0), Chr(0))
-  Screen.MousePointer = vbDefault
-
-  ProximoComando = 0
-  TipoCampo = 0
-  TamanhoMinimo = 0
-  TamanhoMaximo = 0
-  ContinuaNavegacao = 0
-  Resultado = 0
-  Buffer = String(20000, 0)
-
-    lblMensagensTEF.Caption = ""
-
-  Do
-
-    Screen.MousePointer = vbHourglass
-    
-    Retorno = ContinuaFuncaoSiTefInterativo(ProximoComando, TipoCampo, TamanhoMinimo, TamanhoMaximo, Buffer, Len(Buffer), Resultado)
-    Screen.MousePointer = vbDefault
-
-    If (Retorno = 10000) Then
-
-      If ProximoComando = "1" Or ProximoComando = "2" Or ProximoComando = "3" Then
-        Mensagem = lblMensagensTEF.Caption
-        lblMensagensTEF.Caption = Trim(Buffer)
-        If lblMensagensTEF.Caption = "" Then lblMensagensTEF.Caption = Mensagem
-        lblMensagensTEF.Caption = UCase(lblMensagensTEF.Caption)
-        lblMensagensTEF.Refresh
-      End If
-     
-      'lblParcelas.Caption = Buffer
-
-      VARIAVEL = VARIAVEL & ProximoComando & " - " & Resultado & " - " & Buffer & vbNewLine
-
-     Select Case ProximoComando
-          Case 34
-              If Buffer Like "Forneca o valor da transacao a ser canc*" Then
-                  Buffer = valorCobrado
-                  VARIAVEL = VARIAVEL + Buffer & vbNewLine
-              End If
-
-            Case 30
-                If Buffer Like "Data da transacao*" Then
-                    Buffer = "23022018"
-                    VARIAVEL = VARIAVEL + Buffer & vbNewLine
-                ElseIf Buffer Like "Forneca o numero do documento a ser*" Then
-                    Buffer = "999230140"
-                    VARIAVEL = VARIAVEL + Buffer & vbNewLine
-                End If
-              
-            Case 21
-                If Buffer Like "*1:Magnetico/Chip;2:Digitado;*" Then
-                    Buffer = "1"
-                    VARIAVEL = VARIAVEL + Buffer & vbNewLine
-                End If
-              
-            End Select
-
-    End If
-
-  Loop Until Not (Retorno = 10000)
-
-  If (Retorno = 0) Then
-    lblMensagensTEF.Caption = "Retorno Ok!"
-    EfetuaPagamentoTEF = True
-    
-  Else
-    'Retorno = IniciaFuncaoSiTefInterativo(3, 10, 10, "20180216", "101010", "ACASD", "")
-    'Retorno = ContinuaFuncaoSiTefInterativo(ProximoComando, TipoCampo, TamanhoMinimo, TamanhoMaximo, Buffer, Len(Buffer), Resultado)
-    'FrmSiTef.TxtDisplay.Text = FrmSiTef.TxtDisplay.Text & Buffer
-
-    'felipetef
-    'lblMensagensTEF.Caption = "Erro:" & " " & retornoFuncoesTEF(CStr(Retorno))
-  End If
-
-     FinalizaTransacaoSiTefInterativo 1, pedido, Format("2018/02/23", "YYYYMMDD"), Format("09:44:00", "HHMMSS")
-     criaLogTef (VARIAVEL)
- 
-End Function
-
 

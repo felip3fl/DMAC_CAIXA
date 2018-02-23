@@ -296,16 +296,16 @@ Public Sub verificaNumeroPedido()
     
 End Sub
 
-Private Function carregaListaItem(NumeroPedido As String) As Boolean
+Private Function carregaListaItem(numeroPedido As String) As Boolean
 
-    Dim sql As String
+    Dim Sql As String
     
     carregaListaItem = True
     
-    sql = "SP_FIN_GE_Monta_Campos_capa " & NumeroPedido
+    Sql = "SP_FIN_GE_Monta_Campos_capa " & numeroPedido
     
     rsCapaBilhete.CursorLocation = adUseClient
-    rsCapaBilhete.Open sql, rdoCNLoja, adOpenDynamic, adLockPessimistic
+    rsCapaBilhete.Open Sql, rdoCNLoja, adOpenDynamic, adLockPessimistic
     
     'Set rsItensGarantia = rdoCNLoja.OpenResultset(SQL, rdOpenKeyset)
     
@@ -316,40 +316,40 @@ Private Function carregaListaItem(NumeroPedido As String) As Boolean
     
 End Function
 
-Private Sub atualizaNumeroCertificado(NumeroPedido As String, ByRef rsItens)
-    Dim sql As String
+Private Sub atualizaNumeroCertificado(numeroPedido As String, ByRef rsItens)
+    Dim Sql As String
     
     Do While Not rsItens.EOF
-        sql = sql & "update nfitens set " & vbNewLine & _
+        Sql = Sql & "update nfitens set " & vbNewLine & _
               "certificadoInicio = (select cts_certificado from ControleSistema)+1, " & vbNewLine & _
               "certificadoFim = ((select cts_certificado from ControleSistema)+qtdeGarantia) " & vbNewLine & _
-              "where numeroPed = " & NumeroPedido & " and garantiaEstendida = 'S' and " & vbNewLine & _
+              "where numeroPed = " & numeroPedido & " and garantiaEstendida = 'S' and " & vbNewLine & _
               "referencia = " & rsItens("Referencia") & vbNewLine & vbNewLine
               
-        sql = sql & "update ControleSistema set " & vbNewLine & _
+        Sql = Sql & "update ControleSistema set " & vbNewLine & _
               "cts_certificado = (select certificadoFIM from nfitens " & vbNewLine & _
-              "where numeroPed = " & NumeroPedido & " and garantiaEstendida = 'S' and " & vbNewLine & _
+              "where numeroPed = " & numeroPedido & " and garantiaEstendida = 'S' and " & vbNewLine & _
               "referencia = " & rsItens("Referencia") & ")" & vbNewLine & vbNewLine
         rsItens.MoveNext
     Loop
 
-    rdoCNLoja.Execute (sql)
+    rdoCNLoja.Execute (Sql)
     'rsItensGarantia.Close
     ''carregaListaItem numeroPedido '''''''''''''''''''''''''''''''''''''''''''''''
 
 End Sub
 
-Private Function possuiNumeroCertificado(NumeroPedido As String) As Boolean
-    Dim sql As String
+Private Function possuiNumeroCertificado(numeroPedido As String) As Boolean
+    Dim Sql As String
     Dim rsProdutoGarantia As New ADODB.Recordset
     
     possuiNumeroCertificado = True
 
-    sql = "select certificadoInicio from nfitens " & _
-          "where numeroPed = " & NumeroPedido & " and " & _
+    Sql = "select certificadoInicio from nfitens " & _
+          "where numeroPed = " & numeroPedido & " and " & _
           "referencia = " & rsItemBilhete("Referencia")
           
-    Set rsProdutoGarantia = rdoCNLoja.OpenResultset(sql)
+    Set rsProdutoGarantia = rdoCNLoja.OpenResultset(Sql)
         If IsNull(rsProdutoGarantia("certificadoInicio")) Then
             possuiNumeroCertificado = False
         End If
@@ -423,23 +423,23 @@ Private Sub txtNumeroPedido_KeyPress(KeyAscii As Integer)
     End If
 End Sub
 
-Private Sub possuiNumCertificado(NumeroPedido)
+Private Sub possuiNumCertificado(numeroPedido)
 
-    Dim sql As String
+    Dim Sql As String
     Dim rsItens As New ADODB.Recordset
     
-    sql = "select itens.referencia as referencia " & vbNewLine & _
+    Sql = "select itens.referencia as referencia " & vbNewLine & _
           "from nfitens itens, nfcapa capa " & vbNewLine & _
           "where itens.garantiaEstendida = 'S' " & vbNewLine & _
           "and itens.certificadoInicio = '' " & vbNewLine & _
           "and capa.numeroPed = itens.numeroPed " & vbNewLine & _
           "and capa.tipoNota = 'V'" & vbNewLine & _
           "and capa.garantiaEstendida = 'S' " & vbNewLine & _
-          "and capa.numeroPed = " & NumeroPedido & "" & vbNewLine & _
+          "and capa.numeroPed = " & numeroPedido & "" & vbNewLine & _
           "order by itens.item"
 
     rsItens.CursorLocation = adUseClient
-    rsItens.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsItens.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
         If Not rsItens.EOF Then
             atualizaNumeroCertificado pedido, rsItens
@@ -451,16 +451,16 @@ End Sub
 
 ''''' CAMPOS ITENS ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-Private Sub carregaItem(NumeroPedido As String)
+Private Sub carregaItem(numeroPedido As String)
 
-    Dim sql As String
+    Dim Sql As String
     
-    rdoCNLoja.Execute ("exec SP_FIN_GE_Monta_Campos_item " & NumeroPedido)
+    rdoCNLoja.Execute ("exec SP_FIN_GE_Monta_Campos_item " & numeroPedido)
 
-    sql = "SELECT * FROM temp_GE_Itens order by certificadoInicio"
+    Sql = "SELECT * FROM temp_GE_Itens order by certificadoInicio"
     
     rsItemBilhete.CursorLocation = adUseClient
-    rsItemBilhete.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsItemBilhete.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     If rsItemBilhete.EOF Then
         MsgBox "Erro ao monta item GE", vbCritical, "GE"
@@ -599,14 +599,14 @@ Private Sub obterCertificado()
 End Sub
 
 Private Sub encerrar()
-    Dim sql As String
+    Dim Sql As String
     
-    sql = "IF object_id('temp_GE_Itens') IS NOT NULL" & vbNewLine & _
+    Sql = "IF object_id('temp_GE_Itens') IS NOT NULL" & vbNewLine & _
           "BEGIN" & vbNewLine & _
           "   drop table temp_GE_Itens" & vbNewLine & _
           "END"
     
-    rdoCNLoja.Execute (sql)
+    rdoCNLoja.Execute (Sql)
     encerraConexao
     Screen.MousePointer = 0
     
