@@ -3,17 +3,17 @@ Begin VB.Form frmCancelaCFNF
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    Caption         =   "Cancela CF/NF"
-   ClientHeight    =   2580
-   ClientLeft      =   4245
-   ClientTop       =   4185
-   ClientWidth     =   5085
+   ClientHeight    =   7455
+   ClientLeft      =   5415
+   ClientTop       =   240
+   ClientWidth     =   12765
    ControlBox      =   0   'False
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   2580
-   ScaleWidth      =   5085
+   ScaleHeight     =   7455
+   ScaleWidth      =   12765
    ShowInTaskbar   =   0   'False
    Begin VB.Frame Frame1 
       BackColor       =   &H80000012&
@@ -192,6 +192,26 @@ Begin VB.Form frmCancelaCFNF
          Width           =   555
       End
    End
+   Begin VB.Label lblMensagensTEF 
+      Alignment       =   2  'Center
+      BackColor       =   &H00000000&
+      Caption         =   "Mensagens TEF"
+      BeginProperty Font 
+         Name            =   "Arial"
+         Size            =   12
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      ForeColor       =   &H00FFFFFF&
+      Height          =   2595
+      Left            =   5490
+      TabIndex        =   12
+      Top             =   2715
+      Width           =   5055
+   End
 End
 Attribute VB_Name = "frmCancelaCFNF"
 Attribute VB_GlobalNameSpace = False
@@ -345,15 +365,24 @@ Private Sub Form_Unload(Cancel As Integer)
     wPedido = 0
 End Sub
 
+Private Sub Label8_Click()
+
+End Sub
+
+Private Sub Text5_Change()
+    
+End Sub
+
 Private Sub txtNotaFiscal_KeyPress(KeyAscii As Integer)
 
-If KeyAscii = 27 Then
-   Unload Me
-End If
+    If KeyAscii = 27 Then
+       Unload Me
+    End If
 
-If KeyAscii = 13 Then
-   txtSerie.SetFocus
-End If
+    If KeyAscii = 13 Then
+       txtSerie.SetFocus
+    End If
+    
 End Sub
 
 Private Sub txtNotaFiscal_LostFocus()
@@ -374,6 +403,8 @@ End Sub
 Private Sub txtSenha_KeyPress(KeyAscii As Integer)
 
 If KeyAscii = 13 Then
+  
+  EfetuaCancelarTEF "210", ""
   
   If txtSenha.text <> "" Then
      Call finalizarCancelamento
@@ -471,3 +502,102 @@ Sub LimpaCampos()
         Exit Sub
 
 End Sub
+
+Public Function EfetuaCancelarTEF(codigoPagamento As String, valorCobrado As String) As Boolean
+
+  Dim Retorno        As Long
+  Dim Buffer         As String * 20000
+  Dim ProximoComando As Long
+  Dim TipoCampo      As Long
+  Dim TamanhoMinimo  As Integer
+  Dim TamanhoMaximo  As Integer
+  Dim ContinuaNavegacao  As Long
+  Dim Mensagem As String
+  Dim VARIAVEL As String
+  
+  valorCobrado = Format(valorCobrado, "###,###,##0.00")
+
+  Screen.MousePointer = vbHourglass
+  pedido = "1233456"
+  valorCobrado = "1,80"
+  Retorno = IniciaFuncaoSiTefInterativo(codigoPagamento, valorCobrado & Chr(0), pedido & Chr(0), Format("2018/02/23", "YYYYMMDD") & Chr(0), Format("09:44:00", "HHMMSS") & Chr(0), Trim(GLB_USU_Nome) & Chr(0), Chr(0))
+  Screen.MousePointer = vbDefault
+
+  ProximoComando = 0
+  TipoCampo = 0
+  TamanhoMinimo = 0
+  TamanhoMaximo = 0
+  ContinuaNavegacao = 0
+  Resultado = 0
+  Buffer = String(20000, 0)
+
+    lblMensagensTEF.Caption = ""
+
+  Do
+
+    Screen.MousePointer = vbHourglass
+    
+    Retorno = ContinuaFuncaoSiTefInterativo(ProximoComando, TipoCampo, TamanhoMinimo, TamanhoMaximo, Buffer, Len(Buffer), Resultado)
+    Screen.MousePointer = vbDefault
+
+    If (Retorno = 10000) Then
+
+      If ProximoComando = "1" Or ProximoComando = "2" Or ProximoComando = "3" Then
+        Mensagem = lblMensagensTEF.Caption
+        lblMensagensTEF.Caption = Trim(Buffer)
+        If lblMensagensTEF.Caption = "" Then lblMensagensTEF.Caption = Mensagem
+        lblMensagensTEF.Caption = UCase(lblMensagensTEF.Caption)
+        lblMensagensTEF.Refresh
+      End If
+     
+      'lblParcelas.Caption = Buffer
+
+      VARIAVEL = VARIAVEL & ProximoComando & " - " & Resultado & " - " & Buffer & vbNewLine
+
+     Select Case ProximoComando
+          Case 34
+              If Buffer Like "Forneca o valor da transacao a ser canc*" Then
+                  Buffer = valorCobrado
+                  VARIAVEL = VARIAVEL + Buffer & vbNewLine
+              End If
+
+            Case 30
+                If Buffer Like "Data da transacao*" Then
+                    Buffer = "23022018"
+                    VARIAVEL = VARIAVEL + Buffer & vbNewLine
+                ElseIf Buffer Like "Forneca o numero do documento a ser*" Then
+                    Buffer = "999230140"
+                    VARIAVEL = VARIAVEL + Buffer & vbNewLine
+                End If
+              
+            Case 21
+                If Buffer Like "*1:Magnetico/Chip;2:Digitado;*" Then
+                    Buffer = "1"
+                    VARIAVEL = VARIAVEL + Buffer & vbNewLine
+                End If
+              
+            End Select
+
+    End If
+
+  Loop Until Not (Retorno = 10000)
+
+  If (Retorno = 0) Then
+    lblMensagensTEF.Caption = "Retorno Ok!"
+    EfetuaPagamentoTEF = True
+    
+  Else
+    'Retorno = IniciaFuncaoSiTefInterativo(3, 10, 10, "20180216", "101010", "ACASD", "")
+    'Retorno = ContinuaFuncaoSiTefInterativo(ProximoComando, TipoCampo, TamanhoMinimo, TamanhoMaximo, Buffer, Len(Buffer), Resultado)
+    'FrmSiTef.TxtDisplay.Text = FrmSiTef.TxtDisplay.Text & Buffer
+
+    'felipetef
+    'lblMensagensTEF.Caption = "Erro:" & " " & retornoFuncoesTEF(CStr(Retorno))
+  End If
+
+     FinalizaTransacaoSiTefInterativo 1, pedido, Format("2018/02/23", "YYYYMMDD"), Format("09:44:00", "HHMMSS")
+     criaLogTef (VARIAVEL)
+ 
+End Function
+
+

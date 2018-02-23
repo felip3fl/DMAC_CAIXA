@@ -612,7 +612,7 @@ Dim wQtde As String * 4
 Dim wDescricao38 As String * 38
 
 Private Sub chbSair_Click()
-Unload Me
+    Unload Me
 End Sub
 
 Private Sub chSair_Click()

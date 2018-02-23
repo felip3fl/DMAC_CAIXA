@@ -4,8 +4,8 @@ Begin VB.Form frmFormaPagamento
    BorderStyle     =   0  'None
    Caption         =   "Forma de Pagamento"
    ClientHeight    =   8640
-   ClientLeft      =   2475
-   ClientTop       =   1305
+   ClientLeft      =   3570
+   ClientTop       =   1755
    ClientWidth     =   13425
    BeginProperty Font 
       Name            =   "Arial Black"
@@ -1581,7 +1581,7 @@ End Sub
 Private Sub GuardaValoresParaGravarMovimentoCaixa()
 
 'wValorModalidadeIncorreto = False
-
+      Dim numeroTef As String
       
       If Trim(txtValorModalidade.text = "") Then
          Exit Sub
@@ -1609,6 +1609,8 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
       'TEF ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
       If lblModalidade.Caption = "CREDITO" Then
           If EfetuaPagamentoTEF("3", txtValorModalidade.text) Then
+            
+            numeroTef = lerCamporResultadoTEF(ComprovantePagamento, "Host")
             TotPago = TotPago + Modalidade
             ValTEFVisaElectron = ValTEFVisaElectron + Modalidade
             bandeiraTEFVisaElectron = Agencia
@@ -1617,6 +1619,7 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
 
       If lblModalidade.Caption = "DEBITO" Then
           If EfetuaPagamentoTEF("2", txtValorModalidade.text) Then
+            numeroTef = lerCamporResultadoTEF(ComprovantePagamento, "NSU SiTef")
             TotPago = TotPago + Modalidade
             ValTEFVisaElectron = ValTEFVisaElectron + Modalidade
             bandeiraTEFVisaElectron = Agencia
@@ -3149,31 +3152,33 @@ Private Sub Form_Load()
 End Sub
 
 Public Sub Form_Unload(Cancel As Integer)
-
-Call ZeraVariaveis
-frmcond.Visible = False
-
-lblTootip.Visible = False
-'lblTootip1.Visible = False
- If txtPedido.text <> "" Then
-    pedido = txtPedido.text
- End If
-  pedido = IIf(txtPedido.text = "", 0, txtPedido.text)
-  frmStartaProcessos.txtPedido.text = txtPedido.text
-       
-  chbValoraPagar.Caption = ""
-  txtValorModalidade.text = ""
-  chbvalortroco.Caption = ""
- 
- ' If UCase(frmFormaPagamento.txtIdentificadequeTelaqueveio) = "FRMCAIXATEFPEDIDO" Then
- '    frmCaixaTEFPedido.fraPedido.Visible = True
- ' End If
- 
-  fraRecebimento.Visible = False
-  lblTotalPedido.Visible = False
-  lblValorTotalPedido.Visible = False
-  lblTootip.text = ""
-'  lblTootip1.Text = ""
+    
+    Call ZeraVariaveis
+    frmcond.Visible = False
+    
+    lblTootip.Visible = False
+    'lblTootip1.Visible = False
+    
+    If txtPedido.text <> "" Then
+        pedido = txtPedido.text
+    End If
+    
+    pedido = IIf(txtPedido.text = "", 0, txtPedido.text)
+    frmStartaProcessos.txtPedido.text = txtPedido.text
+    
+    chbValoraPagar.Caption = ""
+    txtValorModalidade.text = ""
+    chbvalortroco.Caption = ""
+    
+    ' If UCase(frmFormaPagamento.txtIdentificadequeTelaqueveio) = "FRMCAIXATEFPEDIDO" Then
+    '    frmCaixaTEFPedido.fraPedido.Visible = True
+    ' End If
+    
+    fraRecebimento.Visible = False
+    lblTotalPedido.Visible = False
+    lblValorTotalPedido.Visible = False
+    lblTootip.text = ""
+    '  lblTootip1.Text = ""
 
 End Sub
 '*??????????????????
@@ -3496,6 +3501,7 @@ If KeyAscii = 27 Then
        txtValorModalidade.Visible = False
        lblModalidade.Visible = False
        lblParcelas.Visible = False
+       exibirMensagemTEF "Pagamento Confir" & vbNewLine & "   Emitindo NF"
     End If
 
 End If
@@ -3716,7 +3722,7 @@ Public Function EfetuaPagamentoTEF(codigoPagamento As String, valorCobrado As St
   Dim TamanhoMinimo  As Integer
   Dim TamanhoMaximo  As Integer
   Dim ContinuaNavegacao  As Long
-  Dim mensagem As String
+  Dim Mensagem As String
   Dim VARIAVEL As String
   
   valorCobrado = Format(valorCobrado, "###,###,##0.00")
@@ -3745,10 +3751,10 @@ Public Function EfetuaPagamentoTEF(codigoPagamento As String, valorCobrado As St
 
     If (Retorno = 10000) Then
 
-      If ProximoComando = "1" Or ProximoComando = "3" Then
-        mensagem = lblMensagemTEF.Caption
+      If ProximoComando = "1" Or ProximoComando = "2" Or ProximoComando = "3" Then
+        Mensagem = lblMensagemTEF.Caption
         lblMensagemTEF.Caption = Trim(Buffer)
-        If lblMensagemTEF.Caption = "" Then lblMensagemTEF.Caption = mensagem
+        If lblMensagemTEF.Caption = "" Then lblMensagemTEF.Caption = Mensagem
         lblMensagemTEF.Caption = UCase(lblMensagemTEF.Caption)
         lblMensagemTEF.Refresh
       End If
@@ -3762,19 +3768,21 @@ Public Function EfetuaPagamentoTEF(codigoPagamento As String, valorCobrado As St
               If Buffer Like ".....S.O.F.T.W.A.R.E*" Then
                   ComprovantePagamento = Buffer
               End If
-            End Select
+          Case 21
+              If Buffer Like "*1:Magnetico/Chip;2:Digitado;*" Then
+                  Buffer = "1"
+              End If
+          End Select
       
       If wParcelas > 1 Then
         Select Case ProximoComando
           Case 21
-              If Buffer Like "1:A Vista*" Then
+              If Buffer Like "1:A Vista;2:Parcelado pelo Estabelecimento;3:Parcelado pela Administradora;*" Then
                   Buffer = "02"
-                  Retorno = ContinuaFuncaoSiTefInterativo(ProximoComando, TipoCampo, TamanhoMinimo, TamanhoMaximo, Buffer, Len(Buffer), Resultado)
               End If
           Case 30
               If Buffer Like "*Forneca o numero de parcela*" And wParcelas > 1 Then
                   Buffer = Format(wParcelas, "00")
-                  Retorno = ContinuaFuncaoSiTefInterativo(ProximoComando, TipoCampo, TamanhoMinimo, TamanhoMaximo, Buffer, Len(Buffer), Resultado)
               End If
         End Select
       End If
@@ -3792,23 +3800,14 @@ Public Function EfetuaPagamentoTEF(codigoPagamento As String, valorCobrado As St
     'Retorno = ContinuaFuncaoSiTefInterativo(ProximoComando, TipoCampo, TamanhoMinimo, TamanhoMaximo, Buffer, Len(Buffer), Resultado)
     'FrmSiTef.TxtDisplay.Text = FrmSiTef.TxtDisplay.Text & Buffer
 
-    lblMensagemTEF.Caption = "Erro:" & " " & retornoFuncoesTEF(CStr(Retorno))
+    'felipetef
+    'lblMensagemTEF.Caption = "Erro:" & " " & retornoFuncoesTEF(CStr(Retorno))
   End If
 
-     FinalizaTransacaoSiTefInterativo 1, "12345", "20011022", "091800"
-     criarLOG (VARIAVEL)
+     FinalizaTransacaoSiTefInterativo 1, pedido & Chr(0), Format(Date, "YYYYMMDD"), Format(Time, "HHMMSS")
+     criaLogTef (VARIAVEL)
 
 End Function
 
-
-Private Sub criarLOG(VARIAVEL As String)
-
-    Open "C:\Users\felipelima\Desktop\LOG.txt" For Output As #1
-            
-        Print #1, VARIAVEL
-    
-    Close #1
-
-End Sub
 
 

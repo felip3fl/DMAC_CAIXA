@@ -1,21 +1,32 @@
 Attribute VB_Name = "Modulo_SiTef"
 
-Public Declare Function ConfiguraIntSiTefInterativo Lib "C:\Users\felipelima\Desktop\DMAC_Caixa\CliSitef32I.dll" (ByVal pEnderecoIP As String, ByVal pCodigoLoja As String, ByVal pNumeroTerminal As String, ByVal ConfiguraResultado As Integer) As Long
-Public Declare Function IniciaFuncaoSiTefInterativo Lib "C:\Users\felipelima\Desktop\DMAC_Caixa\CliSitef32I.dll" (ByVal Funcao As Long, ByVal pValor As String, ByVal pCuponFiscal As String, ByVal pDataFiscal As String, ByVal pHorario As String, ByVal pOperador As String, ByVal pParamAdic As String) As Long
-Public Declare Sub FinalizaTransacaoSiTefInterativo Lib "C:\Users\felipelima\Desktop\DMAC_Caixa\CliSitef32I.dll" (ByVal Confirma As Integer, ByVal pNumeroCuponFiscal As String, ByVal pDataFiscal As String, ByVal pHorario As String)
-Public Declare Function ContinuaFuncaoSiTefInterativo Lib "C:\Users\felipelima\Desktop\DMAC_Caixa\CliSitef32I.dll" (ByRef pProximoComando As Long, ByRef pTipoCampo As Long, ByRef pTamanhoMinimo As Integer, ByRef pTamanhoMaximo As Integer, ByVal pBuffer As String, ByVal TamMaxBuffer As Long, ByVal ContinuaNavegacao As Long) As Long
+Public Declare Function ConfiguraIntSiTefInterativo Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" (ByVal pEnderecoIP As String, ByVal pCodigoLoja As String, ByVal pNumeroTerminal As String, ByVal ConfiguraResultado As Integer) As Long
+Public Declare Function IniciaFuncaoSiTefInterativo Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" (ByVal Funcao As Long, ByVal pValor As String, ByVal pCuponFiscal As String, ByVal pDataFiscal As String, ByVal pHorario As String, ByVal pOperador As String, ByVal pParamAdic As String) As Long
+Public Declare Sub FinalizaTransacaoSiTefInterativo Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" (ByVal Confirma As Integer, ByVal pNumeroCuponFiscal As String, ByVal pDataFiscal As String, ByVal pHorario As String)
+                   
+    
+Public Declare Function ContinuaFuncaoSiTefInterativo Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" (ByRef pProximoComando As Long, ByRef pTipoCampo As Long, ByRef pTamanhoMinimo As Integer, ByRef pTamanhoMaximo As Integer, ByVal pBuffer As String, ByVal TamMaxBuffer As Long, ByVal ContinuaNavegacao As Long) As Long
 
-Private Declare Function LeSimNaoPinPad Lib "C:\Users\felipelima\Desktop\DMAC_Caixa\CliSitef32I.dll" (ByVal Funcao As String) As Long
-Private Declare Function EscreveMensagemPermanentePinPad Lib "C:\Users\felipelima\Desktop\DMAC_Caixa\CliSitef32I.dll" (ByVal Funcao As String) As Long
+Private Declare Function LeSimNaoPinPad Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" (ByVal Funcao As String) As Long
+Private Declare Function EscreveMensagemPermanentePinPad Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" (ByVal Funcao As String) As Long
 
 Global Resultado     As Long
 Global ComprovantePagamento As String
 Global GLB_TefHabilidado As Boolean
+Private Const endereco = ""
 
-
+Public Sub criaLogTef(Mensagem As String)
+    Open "C:\Sistemas\DMAC Caixa\Sitef\log.txt" For Output As #1
+            
+        Print #1, Mensagem
+    
+    Close #1
+End Sub
 
 
 Public Function retornoFuncoesConfiguracoes(codigo As String)
+
+    endereco = App.Path
 
     Select Case codigo
         Case 0
@@ -105,7 +116,7 @@ Public Function retornoFuncoesTEF(codigo As String)
 End Function
 
 
-Public Sub exibirMensagemTEF(mensagem As String)
+Public Sub exibirMensagemTEF(Mensagem As String)
 
 On Error GoTo TrataErro
 
@@ -113,7 +124,7 @@ On Error GoTo TrataErro
 
     Screen.MousePointer = 11
 
-    EscreveMensagemPermanentePinPad (mensagem)
+    EscreveMensagemPermanentePinPad (Mensagem)
                                      
 TrataErro:
     Screen.MousePointer = vbDefault
@@ -122,16 +133,16 @@ TrataErro:
     End If
 End Sub
 
-Public Sub exibirMensagemPedidoTEF(numeroPedido As String, parcelas As Byte)
+Public Sub exibirMensagemPedidoTEF(numeroPedido As String, Parcelas As Byte)
     
     Dim msgParcela As String
     
     msgParcela = " parcela"
     
-    If parcelas > 1 Then msgParcela = msgParcela + "s"
+    If Parcelas > 1 Then msgParcela = msgParcela + "s"
         
     exibirMensagemTEF ("Pedido " & Trim(numeroPedido) & vbNewLine & _
-                   "" & parcelas & msgParcela)
+                   "" & Parcelas & msgParcela)
                    
 
 End Sub
@@ -142,6 +153,8 @@ Public Sub ImprimeComprovanteTEF(ByRef mensagemComprovanteTEF As String)
     
     Screen.MousePointer = 11
     
+    exibirMensagemTEF " Imprimindo TEF" & vbNewLine & "   Aguarde..."
+    
     impressoraRelatorio "[INICIO]"
     impressoraRelatorio mensagemComprovanteTEF
     impressoraRelatorio "[FIM]"
@@ -150,6 +163,8 @@ Public Sub ImprimeComprovanteTEF(ByRef mensagemComprovanteTEF As String)
     
     mensagemComprovanteTEF = ""
     
+    Esperar 1
+    
 End Sub
 
 Public Sub exibirMensagemPadraoTEF()
@@ -157,4 +172,21 @@ Public Sub exibirMensagemPadraoTEF()
     exibirMensagemTEF "  Conectado ao " & vbNewLine & "   DMAC CAIXA"
 
 End Sub
+
+Public Function lerCamporResultadoTEF(informacoes As String, campo As String) As String
+    
+    If informacoes Like "*" & campo & ":*" Then
+        Dim inicioCampo, fimCampo As Integer
+    
+        inicioCampo = (InStr(informacoes, campo & ":")) + (Len(campo)) + 1
+        fimCampo = (InStr(inicioCampo, informacoes, Chr(10))) - inicioCampo - 1
+    
+        If inicioCampo + fimCampo <> 0 Then
+            lerCamporResultadoTEF = Mid$(informacoes, inicioCampo, fimCampo)
+        End If
+    Else
+        lerCamporResultadoTEF = ""
+    End If
+    
+End Function
 

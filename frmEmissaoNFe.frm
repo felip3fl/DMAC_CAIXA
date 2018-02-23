@@ -5,8 +5,8 @@ Begin VB.Form frmEmissaoNFe
    BorderStyle     =   0  'None
    Caption         =   "Emissão NFe"
    ClientHeight    =   9240
-   ClientLeft      =   900
-   ClientTop       =   1095
+   ClientLeft      =   960
+   ClientTop       =   885
    ClientWidth     =   19035
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
@@ -926,7 +926,10 @@ Public Sub cmdTransmitir_Click()
      
     If Nf.eSerie = "NE" Then
     
+            
         finalizaProcesso "Emitindo Nota Fiscal Eletrônica " & Nf.numero, True
+        exibirMensagemTEF "  Emitindo NFe" & vbNewLine & "   Aguarde..."
+        
         
         criaDuplicataBanco
     
@@ -949,8 +952,10 @@ Public Sub cmdTransmitir_Click()
     ElseIf Nf.eSerie Like "CE*" Then
 
         finalizaProcesso "Emitindo Cupom Fiscal Eletrônico", True
-        criaTXTSAT "sat", Nf
+        exibirMensagemTEF " Emitindo Cupom" & vbNewLine & "   Aguarde..."
         
+        criaTXTSAT "sat", Nf
+             
         
     End If
 
@@ -968,9 +973,9 @@ Private Sub cmdImprimir_Click()
 End Sub
 
 
-Private Sub finalizaProcesso(mensagem As String, esperaResposta As Boolean)
+Private Sub finalizaProcesso(Mensagem As String, esperaResposta As Boolean)
             
-    mensagemStatus = mensagem
+    mensagemStatus = Mensagem
     frameDadosNotaFiscal.Visible = False
     frmAdministrador.Visible = False
     frameNFE.Visible = False
@@ -1119,21 +1124,21 @@ Private Sub Form_Activate()
     
 End Sub
 
-Public Sub statusFuncionamento(mensagem As String)
+Public Sub statusFuncionamento(Mensagem As String)
     
    ' mensagem = "Imprimindo Garantia Estendida" & " "
-    If lblStatusImpressao.Caption = mensagem & " " & "  . . . ." Then
-        lblStatusImpressao.Caption = mensagem & " " & ".   . . ."
-    ElseIf lblStatusImpressao.Caption = mensagem & " " & ".   . . ." Then
-        lblStatusImpressao.Caption = mensagem & " " & ". .   . ."
-    ElseIf lblStatusImpressao.Caption = mensagem & " " & ". .   . ." Then
-        lblStatusImpressao.Caption = mensagem & " " & ". . .   ."
-    ElseIf lblStatusImpressao.Caption = mensagem & " " & ". . .   ." Then
-        lblStatusImpressao.Caption = mensagem & " " & ". . . .  "
-    ElseIf lblStatusImpressao.Caption = mensagem & " " & ". . . .  " Then
-        lblStatusImpressao.Caption = mensagem & " " & "  . . . ."
+    If lblStatusImpressao.Caption = Mensagem & " " & "  . . . ." Then
+        lblStatusImpressao.Caption = Mensagem & " " & ".   . . ."
+    ElseIf lblStatusImpressao.Caption = Mensagem & " " & ".   . . ." Then
+        lblStatusImpressao.Caption = Mensagem & " " & ". .   . ."
+    ElseIf lblStatusImpressao.Caption = Mensagem & " " & ". .   . ." Then
+        lblStatusImpressao.Caption = Mensagem & " " & ". . .   ."
+    ElseIf lblStatusImpressao.Caption = Mensagem & " " & ". . .   ." Then
+        lblStatusImpressao.Caption = Mensagem & " " & ". . . .  "
+    ElseIf lblStatusImpressao.Caption = Mensagem & " " & ". . . .  " Then
+        lblStatusImpressao.Caption = Mensagem & " " & "  . . . ."
     Else
-        lblStatusImpressao.Caption = mensagem & " " & "  . . . ."
+        lblStatusImpressao.Caption = Mensagem & " " & "  . . . ."
     End If
     
 End Sub
@@ -1211,6 +1216,10 @@ Private Function obterNumeroNota(pedido As String, numeroNFE As String) As Strin
     rsNotaFiscal.Close
 
 End Function
+
+Private Sub Form_Unload(Cancel As Integer)
+    exibirMensagemPadraoTEF
+End Sub
 
 Private Sub grdLogSig_Click()
     If grdLogSig.CellForeColor = vbRed Then
@@ -1450,7 +1459,7 @@ Private Sub timerSairSistema_Timer()
     Tempo = Tempo + 1
     statusFuncionamento mensagemStatus
     carregaArquivoUnico
-    If Tempo > 3 Then
+    If Tempo > 3 Then 'felipetef
         timerExibirMSG.Enabled = False
         ImprimeComprovanteTEF ComprovantePagamento
         Unload Me
@@ -2684,7 +2693,7 @@ Private Sub atualizaArquivo(ByRef enderecoArquivo As String, Arquivo As String, 
     
 End Sub
 
-Public Function mensagemLOG2(grid, Data As Date, tipoStatus As Integer, loja As String, numeroNotaFiscal As String, pedido As String, mensagem As String)
+Public Function mensagemLOG2(grid, Data As Date, tipoStatus As Integer, loja As String, numeroNotaFiscal As String, pedido As String, Mensagem As String)
 
     Dim status As String
     Dim corLinha As ColorConstants
@@ -2700,11 +2709,11 @@ Public Function mensagemLOG2(grid, Data As Date, tipoStatus As Integer, loja As 
     End Select
                
     If chkMostraLogErro.Value = 1 And chkMostraLogSucesso = 1 Then
-        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & mensagem
+        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & Mensagem
     ElseIf chkMostraLogErro = 1 And status = "Erro" Then
-        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & mensagem
+        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & Mensagem
     ElseIf chkMostraLogSucesso = 1 And status <> "Erro" Then
-        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & mensagem
+        grid.AddItem loja & Chr(9) & Data & Chr(9) & Format(pedido, "##") & Chr(9) & numeroNotaFiscal & Chr(9) & Mensagem
     End If
         
     
@@ -2832,7 +2841,7 @@ End Function
 
 
 
-Public Function criaTXTtemporario(Endereco As String, tiponota As String, pedido As String, CNPJ As String, loja As String) As String
+Public Function criaTXTtemporario(endereco As String, tiponota As String, pedido As String, CNPJ As String, loja As String) As String
 
     Dim corpoMensagem As String
     Dim nota As notaFiscal
@@ -2843,7 +2852,7 @@ On Error GoTo TrataErro
     If tiponota = "SAT" Then corpoMensagem = montaTXTSAT(pedido)
     
     If corpoMensagem <> Empty Then
-        criaTXTtemporario = Endereco & LCase(tiponota) & (Format(pedido, "000000000")) & "#" & CNPJ & ".txt"
+        criaTXTtemporario = endereco & LCase(tiponota) & (Format(pedido, "000000000")) & "#" & CNPJ & ".txt"
         Open criaTXTtemporario For Output As #1
              Print #1, corpoMensagem
         Close #1

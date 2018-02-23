@@ -3,8 +3,8 @@ Begin VB.Form frmControlaCaixa
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    ClientHeight    =   10440
-   ClientLeft      =   1770
-   ClientTop       =   90
+   ClientLeft      =   1695
+   ClientTop       =   630
    ClientWidth     =   15630
    Icon            =   "frmControlaCaixa.frx":0000
    LinkTopic       =   "Form1"
@@ -1167,7 +1167,7 @@ Private Sub cmdBotoesParte2_Click(Index As Integer)
        ' frmPortal.Show 0
     
     Case 2
-        frmCancelaCFNF.Show vbModal
+         frmCancelaCFNF.Show vbModal
     Case 3
         frmReimpressaoMovimento.Show vbModal
     Case 4
@@ -1289,7 +1289,6 @@ Private Sub Form_Activate()
     'txtPedido.Visible = False
     'webAviso.Navigate "https://www.nfe.fazenda.gov.br/portal/disponibilidade.aspx?versao=0.00&tipoConteudo=Skeuqr8PQBY="
     
-    
     Dim statusContingencia As Byte
 
     
@@ -1325,61 +1324,63 @@ End Sub
 Private Sub Form_Load()
         
     defineImpressora
+    
+    'Call criaIconeBarra(TrayAdd, Me.Hwnd, "DMAC Caixa", imgIconBandeja.Picture)
+    
+    lblBotao.top = 11230
+    emitiNota = False
+    
+    resolucaoOriginal.Colunas = resolucaoTela.Colunas
+    resolucaoOriginal.Linhas = resolucaoTela.Linhas
+    Call AlterarResolucao(1024, 768)
+    
+    webInternet1.Picture = LoadPicture(endIMG("topo1024768hd"))
+    'frmControlaCaixa.Picture = LoadPicture("C:\sistemas\DMAC Caixa\imagens\TelaDMAC.jpg")
+    cmdVersao.Caption = ""
+    ControlaMenu = 0
+    
+    Sql = "Select * from ParametroCaixa where PAR_NroCaixa = " & GLB_Caixa
+    
+    rdoParametro.CursorLocation = adUseClient
+    rdoParametro.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    
+    If rdoParametro.EOF Then
+        rdoParametro.Close
+        MsgBox "Problema com os Parametros avise ao CPD", vbCritical, "Aviso"
+        Unload Me
+    End If
+    
+    lblNroCaixa.Caption = GLB_Caixa
+    cmdNroCaixa.Caption = "Caixa " & GLB_Caixa
+    
+    If GLB_TefHabilidado Then cmdNroCaixa.Caption = cmdNroCaixa.Caption & " (TEF)"
+        lblloja.Caption = rdoParametro("PAR_Loja")
+        cmdLoja.Caption = "Loja " & rdoParametro("PAR_Loja")
+        lblOperador.Caption = Trim(GLB_USU_Nome)
+        cmdOperador.Caption = "Operador  " & Trim(GLB_USU_Nome)
+    
+        tipoZero = False
         
-'Call criaIconeBarra(TrayAdd, Me.Hwnd, "DMAC Caixa", imgIconBandeja.Picture)
-        
-lblBotao.top = 11230
-emitiNota = False
-        
-
-        
-resolucaoOriginal.Colunas = resolucaoTela.Colunas
-resolucaoOriginal.Linhas = resolucaoTela.Linhas
-Call AlterarResolucao(1024, 768)
-        
-  webInternet1.Picture = LoadPicture(endIMG("topo1024768hd"))
-  'frmControlaCaixa.Picture = LoadPicture("C:\sistemas\DMAC Caixa\imagens\TelaDMAC.jpg")
-  cmdVersao.Caption = ""
-  ControlaMenu = 0
- 
-Sql = "Select * from ParametroCaixa where PAR_NroCaixa = " & GLB_Caixa
-
-rdoParametro.CursorLocation = adUseClient
-rdoParametro.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
-If rdoParametro.EOF Then
-   rdoParametro.Close
-   MsgBox "Problema com os Parametros avise ao CPD", vbCritical, "Aviso"
-   Unload Me
-End If
-
-lblNroCaixa.Caption = GLB_Caixa
-cmdNroCaixa.Caption = "Caixa " & GLB_Caixa
-If GLB_TefHabilidado Then cmdNroCaixa.Caption = cmdNroCaixa.Caption & " (TEF)"
-lblloja.Caption = rdoParametro("PAR_Loja")
-cmdLoja.Caption = "Loja " & rdoParametro("PAR_Loja")
-lblOperador.Caption = Trim(GLB_USU_Nome)
-cmdOperador.Caption = "Operador  " & Trim(GLB_USU_Nome)
-
-tipoZero = False
-If VerificaSeEmiteCodigoZero = "S" Then
-    tipoZero = True
-End If
-
-lblProtocolo.Caption = GLB_CTR_Protocolo
-cmdProtocolo.Caption = "Protocolo  " & GLB_CTR_Protocolo
-rdoParametro.Close
-
-Sql = "select CS_SerieCF as serie from ControleSerie where CS_NroCaixa = '" & GLB_Caixa & "'"
-rdoParametro.CursorLocation = adUseClient
-rdoParametro.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    If VerificaSeEmiteCodigoZero = "S" Then
+        tipoZero = True
+    End If
+    
+    lblProtocolo.Caption = GLB_CTR_Protocolo
+    cmdProtocolo.Caption = "Protocolo  " & GLB_CTR_Protocolo
+    rdoParametro.Close
+    
+    Sql = "select CS_SerieCF as serie from ControleSerie where CS_NroCaixa = '" & GLB_Caixa & "'"
+    rdoParametro.CursorLocation = adUseClient
+    rdoParametro.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     GLB_SerieCF = rdoParametro("Serie")
-rdoParametro.Close
-
+    rdoParametro.Close
+    
     abilitaFuncoesCF
-
+    
     conectarTEF
-
-'txtPedido.SetFocus
+    
+    'txtPedido.SetFocus
+    
 End Sub
 
 
@@ -1792,10 +1793,29 @@ Private Function notaTrans()
 End Function
 
 
-
 Private Sub conectarTEF()
+
   Dim Retorno As Long
   Dim Ip As String
+  Dim IdTerminal As String
+  Dim Sql As String
+  
+  Sql = "select LT_LOJA LOJA, LT_NumeroCaixa NumeroCaixa, LT_TefHabilidado Habilitado, " & vbNewLine & _
+        "LT_IPSiTef IPSiTef, LT_IdLoja IdLoja, LT_IdTerminal IdTerminal, " & vbNewLine & _
+        "LT_Reservado Reservado" & vbNewLine & _
+        "from lojaTEF " & vbNewLine & _
+        "where LT_LOJA = '" & wLoja & "'" & vbNewLine & _
+        "and LT_Caixa  "
+  
+  GLB_TefHabilidado = True
+  
+  IdTerminal = 1
+  
+  If IdTerminal >= 900 And IdTerminal <= 999 Then
+     MsgBox "Atenção: A automação comercial não deve utilizar a identificação de terminal na faixa entre 000900 a 000999 que é reservada para uso pelo SiTef: Função ConfiguraIntSiTefInterativo (EndSiTef, IdLoja, IdTerminal, Reservado);", vbCritical, "Inicialização TEF"
+  Else
+    IdTerminal = Format("1", "000000")
+  End If
         
   On Error GoTo TrataErro
   
@@ -1808,11 +1828,11 @@ Private Sub conectarTEF()
         
   Screen.MousePointer = vbHourglass
     
-  Retorno = ConfiguraIntSiTefInterativo(Ip & Chr(0), "00000000" & Chr(0), "SE000001" & Chr(0), 0)
+  Retorno = ConfiguraIntSiTefInterativo(Ip & Chr(0), "00000000" & Chr(0), "SE" & IdTerminal & Chr(0), 0)
   Screen.MousePointer = vbDefault
 
   If (Retorno = 0) Then
-    lblMensagensTEF.Caption = "Conexão com o TEF realizada com sucesso"
+    lblMensagensTEF.Caption = "Conexão com o sistema SITEF realizada com sucesso"
   Else
     lblMensagensTEF.Caption = "TEF Erro: Retorno -> " & CStr(Retorno)
   End If
