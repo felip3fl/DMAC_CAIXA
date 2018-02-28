@@ -1,10 +1,11 @@
 Attribute VB_Name = "Modulo_SiTef"
+Option Explicit
+
 
 Public Declare Function ConfiguraIntSiTefInterativo Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" (ByVal pEnderecoIP As String, ByVal pCodigoLoja As String, ByVal pNumeroTerminal As String, ByVal ConfiguraResultado As Integer) As Long
 Public Declare Function IniciaFuncaoSiTefInterativo Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" (ByVal Funcao As Long, ByVal pValor As String, ByVal pCuponFiscal As String, ByVal pDataFiscal As String, ByVal pHorario As String, ByVal pOperador As String, ByVal pParamAdic As String) As Long
 Public Declare Sub FinalizaTransacaoSiTefInterativo Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" (ByVal Confirma As Integer, ByVal pNumeroCuponFiscal As String, ByVal pDataFiscal As String, ByVal pHorario As String)
                    
-    
 Public Declare Function ContinuaFuncaoSiTefInterativo Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" (ByRef pProximoComando As Long, ByRef pTipoCampo As Long, ByRef pTamanhoMinimo As Integer, ByRef pTamanhoMaximo As Integer, ByVal pBuffer As String, ByVal TamMaxBuffer As Long, ByVal ContinuaNavegacao As Long) As Long
 
 Private Declare Function LeSimNaoPinPad Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" (ByVal Funcao As String) As Long
@@ -15,23 +16,16 @@ Global ComprovantePagamento As String
 Global GLB_TefHabilidado As Boolean
 Private Const endereco = ""
 
-Type notaFiscalTEF
-    numero As String
-    loja As String
-    eSerie As String
-    'serie As String
-    CNPJ As String
-    chave As String
-    pedido As String
-    cfop As String
-End Type
 
-Public Sub criaLogTef(Mensagem As String)
-    Open "C:\Sistemas\DMAC Caixa\Sitef\log.txt" For Output As #1
+
+Public Sub criaLogTef(Nome As String, Mensagem As String)
+
+    Open "C:\Sistemas\DMAC Caixa\Sitef\log\log" & Nome & ".txt" For Output As #1
             
         Print #1, Mensagem
     
     Close #1
+    
 End Sub
 
 
@@ -74,22 +68,29 @@ End Function
 
 Public Function retornoFuncoesTEF(codigo As String)
 
-
     Select Case codigo
         Case "1"
             retornoFuncoesTEF = "0 Sucesso na execução da função. "
         Case "10000"
             retornoFuncoesTEF = "10000 Deve ser chamada a rotina de continuidade do processo. "
         Case Is > 1
-            retornoFuncoesTEF = "outro valor positivo Negada pelo autorizador. "
+            retornoFuncoesTEF = "1 outro valor positivo Negada pelo autorizador. "
         Case "-1"
             retornoFuncoesTEF = "-1 Módulo não inicializado. O PDV tentou chamar alguma rotina sem antes executar a função configura. "
         Case "-2"
-            retornoFuncoesTEF = "-2 Operação cancelada pelo operador. -3 O parâmetro função / modalidade é inexistente/inválido. "
+            retornoFuncoesTEF = "-2 Operação cancelada pelo operador. "
+        Case "-3"
+            retornoFuncoesTEF = "-3 O parâmetro função / modalidade é inexistente/inválido. "
         Case "-4"
-            retornoFuncoesTEF = "-4 Falta de memória no PDV. -5 Sem comunicação com o SiTef. -6 Operação cancelada pelo usuário (no pinpad). "
+            retornoFuncoesTEF = "-4 Falta de memória no PDV."
+        Case "-5"
+            retornoFuncoesTEF = "-5 Sem comunicação com o SiTef. "
+        Case "-6"
+            retornoFuncoesTEF = "-6 Operação cancelada pelo usuário (no pinpad). "
         Case "-7"
-            retornoFuncoesTEF = "-7 Reservado -8 A CliSiTef não possui a implementação da função necessária, provavelmente está desatualizada (a CliSiTefI é mais recente). "
+            retornoFuncoesTEF = "-7 Reservado"
+        Case "-7"
+            retornoFuncoesTEF = "-8 A CliSiTef não possui a implementação da função necessária, provavelmente está desatualizada (a CliSiTefI é mais recente). "
         Case "-9"
             retornoFuncoesTEF = "-9 A automação chamou a rotina ContinuaFuncaoSiTefInterativo sem antes iniciar uma função iterativa. "
         Case "-10"
@@ -144,16 +145,16 @@ TrataErro:
     End If
 End Sub
 
-Public Sub exibirMensagemPedidoTEF(numeroPedido As String, Parcelas As Byte)
+Public Sub exibirMensagemPedidoTEF(numeroPedido As String, parcelas As Byte)
     
     Dim msgParcela As String
     
     msgParcela = " parcela"
     
-    If Parcelas > 1 Then msgParcela = msgParcela + "s"
+    If parcelas > 1 Then msgParcela = msgParcela + "s"
         
     exibirMensagemTEF ("Pedido " & Trim(numeroPedido) & vbNewLine & _
-                   "" & Parcelas & msgParcela)
+                   "" & parcelas & msgParcela)
                    
 
 End Sub
@@ -186,11 +187,11 @@ End Sub
 
 Public Function lerCamporResultadoTEF(informacoes As String, campo As String) As String
     
-    If informacoes Like "*" & campo & ":*" Then
+    If informacoes Like "*" & campo & ": *" Then
         Dim inicioCampo, fimCampo As Integer
     
-        inicioCampo = (InStr(informacoes, campo & ":")) + (Len(campo)) + 1
-        fimCampo = (InStr(inicioCampo, informacoes, Chr(10))) - inicioCampo - 1
+        inicioCampo = (InStr(informacoes, campo & ": ")) + (Len(campo)) + 2
+        fimCampo = (InStr(inicioCampo, informacoes, Chr(10))) - inicioCampo
     
         If inicioCampo + fimCampo <> 0 Then
             lerCamporResultadoTEF = Mid$(informacoes, inicioCampo, fimCampo)
@@ -202,28 +203,47 @@ Public Function lerCamporResultadoTEF(informacoes As String, campo As String) As
 End Function
 
 
-Public Function EfetuaOperacaoTEF(codigoOperacao As String, valorCobrado As String, ByRef campoExibirMensagem As Label) As Boolean
+Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
+                                  ByRef Nf As notaFiscal, _
+                                  ByRef campoExibirMensagem As Label) _
+                                  As Boolean
+                                  
 
     Dim Retorno        As Long
     Dim Buffer         As String * 20000
+    Dim BufferAux      As String * 20000
+    Dim resposta       As String
     Dim ProximoComando As Long
     Dim TipoCampo      As Long
     Dim TamanhoMinimo  As Integer
     Dim TamanhoMaximo  As Integer
     Dim ContinuaNavegacao  As Long
-    
-    Dim Mensagem As String
+
     Dim logOperacoesTEF As String
+    Dim horaOperacao As String
+    Dim dataOperacao As String
     
-    valorCobrado = Format(valorCobrado, "###,###,##0.00")
+    Dim valores As String
+    Dim tipoOperacao As String
+    
+    If codigoOperacao = "" Then
+        MsgBox "Não foi possível realizar a operação. Código de Operação não informado", vbExclamation, "TEF"
+        Exit Function
+    End If
+    
+    horaOperacao = Format(Time, "HHMMSS")
+    dataOperacao = Format(GLB_DataInicial, "YYYYMMDD")
+    
+    Nf.valor = Format(Nf.valor, "###,###,##0.00")
+    Nf.dataEmissao = Format(Nf.dataEmissao, "DDMMYYYY")
     
     Screen.MousePointer = 11
     
     Retorno = IniciaFuncaoSiTefInterativo(codigoOperacao, _
-                                          valorCobrado & Chr(0), _
-                                          pedido & Chr(0), _
-                                          Format(Date, "YYYYMMDD") & Chr(0), _
-                                          Format(Time, "HHMMSS") & Chr(0), _
+                                          Nf.valor & Chr(0), _
+                                          Nf.pedido & Chr(0), _
+                                          dataOperacao & Chr(0), _
+                                          horaOperacao & Chr(0), _
                                           Trim(GLB_USU_Nome) & Chr(0), _
                                           Chr(0))
                                         
@@ -239,18 +259,32 @@ Public Function EfetuaOperacaoTEF(codigoOperacao As String, valorCobrado As Stri
     
     Do
         
-        Retorno = ContinuaFuncaoSiTefInterativo(ProximoComando, _
+            If valores <> "" Then
+                Retorno = ContinuaFuncaoSiTefInterativo(ProximoComando, _
+                                                        TipoCampo, _
+                                                        TamanhoMinimo, _
+                                                        TamanhoMaximo, _
+                                                        valores, _
+                                                        Len(valores), _
+                                                        Resultado)
+            Else
+                Retorno = ContinuaFuncaoSiTefInterativo(ProximoComando, _
                                                 TipoCampo, _
                                                 TamanhoMinimo, _
                                                 TamanhoMaximo, _
                                                 Buffer, _
                                                 Len(Buffer), _
                                                 Resultado)
+            End If
+        
+
                                                 
+        valores = ""
+                                                
+        BufferAux = Buffer
         logOperacoesTEF = logOperacoesTEF & "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
                               "[Resu:" & Space(4 - Len(Trim(Resultado))) & Resultado & "]" & _
-                              "[Tipo:" & Space(4 - Len(Trim(TipoCampo))) & TipoCampo & "] " & Trim(Buffer) & vbNewLine
-                                                
+                              "[Tipo:" & Space(4 - Len(Trim(TipoCampo))) & TipoCampo & "] " & left(Buffer, 200) & vbNewLine
         
         If (Retorno = 10000) Then
         
@@ -263,32 +297,50 @@ Public Function EfetuaOperacaoTEF(codigoOperacao As String, valorCobrado As Stri
             Case -1
             
                 If ProximoComando = 21 Then
-                    If Buffer Like "1:A Vista;2:Parcelado pelo Estabelecimento;3:Parcelado pela Administradora;*" Then
-                        Buffer = "1"
-                        If wParcelas > 1 Then Buffer = wParcelas
+                
+                    valores = "1"
+                
+                    If Buffer Like "1:A Vista;2:Parcelado pelo Estabelecimento;3:Parcelado pela Administradora;*" And Nf.parcelas > 1 Then
+                        valores = Nf.parcelas
                     End If
                         
-                    If Buffer Like "Forneca o numero de parcela*" And wParcelas > 1 Then
-                        Buffer = Format(wParcelas, "0")
+                    If Buffer Like "Forneca o numero de parcela*" Then
+                        valores = Format(Nf.parcelas, "0")
                     End If
                     
-                    If Buffer Like "1:Magnetico/Chip;2:Digitado*" Then
-                        Buffer = "1"
-                    End If
+                    'If Buffer Like "1:Magnetico/Chip;2:Digitado*" Then
+                     '   valores = "1"
+                        'valores = InputBox(Buffer)
+                    'End If
+                    
+                ElseIf ProximoComando = 22 Then
+                    'MsgBox Trim(Buffer)
                 End If
             
-            
-            Case 121 'Buffer contém a primeira via do comprovante de pagamento
+                    
+            Case 121, 122 'Buffer contém a primeira via do comprovante de pagamento
                     ComprovantePagamento = ComprovantePagamento & Buffer & vbNewLine
+                    If Nf.numeroTEF = "" Then Nf.numeroTEF = lerCamporResultadoTEF(ComprovantePagamento, "Host")
             Case 515 'Data da transação a ser cancelada (DDMMAAAA) ou a ser re-impressa
-                    Buffer = "23022018"
+                    valores = Nf.dataEmissao
             Case 516 'Número do documento a ser cancelado ou a ser re-impresso
-                    Buffer = "999230151" 'numero tef
+                    valores = Nf.numeroTEF 'numero tef
             Case 146 'A rotina está sendo chamada para ler o Valor a ser cancelado.
-                    Buffer = "0,90"
+                    valores = Nf.valor
+            Case 512, 513, 514
+                    valores = InputBox(Buffer)
+            Case 21
+            
+            Case 4
+                    
+                    
             End Select
             
-            logOperacoesTEF = logOperacoesTEF + Buffer & vbNewLine
+
+            
+            logOperacoesTEF = logOperacoesTEF & "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
+                              "[Resu:" & Space(4 - Len(Trim(Resultado))) & Resultado & "]" & _
+                              "[Tipo:" & Space(4 - Len(Trim(TipoCampo))) & TipoCampo & "] VALORES: " & left(valores, 200) & vbNewLine
         
         End If
     
@@ -297,18 +349,113 @@ Public Function EfetuaOperacaoTEF(codigoOperacao As String, valorCobrado As Stri
     If (Retorno = 0) Then
         campoExibirMensagem.Caption = "Operação completada com sucesso"
         EfetuaOperacaoTEF = True
+    Else
+        MsgBox "Erro " & "" & retornoFuncoesTEF(Str(Retorno)), vbCritical, "Erro TEF"
     End If
     
     FinalizaTransacaoSiTefInterativo 1, _
-                                     pedido, _
-                                     Format("2018/02/23", "YYYYMMDD"), _
-                                     Format("09:44:00", "HHMMSS")
+                                     Nf.pedido, _
+                                     dataOperacao, _
+                                     horaOperacao
                                      
-    criaLogTef (logOperacoesTEF)
+                                     
     Screen.MousePointer = 0
+    
+    If codigoOperacao < 100 Then
+        tipoOperacao = "Venda" & pedido
+    Else
+        tipoOperacao = "Cancelamento" & pedido
+    End If
+    
+    criaLogTef tipoOperacao, logOperacoesTEF
+    
  
 End Function
 
 
+Private Sub carregarDadosTEFBancoDeDados(ByRef labelMensagem As Label, ByRef Ip As String, ByRef IdTerminal As String, ByRef IdLoja As String, ByRef HabilitaTEF As Boolean)
 
+    Dim RsDados As New ADODB.Recordset
+    Dim sql As String
+
+    On Error GoTo TrataErro
+
+    sql = "select " & vbNewLine & _
+          "LT_TefHabilidado Habilitado, " & vbNewLine & _
+          "LT_IPSiTef IPSiTef, " & vbNewLine & _
+          "LT_IdLoja IdLoja, " & vbNewLine & _
+          "LT_IdTerminal IdTerminal, " & vbNewLine & _
+          "LT_Reservado Reservado" & vbNewLine & _
+          "from lojaTEF " & vbNewLine & _
+          "where LT_LOJA = '" & wLoja & "'" & vbNewLine & _
+          "and LT_NumeroCaixa = '" & GLB_Caixa & "'"
+
+    RsDados.CursorLocation = adUseClient
+    RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    
+    If Not RsDados.EOF Then
+        If RsDados("Habilitado") = "S" Then GLB_TefHabilidado = True
+        Ip = RsDados("IPSiTef")
+        
+        IdLoja = RsDados("IdLoja")
+        IdTerminal = RsDados("IdTerminal")
+    End If
+
+    RsDados.Close
+
+TrataErro:
+
+    Screen.MousePointer = vbDefault
+    
+    If Err.Number <> 0 Then
+        labelMensagem.Caption = "Erro buscar dados do TEF no banco de dados" & vbNewLine & Err.Number & " - " & Err.Description
+        frmControlaCaixa.cmdNroCaixa.ForeOver = vbRed
+        frmControlaCaixa.cmdNroCaixa.ForeColor = vbRed
+        frmControlaCaixa.cmdNroCaixa.Caption = Replace(frmControlaCaixa.cmdNroCaixa.Caption, "(TEF)", "(Erro no TEF)")
+    End If
+
+End Sub
+
+Public Sub conectarTEF(ByRef labelMensagem As Label)
+
+  Dim Retorno As Long
+  Dim Ip As String
+  Dim IdTerminal As String
+  Dim IdLoja As String
+  
+  On Error GoTo TrataErro
+
+  labelMensagem.Caption = ""
+  Screen.MousePointer = 11
+
+  carregarDadosTEFBancoDeDados labelMensagem, Ip, IdTerminal, IdLoja, GLB_TefHabilidado
+
+  If Not GLB_TefHabilidado Then
+    Exit Sub
+  End If
+  
+  If right(IdTerminal, 3) >= 900 And right(IdTerminal, 3) <= 999 Then
+     MsgBox "Atenção: A automação comercial não deve utilizar a identificação de terminal na faixa entre 000900 a 000999 que é reservada para uso pelo SiTef: Função ConfiguraIntSiTefInterativo (EndSiTef, IdLoja, IdTerminal, Reservado);", vbCritical, "Inicialização TEF"
+  End If
+        
+  Retorno = ConfiguraIntSiTefInterativo(Ip & Chr(0), IdLoja & Chr(0), IdTerminal & Chr(0), 0)
+
+  If (Retorno = 0) Then
+    labelMensagem.Caption = "Conexão com o sistema SITEF realizada com sucesso"
+  Else
+    labelMensagem.Caption = "TEF Erro: Retorno -> " & CStr(Retorno)
+  End If
+  
+  exibirMensagemPadraoTEF
+  
+TrataErro:
+    Screen.MousePointer = 0
+    If Err.Number <> 0 Then
+        labelMensagem.Caption = "Erro no TEF " & Err.Number & vbNewLine & Err.Description
+        frmControlaCaixa.cmdNroCaixa.ForeOver = vbRed
+        frmControlaCaixa.cmdNroCaixa.ForeColor = vbRed
+        frmControlaCaixa.cmdNroCaixa.Caption = Replace(frmControlaCaixa.cmdNroCaixa.Caption, "(TEF)", "(Erro no TEF)")
+    End If
+  
+End Sub
 

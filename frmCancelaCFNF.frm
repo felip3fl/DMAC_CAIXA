@@ -1,27 +1,177 @@
 VERSION 5.00
+Object = "{D76D7120-4A96-11D3-BD95-D296DC2DD072}#1.0#0"; "Vsflex7u.ocx"
 Begin VB.Form frmCancelaCFNF 
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    Caption         =   "Cancela CF/NF"
    ClientHeight    =   7455
-   ClientLeft      =   5415
-   ClientTop       =   240
-   ClientWidth     =   12765
+   ClientLeft      =   3165
+   ClientTop       =   2295
+   ClientWidth     =   15165
    ControlBox      =   0   'False
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   7455
-   ScaleWidth      =   12765
+   ScaleWidth      =   15165
    ShowInTaskbar   =   0   'False
+   Begin VB.Frame frameCancelamentoTEF 
+      BackColor       =   &H80000012&
+      Height          =   5370
+      Left            =   5295
+      TabIndex        =   12
+      Top             =   30
+      Width           =   5625
+      Begin VSFlex7UCtl.VSFlexGrid grdNumeroTEF 
+         Height          =   2835
+         Left            =   570
+         TabIndex        =   15
+         Top             =   885
+         Width           =   4515
+         _cx             =   7964
+         _cy             =   5001
+         _ConvInfo       =   1
+         Appearance      =   2
+         BorderStyle     =   1
+         Enabled         =   -1  'True
+         BeginProperty Font {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+            Name            =   "Arial"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         MousePointer    =   0
+         BackColor       =   14737632
+         ForeColor       =   4210752
+         BackColorFixed  =   0
+         ForeColorFixed  =   16777215
+         BackColorSel    =   3421236
+         ForeColorSel    =   16777215
+         BackColorBkg    =   0
+         BackColorAlternate=   12632256
+         GridColor       =   14737632
+         GridColorFixed  =   8421504
+         TreeColor       =   8421504
+         FloodColor      =   16777215
+         SheetBorder     =   8421504
+         FocusRect       =   1
+         HighLight       =   1
+         AllowSelection  =   0   'False
+         AllowBigSelection=   0   'False
+         AllowUserResizing=   0
+         SelectionMode   =   1
+         GridLines       =   1
+         GridLinesFixed  =   2
+         GridLineWidth   =   1
+         Rows            =   50
+         Cols            =   4
+         FixedRows       =   1
+         FixedCols       =   0
+         RowHeightMin    =   0
+         RowHeightMax    =   0
+         ColWidthMin     =   0
+         ColWidthMax     =   0
+         ExtendLastCol   =   -1  'True
+         FormatString    =   $"frmCancelaCFNF.frx":0000
+         ScrollTrack     =   0   'False
+         ScrollBars      =   2
+         ScrollTips      =   0   'False
+         MergeCells      =   5
+         MergeCompare    =   0
+         AutoResize      =   -1  'True
+         AutoSizeMode    =   0
+         AutoSearch      =   0
+         AutoSearchDelay =   2
+         MultiTotals     =   -1  'True
+         SubtotalPosition=   1
+         OutlineBar      =   0
+         OutlineCol      =   0
+         Ellipsis        =   0
+         ExplorerBar     =   0
+         PicturesOver    =   0   'False
+         FillStyle       =   0
+         RightToLeft     =   0   'False
+         PictureType     =   0
+         TabBehavior     =   0
+         OwnerDraw       =   0
+         Editable        =   0
+         ShowComboButton =   -1  'True
+         WordWrap        =   0   'False
+         TextStyle       =   0
+         TextStyleFixed  =   0
+         OleDragMode     =   0
+         OleDropMode     =   0
+         DataMode        =   0
+         VirtualData     =   -1  'True
+         DataMember      =   ""
+         ComboSearch     =   3
+         AutoSizeMouse   =   -1  'True
+         FrozenRows      =   0
+         FrozenCols      =   0
+         AllowUserFreezing=   0
+         BackColorFrozen =   -2147483633
+         ForeColorFrozen =   4210752
+         WallPaperAlignment=   4
+         Begin VB.Timer timerVerificaResposta 
+            Enabled         =   0   'False
+            Interval        =   3000
+            Left            =   0
+            Top             =   0
+         End
+      End
+      Begin VB.Label lblMensagensTEF 
+         Alignment       =   2  'Center
+         BackColor       =   &H00000000&
+         Caption         =   "Mensagens TEF"
+         BeginProperty Font 
+            Name            =   "Arial"
+            Size            =   11.25
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FFFFFF&
+         Height          =   915
+         Left            =   240
+         TabIndex        =   14
+         Top             =   4260
+         Width           =   5190
+      End
+      Begin VB.Label Label7 
+         Alignment       =   2  'Center
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "Cancelamento TEF"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   9.75
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FFFFFF&
+         Height          =   240
+         Left            =   0
+         TabIndex        =   13
+         Top             =   225
+         Width           =   5625
+      End
+   End
    Begin VB.Frame Frame1 
       BackColor       =   &H80000012&
       Height          =   2430
       Left            =   75
       TabIndex        =   0
       Top             =   30
-      Width           =   4935
+      Width           =   4890
       Begin VB.TextBox txtNotaFiscal 
          BackColor       =   &H00FFFFFF&
          Height          =   315
@@ -51,7 +201,7 @@ Begin VB.Form frmCancelaCFNF
          BackColor       =   &H00FFFFFF&
          Enabled         =   0   'False
          Height          =   315
-         Left            =   3240
+         Left            =   3225
          TabIndex        =   4
          Top             =   1110
          Width           =   1260
@@ -60,11 +210,32 @@ Begin VB.Form frmCancelaCFNF
          BackColor       =   &H00FFFFFF&
          Height          =   315
          IMEMode         =   3  'DISABLE
-         Left            =   2130
+         Left            =   2250
          PasswordChar    =   "*"
          TabIndex        =   5
          Top             =   1695
          Width           =   1035
+      End
+      Begin VB.Label Label1 
+         AutoSize        =   -1  'True
+         BackColor       =   &H0081E8FA&
+         BackStyle       =   0  'Transparent
+         Caption         =   "Valor Total "
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FFFFFF&
+         Height          =   195
+         Left            =   3255
+         TabIndex        =   11
+         Top             =   885
+         Width           =   1005
       End
       Begin VB.Label lblnroNFCF 
          AutoSize        =   -1  'True
@@ -83,7 +254,7 @@ Begin VB.Form frmCancelaCFNF
          ForeColor       =   &H00FFFFFF&
          Height          =   195
          Left            =   420
-         TabIndex        =   11
+         TabIndex        =   10
          Top             =   885
          Width           =   675
       End
@@ -104,7 +275,7 @@ Begin VB.Form frmCancelaCFNF
          ForeColor       =   &H00FFFFFF&
          Height          =   195
          Left            =   1545
-         TabIndex        =   10
+         TabIndex        =   9
          Top             =   885
          Width           =   450
       End
@@ -125,32 +296,12 @@ Begin VB.Form frmCancelaCFNF
          ForeColor       =   &H00FFFFFF&
          Height          =   195
          Left            =   2160
-         TabIndex        =   9
+         TabIndex        =   8
          Top             =   885
          Width           =   960
       End
-      Begin VB.Label lblValorTotal 
-         AutoSize        =   -1  'True
-         BackColor       =   &H0081E8FA&
-         BackStyle       =   0  'Transparent
-         Caption         =   "Valor Total "
-         BeginProperty Font 
-            Name            =   "MS Sans Serif"
-            Size            =   8.25
-            Charset         =   0
-            Weight          =   700
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         ForeColor       =   &H00FFFFFF&
-         Height          =   195
-         Left            =   3255
-         TabIndex        =   8
-         Top             =   885
-         Width           =   1005
-      End
       Begin VB.Label Label5 
+         Alignment       =   2  'Center
          AutoSize        =   -1  'True
          BackStyle       =   0  'Transparent
          Caption         =   "Cancelar Nota"
@@ -165,10 +316,10 @@ Begin VB.Form frmCancelaCFNF
          EndProperty
          ForeColor       =   &H00FFFFFF&
          Height          =   240
-         Left            =   1710
+         Left            =   0
          TabIndex        =   7
          Top             =   300
-         Width           =   1500
+         Width           =   4890
       End
       Begin VB.Label lblSenha 
          AutoSize        =   -1  'True
@@ -186,31 +337,11 @@ Begin VB.Form frmCancelaCFNF
          EndProperty
          ForeColor       =   &H00FFFFFF&
          Height          =   195
-         Left            =   1485
+         Left            =   1605
          TabIndex        =   6
          Top             =   1800
          Width           =   555
       End
-   End
-   Begin VB.Label lblMensagensTEF 
-      Alignment       =   2  'Center
-      BackColor       =   &H00000000&
-      Caption         =   "Mensagens TEF"
-      BeginProperty Font 
-         Name            =   "Arial"
-         Size            =   12
-         Charset         =   0
-         Weight          =   400
-         Underline       =   0   'False
-         Italic          =   0   'False
-         Strikethrough   =   0   'False
-      EndProperty
-      ForeColor       =   &H00FFFFFF&
-      Height          =   2595
-      Left            =   5490
-      TabIndex        =   12
-      Top             =   2715
-      Width           =   5055
    End
 End
 Attribute VB_Name = "frmCancelaCFNF"
@@ -218,11 +349,14 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Dim Sql As String
+Dim sql As String
 Dim wUltimoCupom As Double
 Dim WGrupoAtualzado As Double
 Dim wNumeroPedido As Double
 Dim wWhere As String
+Dim wDataEmissao As String
+
+Dim Nf As notaFiscal
 
 Private Sub cmbSair_Click()
  Unload Me
@@ -283,11 +417,11 @@ Private Sub finalizarCancelamento()
         wWhere = " "
   '      End If
 
-        Sql = "SELECT CTR_DATAINICIAL, CTR_SITUACAOCAIXA FROM  CONTROLECAIXA " _
+        sql = "SELECT CTR_DATAINICIAL, CTR_SITUACAOCAIXA FROM  CONTROLECAIXA " _
             & " WHERE CTR_Supervisor <> 99 and CTR_SITUACAOCAIXA = 'A'"
      
         ADOSituacao.CursorLocation = adUseClient
-        ADOSituacao.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        ADOSituacao.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                                           
         If Not ADOSituacao.EOF Then
            wData = ADOSituacao("CTR_DATAINICIAL")
@@ -300,13 +434,13 @@ Private Sub finalizarCancelamento()
           
         ADOSituacao.Close
      
-        Sql = "SELECT TOP 1 TIPONOTA,NumeroPed, SERIE, NF, TOTALNOTA, DATAEMI, rtrim(CHAVENFE) as CHAVENFE " _
+        sql = "SELECT TOP 1 TIPONOTA,NumeroPed, SERIE, NF, TOTALNOTA, DATAEMI, rtrim(CHAVENFE) as CHAVENFE " _
             & " FROM NFCAPA WHERE " _
             & " SERIE = '" & txtSerie.text & "' AND " _
             & " NF = " & txtNotaFiscal.text & " " & Where
          
         ADOCancela.CursorLocation = adUseClient
-        ADOCancela.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        ADOCancela.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
  
 
         If Not ADOCancela.EOF Then
@@ -327,8 +461,8 @@ Private Sub finalizarCancelamento()
             End If
               
             If cancelaNotaResultado = True Then
-                Sql = "exec SP_Cancela_NotaFiscal " & txtNotaFiscal.text & ",'" & txtSerie.text & "'"
-                rdoCNLoja.Execute (Sql)
+                sql = "exec SP_Cancela_NotaFiscal " & txtNotaFiscal.text & ",'" & txtSerie.text & "'"
+                rdoCNLoja.Execute (sql)
             Else
                 MsgBox "Cancelamento não realizado", vbCritical, "DMAC Caixa"
             End If
@@ -352,12 +486,15 @@ Unload Me
 End Sub
 
 Private Sub Form_Activate()
- txtNotaFiscal.SetFocus
+  txtNotaFiscal.SetFocus
 End Sub
 
 Private Sub Form_Load()
   
-Call AjustaTela(frmCancelaCFNF)
+    Call AjustaTela(frmCancelaCFNF)
+    
+    frameCancelamentoTEF.Visible = False
+    grdNumeroTEF.Rows = grdNumeroTEF.FixedRows
     
 End Sub
 
@@ -371,6 +508,10 @@ End Sub
 
 Private Sub Text5_Change()
     
+End Sub
+
+Private Sub Label5_Click()
+4890
 End Sub
 
 Private Sub txtNotaFiscal_KeyPress(KeyAscii As Integer)
@@ -398,17 +539,64 @@ If IsNumeric(txtNotaFiscal.text) = False Then
 End If
 End Sub
 
+Private Sub cancelarTEF()
 
+    If Not GLB_TefHabilidado Then Exit Sub
+    
+    Dim i As Byte
+    Dim codigoOperacaoVenda As String
+    Dim codigoOperacaoCancelamento As String
+    
+    i = grdNumeroTEF.FixedRows
+    
+    Do While i > grdNumeroTEF.FixedRows
+        
+        codigoOperacao = Mid(grdNumeroTEF.TextMatrix(i, 2), 1, 1)
+        
+        Nf.pedido = txtPedido.text
+        Nf.numeroTEF = grdNumeroTEF.TextMatrix(1, 0)
+        Nf.eSerie = txtSerie.text
+        Nf.dataEmissao = wDataEmissao
+        Nf.valor = grdNumeroTEF.TextMatrix(1, 1)
+        
+        If codigoOperacao = 2 Then codigoOperacaoCancelamento = 211
+        If codigoOperacao = 3 Then codigoOperacaoCancelamento = 210
+        
+        If EfetuaOperacaoTEF(codigoOperacaoCancelamento, Nf, lblMensagensTEF) Then
+            ImprimeComprovanteTEF ComprovantePagamento
+            cancelaMovimentoCaixaEspecifico Nf.numeroTEF, Nf.pedido
+        End If
+            
+        carregaNotasComTEFGrid
+        
+    Loop
+    
+End Sub
+
+Private Sub cancelaMovimentoCaixaEspecifico(numeroTEF As String, numeroPedido As String)
+
+    Dim sql As String
+    
+    sql = "update movimentocaixa " & vbNewLine & _
+          "set mc_tiponota = 'C'" & vbNewLine & _
+          "where mc_pedido = '" & numeroPedido & "' " & vbNewLine & _
+          "and mc_tiponota IN ('V') " & vbNewLine & _
+          "and mc_sequenciaTEF = '" & numeroTEF & "'"
+
+    rdoCNLoja.Execute sql
+    
+End Sub
 
 Private Sub txtSenha_KeyPress(KeyAscii As Integer)
 
 If KeyAscii = 13 Then
   
-  EfetuaOperacaoTEF "210", "", lblMensagensTEF
+  cancelarTEF
   
   If txtSenha.text <> "" Then
      Call finalizarCancelamento
    End If
+   
 End If
 
 If KeyAscii = 27 Then
@@ -435,61 +623,105 @@ End Sub
 
 Private Sub txtSerie_LostFocus()
 
-If txtSerie.text = "" Then
-    Exit Sub
-End If
-
-If txtNotaFiscal.text = "" Then
-   MsgBox "Preencha todos os campos", vbCritical, "Atenção"
-   txtNotaFiscal.SelStart = 0
-   txtNotaFiscal.SelLength = Len(txtNotaFiscal.text)
-   txtNotaFiscal.SetFocus
-   Exit Sub
-End If
-
-If txtNotaFiscal.text = "" Then
-   MsgBox "Preencha todos os campos", vbCritical, "Atenção"
-   txtNotaFiscal.SelStart = 0
-   txtNotaFiscal.SelLength = Len(txtNotaFiscal.text)
-   txtNotaFiscal.SetFocus
-   Exit Sub
-End If
-
-If Not UCase(txtSerie.text) Like "CE*" Then
-    If UCase(txtSerie.text) Like GLB_SerieCF & "*" Then
-       MsgBox "Para cancelamento de Cupom Fiscal selecione Operações ECF", vbCritical, "Atenção"
-       txtSerie.text = ""
-       txtNotaFiscal.SelStart = 0
-       txtNotaFiscal.SelLength = Len(txtNotaFiscal.text)
-       txtNotaFiscal.SetFocus
-       Exit Sub
+    If txtSerie.text = "" Then
+        Exit Sub
     End If
-End If
-
-
-txtSerie.text = UCase(txtSerie.text)
     
-Sql = "SELECT TOTALNOTA, NF, SERIE,TipoNota,numeroped FROM NFCAPA WHERE NF = " & txtNotaFiscal.text & " " _
+    If txtNotaFiscal.text = "" Then
+        MsgBox "Preencha todos os campos", vbCritical, "Atenção"
+        txtNotaFiscal.SelStart = 0
+        txtNotaFiscal.SelLength = Len(txtNotaFiscal.text)
+        txtNotaFiscal.SetFocus
+        Exit Sub
+    End If
+    
+    If txtNotaFiscal.text = "" Then
+        MsgBox "Preencha todos os campos", vbCritical, "Atenção"
+        txtNotaFiscal.SelStart = 0
+        txtNotaFiscal.SelLength = Len(txtNotaFiscal.text)
+        txtNotaFiscal.SetFocus
+        Exit Sub
+    End If
+    
+    If Not UCase(txtSerie.text) Like "CE*" Then
+        If UCase(txtSerie.text) Like GLB_SerieCF & "*" Then
+            MsgBox "Para cancelamento de Cupom Fiscal selecione Operações ECF", vbCritical, "Atenção"
+            txtSerie.text = ""
+            txtNotaFiscal.SelStart = 0
+            txtNotaFiscal.SelLength = Len(txtNotaFiscal.text)
+            txtNotaFiscal.SetFocus
+            Exit Sub
+        End If
+    End If
+    
+    
+    txtSerie.text = UCase(txtSerie.text)
+    
+    
+    sql = "SELECT TOTALNOTA, NF, SERIE,TipoNota,numeroped, dataemi FROM NFCAPA WHERE NF = " & txtNotaFiscal.text & " " _
     & "AND SERIE = '" & UCase(Trim(txtSerie.text)) & "' and TIPONOTA <> 'C' and Dataemi = '" & Format(Date, "yyyy/mm/dd") & "'"
     
- ADOCancela.CursorLocation = adUseClient
- ADOCancela.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
-
-If Not ADOCancela.EOF Then
-       txtValorNF.text = Format(ADOCancela("TOTALNOTA"), "0.00")
-       txtPedido.text = ADOCancela("numeroped")
-       wPedido = ADOCancela("numeroped")
-       pedido = ADOCancela("numeroped")
-       wTipoNota = ADOCancela("TipoNota")
+    ADOCancela.CursorLocation = adUseClient
+    ADOCancela.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    
+    If Not ADOCancela.EOF Then
+        txtValorNF.text = Format(ADOCancela("TOTALNOTA"), "0.00")
+        txtPedido.text = ADOCancela("numeroped")
+        wPedido = ADOCancela("numeroped")
+        pedido = ADOCancela("numeroped")
+        wTipoNota = ADOCancela("TipoNota")
+        wDataEmissao = ADOCancela("dataemi")
+        
+        carregaNotasComTEF (pedido)
+        
     Else
         MsgBox "NF não encontrado ou já cancelado", vbInformation, "Aviso"
         txtSerie.text = ""
         txtNotaFiscal.SelStart = 0
         txtNotaFiscal.SelLength = Len(txtNotaFiscal.text)
         txtNotaFiscal.SetFocus
-End If
-ADOCancela.Close
+    End If
+    
+    ADOCancela.Close
 
+End Sub
+
+Private Sub carregaNotasComTEF(numeroPedido As String)
+
+    If Not GLB_TefHabilidado Then Exit Sub
+
+    frameCancelamentoTEF.Visible = True
+    lblMensagensTEF.Caption = "As mensagens do TEF serão exibida aqui"
+    
+    carregaNotasComTEFGrid
+
+End Sub
+
+Private Sub carregaNotasComTEFGrid()
+    Dim sql As String
+    Dim RsDados As New ADODB.Recordset
+    
+    grdNumeroTEF.Rows = grdNumeroTEF.FixedRows
+    
+    sql = "select MC_SequenciaTEF as TEF, MC_VALOR as valor " & vbNewLine & _
+          "from MovimentoCaixa " & vbNewLine & _
+          "where mc_pedido = '" & txtPedido.text & "' " & vbNewLine & _
+          "and mc_tipoNOTA IN ('V') " & vbNewLine & _
+          "group by MC_Sequenciatef, MC_Valor " & vbNewLine & _
+          "order by mc_sequenciaTEF"
+
+    RsDados.CursorLocation = adUseClient
+    RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    
+        Do While Not RsDados.EOF
+        
+            grdNumeroTEF.AddItem RsDados("TEF") & vbTab & Format(RsDados("valor"), "###,###,##0.00") & vbTab & "3 CRÉDITO" & vbTab & "DESCONHECIDO"
+            RsDados.MoveNext
+            
+        Loop
+    
+    RsDados.Close
+    
 End Sub
 
 Sub LimpaCampos()

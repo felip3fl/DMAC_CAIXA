@@ -304,7 +304,7 @@ Private Const cbVersion As String = "2.0.6 B"
 '#                                                    #
 '######################################################
 
-Private Declare Function SetPixel Lib "gdi32" Alias "SetPixelV" (ByVal hdc As Long, ByVal x As Long, ByVal y As Long, ByVal crColor As Long) As Long
+Private Declare Function SetPixel Lib "gdi32" Alias "SetPixelV" (ByVal hdc As Long, ByVal X As Long, ByVal Y As Long, ByVal crColor As Long) As Long
 Private Declare Function GetNearestColor Lib "gdi32" (ByVal hdc As Long, ByVal crColor As Long) As Long
 
 Private Declare Function GetSysColor Lib "user32" (ByVal nIndex As Long) As Long
@@ -334,8 +334,8 @@ Private Declare Function Ellipse Lib "gdi32" (ByVal hdc As Long, ByVal X1 As Lon
 Private Declare Function DeleteObject Lib "gdi32" (ByVal hObject As Long) As Long
 Private Declare Function SelectObject Lib "gdi32" (ByVal hdc As Long, ByVal hObject As Long) As Long
 
-Private Declare Function MoveToEx Lib "gdi32" (ByVal hdc As Long, ByVal x As Long, ByVal y As Long, lpPoint As POINTAPI) As Long
-Private Declare Function LineTo Lib "gdi32" (ByVal hdc As Long, ByVal x As Long, ByVal y As Long) As Long
+Private Declare Function MoveToEx Lib "gdi32" (ByVal hdc As Long, ByVal X As Long, ByVal Y As Long, lpPoint As POINTAPI) As Long
+Private Declare Function LineTo Lib "gdi32" (ByVal hdc As Long, ByVal X As Long, ByVal Y As Long) As Long
 Private Declare Function CreatePen Lib "gdi32" (ByVal nPenStyle As Long, ByVal nWidth As Long, ByVal crColor As Long) As Long
 Private Const PS_SOLID = 0
 
@@ -347,8 +347,8 @@ Private Const RGN_DIFF = 4
 
 Private Declare Function GetWindowRect Lib "user32" (ByVal Hwnd As Long, lpRect As RECT) As Long
 Private Declare Function GetClientRect Lib "user32" (ByVal Hwnd As Long, lpRect As RECT) As Long
-Private Declare Function InflateRect Lib "user32" (lpRect As RECT, ByVal x As Long, ByVal y As Long) As Long
-Private Declare Function OffsetRect Lib "user32" (lpRect As RECT, ByVal x As Long, ByVal y As Long) As Long
+Private Declare Function InflateRect Lib "user32" (lpRect As RECT, ByVal X As Long, ByVal Y As Long) As Long
+Private Declare Function OffsetRect Lib "user32" (lpRect As RECT, ByVal X As Long, ByVal Y As Long) As Long
 Private Declare Function CopyRect Lib "user32" (lpDestRect As RECT, lpSourceRect As RECT) As Long
 
 Private Declare Function WindowFromPoint Lib "user32" (ByVal xPoint As Long, ByVal yPoint As Long) As Long
@@ -361,9 +361,9 @@ Private Declare Function GetDC Lib "user32" (ByVal Hwnd As Long) As Long
 Private Declare Function GetParent Lib "user32" (ByVal Hwnd As Long) As Long
 
 Private Declare Function GetDIBits Lib "gdi32" (ByVal aHDC As Long, ByVal hBitmap As Long, ByVal nStartScan As Long, ByVal nNumScans As Long, lpBits As Any, lpBI As BITMAPINFO, ByVal wUsage As Long) As Long
-Private Declare Function SetDIBitsToDevice Lib "gdi32" (ByVal hdc As Long, ByVal x As Long, ByVal y As Long, ByVal dx As Long, ByVal dy As Long, ByVal SrcX As Long, ByVal SrcY As Long, ByVal Scan As Long, ByVal NumScans As Long, Bits As Any, BitsInfo As BITMAPINFO, ByVal wUsage As Long) As Long
+Private Declare Function SetDIBitsToDevice Lib "gdi32" (ByVal hdc As Long, ByVal X As Long, ByVal Y As Long, ByVal dx As Long, ByVal dy As Long, ByVal SrcX As Long, ByVal SrcY As Long, ByVal Scan As Long, ByVal NumScans As Long, Bits As Any, BitsInfo As BITMAPINFO, ByVal wUsage As Long) As Long
 
-Private Declare Function BitBlt Lib "gdi32" (ByVal hDestDC As Long, ByVal x As Long, ByVal y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hSrcDC As Long, ByVal xSrc As Long, ByVal ySrc As Long, ByVal dwRop As Long) As Long
+Private Declare Function BitBlt Lib "gdi32" (ByVal hDestDC As Long, ByVal X As Long, ByVal Y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hSrcDC As Long, ByVal xSrc As Long, ByVal ySrc As Long, ByVal dwRop As Long) As Long
 Private Declare Function CreateCompatibleDC Lib "gdi32" (ByVal hdc As Long) As Long
 Private Declare Function CreateCompatibleBitmap Lib "gdi32" (ByVal hdc As Long, ByVal nWidth As Long, ByVal nHeight As Long) As Long
 Private Declare Function DeleteDC Lib "gdi32" (ByVal hdc As Long) As Long
@@ -379,8 +379,8 @@ Private Type RECT
 End Type
 
 Private Type POINTAPI
-    x As Long
-    y As Long
+    X As Long
+    Y As Long
 End Type
 
 Private Type BITMAPINFOHEADER
@@ -453,9 +453,9 @@ Private Const FXDEPTH As Long = &H28
 Public Event Click()
 Attribute Click.VB_UserMemId = -600
 Attribute Click.VB_MemberFlags = "200"
-Public Event MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
-Public Event MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
-Public Event MouseUp(Button As Integer, Shift As Integer, x As Single, y As Single)
+Public Event MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
+Public Event MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
+Public Event MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
 Public Event KeyPress(KeyAscii As Integer)
 Public Event KeyDown(KeyCode As Integer, Shift As Integer)
 Public Event KeyUp(KeyCode As Integer, Shift As Integer)
@@ -626,17 +626,17 @@ Private Sub UserControl_InitProperties()
 
 End Sub
 
-Private Sub UserControl_MouseDown(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub UserControl_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
 
-    RaiseEvent MouseDown(Button, Shift, x, y)
+    RaiseEvent MouseDown(Button, Shift, X, Y)
     LastButton = Button
     If Button <> 2 Then Call Redraw(2, False)
 
 End Sub
 
-Private Sub UserControl_MouseMove(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub UserControl_MouseMove(Button As Integer, Shift As Integer, X As Single, Y As Single)
 
-    RaiseEvent MouseMove(Button, Shift, x, y)
+    RaiseEvent MouseMove(Button, Shift, X, Y)
     If Button < 2 Then
         If Not isMouseOver Then
             'we are outside the button
@@ -658,9 +658,9 @@ Private Sub UserControl_MouseMove(Button As Integer, Shift As Integer, x As Sing
 
 End Sub
 
-Private Sub UserControl_MouseUp(Button As Integer, Shift As Integer, x As Single, y As Single)
+Private Sub UserControl_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
 
-    RaiseEvent MouseUp(Button, Shift, x, y)
+    RaiseEvent MouseUp(Button, Shift, X, Y)
     If Button <> 2 Then Call Redraw(0, False)
 
 End Sub
@@ -1276,7 +1276,7 @@ Private Sub Redraw(ByVal curStat As Byte, ByVal Force As Boolean)
     lastStat = curStat
     TE = elTex
 
-Dim i As Long, stepXP1 As Single, XPFace2 As Long, tempCol As Long
+Dim I As Long, stepXP1 As Single, XPFace2 As Long, tempCol As Long
 
     With UserControl
         .Cls
@@ -1304,9 +1304,9 @@ Dim i As Long, stepXP1 As Single, XPFace2 As Long, tempCol As Long
                     End If
                 Case 3 'Windows XP
                     stepXP1 = 25 / He
-                    For i = 1 To He
-                        DrawLine 0, i, Wi, i, ShiftColor(XPFace, -stepXP1 * i, True)
-                    Next i
+                    For I = 1 To He
+                        DrawLine 0, I, Wi, I, ShiftColor(XPFace, -stepXP1 * I, True)
+                    Next I
                     Call DrawCaption(Abs(isOver))
                     DrawRectangle 0, 0, Wi, He, &H733C00, True
                     mSetPixel 1, 1, &H7B4D10
@@ -1363,7 +1363,7 @@ Dim i As Long, stepXP1 As Single, XPFace2 As Long, tempCol As Long
                     DrawRectangle 0, 0, Wi - 1, He - 1, ShiftColor(cShadow, -&H1A), True
                     mSetPixel 1, He - 2, ShiftColor(cShadow, &H1A)
                     mSetPixel Wi - 2, 1, ShiftColor(cShadow, &H1A)
-                    If HasFocus And showFocusR Then DrawRectangle rc.left - 2, rc.top - 1, fc.x + 4, fc.y + 2, &HCC9999, True
+                    If HasFocus And showFocusR Then DrawRectangle rc.left - 2, rc.top - 1, fc.X + 4, fc.Y + 2, &HCC9999, True
                 Case 6 'Netscape
                     Call DrawCaption(Abs(isOver))
                     DrawFrame ShiftColor(cLight, &H8), cShadow, ShiftColor(cLight, &H8), cShadow, False
@@ -1396,9 +1396,9 @@ Dim i As Long, stepXP1 As Single, XPFace2 As Long, tempCol As Long
                     Dim prevBold As Boolean
                     If Not isOver Then
                         stepXP1 = 58 / He
-                        For i = 1 To He
-                            DrawLine 0, i, Wi, i, ShiftColor(cHighLight, -stepXP1 * i)
-                        Next i
+                        For I = 1 To He
+                            DrawLine 0, I, Wi, I, ShiftColor(cHighLight, -stepXP1 * I)
+                        Next I
                     Else
                         DrawRectangle 0, 0, Wi, He, cLight
                     End If
@@ -1432,9 +1432,9 @@ Dim i As Long, stepXP1 As Single, XPFace2 As Long, tempCol As Long
                 Case 3 'Windows XP
                     stepXP1 = 25 / He
                     XPFace2 = ShiftColor(XPFace, -32, True)
-                    For i = 1 To He
-                        DrawLine 0, He - i, Wi, He - i, ShiftColor(XPFace2, -stepXP1 * i, True)
-                    Next i
+                    For I = 1 To He
+                        DrawLine 0, He - I, Wi, He - I, ShiftColor(XPFace2, -stepXP1 * I, True)
+                    Next I
                     Call DrawCaption(2)
                     DrawRectangle 0, 0, Wi, He, &H733C00, True
                     mSetPixel 1, 1, &H7B4D10
@@ -1479,7 +1479,7 @@ Dim i As Long, stepXP1 As Single, XPFace2 As Long, tempCol As Long
                     DrawLine 1, He - 1, Wi - 1, He - 1, cHighLight
                     SetTextColor .hdc, cTexto
                     DrawText .hdc, elTex, Len(elTex), rc, DT_CENTER
-                    If HasFocus And showFocusR Then DrawRectangle rc.left - 2, rc.top - 1, fc.x + 4, fc.y + 2, &HCC9999, True
+                    If HasFocus And showFocusR Then DrawRectangle rc.left - 2, rc.top - 1, fc.X + 4, fc.Y + 2, &HCC9999, True
                 Case 6 'Netscape
                     Call DrawCaption(2)
                     DrawFrame cShadow, ShiftColor(cLight, &H8), cShadow, ShiftColor(cLight, &H8), False
@@ -1566,9 +1566,9 @@ Dim i As Long, stepXP1 As Single, XPFace2 As Long, tempCol As Long
                 Call DrawCaption(3)
             Case 14 'KDE 2
                 stepXP1 = 58 / He
-                For i = 1 To He
-                    DrawLine 0, i, Wi, i, ShiftColor(cHighLight, -stepXP1 * i)
-                Next i
+                For I = 1 To He
+                    DrawLine 0, I, Wi, I, ShiftColor(cHighLight, -stepXP1 * I)
+                Next I
                 DrawRectangle 0, 0, Wi, He, ShiftColor(cShadow, -&H32), True
                 DrawRectangle 1, 1, Wi - 2, He - 2, ShiftColor(cFace, -&H9), True
                 DrawRectangle 2, 2, Wi - 4, 2, cHighLight
@@ -1583,7 +1583,7 @@ Dim i As Long, stepXP1 As Single, XPFace2 As Long, tempCol As Long
 
 End Sub
 
-Private Sub DrawRectangle(ByVal x As Long, ByVal y As Long, ByVal Width As Long, ByVal Height As Long, ByVal Color As Long, Optional OnlyBorder As Boolean = False)
+Private Sub DrawRectangle(ByVal X As Long, ByVal Y As Long, ByVal Width As Long, ByVal Height As Long, ByVal Color As Long, Optional OnlyBorder As Boolean = False)
 
 'this is my custom function to draw rectangles and frames
 'it's faster and smoother than using the line method
@@ -1591,10 +1591,10 @@ Private Sub DrawRectangle(ByVal x As Long, ByVal y As Long, ByVal Width As Long,
 Dim bRECT As RECT
 Dim hBrush As Long
 
-    bRECT.left = x
-    bRECT.top = y
-    bRECT.right = x + Width
-    bRECT.bottom = y + Height
+    bRECT.left = X
+    bRECT.top = Y
+    bRECT.right = X + Width
+    bRECT.bottom = Y + Height
 
     hBrush = CreateSolidBrush(Color)
 
@@ -1608,14 +1608,14 @@ Dim hBrush As Long
 
 End Sub
 
-Private Sub DrawEllipse(ByVal x As Long, ByVal y As Long, ByVal Width As Long, ByVal Height As Long, ByVal BorderColor As Long, ByVal FillColor As Long)
+Private Sub DrawEllipse(ByVal X As Long, ByVal Y As Long, ByVal Width As Long, ByVal Height As Long, ByVal BorderColor As Long, ByVal FillColor As Long)
 
 Dim pBrush As Long, pPen As Long
 
     pBrush = SelectObject(hdc, CreateSolidBrush(FillColor))
     pPen = SelectObject(hdc, CreatePen(PS_SOLID, 2, BorderColor))
 
-    Call Ellipse(hdc, x, y, x + Width, y + Height)
+    Call Ellipse(hdc, X, Y, X + Width, Y + Height)
 
     Call DeleteObject(SelectObject(hdc, pBrush))
     Call DeleteObject(SelectObject(hdc, pPen))
@@ -1678,9 +1678,9 @@ Dim frHe As Long, frWi As Long, frXtra As Long
 
 End Sub
 
-Private Sub mSetPixel(ByVal x As Long, ByVal y As Long, ByVal Color As Long)
+Private Sub mSetPixel(ByVal X As Long, ByVal Y As Long, ByVal Color As Long)
 
-    Call SetPixel(UserControl.hdc, x, y, Color)
+    Call SetPixel(UserControl.hdc, X, Y, Color)
 
 End Sub
 
@@ -1906,25 +1906,25 @@ Private Sub CalcTextRects()
 
     Select Case PicPosition
     Case 0
-        rc2.left = 1 + picSZ.x: rc2.right = Wi - 2: rc2.top = 1: rc2.bottom = He - 2
+        rc2.left = 1 + picSZ.X: rc2.right = Wi - 2: rc2.top = 1: rc2.bottom = He - 2
     Case 1
-        rc2.left = 1: rc2.right = Wi - 2 - picSZ.x: rc2.top = 1: rc2.bottom = He - 2
+        rc2.left = 1: rc2.right = Wi - 2 - picSZ.X: rc2.top = 1: rc2.bottom = He - 2
     Case 2
-        rc2.left = 1: rc2.right = Wi - 2: rc2.top = 1 + picSZ.y: rc2.bottom = He - 2
+        rc2.left = 1: rc2.right = Wi - 2: rc2.top = 1 + picSZ.Y: rc2.bottom = He - 2
     Case 3
-        rc2.left = 1: rc2.right = Wi - 2: rc2.top = 1: rc2.bottom = He - 2 - picSZ.y
+        rc2.left = 1: rc2.right = Wi - 2: rc2.top = 1: rc2.bottom = He - 2 - picSZ.Y
     Case 4
         rc2.left = 1: rc2.right = Wi - 2: rc2.top = 1: rc2.bottom = He - 2
     End Select
     DrawText UserControl.hdc, elTex, Len(elTex), rc2, DT_CALCRECT Or DT_WORDBREAK
-    CopyRect rc, rc2: fc.x = rc.right - rc.left: fc.y = rc.bottom - rc.top
+    CopyRect rc, rc2: fc.X = rc.right - rc.left: fc.Y = rc.bottom - rc.top
     Select Case PicPosition
     Case 0, 2
         OffsetRect rc, (Wi - rc.right) \ 2, (He - rc.bottom) \ 2
     Case 1
-        OffsetRect rc, (Wi - rc.right - picSZ.x - 4) \ 2, (He - rc.bottom) \ 2
+        OffsetRect rc, (Wi - rc.right - picSZ.X - 4) \ 2, (He - rc.bottom) \ 2
     Case 3
-        OffsetRect rc, (Wi - rc.right) \ 2, (He - rc.bottom - picSZ.y - 4) \ 2
+        OffsetRect rc, (Wi - rc.right) \ 2, (He - rc.bottom - picSZ.Y - 4) \ 2
     Case 4
         OffsetRect rc, (Wi - rc.right) \ 2, (He - rc.bottom) \ 2
     End Select
@@ -2012,19 +2012,19 @@ Private Sub DrawPictures(ByVal State As Byte)
         Case 0 'normal & hover
             If Not isOver Then
                 Call DoFX(0, picNormal)
-                TransBlt .hdc, picPT.x, picPT.y, picSZ.x, picSZ.y, picNormal, cMask, , , useGrey, (MyButtonType = [Office XP])
+                TransBlt .hdc, picPT.X, picPT.Y, picSZ.X, picSZ.Y, picNormal, cMask, , , useGrey, (MyButtonType = [Office XP])
             Else
                 If MyButtonType = [Office XP] Then
                     Call DoFX(-1, picNormal)
-                    TransBlt .hdc, picPT.x + 1, picPT.y + 1, picSZ.x, picSZ.y, picNormal, cMask, cShadow
-                    TransBlt .hdc, picPT.x - 1, picPT.y - 1, picSZ.x, picSZ.y, picNormal, cMask
+                    TransBlt .hdc, picPT.X + 1, picPT.Y + 1, picSZ.X, picSZ.Y, picNormal, cMask, cShadow
+                    TransBlt .hdc, picPT.X - 1, picPT.Y - 1, picSZ.X, picSZ.Y, picNormal, cMask
                 Else
                     If Not picHover Is Nothing Then
                         Call DoFX(0, picHover)
-                        TransBlt .hdc, picPT.x, picPT.y, picSZ.x, picSZ.y, picHover, cMask
+                        TransBlt .hdc, picPT.X, picPT.Y, picSZ.X, picSZ.Y, picHover, cMask
                     Else
                         Call DoFX(0, picNormal)
-                        TransBlt .hdc, picPT.x, picPT.y, picSZ.x, picSZ.y, picNormal, cMask
+                        TransBlt .hdc, picPT.X, picPT.Y, picSZ.X, picSZ.Y, picNormal, cMask
                     End If
                 End If
             End If
@@ -2033,23 +2033,23 @@ Private Sub DrawPictures(ByVal State As Byte)
                 Select Case MyButtonType
                 Case 5, 9
                     Call DoFX(0, picNormal)
-                    TransBlt .hdc, picPT.x, picPT.y, picSZ.x, picSZ.y, picNormal, cMask
+                    TransBlt .hdc, picPT.X, picPT.Y, picSZ.X, picSZ.Y, picNormal, cMask
                 Case Else
                     Call DoFX(1, picNormal)
-                    TransBlt .hdc, picPT.x + 1, picPT.y + 1, picSZ.x, picSZ.y, picNormal, cMask
+                    TransBlt .hdc, picPT.X + 1, picPT.Y + 1, picSZ.X, picSZ.Y, picNormal, cMask
                 End Select
             Else
-                TransBlt .hdc, picPT.x + Abs(MyButtonType <> [Java metal]), picPT.y + Abs(MyButtonType <> [Java metal]), picSZ.x, picSZ.y, picHover, cMask
+                TransBlt .hdc, picPT.X + Abs(MyButtonType <> [Java metal]), picPT.Y + Abs(MyButtonType <> [Java metal]), picSZ.X, picSZ.Y, picHover, cMask
             End If
         Case 2 'disabled
             Select Case MyButtonType
             Case 5, 6, 9    'draw flat grey pictures
-                TransBlt .hdc, picPT.x, picPT.y, picSZ.x, picSZ.y, picNormal, cMask, Abs(MyButtonType = [Office XP]) * ShiftColor(cShadow, &HD) + Abs(MyButtonType <> [Office XP]) * cShadow, True
+                TransBlt .hdc, picPT.X, picPT.Y, picSZ.X, picSZ.Y, picNormal, cMask, Abs(MyButtonType = [Office XP]) * ShiftColor(cShadow, &HD) + Abs(MyButtonType <> [Office XP]) * cShadow, True
             Case 3          'for WinXP draw a greyscaled image
-                TransBlt .hdc, picPT.x + 1, picPT.y + 1, picSZ.x, picSZ.y, picNormal, cMask, , , True
+                TransBlt .hdc, picPT.X + 1, picPT.Y + 1, picSZ.X, picSZ.Y, picNormal, cMask, , , True
             Case Else       'draw classic embossed pictures
-                TransBlt .hdc, picPT.x + 1, picPT.y + 1, picSZ.x, picSZ.y, picNormal, cMask, cHighLight, True
-                TransBlt .hdc, picPT.x, picPT.y, picSZ.x, picSZ.y, picNormal, cMask, cShadow, True
+                TransBlt .hdc, picPT.X + 1, picPT.Y + 1, picSZ.X, picSZ.Y, picNormal, cMask, cHighLight, True
+                TransBlt .hdc, picPT.X, picPT.Y, picSZ.X, picSZ.Y, picNormal, cMask, cShadow, True
             End Select
         End Select
     End With
@@ -2062,8 +2062,8 @@ Private Sub DoFX(ByVal offset As Long, ByVal thePic As StdPicture)
     If SFX > cbNone Then
         Dim curFace As Long
         If MyButtonType = [Windows XP] Then curFace = XPFace Else If offset = -1 And MyColorType <> Custom Then curFace = OXPf Else curFace = cFace
-        TransBlt UserControl.hdc, picPT.x + 1 + offset, picPT.y + 1 + offset, picSZ.x, picSZ.y, thePic, cMask, ShiftColor(curFace, Abs(SFX = cbEngraved) * FXDEPTH + (SFX <> cbEngraved) * FXDEPTH)
-        If SFX < cbShadowed Then TransBlt UserControl.hdc, picPT.x - 1 + offset, picPT.y - 1 + offset, picSZ.x, picSZ.y, thePic, cMask, ShiftColor(curFace, Abs(SFX <> cbEngraved) * FXDEPTH + (SFX = cbEngraved) * FXDEPTH)
+        TransBlt UserControl.hdc, picPT.X + 1 + offset, picPT.Y + 1 + offset, picSZ.X, picSZ.Y, thePic, cMask, ShiftColor(curFace, Abs(SFX = cbEngraved) * FXDEPTH + (SFX <> cbEngraved) * FXDEPTH)
+        If SFX < cbShadowed Then TransBlt UserControl.hdc, picPT.X - 1 + offset, picPT.Y - 1 + offset, picSZ.X, picSZ.Y, thePic, cMask, ShiftColor(curFace, Abs(SFX <> cbEngraved) * FXDEPTH + (SFX = cbEngraved) * FXDEPTH)
     End If
 
 End Sub
@@ -2095,10 +2095,10 @@ End Sub
 Private Sub CalcPicSize()
 
     If Not picNormal Is Nothing Then
-        picSZ.x = UserControl.ScaleX(picNormal.Width, 8, UserControl.ScaleMode)
-        picSZ.y = UserControl.ScaleY(picNormal.Height, 8, UserControl.ScaleMode)
+        picSZ.X = UserControl.ScaleX(picNormal.Width, 8, UserControl.ScaleMode)
+        picSZ.Y = UserControl.ScaleY(picNormal.Height, 8, UserControl.ScaleMode)
     Else
-        picSZ.x = 0: picSZ.y = 0
+        picSZ.X = 0: picSZ.Y = 0
     End If
 
 End Sub
@@ -2112,21 +2112,21 @@ Private Sub CalcPicPos()
     If (Trim$(elTex) <> "") And (PicPosition <> 4) Then 'if there is no caption, or we have the picture as background, then we put the picture at the center of the button
         Select Case PicPosition
         Case 0 'left
-            picPT.x = rc.left - picSZ.x - 4
-            picPT.y = (He - picSZ.y) \ 2
+            picPT.X = rc.left - picSZ.X - 4
+            picPT.Y = (He - picSZ.Y) \ 2
         Case 1 'right
-            picPT.x = rc.right + 4
-            picPT.y = (He - picSZ.y) \ 2
+            picPT.X = rc.right + 4
+            picPT.Y = (He - picSZ.Y) \ 2
         Case 2 'top
-            picPT.x = (Wi - picSZ.x) \ 2
-            picPT.y = rc.top - picSZ.y - 2
+            picPT.X = (Wi - picSZ.X) \ 2
+            picPT.Y = rc.top - picSZ.Y - 2
         Case 3 'bottom
-            picPT.x = (Wi - picSZ.x) \ 2
-            picPT.y = rc.bottom + 2
+            picPT.X = (Wi - picSZ.X) \ 2
+            picPT.Y = rc.bottom + 2
         End Select
     Else 'center the picture
-        picPT.x = (Wi - picSZ.x) \ 2
-        picPT.y = (He - picSZ.y) \ 2
+        picPT.X = (Wi - picSZ.X) \ 2
+        picPT.Y = (He - picSZ.Y) \ 2
     End If
 
 End Sub
@@ -2135,7 +2135,7 @@ Private Sub TransBlt(ByVal DstDC As Long, ByVal DstX As Long, ByVal DstY As Long
 
     If DstW = 0 Or DstH = 0 Then Exit Sub
 
-Dim B As Long, h As Long, F As Long, i As Long, newW As Long
+Dim B As Long, h As Long, F As Long, I As Long, newW As Long
 Dim TmpDC As Long, TmpBmp As Long, TmpObj As Long
 Dim Sr2DC As Long, Sr2Bmp As Long, Sr2Obj As Long
 Dim Data1() As RGBTRIPLE, Data2() As RGBTRIPLE
@@ -2192,26 +2192,26 @@ Dim SrcDC As Long, tObj As Long, ttt As Long
     For h = 0 To DstH - 1
         F = h * DstW
         For B = 0 To newW
-            i = F + B
-            If GetNearestColor(hdc, CLng(Data2(i).rgbRed) + 256& * Data2(i).rgbGreen + 65536 * Data2(i).rgbBlue) <> TransColor Then
-                With Data1(i)
+            I = F + B
+            If GetNearestColor(hdc, CLng(Data2(I).rgbRed) + 256& * Data2(I).rgbGreen + 65536 * Data2(I).rgbBlue) <> TransColor Then
+                With Data1(I)
                     If BrushColor > -1 Then
                         If MonoMask Then
-                            If (CLng(Data2(i).rgbRed) + Data2(i).rgbGreen + Data2(i).rgbBlue) <= 384 Then Data1(i) = BrushRGB
+                            If (CLng(Data2(I).rgbRed) + Data2(I).rgbGreen + Data2(I).rgbBlue) <= 384 Then Data1(I) = BrushRGB
                         Else
-                            Data1(i) = BrushRGB
+                            Data1(I) = BrushRGB
                         End If
                     Else
                         If isGreyscale Then
-                            gCol = CLng(Data2(i).rgbRed * 0.3) + Data2(i).rgbGreen * 0.59 + Data2(i).rgbBlue * 0.11
+                            gCol = CLng(Data2(I).rgbRed * 0.3) + Data2(I).rgbGreen * 0.59 + Data2(I).rgbBlue * 0.11
                             .rgbRed = gCol: .rgbGreen = gCol: .rgbBlue = gCol
                         Else
                             If XPBlend Then
-                                .rgbRed = (CLng(.rgbRed) + Data2(i).rgbRed * 2) \ 3
-                                .rgbGreen = (CLng(.rgbGreen) + Data2(i).rgbGreen * 2) \ 3
-                                .rgbBlue = (CLng(.rgbBlue) + Data2(i).rgbBlue * 2) \ 3
+                                .rgbRed = (CLng(.rgbRed) + Data2(I).rgbRed * 2) \ 3
+                                .rgbGreen = (CLng(.rgbGreen) + Data2(I).rgbGreen * 2) \ 3
+                                .rgbBlue = (CLng(.rgbBlue) + Data2(I).rgbBlue * 2) \ 3
                             Else
-                                Data1(i) = Data2(i)
+                                Data1(I) = Data2(I)
                             End If
                         End If
                     End If
@@ -2236,7 +2236,7 @@ Private Function isMouseOver() As Boolean
 Dim pt As POINTAPI
 
     GetCursorPos pt
-    isMouseOver = (WindowFromPoint(pt.x, pt.y) = Hwnd)
+    isMouseOver = (WindowFromPoint(pt.X, pt.Y) = Hwnd)
 
 End Function
 

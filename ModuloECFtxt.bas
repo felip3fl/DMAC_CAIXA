@@ -4,7 +4,7 @@ Attribute VB_Name = "Modulo_NFE_GeraTexto"
 'Global RsDados As New ADODB.Recordset
 Dim RsMovimentoCaixa As New ADODB.Recordset
 Dim RsDadosUP As New ADODB.Recordset
-Dim Sql As String
+Dim sql As String
 Dim SQLItens As String
 Dim SQLPROD As String
 Dim SQLCLI As String
@@ -32,7 +32,7 @@ Dim SQLCLI As String
 '---------------------------------
 Public Declare Function GetAsyncKeyState Lib "user32" (ByVal vKey As Long) As Integer
 '-----------------------------------------------------------------------------------------
-Type notaFiscal
+Public Type notaFiscal
     numero As String
     loja As String
     eSerie As String
@@ -40,21 +40,23 @@ Type notaFiscal
     chave As String
     pedido As String
     cfop As String
-    valor As Double
+    valor As String
     numeroTEF As String
+    parcelas As Integer
+    dataEmissao As String
 End Type
 
 
 Public Function GeraArqECFTXT(ByVal NroPedido As Long)
 
-Sql = " "
-Sql = "Select I.NUMEROPED,I.REFERENCIA,I.QTDE,I.VLUNIT,I.ICMS,C.DESCONTO,CE_razao," _
+sql = " "
+sql = "Select I.NUMEROPED,I.REFERENCIA,I.QTDE,I.VLUNIT,I.ICMS,C.DESCONTO,CE_razao," _
     & "CE_cgc,PR_Descricao,PR_Unidade,PR_SubstituicaoTributaria,C.LojaOrigem,C.NF,C.Serie,C.cpfnfp " _
     & "From NFItens as I ,NFCAPA as C,ProdutoLoja,fin_cliente " _
     & "Where I.Referencia = PR_Referencia and I.NUMEROPED = C.NUMEROPED " _
     & " and I.NUMEROPED = " & NroPedido & " and C.Cliente = ce_CodigoCliente"
      RsDados.CursorLocation = adUseClient
-     RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic '
+     RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic '
      If RsDados.EOF Then
         RsDados.Close
         Exit Function
@@ -104,14 +106,14 @@ Sql = "Select I.NUMEROPED,I.REFERENCIA,I.QTDE,I.VLUNIT,I.ICMS,C.DESCONTO,CE_raza
         
         linhaArquivo = "32 " & wDesconto
         Print #txtECF, linhaArquivo
-        Sql = " "
-        Sql = "Select MO_Descricao,MO_OrdemApresentacao,Movimentocaixa.* " _
+        sql = " "
+        sql = "Select MO_Descricao,MO_OrdemApresentacao,Movimentocaixa.* " _
             & " From Movimentocaixa,Modalidade Where mo_grupo = mc_grupo and mc_documento= '" _
             & LTrim(RTrim(wNF)) & "' and mc_Serie = '" & LTrim(RTrim(frmFormaPagamento.txtSerie.text)) & "' and MC_pedido = '" & NroPedido _
             & "' and MC_loja = '" & LTrim(RTrim(wLoja)) & "' and mc_grupo between '10101' and '10304'" _
             & " order by mc_documento"
             RsMovimentoCaixa.CursorLocation = adUseClient
-            RsMovimentoCaixa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic '
+            RsMovimentoCaixa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic '
         If RsMovimentoCaixa.EOF Then
            RsMovimentoCaixa.Close
            RsDados.Close
@@ -169,16 +171,16 @@ Public Function montaTXTSAT(pedido As String) As String
 
     Dim ado_estrutura As New ADODB.Recordset
     
-    Sql = "exec SP_VDA_Cria_Cupom '" & pedido & "'"
-    rdoCNLoja.Execute Sql
+    sql = "exec SP_VDA_Cria_Cupom '" & pedido & "'"
+    rdoCNLoja.Execute sql
     
-    Sql = "select snf_Descricao as descricao, snf_Sinal as sinal, snf_Dados as dados " & _
+    sql = "select snf_Descricao as descricao, snf_Sinal as sinal, snf_Dados as dados " & _
           "from sat_nf " & _
           "where snf_pedido = '" & pedido & "' " & _
           "order by snf_Sequencia"
     
     ado_estrutura.CursorLocation = adUseClient
-    ado_estrutura.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    ado_estrutura.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
         
     Do While Not ado_estrutura.EOF
         montaTXTSAT = montaTXTSAT & ado_estrutura("descricao") & ado_estrutura("sinal") & " " & ado_estrutura("dados")
@@ -191,16 +193,16 @@ Public Function montaTXTSAT(pedido As String) As String
     
 End Function
 
-Public Function montaTXT(Nf As notaFiscal) As String
+Public Function montaTXT(nf As notaFiscal) As String
     Dim ado_estrutura As New ADODB.Recordset
 
-    Sql = "select nfl_descricao, nfl_dados " & _
+    sql = "select nfl_descricao, nfl_dados " & _
           "from NFE_NFLojas " & _
-          "where nfl_loja = '" & Nf.loja & "' and nfl_nroNFE = '" & Nf.numero & "'" & _
+          "where nfl_loja = '" & nf.loja & "' and nfl_nroNFE = '" & nf.numero & "'" & _
           "order by NFL_sequencia, nfl_NROnfe, nfl_dados desc"
     
     ado_estrutura.CursorLocation = adUseClient
-    ado_estrutura.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    ado_estrutura.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
         
     Do While Not ado_estrutura.EOF
         If left(ado_estrutura("nfl_descricao"), 1) = "[" Or left(ado_estrutura("nfl_descricao"), 2) = "--" Then
@@ -221,14 +223,14 @@ Public Sub mensagemErroDesconhecido(numeroErro As ErrObject, nomeFormulario As S
     End
 End Sub
 
-Public Function criaTXTSAT(tipoTXT As String, Nf As notaFiscal)
+Public Function criaTXTSAT(tipoTXT As String, nf As notaFiscal)
     Dim corpoMensagem As String
     
 On Error GoTo TrataErro
     
-    corpoMensagem = montaTXTSAT(Nf.pedido)
+    corpoMensagem = montaTXTSAT(nf.pedido)
     Open GLB_EnderecoPastaFIL & _
-    tipoTXT & (Format(Nf.pedido, "000000000")) & "#" & Nf.CNPJ & ".txt" For Output As #1
+    tipoTXT & (Format(nf.pedido, "000000000")) & "#" & nf.CNPJ & ".txt" For Output As #1
          Print #1, corpoMensagem
     Close #1
     
@@ -240,14 +242,14 @@ TrataErro:
     End Select
 End Function
 
-Public Function criaTXT(tipoTXT As String, Nf As notaFiscal)
+Public Function criaTXT(tipoTXT As String, nf As notaFiscal)
     Dim corpoMensagem As String
     
 On Error GoTo TrataErro
     
-    corpoMensagem = montaTXT(Nf)
+    corpoMensagem = montaTXT(nf)
     Open GLB_EnderecoPastaFIL & _
-    tipoTXT & (Format(Nf.numero, "000000000")) & "#" & Nf.CNPJ & ".txt" For Output As #1
+    tipoTXT & (Format(nf.numero, "000000000")) & "#" & nf.CNPJ & ".txt" For Output As #1
          Print #1, Mid(corpoMensagem, 4, Len(corpoMensagem))
     Close #1
     

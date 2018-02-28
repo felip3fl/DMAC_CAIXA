@@ -4,8 +4,8 @@ Begin VB.Form frmFormaPagamento
    BorderStyle     =   0  'None
    Caption         =   "Forma de Pagamento"
    ClientHeight    =   8640
-   ClientLeft      =   3675
-   ClientTop       =   1785
+   ClientLeft      =   3345
+   ClientTop       =   1260
    ClientWidth     =   13425
    BeginProperty Font 
       Name            =   "Arial Black"
@@ -23,6 +23,16 @@ Begin VB.Form frmFormaPagamento
    ScaleHeight     =   8640
    ScaleWidth      =   13425
    ShowInTaskbar   =   0   'False
+   Begin VB.TextBox txtNumeroTEF 
+      Appearance      =   0  'Flat
+      Height          =   405
+      Left            =   6045
+      TabIndex        =   60
+      Text            =   "Número TEF"
+      Top             =   330
+      Visible         =   0   'False
+      Width           =   1215
+   End
    Begin VB.Frame framePagamentoTEF 
       BackColor       =   &H00404040&
       BorderStyle     =   0  'None
@@ -1497,7 +1507,7 @@ Dim wMostraGrideCondicao As Boolean
 Dim wControle As String
  
 Dim wvalorparcelas As Double
- 
+Dim Nf As notaFiscal
 
 
 Dim wValorModalidadeIncorreto As Boolean
@@ -1545,33 +1555,33 @@ Private Sub GravaRegistro()
 If EntFaturada = "0.00" And EntFinanciada = "0.00" Then
 
       Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_SubGrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
-      & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_dataprocesso,MC_TipoNota) values(" & Wecf & ",'" & PegaLoja("ctr_operador") & "','" & Trim(wlblloja) & "', " _
-      & " '" & Format(PegaLoja("ctr_datainicial"), "yyyy/mm/dd") & "', " & wGrupoMovimento & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
+      & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_dataprocesso,MC_TipoNota,MC_SequenciaTEF) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
+      & " '" & Format(GLB_DataInicial, "yyyy/mm/dd") & "', " & wGrupoMovimento & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
       & "" & ConverteVirgula(Format(wValorMovimento, "##,###0.00")) & ", " _
-      & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(PegaLoja("ctr_datainicial"), "yyyy/mm/dd") & "','PA')"
+      & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "')"
       rdoCNLoja.Execute (Sql)
       
 Else
    Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_SubGrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
-      & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota) values(" & Wecf & ",'" & PegaLoja("ctr_operador") & "','" & Trim(wlblloja) & "', " _
-      & " '" & Format(PegaLoja("ctr_datainicial"), "yyyy/mm/dd") & "', " & wGrupoMovimento & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
+      & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
+      & " '" & Format(GLB_DataInicial, "yyyy/mm/dd") & "', " & wGrupoMovimento & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
       & "" & ConverteVirgula(Format(wValorMovimento, "##,###0.00")) & ", " _
-      & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(PegaLoja("ctr_datainicial"), "yyyy/mm/dd") & "','PA')"
+      & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & ")"
       rdoCNLoja.Execute (Sql)
       
    If EntFaturada <> "0.00" Then
       Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_SubGrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
-         & "MC_Contacorrente,MC_bomPara,MC_Parcelas,MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido, MC_DataProcesso,MC_TipoNota) values(" & Wecf & ",'" & PegaLoja("ctr_operador") & "','" & Trim(wlblloja) & "', " _
-         & " '" & Format(PegaLoja("ctr_datainicial"), "yyyy/mm/dd") & "', " & 11004 & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
+         & "MC_Contacorrente,MC_bomPara,MC_Parcelas,MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido, MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
+         & " '" & Format(GLB_DataInicial, "yyyy/mm/dd") & "', " & 11004 & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
          & "" & ConverteVirgula(Format(EntFaturada, "##,###0.00")) & ", " _
-         & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(PegaLoja("ctr_datainicial"), "yyyy/mm/dd") & "','PA')"
+         & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "')"
          rdoCNLoja.Execute (Sql)
    ElseIf EntFinanciada <> "0.00" Then
        Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_SubGrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
-             & "MC_Contacorrente,MC_bomPara,MC_Parcelas,MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido, MC_DataProcesso,MC_TipoNota) values(" & Wecf & ",'" & PegaLoja("ctr_operador") & "','" & Trim(wlblloja) & "', " _
-             & " '" & Format(PegaLoja("ctr_datainicial"), "yyyy/mm/dd") & "', " & 11005 & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
+             & "MC_Contacorrente,MC_bomPara,MC_Parcelas,MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido, MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
+             & " '" & Format(GLB_DataInicial, "yyyy/mm/dd") & "', " & 11005 & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
              & "" & ConverteVirgula(Format(EntFinanciada, "##,###0.00")) & ", " _
-             & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(PegaLoja("ctr_datainicial"), "yyyy/mm/dd") & "','PA')"
+             & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "')"
              rdoCNLoja.Execute (Sql)
    End If
 End If
@@ -1581,7 +1591,7 @@ End Sub
 Private Sub GuardaValoresParaGravarMovimentoCaixa()
 
 'wValorModalidadeIncorreto = False
-      Dim numeroTef As String
+      Dim Nf As notaFiscal
       
       If Trim(txtValorModalidade.text = "") Then
          Exit Sub
@@ -1590,6 +1600,13 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
       If Trim(txtValorModalidade.text = ",") Then
          Exit Sub
       End If
+
+      Nf.pedido = pedido
+      Nf.numero = NroNotaFiscal
+      Nf.eSerie = txtSerie.text
+      Nf.parcelas = wParcelas
+      Nf.dataEmissao = GLB_DataInicial
+      Nf.valor = txtValorModalidade.text
 
       Modalidade = Format(txtValorModalidade.text, "0.00")
 
@@ -1606,11 +1623,16 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
       End If
       
       
+      Nf.pedido = txtPedido.text
+      Nf.eSerie = txtSerie.text
+      Nf.dataEmissao = GLB_DataInicial
+      Nf.valor = txtValorModalidade
+      Nf.parcelas = wParcelas
+      
       'TEF ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
       If lblModalidade.Caption = "CREDITO" Then
-          If EfetuaOperacaoTEF("3", txtValorModalidade.text, lblMensagemTEF) Then
-            
-            numeroTef = lerCamporResultadoTEF(ComprovantePagamento, "Host")
+          If EfetuaOperacaoTEF("3", Nf, lblMensagemTEF) Then
+            txtNumeroTEF.text = Nf.numeroTEF
             TotPago = TotPago + Modalidade
             ValTEFVisaElectron = ValTEFVisaElectron + Modalidade
             bandeiraTEFVisaElectron = Agencia
@@ -1618,8 +1640,8 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
       End If
 
       If lblModalidade.Caption = "DEBITO" Then
-          If EfetuaOperacaoTEF("2", txtValorModalidade.text, lblMensagemTEF) Then
-            numeroTef = lerCamporResultadoTEF(ComprovantePagamento, "NSU SiTef")
+          If EfetuaOperacaoTEF("3", Nf, lblMensagemTEF) Then
+            txtNumeroTEF.text = Nf.numeroTEF
             TotPago = TotPago + Modalidade
             ValTEFVisaElectron = ValTEFVisaElectron + Modalidade
             bandeiraTEFVisaElectron = Agencia
@@ -2314,7 +2336,6 @@ ElseIf txtTipoNota.text = "D1" Or txtTipoNota.text = "S1" Then
         rdoCNLoja.Execute Sql
         
       txtSerie.text = txtTipoNota.text
-      wData = Empty
       NroNotaFiscal = frmCaixaNotaManual.txtNota.text
       Call GravaMovimentoCaixa
       EncerraVenda Val(txtPedido.text), " ", 1
@@ -2393,296 +2414,284 @@ lblTootip.Visible = False
  
   End Sub
   
-  Private Sub GravaMovimentoCaixa()
-             
-          Sql = "Select * from controlecaixa  where CTR_Supervisor <> 99 and" _
-             & " Ctr_DataInicial between '" & Format(Date, "yyyy/mm/dd") & " 00:00:00' and  '" _
-             & Format(Date, "yyyy/mm/dd") & " 23:59:59'"
-          
-             PegaLoja.CursorLocation = adUseClient
-             PegaLoja.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
-             
-          'Limpa registros
-          Sql = "delete movimentocaixa where  mc_serie = '" & txtSerie.text & "' and " _
-            & "mc_protocolo = " & GLB_CTR_Protocolo & " and " _
-            & "mc_nrocaixa = '" & GLB_Caixa & "' and mc_pedido = '" & txtPedido.text & "'"
-          rdoCNLoja.Execute Sql
-          
-        Wecf = GLB_ECF
-        wData = Format(PegaLoja("ctr_datainicial"), "YYYY/MM/DD")
-         
-         If PegaLoja.EOF = False Then
-                  
-               If txtTipoNota.text = "Romaneio" Or txtTipoNota.text = "RomaneioDireto" Then
-                  Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Subgrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
-                              & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota) values(" & Wecf & ",'" & PegaLoja("ctr_operador") & "','" & Trim(wlblloja) & "', " _
-                              & " '" & Format(wData, "YYYY/MM/DD") & "', " & 20105 & ",''," & NroNotaFiscal & ",'" & txtSerie.text & "', " _
-                              & "" & ConverteVirgula(Format(frmControlaCaixa.cmdTotalVenda.Caption, "##,##0.00")) & ", " _
-                              & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(PegaLoja("ctr_datainicial"), "yyyy/mm/dd") & "','V')"
-                  rdoCNLoja.Execute (Sql)
-              End If
+Private Sub GravaMovimentoCaixa()
 
-              If AvistaReceber <> 0 Then
-                 
-                 Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Subgrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
-                              & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio,MC_ControleAVR, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota) values(" & Wecf & ",'" & PegaLoja("ctr_operador") & "','" & Trim(wlblloja) & "', " _
-                              & " '" & Format(wData, "YYYY/MM/DD") & "', " & 10204 & ",'', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
-                              & "" & ConverteVirgula(Format(AvistaReceber, "##,##0.00")) & ", " _
-                              & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A','A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(PegaLoja("ctr_datainicial"), "yyyy/mm/dd") & "','V')"
-                 rdoCNLoja.Execute (Sql)
-              End If
+    'Limpa registros
+    Sql = "delete movimentocaixa where  mc_serie = '" & txtSerie.text & "' and " _
+    & "mc_protocolo = " & GLB_CTR_Protocolo & " and " _
+    & "mc_nrocaixa = '" & GLB_Caixa & "' and mc_pedido = '" & txtPedido.text & "'"
+    rdoCNLoja.Execute Sql
 
-              If WCodigoModalidadeVISA = "0301" Then
-                 If ValCartaoVisa > 0 Then
-                    'VISA
-                    wGrupoMovimento = "10301"
-                    Agencia = bandeiraCartaoVisa
-                    wSubGrupo = ""
-                    wValorMovimento = Format(ValCartaoVisa, "##,##0.00")
-                    
-                    If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
-                       UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-  
-                        Retorno = Bematech_FI_EfetuaFormaPagamento("VISA", ValCartaoVisa * 100)
-                        Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-                        
-                        If Retorno <> 1 Then
-                           MsgBox "Por favor verificar se impressora está ligada corretamente!"
-                           Exit Sub
-                        End If
-                    End If
+    Wecf = GLB_ECF
 
-                    Call GravaRegistro
-                 End If
-              End If
-                 
-             
-        
-              If wCodigoModalidadeMASTERCARD = "0302" Then
-                If ValCartaoMastercard > 0 Then
-                  'MASTERCARD
-                   wGrupoMovimento = "10302"
-                   Agencia = bandeiraCartaoMastercard
-                   wSubGrupo = ""
-                   wValorMovimento = Format(ValCartaoMastercard, "##,##0.00")
-                   If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
-                       UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                        Retorno = Bematech_FI_EfetuaFormaPagamento("MASTERCARD", ValCartaoMastercard * 100)
-                    Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-                    End If
-                   Call GravaRegistro
-                End If
-              End If
-            
-              
-              If WCodigoModalidadeAMEX = "0303" Then
-                 If ValCartaoAmex > 0 Then
-                   'AMEX
-                    wGrupoMovimento = "10303"
-                    Agencia = bandeiraCartaoAmex
-                    wSubGrupo = ""
-                    wValorMovimento = Format(ValCartaoAmex, "##,##0.00")
-                    
-                   If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
-                  UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                      Retorno = Bematech_FI_EfetuaFormaPagamento("AMEX", ValCartaoAmex * 100)
-                      Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-                   End If
-                
-                    Call GravaRegistro
-                 End If
-              End If
-                 
-              
-              
-              If wCodigoModalidadeBNDES = "0304" Then
-                If ValCartaoBNDES > 0 Then
-                  'BNDES
-                   wGrupoMovimento = "10304"
-                   wSubGrupo = ""
-                   wValorMovimento = Format(ValCartaoBNDES, "##,##0.00")
-
-
-                   If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
-                  UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                      Retorno = Bematech_FI_EfetuaFormaPagamento("AMEX", ValCartaoAmex * 100)
-                      Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-                   End If
-                   Call GravaRegistro
-                End If
-              End If
-               
-              If ValTEFVisaElectron > 0 Then
-                 'TEF
-                 wGrupoMovimento = "10206"
-                 wSubGrupo = "Visa Elec."
-                 Agencia = bandeiraTEFVisaElectron
-                 wValorMovimento = Format(ValTEFVisaElectron, "##,###0.00")
-                
-                If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
-                  UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                    Retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFVisaElectron * 100)
-                    Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-                 End If
-
-                 Call GravaRegistro
-              End If
-                        
-              If ValTEFRedeShop > 0 Then
-                'TEF
-                 wGrupoMovimento = "10203"
-                 wSubGrupo = "RedeShop"
-                 Agencia = bandeiraTEFRedeShop
-                 wValorMovimento = Format(ValTEFRedeShop, "##,###0.00")
-                 
-                 If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
-                    UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                      Retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFRedeShop * 100)
-                      Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-                 End If
-                 
-                 
-                 Call GravaRegistro
-              End If
-              
-              If ValTEFHiperCard > 0 Then
-                'TEF
-                 wGrupoMovimento = "10205"
-                 wSubGrupo = "HiperCard"
-                 Agencia = bandeiraTEFHiperCard
-                 wValorMovimento = Format(ValTEFHiperCard, "##,##0.00")
-                 If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
-                    UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                      Retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFHiperCard * 100)
-                      Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-                 End If
-                 Call GravaRegistro
-              End If
-             
-                       
-              If wCodigoModalidadeNOTACREDITO = "0701" Then
-                If ValNotaCredito > 0 Then
-                   'NOTA DE CREDITO
-                   wGrupoMovimento = "10701"
-                   wSubGrupo = ""
-                   wValorMovimento = Format(ValNotaCredito, "##,##0.00")
-                   If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
-                      UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                        Retorno = Bematech_FI_EfetuaFormaPagamento("NC", ValNotaCredito * 100)
-                        Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-                   End If
-                   Call GravaRegistro
-                End If
-              End If
-              
-              If WCodigoModalidadeCHEQUE = "0201" Then
-                If ValCheque > 0 Then
-                   'CHEQUE
-                   wGrupoMovimento = "10201"
-                   wSubGrupo = ""
-                   wValorMovimento = Format(ValCheque, "##,##0.00")
-                   If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
-                      UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                        Retorno = Bematech_FI_EfetuaFormaPagamento("CHEQUE", ValCheque * 100)
-                        Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-                   End If
-                   Call GravaRegistro
-                End If
-              End If
-              
-             
-              If wCodigoModalidadeDINHEIRO = "0101" Then
-                If ValDinheiro > 0 Then
-                   'DINHEIRO
-                   wGrupoMovimento = "10101"
-                   wSubGrupo = ""
-                   wValorMovimento = Format((ValDinheiro - ValTroco), "##,##0.00")
-                   If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
-                      UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                        Retorno = Bematech_FI_EfetuaFormaPagamento("DINHEIRO", ValDinheiro * 100)
-                        Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-                   End If
-                   
-                   Call GravaRegistro
-                End If
-              End If
-              
-              If wCodigoModalidadeFATURADO = "0501" Then
-                   wGrupoMovimento = "10501"
-                   wSubGrupo = ""
-                   wValorMovimento = Format(chbValoraPagarFat.Caption, "##,##0.00")
-                   Call GravaRegistro
-              End If
-             
-              If wCodigoModalidadeFINANCIADO = "0601" Then
-                   wGrupoMovimento = "10601"
-                   wSubGrupo = ""
-                   wValorMovimento = Format(chbValoraPagarFat.Caption, "##,##0.00")
-                   Call GravaRegistro
-              End If
-              wGrupo = 0
-              
-  
-              
-              If txtSerie.text Like GLB_SerieCF & "*" Then
-                 wGrupo = 20101
-              ElseIf txtSerie.text = PegaSerieNota Then
-                 wGrupo = 20102
-              ElseIf txtSerie.text = "SF" Then
-                 wGrupo = 20103
-              ElseIf txtSerie.text = "SM" Then
-                 wGrupo = 20104
-              ElseIf txtSerie.text = "00" Then
-                 wGrupo = 20105
-              ElseIf txtSerie.text = "C0" Then
-                 wGrupo = 20106
-              ElseIf txtSerie.text = "D1" Then
-                 wGrupo = 20107
-              ElseIf txtSerie.text = "S1" Then
-                 wGrupo = 20108
-              End If
-             
-             
-              If wGrupo <> 0 Then
-                 If txtTipoNota.text = "CUPOM" Then
-                    Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Subgrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
-                              & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota) values(" & Wecf & ",'" & PegaLoja("ctr_operador") & "','" & Trim(wlblloja) & "', " _
-                              & " '" & Format(PegaLoja("ctr_datainicial"), "yyyy/mm/dd") & "', " & wGrupo & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
-                              & "" & ConverteVirgula(Format(frmControlaCaixa.cmdTotalVenda.Caption, "##,##0.00")) & ", " _
-                              & "0,'" & Agencia & "',0,0,0,0,'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(PegaLoja("ctr_datainicial"), "yyyy/mm/dd") & "','PA')"
-                              rdoCNLoja.Execute (Sql)
-                              
-                 ElseIf txtSerie.text <> "00" Then
-                       
-                        wTotalNota = frmControlaCaixa.cmdTotalVenda.Caption
-                        
-                        Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Subgrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
-                              & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota) values(" & Wecf & ",'" & PegaLoja("ctr_operador") & "','" & Trim(wlblloja) & "', " _
-                              & " '" & Format(PegaLoja("ctr_datainicial"), "yyyy/mm/dd") & "', " & wGrupo & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
-                              & "" & ConverteVirgula(Format(wTotalNota, "##,##0.00")) & ", " _
-                              & "0,'" & "" & "',0,0,0,9,'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(PegaLoja("ctr_datainicial"), "yyyy/mm/dd") & "','PA')"
-                        rdoCNLoja.Execute (Sql)
-                 End If
-              End If
-              
-              
-              
-             'Garantia estendida
-
-            If wValorGE > 0 Then
-                Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_SubGrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
-                    & "MC_Contacorrente,MC_bomPara,MC_Parcelas,MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido, MC_DataProcesso,MC_TipoNota) values(" & Wecf & ",'" & PegaLoja("ctr_operador") & "','" & Trim(wlblloja) & "', " _
-                    & " '" & Format(PegaLoja("ctr_datainicial"), "yyyy/mm/dd") & "', " & 11009 & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
-                    & "" & ConverteVirgula(Format(wValorGE, "##,###0.00")) & ", " _
-                    & "0,'" & "" & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(PegaLoja("ctr_datainicial"), "yyyy/mm/dd") & "','PA')"
-            rdoCNLoja.Execute (Sql)
-
+    If txtTipoNota.text = "Romaneio" Or txtTipoNota.text = "RomaneioDireto" Then
+        Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Subgrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
+        & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
+        & " '" & Format(GLB_DataInicial, "YYYY/MM/DD") & "', " & 20105 & ",''," & NroNotaFiscal & ",'" & txtSerie.text & "', " _
+        & "" & ConverteVirgula(Format(frmControlaCaixa.cmdTotalVenda.Caption, "##,##0.00")) & ", " _
+        & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(Date, "yyyy/mm/dd") & "','V'," & txtNumeroTEF.text & ")"
+        rdoCNLoja.Execute (Sql)
     End If
-              
+
+    If AvistaReceber <> 0 Then
+        Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Subgrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
+        & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio,MC_ControleAVR, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
+        & " '" & Format(GLB_DataInicial, "YYYY/MM/DD") & "', " & 10204 & ",'', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
+        & "" & ConverteVirgula(Format(AvistaReceber, "##,##0.00")) & ", " _
+        & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A','A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(Date, "yyyy/mm/dd") & "','V'," & txtNumeroTEF.text & ")"
+        rdoCNLoja.Execute (Sql)
+    End If
+
+    If WCodigoModalidadeVISA = "0301" Then
+        If ValCartaoVisa > 0 Then
+            'VISA
+            wGrupoMovimento = "10301"
+            Agencia = bandeiraCartaoVisa
+            wSubGrupo = ""
+            wValorMovimento = Format(ValCartaoVisa, "##,##0.00")
+
+                If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+                    UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+                    Retorno = Bematech_FI_EfetuaFormaPagamento("VISA", ValCartaoVisa * 100)
+                    Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+
+                    If Retorno <> 1 Then
+                        MsgBox "Por favor verificar se impressora está ligada corretamente!"
+                        Exit Sub
+                    End If
+                End If
+
+            Call GravaRegistro
+        End If
+    End If
+
+    If wCodigoModalidadeMASTERCARD = "0302" Then
+        If ValCartaoMastercard > 0 Then
+            'MASTERCARD
+            wGrupoMovimento = "10302"
+            Agencia = bandeiraCartaoMastercard
+            wSubGrupo = ""
+            wValorMovimento = Format(ValCartaoMastercard, "##,##0.00")
+            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+                UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+                Retorno = Bematech_FI_EfetuaFormaPagamento("MASTERCARD", ValCartaoMastercard * 100)
+                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+            End If
+            Call GravaRegistro
+        End If
+    End If
+
+
+    If WCodigoModalidadeAMEX = "0303" Then
+        If ValCartaoAmex > 0 Then
+            'AMEX
+            wGrupoMovimento = "10303"
+            Agencia = bandeiraCartaoAmex
+            wSubGrupo = ""
+            wValorMovimento = Format(ValCartaoAmex, "##,##0.00")
+
+            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+            UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+                Retorno = Bematech_FI_EfetuaFormaPagamento("AMEX", ValCartaoAmex * 100)
+                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+            End If
+
+            Call GravaRegistro
+        End If
+    End If
+
+
+    If wCodigoModalidadeBNDES = "0304" Then
+        If ValCartaoBNDES > 0 Then
+            'BNDES
+            wGrupoMovimento = "10304"
+            wSubGrupo = ""
+            wValorMovimento = Format(ValCartaoBNDES, "##,##0.00")
+
+
+            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+            UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+                Retorno = Bematech_FI_EfetuaFormaPagamento("AMEX", ValCartaoAmex * 100)
+                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+            End If
+        
+            Call GravaRegistro
+        End If
+    End If
+
+    If ValTEFVisaElectron > 0 Then
+        'TEF
+        wGrupoMovimento = "10206"
+        wSubGrupo = "Visa Elec."
+        Agencia = bandeiraTEFVisaElectron
+        wValorMovimento = Format(ValTEFVisaElectron, "##,###0.00")
+
+        If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+            UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+            Retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFVisaElectron * 100)
+            Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+        End If
+
+        Call GravaRegistro
+    End If
+
+    If ValTEFRedeShop > 0 Then
+        'TEF
+        wGrupoMovimento = "10203"
+        wSubGrupo = "RedeShop"
+        Agencia = bandeiraTEFRedeShop
+        wValorMovimento = Format(ValTEFRedeShop, "##,###0.00")
+
+        If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+            UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+            Retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFRedeShop * 100)
+            Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+        End If
+
+
+        Call GravaRegistro
+    End If
+
+    If ValTEFHiperCard > 0 Then
+        'TEF
+        wGrupoMovimento = "10205"
+        wSubGrupo = "HiperCard"
+        Agencia = bandeiraTEFHiperCard
+        wValorMovimento = Format(ValTEFHiperCard, "##,##0.00")
+
+        If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+            UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+            Retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFHiperCard * 100)
+            Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+        End If
+        
+        Call GravaRegistro
+    End If
+
+
+    If wCodigoModalidadeNOTACREDITO = "0701" Then
+        If ValNotaCredito > 0 Then
+            'NOTA DE CREDITO
+            wGrupoMovimento = "10701"
+            wSubGrupo = ""
+            wValorMovimento = Format(ValNotaCredito, "##,##0.00")
+            
+            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+                UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+                Retorno = Bematech_FI_EfetuaFormaPagamento("NC", ValNotaCredito * 100)
+                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+            End If
+            
+            Call GravaRegistro
+        End If
+    End If
+
+    If WCodigoModalidadeCHEQUE = "0201" Then
+        If ValCheque > 0 Then
+            'CHEQUE
+            wGrupoMovimento = "10201"
+            wSubGrupo = ""
+            wValorMovimento = Format(ValCheque, "##,##0.00")
+            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+                UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+                Retorno = Bematech_FI_EfetuaFormaPagamento("CHEQUE", ValCheque * 100)
+                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+            End If
+            Call GravaRegistro
+        End If
+    End If
+
+
+    If wCodigoModalidadeDINHEIRO = "0101" Then
+        If ValDinheiro > 0 Then
+            'DINHEIRO
+            wGrupoMovimento = "10101"
+            wSubGrupo = ""
+            wValorMovimento = Format((ValDinheiro - ValTroco), "##,##0.00")
+            
+            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+                UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+                Retorno = Bematech_FI_EfetuaFormaPagamento("DINHEIRO", ValDinheiro * 100)
+                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+            End If
+
+        Call GravaRegistro
+        End If
+    End If
+
+    If wCodigoModalidadeFATURADO = "0501" Then
+        wGrupoMovimento = "10501"
+        wSubGrupo = ""
+        wValorMovimento = Format(chbValoraPagarFat.Caption, "##,##0.00")
+        Call GravaRegistro
+    End If
+
+    If wCodigoModalidadeFINANCIADO = "0601" Then
+        wGrupoMovimento = "10601"
+        wSubGrupo = ""
+        wValorMovimento = Format(chbValoraPagarFat.Caption, "##,##0.00")
+        Call GravaRegistro
     End If
     
-    PegaLoja.Close
- 
+    wGrupo = 0
+
+
+
+    If txtSerie.text Like GLB_SerieCF & "*" Then
+        wGrupo = 20101
+    ElseIf txtSerie.text = PegaSerieNota Then
+        wGrupo = 20102
+    ElseIf txtSerie.text = "SF" Then
+        wGrupo = 20103
+    ElseIf txtSerie.text = "SM" Then
+        wGrupo = 20104
+    ElseIf txtSerie.text = "00" Then
+        wGrupo = 20105
+    ElseIf txtSerie.text = "C0" Then
+        wGrupo = 20106
+    ElseIf txtSerie.text = "D1" Then
+        wGrupo = 20107
+    ElseIf txtSerie.text = "S1" Then
+        wGrupo = 20108
+    End If
+
+
+    If wGrupo <> 0 Then
+        If txtTipoNota.text = "CUPOM" Then
+            Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Subgrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
+            & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
+            & " '" & Format(GLB_DataInicial, "yyyy/mm/dd") & "', " & wGrupo & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
+            & "" & ConverteVirgula(Format(frmControlaCaixa.cmdTotalVenda.Caption, "##,##0.00")) & ", " _
+            & "0,'" & Agencia & "',0,0,0,0,'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "')"
+            rdoCNLoja.Execute (Sql)
+
+        ElseIf txtSerie.text <> "00" Then
+
+            wTotalNota = frmControlaCaixa.cmdTotalVenda.Caption
+
+            Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Subgrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
+            & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
+            & " '" & Format(GLB_DataInicial, "yyyy/mm/dd") & "', " & wGrupo & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
+            & "" & ConverteVirgula(Format(wTotalNota, "##,##0.00")) & ", " _
+            & "0,'" & "" & "',0,0,0,9,'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "')"
+            rdoCNLoja.Execute (Sql)
+            
+        End If
+    End If
+
+
+    'Garantia estendida
+    If wValorGE > 0 Then
+        Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_SubGrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
+        & "MC_Contacorrente,MC_bomPara,MC_Parcelas,MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido, MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
+        & " '" & Format(GLB_DataInicial, "yyyy/mm/dd") & "', " & 11009 & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
+        & "" & ConverteVirgula(Format(wValorGE, "##,###0.00")) & ", " _
+        & "0,'" & "" & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "')"
+        rdoCNLoja.Execute (Sql)
+    End If
+
+
+
 End Sub
 
 Private Function ProcuraPedido()
@@ -3147,9 +3156,9 @@ Private Sub Form_Load()
 
     habilitaPagamentoTEF
     
-
-    
 End Sub
+
+
 
 Public Sub Form_Unload(Cancel As Integer)
     
@@ -3713,104 +3722,6 @@ frmFormaPagamento.txtValorModalidade.text = ""
  WCodigoModalidadeVISA = ""
 End Sub
 
-Public Function EfetuaPagamentoTEFOLD(codigoPagamento As String, valorCobrado As String) As Boolean
-
-  Dim Retorno        As Long
-  Dim Buffer         As String * 20000
-  Dim ProximoComando As Long
-  Dim TipoCampo      As Long
-  Dim TamanhoMinimo  As Integer
-  Dim TamanhoMaximo  As Integer
-  Dim ContinuaNavegacao  As Long
-  Dim Mensagem As String
-  Dim logOperacoesTEF As String
-  
-  valorCobrado = Format(valorCobrado, "###,###,##0.00")
-
-  Screen.MousePointer = vbHourglass
-  'codigoPagamento = "112"
-  Retorno = IniciaFuncaoSiTefInterativo(codigoPagamento, valorCobrado & Chr(0), pedido & Chr(0), Format(Date, "YYYYMMDD") & Chr(0), Format(Time, "HHMMSS") & Chr(0), Trim(GLB_USU_Nome) & Chr(0), Chr(0))
-  Screen.MousePointer = vbDefault
-
-  ProximoComando = 0
-  TipoCampo = 0
-  TamanhoMinimo = 0
-  TamanhoMaximo = 0
-  ContinuaNavegacao = 0
-  Resultado = 0
-  Buffer = String(20000, 0)
-
-    lblMensagemTEF.Caption = ""
-
-  Do
-
-    Screen.MousePointer = vbHourglass
-    
-    Retorno = ContinuaFuncaoSiTefInterativo(ProximoComando, TipoCampo, TamanhoMinimo, TamanhoMaximo, Buffer, Len(Buffer), Resultado)
-    Screen.MousePointer = vbDefault
-
-    If (Retorno = 10000) Then
-
-      If ProximoComando = "1" Or ProximoComando = "2" Or ProximoComando = "3" Then
-        Mensagem = lblMensagemTEF.Caption
-        lblMensagemTEF.Caption = Trim(Buffer)
-        If lblMensagemTEF.Caption = "" Then lblMensagemTEF.Caption = Mensagem
-        lblMensagemTEF.Caption = UCase(lblMensagemTEF.Caption)
-        lblMensagemTEF.Refresh
-      End If
-     
-      'lblParcelas.Caption = Buffer
-
-            logOperacoesTEF = logOperacoesTEF & "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
-                              "[Resu:" & Space(4 - Len(Trim(Resultado))) & Resultado & "]" & _
-                              "[Tipo:" & Space(4 - Len(Trim(TipoCampo))) & TipoCampo & "] " & Trim(Buffer) & vbNewLine
-
-     Select Case ProximoComando
-          Case 0
-              If Buffer Like ".....S.O.F.T.W.A.R.E*" Then
-                  ComprovantePagamento = Buffer
-              End If
-              
-          Case 21
-              If Buffer Like "*1:Magnetico/Chip;2:Digitado;*" Then
-                  Buffer = "1"
-              End If
-          End Select
-      
-      If wParcelas > 1 Then
-        Select Case ProximoComando
-          Case 21
-              If Buffer Like "1:A Vista;2:Parcelado pelo Estabelecimento;3:Parcelado pela Administradora;*" Then
-                  Buffer = "02"
-              End If
-          Case 30
-              If Buffer Like "*Forneca o numero de parcela*" And wParcelas > 1 Then
-                  Buffer = Format(wParcelas, "00")
-              End If
-        End Select
-      End If
-
-    End If
-
-  Loop Until Not (Retorno = 10000)
-
-  If (Retorno = 0) Then
-    lblMensagemTEF.Caption = "Retorno Ok!"
-    EfetuaPagamentoTEF = True
-    
-  Else
-    'Retorno = IniciaFuncaoSiTefInterativo(3, 10, 10, "20180216", "101010", "ACASD", "")
-    'Retorno = ContinuaFuncaoSiTefInterativo(ProximoComando, TipoCampo, TamanhoMinimo, TamanhoMaximo, Buffer, Len(Buffer), Resultado)
-    'FrmSiTef.TxtDisplay.Text = FrmSiTef.TxtDisplay.Text & Buffer
-
-    'felipetef
-    'lblMensagemTEF.Caption = "Erro:" & " " & retornoFuncoesTEF(CStr(Retorno))
-  End If
-
-     FinalizaTransacaoSiTefInterativo 1, pedido & Chr(0), Format(Date, "YYYYMMDD"), Format(Time, "HHMMSS")
-     criaLogTef (logOperacoesTEF)
-
-End Function
 
 
 
