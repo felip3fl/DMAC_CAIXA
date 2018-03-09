@@ -5,8 +5,8 @@ Begin VB.Form frmReimpressaoMovimento
    BorderStyle     =   0  'None
    Caption         =   "Fechamento do CaixaFechamento do Caixa"
    ClientHeight    =   8505
-   ClientLeft      =   480
-   ClientTop       =   1125
+   ClientLeft      =   3120
+   ClientTop       =   210
    ClientWidth     =   15300
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
@@ -688,13 +688,6 @@ Private Sub ChkModoImpressao_Click()
     
         fraFechamentoAnterior.Height = 615
     End If
-    
-End Sub
-
-Private Sub cmdImprimir_Click()
-
-
-
     
 End Sub
 

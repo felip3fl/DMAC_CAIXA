@@ -7,16 +7,197 @@ Begin VB.Form frmSangria
    BorderStyle     =   0  'None
    Caption         =   "T. Numerário"
    ClientHeight    =   9090
-   ClientLeft      =   885
-   ClientTop       =   1650
+   ClientLeft      =   -4860
+   ClientTop       =   1125
    ClientWidth     =   18900
    LinkTopic       =   "Form1"
-   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   9090
-   ScaleWidth      =   18900
+   ScaleHeight     =   10575
+   ScaleWidth      =   20490
    ShowInTaskbar   =   0   'False
+   Begin VB.Frame frameOperacoes 
+      BackColor       =   &H00000000&
+      Height          =   4440
+      Left            =   7470
+      TabIndex        =   37
+      Top             =   3210
+      Visible         =   0   'False
+      Width           =   4200
+      Begin Balcao2010.chameleonButton cmdImprimirMovimento 
+         Height          =   720
+         Left            =   195
+         TabIndex        =   38
+         Top             =   645
+         Width           =   3780
+         _ExtentX        =   6668
+         _ExtentY        =   1270
+         BTYPE           =   14
+         TX              =   "Re-Imprimir Movimento"
+         ENAB            =   -1  'True
+         BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+            Name            =   "Arial"
+            Size            =   12
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         COLTYPE         =   2
+         FOCUSR          =   -1  'True
+         BCOL            =   2500134
+         BCOLO           =   4210752
+         FCOL            =   16777215
+         FCOLO           =   16777215
+         MCOL            =   5263440
+         MPTR            =   1
+         MICON           =   "frmSangria.frx":0000
+         UMCOL           =   -1  'True
+         SOFT            =   0   'False
+         PICPOS          =   0
+         NGREY           =   0   'False
+         FX              =   0
+         HAND            =   0   'False
+         CHECK           =   0   'False
+         VALUE           =   0   'False
+      End
+      Begin Balcao2010.chameleonButton cmdImprimirTEF 
+         Height          =   720
+         Left            =   195
+         TabIndex        =   39
+         Top             =   2100
+         Width           =   3780
+         _ExtentX        =   6668
+         _ExtentY        =   1270
+         BTYPE           =   14
+         TX              =   "Re-Imprimir TEF(S)"
+         ENAB            =   -1  'True
+         BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+            Name            =   "Arial"
+            Size            =   12
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         COLTYPE         =   2
+         FOCUSR          =   -1  'True
+         BCOL            =   2500134
+         BCOLO           =   4210752
+         FCOL            =   16777215
+         FCOLO           =   16777215
+         MCOL            =   5263440
+         MPTR            =   1
+         MICON           =   "frmSangria.frx":001C
+         UMCOL           =   -1  'True
+         SOFT            =   0   'False
+         PICPOS          =   0
+         NGREY           =   0   'False
+         FX              =   0
+         HAND            =   0   'False
+         CHECK           =   0   'False
+         VALUE           =   0   'False
+      End
+      Begin Balcao2010.chameleonButton cmdAlterarModalidade 
+         Height          =   720
+         Left            =   195
+         TabIndex        =   40
+         Top             =   1365
+         Width           =   3780
+         _ExtentX        =   6668
+         _ExtentY        =   1270
+         BTYPE           =   14
+         TX              =   "Alterar modalidade"
+         ENAB            =   -1  'True
+         BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+            Name            =   "Arial"
+            Size            =   12
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         COLTYPE         =   2
+         FOCUSR          =   -1  'True
+         BCOL            =   2500134
+         BCOLO           =   4210752
+         FCOL            =   16777215
+         FCOLO           =   16777215
+         MCOL            =   5263440
+         MPTR            =   1
+         MICON           =   "frmSangria.frx":0038
+         UMCOL           =   -1  'True
+         SOFT            =   0   'False
+         PICPOS          =   0
+         NGREY           =   0   'False
+         FX              =   0
+         HAND            =   0   'False
+         CHECK           =   0   'False
+         VALUE           =   0   'False
+      End
+      Begin VB.Label lblMensagemTEFModalidade 
+         Alignment       =   2  'Center
+         BackColor       =   &H00000000&
+         Caption         =   "As mensagem do TEF serão exibidas aqui"
+         BeginProperty Font 
+            Name            =   "Arial"
+            Size            =   9.75
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FFFFFF&
+         Height          =   360
+         Left            =   210
+         TabIndex        =   43
+         Top             =   3015
+         Width           =   3780
+      End
+      Begin VB.Label lblMensagemTEF 
+         Alignment       =   2  'Center
+         BackColor       =   &H00000000&
+         BeginProperty Font 
+            Name            =   "Arial"
+            Size            =   9.75
+            Charset         =   0
+            Weight          =   400
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FFFFFF&
+         Height          =   795
+         Left            =   225
+         TabIndex        =   42
+         Top             =   3450
+         Width           =   3780
+      End
+      Begin VB.Label Label5 
+         AutoSize        =   -1  'True
+         BackStyle       =   0  'Transparent
+         Caption         =   "Operações"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   9.75
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         ForeColor       =   &H00FFFFFF&
+         Height          =   240
+         Left            =   195
+         TabIndex        =   41
+         Top             =   255
+         Width           =   1155
+      End
+   End
    Begin VB.Frame frameDividiModalidade 
       Appearance      =   0  'Flat
       BackColor       =   &H00000000&
@@ -201,7 +382,7 @@ Begin VB.Form frmSangria
          ColWidthMin     =   0
          ColWidthMax     =   0
          ExtendLastCol   =   0   'False
-         FormatString    =   $"frmSangria.frx":0000
+         FormatString    =   $"frmSangria.frx":0054
          ScrollTrack     =   0   'False
          ScrollBars      =   2
          ScrollTips      =   0   'False
@@ -270,7 +451,7 @@ Begin VB.Form frmSangria
          FCOLO           =   16777215
          MCOL            =   5263440
          MPTR            =   1
-         MICON           =   "frmSangria.frx":00AC
+         MICON           =   "frmSangria.frx":0100
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -423,7 +604,7 @@ Begin VB.Form frmSangria
       ColWidthMin     =   0
       ColWidthMax     =   0
       ExtendLastCol   =   0   'False
-      FormatString    =   $"frmSangria.frx":00C8
+      FormatString    =   $"frmSangria.frx":011C
       ScrollTrack     =   0   'False
       ScrollBars      =   2
       ScrollTips      =   0   'False
@@ -470,8 +651,8 @@ Begin VB.Form frmSangria
       TabIndex        =   11
       Top             =   1995
       Visible         =   0   'False
-      Width           =   4995
-      _cx             =   8811
+      Width           =   4770
+      _cx             =   8414
       _cy             =   8890
       _ConvInfo       =   1
       Appearance      =   0
@@ -510,15 +691,15 @@ Begin VB.Form frmSangria
       GridLinesFixed  =   2
       GridLineWidth   =   1
       Rows            =   50
-      Cols            =   5
+      Cols            =   8
       FixedRows       =   1
       FixedCols       =   0
       RowHeightMin    =   0
       RowHeightMax    =   0
       ColWidthMin     =   0
       ColWidthMax     =   0
-      ExtendLastCol   =   0   'False
-      FormatString    =   $"frmSangria.frx":0129
+      ExtendLastCol   =   -1  'True
+      FormatString    =   $"frmSangria.frx":017D
       ScrollTrack     =   0   'False
       ScrollBars      =   2
       ScrollTips      =   0   'False
@@ -578,8 +759,8 @@ Begin VB.Form frmSangria
          ForeColor       =   &H80000008&
          Height          =   375
          Left            =   2715
-         MouseIcon       =   "frmSangria.frx":01C5
-         Picture         =   "frmSangria.frx":04CF
+         MouseIcon       =   "frmSangria.frx":0290
+         Picture         =   "frmSangria.frx":059A
          ScaleHeight     =   375
          ScaleWidth      =   240
          TabIndex        =   16
@@ -596,8 +777,8 @@ Begin VB.Form frmSangria
          ForeColor       =   &H80000008&
          Height          =   375
          Left            =   915
-         MouseIcon       =   "frmSangria.frx":075E
-         Picture         =   "frmSangria.frx":0A68
+         MouseIcon       =   "frmSangria.frx":0829
+         Picture         =   "frmSangria.frx":0B33
          ScaleHeight     =   375
          ScaleWidth      =   240
          TabIndex        =   15
@@ -775,7 +956,7 @@ Begin VB.Form frmSangria
       ColWidthMin     =   0
       ColWidthMax     =   0
       ExtendLastCol   =   -1  'True
-      FormatString    =   $"frmSangria.frx":0CF6
+      FormatString    =   $"frmSangria.frx":0DC1
       ScrollTrack     =   0   'False
       ScrollBars      =   2
       ScrollTips      =   0   'False
@@ -870,7 +1051,7 @@ Begin VB.Form frmSangria
       ColWidthMin     =   0
       ColWidthMax     =   0
       ExtendLastCol   =   0   'False
-      FormatString    =   $"frmSangria.frx":0D95
+      FormatString    =   $"frmSangria.frx":0E60
       ScrollTrack     =   0   'False
       ScrollBars      =   3
       ScrollTips      =   0   'False
@@ -1162,6 +1343,14 @@ Unload Me
 End Sub
 
 
+Private Sub cmdAlterarModalidade_Click()
+    frameOperacoes.Visible = False
+    lblModalidade.Visible = True
+    If GLB_Administrador = True Then frameDividiModalidade.Visible = True
+    grdModalidadeVenda.Visible = True
+    grdModalidadeVenda.SetFocus
+End Sub
+
 Private Sub cmdAtualizarSaldo_Click()
 
     If chkAtualizaSaldoFuturo.Value = 0 Then
@@ -1187,11 +1376,53 @@ End Sub
 
 
 
+
+Private Sub cmdImprimir_Click()
+
+End Sub
+
+Private Sub cmdImprimirMovimento_Click()
+    frameOperacoes.Visible = False
+    Call ImprimeAnaliticoVenda
+End Sub
+
+Private Sub cmdImprimirTEF_Click()
+    If grdAnaliticoVenda.Row >= grdAnaliticoVenda.FixedRows Then
+        reimpressaoTEF
+    End If
+End Sub
+
+Private Sub reimpressaoTEF()
+
+    Dim Sql As String
+    Dim nf As notaFiscalTEF
+    
+    nf.numero = grdAnaliticoVenda.TextMatrix(grdAnaliticoVenda.Row, 0)
+    nf.serie = grdAnaliticoVenda.TextMatrix(grdAnaliticoVenda.Row, 1)
+    nf.valor = grdAnaliticoVenda.TextMatrix(grdAnaliticoVenda.Row, 3)
+    nf.pedido = grdAnaliticoVenda.TextMatrix(grdAnaliticoVenda.Row, 6)
+    nf.numeroTEF = grdAnaliticoVenda.TextMatrix(grdAnaliticoVenda.Row, 5)
+    nf.dataEmissao = grdAnaliticoVenda.TextMatrix(grdAnaliticoVenda.Row, 7)
+
+    If nf.numeroTEF = "0" Or nf.numeroTEF = "" Then
+        MsgBox "Não foi possível imprimir TEF. Número invalido ou número não informado", vbExclamation
+        Exit Sub
+    End If
+
+    frameOperacoes.Height = 4400
+
+    Call EfetuaOperacaoTEF("113", nf, lblMensagemTEFModalidade, lblMensagemTEF)
+ 
+
+    ImprimeComprovanteTEF nf.comprovantePagamento
+
+End Sub
+
 Private Sub Form_Load()
   
     'defineImpressora
   
-    frmSaldo.BackColor = vbBlack
+  frmSaldo.BackColor = vbBlack
   
   If GLB_Administrador = True Then
     mskData.text = Date
@@ -1231,10 +1462,15 @@ Private Sub Form_Load()
   grdAnaliticoVenda.Height = grdMovimentoCaixa.Height
   grdAnaliticoVenda.Height = grdMovimentoCaixa.Height
   
+  frameOperacoes.left = grdModalidadeVenda.left
+  frameOperacoes.top = grdModalidadeVenda.top - 100
+  
   frmSaldo.left = frameDataAdministrador.left
   frmSaldo.top = frameDataAdministrador.top
   
   imgLogo.Picture = LoadPicture(endIMG("logo"))
+  
+  If GLB_TefHabilidado = False Then cmdImprimirTEF.Enabled = False
   
 End Sub
 
@@ -1480,19 +1716,15 @@ Private Sub grdAnaliticoSangria_KeyUp(KeyCode As Integer, Shift As Integer)
 End Sub
 
 Private Sub grdAnaliticoVenda_DblClick()
+
   If grdAnaliticoVenda.Rows > 1 Then
-        If MsgBox("Deseja Imprimir Analítico?", vbYesNo + vbQuestion, "Atenção") = vbYes Then
-           Call ImprimeAnaliticoVenda
-        Else
-           If MsgBox("Deseja Trocar Modalidade ", vbYesNo + vbQuestion, "Atenção") = vbYes Then
-              lblModalidade.Visible = True
-              If GLB_Administrador = True Then frameDividiModalidade.Visible = True
-              grdModalidadeVenda.Visible = True
-              grdModalidadeVenda.SetFocus
-              Exit Sub
-           End If
-        End If
+        frameOperacoes.Visible = True
+        grdModalidadeVenda.Visible = False
+        frameOperacoes.Height = 3020
+        lblModalidade.Visible = False
+        lblMensagemTEFModalidade.Caption = "Mensagens TEF"
   End If
+  
 End Sub
 
 Private Sub grdAnaliticoVenda_KeyPress(KeyAscii As Integer)
@@ -1502,6 +1734,7 @@ Private Sub grdAnaliticoVenda_KeyPress(KeyAscii As Integer)
       frameDividiModalidade.Visible = False
      grdModalidadeVenda.Visible = False
      lblModalidade.Visible = False
+     frameOperacoes.Visible = False
   End If
 End Sub
 
@@ -1926,13 +2159,23 @@ End Sub
 '  novo
 '-------------------------------------------------------------
 Sub CarregaAnaliticoVenda()
+
     grdAnaliticoVenda.Rows = 1
     grdAnaliticoVenda.Visible = False
     lblAnalitico.Visible = False
     
-    Sql = "select mc_documento,mc_serie,mo_descricao,mc_valor,mc_Sequencia from movimentocaixa,Modalidade" _
-        & " where MC_Grupo=mo_grupo and MC_grupo='" & "1" + Mid(grdMovimentoCaixa.TextMatrix(grdMovimentoCaixa.Row, 4), 2, 5) _
-        & "' and MC_Data ='" & Format(wData, "yyyy/mm/dd") & "' and MC_Protocolo = " & rdoDataFechamentoRetaguarda("protocolo") & " and MC_TipoNota in ('V','T','E','S')"
+    Sql = "select mc_documento," & vbNewLine & _
+        "mc_serie," & vbNewLine & _
+        "mo_descricao,mc_data," & vbNewLine & _
+        "mc_valor,mc_pedido," & vbNewLine & _
+        "mc_Sequencia, mc_sequenciaTEF " & vbNewLine & _
+        "from movimentocaixa,Modalidade" & vbNewLine & _
+        "where MC_Grupo=mo_grupo " & vbNewLine & _
+        "and MC_grupo='" & "1" + Mid(grdMovimentoCaixa.TextMatrix(grdMovimentoCaixa.Row, 4), 2, 5) & "'" & vbNewLine & _
+        "and MC_Data ='" & Format(wData, "yyyy/mm/dd") & "' " & vbNewLine & _
+        "and MC_Protocolo = " & rdoDataFechamentoRetaguarda("protocolo") & " " & vbNewLine & _
+        "and MC_TipoNota in ('V','T','E','S') order by mc_serie, mc_documento desc"
+        
     RsMovimentoCaixa.CursorLocation = adUseClient
     RsMovimentoCaixa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
    
@@ -1940,7 +2183,10 @@ Sub CarregaAnaliticoVenda()
         Do While Not RsMovimentoCaixa.EOF
            grdAnaliticoVenda.AddItem RsMovimentoCaixa("mc_documento") & Chr(9) & RsMovimentoCaixa("mc_serie") _
            & Chr(9) & RsMovimentoCaixa("mo_descricao") & Chr(9) & Format(RsMovimentoCaixa("mc_Valor"), "###,###,##0.00") _
-           & Chr(9) & RsMovimentoCaixa("mc_sequencia")
+           & Chr(9) & RsMovimentoCaixa("mc_sequencia") _
+           & Chr(9) & RsMovimentoCaixa("mc_sequenciaTEF") _
+           & Chr(9) & RsMovimentoCaixa("mc_pedido") _
+           & Chr(9) & RsMovimentoCaixa("mc_data")
            RsMovimentoCaixa.MoveNext
         Loop
         grdAnaliticoVenda.Visible = True
@@ -1949,6 +2195,7 @@ Sub CarregaAnaliticoVenda()
     End If
 
     RsMovimentoCaixa.Close
+    
 End Sub
 
 Sub CarregaAnaliticoSangria()
@@ -1991,28 +2238,28 @@ Sub ImprimeAnaliticoVenda()
  
  
 Screen.MousePointer = 11
-    Retorno = Bematech_FI_AbreRelatorioGerencialMFD("01")
+    retorno = Bematech_FI_AbreRelatorioGerencialMFD("01")
  
-    Retorno = Bematech_FI_UsaRelatorioGerencialMFD("________________________________________________" & _
+    retorno = Bematech_FI_UsaRelatorioGerencialMFD("________________________________________________" & _
                    "          RELATORIO ANALITICO DE VENDA          " & _
                    left("Loja " & Format(GLB_Loja, "000") & Space(10), 10) & _
                    right(Space(38) & (Format(Trim(wData), "dd/mm/yyyy")), 38) & _
                    "________________________________________________")
     
-    Retorno = Bematech_FI_UsaRelatorioGerencialMFD("                                                " & _
+    retorno = Bematech_FI_UsaRelatorioGerencialMFD("                                                " & _
                    left("NF " & Space(10), 10) & left("SERIE" & Space(8), 8) & _
                    left("FORMA PAGAMENTO" & Space(20), 20) & left("VALOR " & Space(10), 10) & _
                    "                                                ")
  
      For Idx = 1 To grdAnaliticoVenda.Rows - 1 Step 1
      
-     Retorno = Bematech_FI_UsaRelatorioGerencialMFD(left(grdAnaliticoVenda.TextMatrix(Idx, 0) & Space(10), 10) & _
+     retorno = Bematech_FI_UsaRelatorioGerencialMFD(left(grdAnaliticoVenda.TextMatrix(Idx, 0) & Space(10), 10) & _
                    left(grdAnaliticoVenda.TextMatrix(Idx, 1) & Space(8), 8) & _
                    left(grdAnaliticoVenda.TextMatrix(Idx, 2) & Space(20), 20) & _
                    right(Space(10) & Format(grdAnaliticoVenda.TextMatrix(Idx, 3), "###,###,##0.00"), 10))
      Next Idx
     
-     Retorno = Bematech_FI_FechaRelatorioGerencial()
+     retorno = Bematech_FI_FechaRelatorioGerencial()
  
      Screen.MousePointer = 0
      
@@ -2186,3 +2433,62 @@ Private Sub txtValorNovoModalidade_LostFocus()
     End If
 End Sub
 
+Private Sub ImprimeReforcoSangria()
+  Dim wSangrialinha1 As String
+  Dim wSangrialinha2 As String
+    
+    Screen.MousePointer = 11
+    
+    impressoraRelatorio "[INICIO]"
+    
+    impressoraRelatorio "________________________________________________"
+    impressoraRelatorio "         RETIRADA / REFORÇO DE CAIXA            "
+    impressoraRelatorio "                                                "
+    impressoraRelatorio left("Loja         " & GLB_Loja & Space(48), 48)
+    impressoraRelatorio left("Caixa Nro.   " & GLB_Caixa & Space(48), 48)
+    impressoraRelatorio left("Operador     " & GLB_USU_Nome & Space(48), 48)
+    impressoraRelatorio left("Protocolo    " & GLB_CTR_Protocolo & Space(48), 48)
+    impressoraRelatorio left("Data/Hora    " & Format(Date, "DD/MM/YYYY") & " - " & Format(Time, "HH:MM") & Space(48), 48)
+    impressoraRelatorio "                                                "
+    impressoraRelatorio "________________________________________________"
+ 
+   
+   If txtReforco.text > 0 Then
+     
+        impressoraRelatorio "                                                "
+        impressoraRelatorio "::::::::::::::  REFORÇO DE CAIXA  ::::::::::::::"
+        impressoraRelatorio "                                                "
+        impressoraRelatorio "                                                "
+        impressoraRelatorio left(Space(10) & "R$ " & Format(txtReforco.text, "###,###,##0.00") & Space(38), 48)
+        impressoraRelatorio "                                                "
+
+        imprimeCampoGerenteOperador
+ 
+    ElseIf txtRetirada.text > 0 Then
+    
+        impressoraRelatorio "                                                "
+        impressoraRelatorio "::::::::::::  " & UCase(Mid(cmbGrupoAuxiliar.text, 7, 20)) & "  ::::::::::::"
+        impressoraRelatorio "                                                "
+        impressoraRelatorio "                                                "
+        impressoraRelatorio left(Space(10) & "R$ " & Format(txtRetirada.text, "###,###,##0.00") & Space(38), 48)
+        impressoraRelatorio "                                                "
+
+        imprimeCampoGerenteOperador
+        
+    End If
+   
+   
+   
+   
+   
+   
+   'TxtFormatado = “Teste de formatação relatório gerencial !!!” + Chr(10) + cItalico + cNegrito + cCondensado + cSublinhado + cExpandido
+   'Abre relatório gerencial
+        'Retorno = Bematech_FI_AbreRelatorioGerencialMFD("01")
+   'impressão texto formatado
+
+   'Encerra relatório gerencial
+    impressoraRelatorio "[FIM]"
+ 
+    Screen.MousePointer = 0
+End Sub

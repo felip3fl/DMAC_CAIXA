@@ -124,7 +124,7 @@ Dim CodigoOperador As Integer
 'Dim CodigoSupervisor As Integer
 Dim GuardaSequencia As Double
 Dim wGrupo As String
-Dim sql As String
+Dim Sql As String
 
 Private Sub chSair_Click()
 Call AlterarResolucao(resolucaoOriginal.Colunas, resolucaoOriginal.Linhas)
@@ -137,16 +137,15 @@ End Sub
 Private Sub modoAdministrador()
 
 ConectaODBCMatriz
-wPermitirVenda = False
 GLB_Administrador = False
     
- sql = "Select us_nome as nome, us_senha as senha " & vbNewLine _
+ Sql = "Select us_nome as nome, us_senha as senha " & vbNewLine _
        & "from usuario where " & vbNewLine _
        & "US_Nome ='" & txtOperador.text & "' " & vbNewLine _
        & "and US_Permissao='A'"
        
  RsDados.CursorLocation = adUseClient
- RsDados.Open sql, rdoCNRetaguarda, adOpenForwardOnly, adLockPessimistic
+ RsDados.Open Sql, rdoCNRetaguarda, adOpenForwardOnly, adLockPessimistic
  If Not RsDados.EOF Then
       nroProtocoloADM
       If RTrim(RsDados("senha")) <> txtSenha.text Then
@@ -173,9 +172,9 @@ Private Sub nroProtocoloADM()
 
     Dim RsDados As New ADODB.Recordset
 
-    sql = "select MAX(ame_numero) as protocolo from alerta_movimento_email"
+    Sql = "select MAX(ame_numero) as protocolo from alerta_movimento_email"
     RsDados.CursorLocation = adUseClient
-    RsDados.Open sql, rdoCNRetaguarda, adOpenForwardOnly, adLockPessimistic
+    RsDados.Open Sql, rdoCNRetaguarda, adOpenForwardOnly, adLockPessimistic
     
     If Not RsDados.EOF And IsNull(RsDados("protocolo")) = False Then
         GLB_ADMProtocolo = Val(RsDados("protocolo")) + 1
@@ -190,11 +189,11 @@ Private Sub EfetuarLogin()
 
 '**********
        wPermitirVenda = True
-       sql = ("Select * from ControleCaixa Where CTR_Supervisor = 99 and CTR_SituacaoCaixa='A' and " _
+       Sql = ("Select * from ControleCaixa Where CTR_Supervisor = 99 and CTR_SituacaoCaixa='A' and " _
                     & "CTR_DataInicial < '" & Format(Date, "yyyy/mm/dd") & "'")
 
        rsTEF.CursorLocation = adUseClient
-       rsTEF.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rsTEF.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
             
        If rsTEF.EOF = False Then
            'MsgBox "Data do caixa geral incorreta.Favor efetuar o Fechamento Geral", vbCritical, "Atenção"
@@ -203,16 +202,16 @@ Private Sub EfetuarLogin()
        rsTEF.Close
 '********
 
- sql = ("Select * from UsuarioCaixa where USU_Nome ='" & txtOperador.text & "' and USU_codigo='99'")
+ Sql = ("Select * from UsuarioCaixa where USU_Nome ='" & txtOperador.text & "' and USU_codigo='99'")
  RsDados.CursorLocation = adUseClient
- RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+ RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
  If Not RsDados.EOF Then
 
-       sql = ("Select * from ControleCaixa where CTR_Supervisor = 99 and " _
+       Sql = ("Select * from ControleCaixa where CTR_Supervisor = 99 and " _
                     & "CTR_DataInicial >= '" & Format(Date, "yyyy/mm/dd") & "'")
        
        rsTEF.CursorLocation = adUseClient
-       rsTEF.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rsTEF.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
        If rsTEF.EOF And wPermitirVenda = True Then
            MsgBox "Por favor, abrir o caixa."
@@ -224,9 +223,9 @@ Private Sub EfetuarLogin()
        rsTEF.Close
 
 
-      sql = "Select * from ControleCaixa Where CTR_supervisor <> '99' and CTR_situacaocaixa = 'A'"
+      Sql = "Select * from ControleCaixa Where CTR_supervisor <> '99' and CTR_situacaocaixa = 'A'"
       rsTEF.CursorLocation = adUseClient
-      rsTEF.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+      rsTEF.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
        If Not rsTEF.EOF Then
            MsgBox "Por favor, fazer o fechamento dos caixas para fazer o fechamento geral"
@@ -244,9 +243,9 @@ RsDados.Close
            Exit Sub
    End If
 
-   sql = ("Select * from UsuarioCaixa where USU_Nome ='" & txtOperador.text & "' and USU_TipoUsuario='O'")
+   Sql = ("Select * from UsuarioCaixa where USU_Nome ='" & txtOperador.text & "' and USU_TipoUsuario='O'")
    RsDados.CursorLocation = adUseClient
-   RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+   RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
    If RsDados.EOF Then
       MsgBox "Operador não Cadastrado", vbCritical, "Aviso"
       RsDados.Close
@@ -280,10 +279,10 @@ RsDados.Close
                 'CodigoSupervisor = RsDados("USU_Codigo")
                 'RsDados.Close
                 
-                sql = ("Select * from ControleCaixa where CTR_Supervisor = 99 and " _
+                Sql = ("Select * from ControleCaixa where CTR_Supervisor = 99 and " _
                     & "CTR_DataInicial >= '" & Format(Date, "yyyy/mm/dd") & "'")
                 RsDados.CursorLocation = adUseClient
-                RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+                RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                 If Not RsDados.EOF Then
 
                     If Trim(RsDados("ctr_situacaocaixa")) = "F" Then
@@ -293,13 +292,13 @@ RsDados.Close
                     End If
                 Else
                         Call VerificaSaldoCaixa
-                        sql = ""
-                        sql = "Insert Into ControleCaixa (" _
+                        Sql = ""
+                        Sql = "Insert Into ControleCaixa (" _
                             & "CTR_Operador,CTR_Supervisor,CTR_DataInicial," _
                             & "CTR_DataFinal,CTR_SaldoAnterior," _
                             & "CTR_SaldoFinal,CTR_SituacaoCaixa,CTR_NumeroCaixa,CTR_ProtocoloAnterior) " _
                             & "Values (99,99,GetDate(),' ',0,0,'A'," & GLB_Caixa & "," & GuardaSequencia & ")"
-                        rdoCNLoja.Execute (sql)
+                        rdoCNLoja.Execute (Sql)
 
                 End If
                 RsDados.Close
@@ -307,14 +306,14 @@ RsDados.Close
                 Call VerificaSaldoCaixa
                 rdoCNLoja.BeginTrans
                 Screen.MousePointer = vbHourglass
-                sql = ""
-                sql = "Insert Into ControleCaixa (" _
+                Sql = ""
+                Sql = "Insert Into ControleCaixa (" _
                     & "CTR_Operador,CTR_Supervisor,CTR_DataInicial," _
                     & "CTR_DataFinal,CTR_SaldoAnterior," _
                     & "CTR_SaldoFinal,CTR_SituacaoCaixa,CTR_NumeroCaixa,CTR_ProtocoloAnterior) " _
                     & "Values (" & CodigoOperador & "," & "0" _
                     & ",getdate(),' '," & ConverteVirgula(Format(saldoAnterior, "00.00")) & ",0,'A'," & GLB_Caixa & "," & GuardaSequencia & ")"
-                    rdoCNLoja.Execute sql
+                    rdoCNLoja.Execute Sql
                     'Screen.MousePointer = vbNormal
                     rdoCNLoja.CommitTrans
                 Call GuardaProtocolo
@@ -381,10 +380,10 @@ Private Sub Form_Load()
 End Sub
 Private Sub VerificaSaldoCaixa()
 
-  sql = "Select max(CTR_Protocolo) as Sequencia from ControleCaixa where CTR_Operador <> '99' AND CTR_numeroCaixa = " & GLB_Caixa
+  Sql = "Select max(CTR_Protocolo) as Sequencia from ControleCaixa where CTR_Operador <> '99' AND CTR_numeroCaixa = " & GLB_Caixa
 
    RsSaldoCaixa.CursorLocation = adUseClient
-   RsSaldoCaixa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+   RsSaldoCaixa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
    If RsSaldoCaixa.EOF Then
       MsgBox "Problemas com Saldo do Caixa", vbCritical, "Aviso"
       RsSaldoCaixa.Close
@@ -408,10 +407,10 @@ Private Sub VerificaSaldoCaixa()
 End Sub
 Private Sub ComposicaoSaldoAnterior()
     
-  sql = "select * from MovimentoCaixa Where MC_Protocolo = " & GuardaSequencia _
+  Sql = "select * from MovimentoCaixa Where MC_Protocolo = " & GuardaSequencia _
       & " and MC_Grupo like '70%'"
   rdoFormaPagamento.CursorLocation = adUseClient
-  rdoFormaPagamento.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+  rdoFormaPagamento.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
        
   If Not rdoFormaPagamento.EOF Then
      Do While Not rdoFormaPagamento.EOF
@@ -422,11 +421,11 @@ Private Sub ComposicaoSaldoAnterior()
         ElseIf rdoFormaPagamento("MC_Grupo") = "70204" Then
             wGrupo = "11008"
         End If
-        sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_NroCaixa,MC_CodigoOperador,MC_Loja, MC_Data, MC_Grupo,MC_Subgrupo, MC_Documento,MC_Serie," _
+        Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_NroCaixa,MC_CodigoOperador,MC_Loja, MC_Data, MC_Grupo,MC_Subgrupo, MC_Documento,MC_Serie," _
             & "MC_Valor, MC_banco, MC_Agencia,MC_Contacorrente, MC_bomPara, MC_Parcelas, MC_Remessa,MC_SituacaoEnvio,MC_Protocolo,MC_Pedido,MC_DataProcesso,MC_TipoNota)" _
             & " values(" & GLB_ECF & "," & GLB_Caixa & ",'" & GLB_USU_Codigo & "','" & GLB_Loja & "','" _
             & Format(Date, "yyyy/mm/dd") & "','" & wGrupo & "','',0,'SC'," & ConverteVirgula(rdoFormaPagamento("MC_Valor")) & ",0,0,0,0,0,9,'A'," & GLB_CTR_Protocolo & ",'0','" & Format(Date, "yyyy/mm/dd") & "','V')"
-        rdoCNLoja.Execute (sql)
+        rdoCNLoja.Execute (Sql)
         rdoFormaPagamento.MoveNext
      Loop
   
@@ -449,9 +448,9 @@ Private Sub ComposicaoSaldoAnterior()
   rdoFormaPagamento.Close
 End Sub
 Private Sub GuardaProtocolo()
-    sql = "Select * from ControleCaixa where CTR_Supervisor <> 99 and CTR_SituacaoCaixa = 'A' and CTR_NumeroCaixa =" & GLB_Caixa
+    Sql = "Select * from ControleCaixa where CTR_Supervisor <> 99 and CTR_SituacaoCaixa = 'A' and CTR_NumeroCaixa =" & GLB_Caixa
           RsControleCaixa.CursorLocation = adUseClient
-          RsControleCaixa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+          RsControleCaixa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     GLB_CTR_Protocolo = RsControleCaixa("CTR_Protocolo")
     RsControleCaixa.Close
 End Sub

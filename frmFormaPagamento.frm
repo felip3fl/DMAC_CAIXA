@@ -4,8 +4,8 @@ Begin VB.Form frmFormaPagamento
    BorderStyle     =   0  'None
    Caption         =   "Forma de Pagamento"
    ClientHeight    =   8640
-   ClientLeft      =   3345
-   ClientTop       =   1260
+   ClientLeft      =   690
+   ClientTop       =   1200
    ClientWidth     =   13425
    BeginProperty Font 
       Name            =   "Arial Black"
@@ -28,7 +28,7 @@ Begin VB.Form frmFormaPagamento
       Height          =   405
       Left            =   6045
       TabIndex        =   60
-      Text            =   "Número TEF"
+      Text            =   "0"
       Top             =   330
       Visible         =   0   'False
       Width           =   1215
@@ -103,7 +103,9 @@ Begin VB.Form frmFormaPagamento
          Width           =   4725
       End
    End
-   Begin VB.Timer Timer1 
+   Begin VB.Timer timeHabilitaTEF 
+      Enabled         =   0   'False
+      Interval        =   1000
       Left            =   12135
       Top             =   7845
    End
@@ -1482,7 +1484,7 @@ Dim ValTEFHiperCard As Double
 
 Dim ValNotaCredito As Double
 Dim AvistaReceber As Double
-Dim Modalidade As Double
+Dim modalidade As Double
 Dim wParcelas As Long
 Dim wIndicePreco As Double
 Dim wVerificaAVR As Boolean
@@ -1507,7 +1509,7 @@ Dim wMostraGrideCondicao As Boolean
 Dim wControle As String
  
 Dim wvalorparcelas As Double
-Dim Nf As notaFiscal
+Dim nf As notaFiscalTEF
 
 
 Dim wValorModalidadeIncorreto As Boolean
@@ -1546,11 +1548,14 @@ Dim cValorPago As String
 Dim valValorPago As Double
 Dim valValorFalta As Double
 Dim valValoraPagar As Double
+Dim tempoHabilitaPOS As Byte
 
 Dim Agencia As String
 
 
 Private Sub GravaRegistro()
+
+    Wecf = GLB_ECF
 
 If EntFaturada = "0.00" And EntFinanciada = "0.00" Then
 
@@ -1591,7 +1596,7 @@ End Sub
 Private Sub GuardaValoresParaGravarMovimentoCaixa()
 
 'wValorModalidadeIncorreto = False
-      Dim Nf As notaFiscal
+      Dim nf As notaFiscalTEF
       
       If Trim(txtValorModalidade.text = "") Then
          Exit Sub
@@ -1601,103 +1606,266 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
          Exit Sub
       End If
 
-      Nf.pedido = pedido
-      Nf.numero = NroNotaFiscal
-      Nf.eSerie = txtSerie.text
-      Nf.parcelas = wParcelas
-      Nf.dataEmissao = GLB_DataInicial
-      Nf.valor = txtValorModalidade.text
+'      Nf.pedido = pedido
+      'Nf.numero = NroNotaFiscal
+      'Nf.serie = txtSerie.text
+      'Nf.Parcelas = wParcelas
+      'Nf.dataEmissao = GLB_DataInicial
+      'Nf.valor = txtValorModalidade.text
 
-      Modalidade = Format(txtValorModalidade.text, "0.00")
+      modalidade = Format(txtValorModalidade.text, "0.00")
 
          
-         If ((Modalidade + TotPago) - valValoraPagar) > ValDinheiro _
-          And lblModalidade.Caption <> "DINHEIRO" And valValoraPagar < (Modalidade + TotPago) Then
+         If ((modalidade + TotPago) - valValoraPagar) > ValDinheiro _
+          And lblModalidade.Caption <> "DINHEIRO" And valValoraPagar < (modalidade + TotPago) Then
             MsgBox "Não é permitido troco maior que pagamento em dinheiro"
             Exit Sub
           End If
             
       If lblModalidade.Caption = "DINHEIRO" Then
-           TotPago = TotPago + Modalidade
-           ValDinheiro = ValDinheiro + Modalidade
+           TotPago = TotPago + modalidade
+           ValDinheiro = ValDinheiro + modalidade
       End If
       
       
-      Nf.pedido = txtPedido.text
-      Nf.eSerie = txtSerie.text
-      Nf.dataEmissao = GLB_DataInicial
-      Nf.valor = txtValorModalidade
-      Nf.parcelas = wParcelas
+      nf.pedido = txtPedido.text
+      nf.serie = txtSerie.text
+      nf.numero = NroNotaFiscal
+      nf.dataEmissao = GLB_DataInicial
+      nf.valor = txtValorModalidade
+      nf.Parcelas = wParcelas
+      nf.numeroTEF = 0
       
       'TEF ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
       If lblModalidade.Caption = "CREDITO" Then
-          If EfetuaOperacaoTEF("3", Nf, lblMensagemTEF) Then
-            txtNumeroTEF.text = Nf.numeroTEF
-            TotPago = TotPago + Modalidade
-            ValTEFVisaElectron = ValTEFVisaElectron + Modalidade
-            bandeiraTEFVisaElectron = Agencia
+          If EfetuaOperacaoTEF("3", nf, lblModalidade, lblMensagemTEF) Then
+            txtNumeroTEF.text = nf.numeroTEF
+            carregaCodigoModalidade lblModalidade.Caption
+            
+            ComprovantePagamentoFila = ComprovantePagamentoFila & nf.comprovantePagamento
+        
+                '    If wCodigoModalidadeMASTERCARD = "0302" Then
+                     
+                    'End If
+    
+          Else
+            lblModalidade.Caption = ""
           End If
       End If
 
       If lblModalidade.Caption = "DEBITO" Then
-          If EfetuaOperacaoTEF("3", Nf, lblMensagemTEF) Then
-            txtNumeroTEF.text = Nf.numeroTEF
-            TotPago = TotPago + Modalidade
-            ValTEFVisaElectron = ValTEFVisaElectron + Modalidade
-            bandeiraTEFVisaElectron = Agencia
+          If EfetuaOperacaoTEF("2", nf, lblModalidade, lblMensagemTEF) Then
+            txtNumeroTEF.text = nf.numeroTEF
+            carregaCodigoModalidade lblModalidade.Caption
+            
+            ComprovantePagamentoFila = ComprovantePagamentoFila & nf.comprovantePagamento
+            'TotPago = TotPago + Modalidade
+            'ValTEFVisaElectron = ValTEFVisaElectron + Modalidade
+            'bandeiraTEFVisaElectron = Agencia
+          Else
+            lblModalidade.Caption = ""
           End If
       End If
+      
       'TEF ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
       If lblModalidade.Caption = "CHEQUE" Then
-         ValCheque = ValCheque + Modalidade
-         TotPago = TotPago + Modalidade
+         ValCheque = ValCheque + modalidade
+         TotPago = TotPago + modalidade
+         
+    
+            wGrupoMovimento = "10201"
+            wSubGrupo = ""
+            wValorMovimento = Format(ValCheque, "##,##0.00")
+            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+                UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+                retorno = Bematech_FI_EfetuaFormaPagamento("CHEQUE", ValCheque * 100)
+                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+            End If
+            Call GravaRegistro
+        
+         
       End If
 
       If lblModalidade.Caption = "VISA ELEC." Then
-          TotPago = TotPago + Modalidade
-          ValTEFVisaElectron = ValTEFVisaElectron + Modalidade
+          TotPago = TotPago + modalidade
+          ValTEFVisaElectron = ValTEFVisaElectron + modalidade
           bandeiraTEFVisaElectron = Agencia
+          
+
+            'TEF
+            wGrupoMovimento = "10206"
+            wSubGrupo = "Visa Elec."
+            Agencia = bandeiraTEFVisaElectron
+            wValorMovimento = Format(ValTEFVisaElectron, "##,###0.00")
+    
+            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+                UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+                retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFVisaElectron * 100)
+                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+            End If
+    
+            Call GravaRegistro
+
+          
       End If
 
       If lblModalidade.Caption = "REDESHOP" Then
-          TotPago = TotPago + Modalidade
-          ValTEFRedeShop = ValTEFRedeShop + Modalidade
+          TotPago = TotPago + modalidade
+          ValTEFRedeShop = ValTEFRedeShop + modalidade
           bandeiraTEFRedeShop = Agencia
+          
+
+            'TEF
+            wGrupoMovimento = "10203"
+            wSubGrupo = "RedeShop"
+            Agencia = bandeiraTEFRedeShop
+            wValorMovimento = Format(ValTEFRedeShop, "##,###0.00")
+    
+            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+                UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+                retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFRedeShop * 100)
+                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+            End If
+    
+    
+            Call GravaRegistro
+
+          
       End If
 
       If lblModalidade.Caption = "HIPERCARD" Then
-          TotPago = TotPago + Modalidade
-          ValTEFHiperCard = ValTEFHiperCard + Modalidade
+          TotPago = TotPago + modalidade
+          ValTEFHiperCard = ValTEFHiperCard + modalidade
           bandeiraTEFHiperCard = Agencia
+          
+            wGrupoMovimento = "10205"
+            wSubGrupo = "HiperCard"
+            Agencia = bandeiraTEFHiperCard
+            wValorMovimento = Format(ValTEFHiperCard, "##,##0.00")
+    
+            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+                UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+                retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFHiperCard * 100)
+                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+            End If
+            
+            Call GravaRegistro
+    
+          
       End If
 
       If lblModalidade.Caption = "NOTA DE CRÉD." Then
-          TotPago = TotPago + Modalidade
-          ValNotaCredito = ValNotaCredito + Modalidade
+          TotPago = TotPago + modalidade
+          ValNotaCredito = ValNotaCredito + modalidade
+          
+    
+            'NOTA DE CREDITO
+            wGrupoMovimento = "10701"
+            wSubGrupo = ""
+            wValorMovimento = Format(ValNotaCredito, "##,##0.00")
+            
+            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+                UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+                retorno = Bematech_FI_EfetuaFormaPagamento("NC", ValNotaCredito * 100)
+                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+            End If
+            
+            Call GravaRegistro
+        
+          
       End If
 
       If lblModalidade.Caption = "VISA" Then
-          ValCartaoVisa = ValCartaoVisa + Modalidade
-          TotPago = TotPago + Modalidade
+          ValCartaoVisa = ValCartaoVisa + modalidade
+          TotPago = TotPago + modalidade
           bandeiraCartaoVisa = Agencia
-          End If
+        
+            wGrupoMovimento = "10301"
+            Agencia = bandeiraCartaoVisa
+            wSubGrupo = ""
+            wValorMovimento = Format(ValCartaoVisa, "##,##0.00")
+    
+                If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+                    UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+                    retorno = Bematech_FI_EfetuaFormaPagamento("VISA", ValCartaoVisa * 100)
+                    Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+    
+                    If retorno <> 1 Then
+                        MsgBox "Por favor verificar se impressora está ligada corretamente!"
+                        Exit Sub
+                    End If
+                End If
+    
+            Call GravaRegistro
 
-      If lblModalidade.Caption = "MASTERCARD" Then
-          ValCartaoMastercard = ValCartaoMastercard + Modalidade
-          TotPago = TotPago + Modalidade
-          bandeiraCartaoMastercard = Agencia
+          
       End If
 
+      If lblModalidade.Caption = "MASTERCARD" Then
+          ValCartaoMastercard = ValCartaoMastercard + modalidade
+          TotPago = TotPago + modalidade
+          bandeiraCartaoMastercard = Agencia
+          
+          
+            wGrupoMovimento = "10302"
+            Agencia = bandeiraCartaoMastercard
+            wSubGrupo = ""
+            wValorMovimento = Format(ValCartaoMastercard, "##,##0.00")
+            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+            UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+            retorno = Bematech_FI_EfetuaFormaPagamento("MASTERCARD", ValCartaoMastercard * 100)
+            Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+            End If
+            Call GravaRegistro
+                 
+            ValCartaoMastercard = 0
+            wCodigoModalidadeMASTERCARD = ""
+            txtNumeroTEF.text = ""
+          
+        End If
+
       If lblModalidade.Caption = "AMEX" Then
-          ValCartaoAmex = ValCartaoAmex + Modalidade
-          TotPago = TotPago + Modalidade
+          ValCartaoAmex = ValCartaoAmex + modalidade
+          TotPago = TotPago + modalidade
           bandeiraCartaoAmex = Agencia
+          
+            wGrupoMovimento = "10303"
+            Agencia = bandeiraCartaoAmex
+            wSubGrupo = ""
+            wValorMovimento = Format(ValCartaoAmex, "##,##0.00")
+
+            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+            UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+                retorno = Bematech_FI_EfetuaFormaPagamento("AMEX", ValCartaoAmex * 100)
+                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+            End If
+
+            Call GravaRegistro
+        
+          
       End If
 
       If lblModalidade.Caption = "BNDES" Then
-          ValCartaoBNDES = ValCartaoBNDES + Modalidade
-          TotPago = TotPago + Modalidade
+          ValCartaoBNDES = ValCartaoBNDES + modalidade
+          TotPago = TotPago + modalidade
+          
+
+            'BNDES
+            wGrupoMovimento = "10304"
+            wSubGrupo = ""
+            wValorMovimento = Format(ValCartaoBNDES, "##,##0.00")
+
+
+            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+            UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+                retorno = Bematech_FI_EfetuaFormaPagamento("AMEX", ValCartaoAmex * 100)
+                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+            End If
+        
+            Call GravaRegistro
+        
+          
       End If
 
       
@@ -1726,6 +1894,7 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
 
 
 End Sub
+
 
 'Private Sub ZeraVariaveis()
 'ValorPagamentoCartao = 0
@@ -1902,60 +2071,29 @@ If txtSerie.text Like GLB_SerieCF & "*" Then
 End Sub
 
 Private Sub chbHiperCard_Click()
-  frmcond.Visible = False
-'  FraParcelas.Visible = False
-'  lblParc.Visible = False
-  lblParcelas.Visible = False
-'  lblModalidade.Caption = "TEF"
-  lblModalidade.Caption = "HIPERCARD"
-  txtValorModalidade.Enabled = True
-  txtValorModalidade.SetFocus
-  CodigoModalidade = "0405"
- ' wTEFHiperCard = "0403"
-'  wTEFVisaElectron = ""
-'  wTEFRedeShop = ""
-' wPagamentoECF = 2
-'wPagamentoECF = BuscaCodigoPagamentoTEF("TEF")
-   
-
+    carregaCodigoModalidade "HIPERCARD"
+    frmcond.Visible = False
+    lblParcelas.Visible = False
+    txtValorModalidade.Enabled = True
+    txtValorModalidade.SetFocus
 End Sub
 
 Private Sub chbRedeShop_Click()
-  frmcond.Visible = False
-  'FraParcelas.Visible = False
-  'lblParc.Visible = False
-  lblParcelas.Visible = False
-'  lblModalidade.Caption = "TEF"
-  lblModalidade.Caption = "REDESHOP"
-  txtValorModalidade.Enabled = True
-  txtValorModalidade.SetFocus
-  
-  CodigoModalidade = "0402"
-'  wTEFRedeShop = "0402"
-'  wTEFHiperCard = ""
-'  wTEFVisaElectron = ""
-  'wPagamentoECF = BuscaCodigoPagamentoTEF("TEF")
+    carregaCodigoModalidade "REDESHOP"
+    frmcond.Visible = False
+    lblParcelas.Visible = False
+    txtValorModalidade.Enabled = True
+    txtValorModalidade.SetFocus
 End Sub
 Private Sub chbSair_Click()
 Unload Me
 End Sub
 
 Private Sub chbAmex_Click()
-  lblModalidade.Caption = "AMEX"
-'  FraParcelas.Visible = True
-'  lblParc.Visible = True
-  lblParcelas.Visible = True
-  txtValorModalidade.Enabled = True
-  txtValorModalidade.SetFocus
-  CodigoModalidade = "0303"
-  WCodigoModalidadeAMEX = "0303"
- ' cmdFecharCupom
-  
-  cFormaPGTO = "Cartao"
- ' wPagamentoECF = 5
- ' wPagamentoECF = BuscaCodigoPagamentoTEF("Amex")
-  
-  
+    carregaCodigoModalidade "AMEX"
+    lblParcelas.Visible = True
+    txtValorModalidade.Enabled = True
+    txtValorModalidade.SetFocus
 End Sub
 
 Private Sub chbAmex_KeyPress(KeyAscii As Integer)
@@ -2020,22 +2158,44 @@ Private Sub chbDinheiro_KeyPress(KeyAscii As Integer)
  End If
  
 End Sub
-Private Sub chbMasterCard_Click()
-  lblModalidade.Caption = "MASTERCARD"
-  'FraParcelas.Visible = True
-  'lblParc.Visible = True
-  lblParcelas.Visible = True
-  txtValorModalidade.Enabled = True
-  txtValorModalidade.SetFocus
-  CodigoModalidade = "0302"
-  wCodigoModalidadeMASTERCARD = "0302"
- ' wPagamentoECF = 4
-  'cmdFecharCupom
-  cFormaPGTO = "Cartao"
-  'wPagamentoECF = BuscaCodigoPagamentoTEF("MasterCard")
 
+Private Sub chbMasterCard_Click()
+    carregaCodigoModalidade "MASTERCARD"
+    lblParcelas.Visible = True
+    txtValorModalidade.Enabled = True
+    txtValorModalidade.SetFocus
 End Sub
 
+Private Sub carregaCodigoModalidade(modalidade As String)
+    Select Case modalidade
+    Case "MASTERCARD"
+        lblModalidade.Caption = "MASTERCARD"
+        CodigoModalidade = "0302"
+        wCodigoModalidadeMASTERCARD = "0302"
+        cFormaPGTO = "Cartao"
+    Case "AMEX"
+        lblModalidade.Caption = "AMEX"
+        CodigoModalidade = "0303"
+        WCodigoModalidadeAMEX = "0303"
+        cFormaPGTO = "Cartao"
+    Case "HIPERCARD"
+        lblModalidade.Caption = "HIPERCARD"
+        CodigoModalidade = "0405"
+    Case "REDESHOP"
+        lblModalidade.Caption = "REDESHOP"
+        CodigoModalidade = "0402"
+    Case "VISA"
+        lblModalidade.Caption = "VISA"
+        CodigoModalidade = "0301"
+        WCodigoModalidadeVISA = "0301"
+        cFormaPGTO = "Cartao"
+    Case "VISA ELEC."
+        lblModalidade.Caption = "VISA ELEC."
+        CodigoModalidade = "0401"
+    Case Else
+        MsgBox "Modalidade desconhecida inserida", vbCritical, "Erro ao carregar código modalidade"
+    End Select
+End Sub
 
 Private Sub chbMasterCard_KeyPress(KeyAscii As Integer)
 If KeyAscii = 27 Then
@@ -2109,12 +2269,12 @@ If txtTipoNota.text = "CUPOM" Then
    '      Exit Sub
    '  End If
 
-    Retorno = 0
-    Retorno = Bematech_FI_TerminaFechamentoCupom(wAdicionaisECF)
+    retorno = 0
+    retorno = Bematech_FI_TerminaFechamentoCupom(wAdicionaisECF)
     'Função que analisa o retorno da impressora
     Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
     
-    If Retorno <> 1 Then
+    If retorno <> 1 Then
         MsgBox "Por favor verificar se impressora está ligada corretamente!", vbCritical, "ERRO"
         Exit Sub
 
@@ -2416,12 +2576,6 @@ lblTootip.Visible = False
   
 Private Sub GravaMovimentoCaixa()
 
-    'Limpa registros
-    Sql = "delete movimentocaixa where  mc_serie = '" & txtSerie.text & "' and " _
-    & "mc_protocolo = " & GLB_CTR_Protocolo & " and " _
-    & "mc_nrocaixa = '" & GLB_Caixa & "' and mc_pedido = '" & txtPedido.text & "'"
-    rdoCNLoja.Execute Sql
-
     Wecf = GLB_ECF
 
     If txtTipoNota.text = "Romaneio" Or txtTipoNota.text = "RomaneioDireto" Then
@@ -2442,164 +2596,148 @@ Private Sub GravaMovimentoCaixa()
         rdoCNLoja.Execute (Sql)
     End If
 
-    If WCodigoModalidadeVISA = "0301" Then
-        If ValCartaoVisa > 0 Then
-            'VISA
-            wGrupoMovimento = "10301"
-            Agencia = bandeiraCartaoVisa
-            wSubGrupo = ""
-            wValorMovimento = Format(ValCartaoVisa, "##,##0.00")
+'    If WCodigoModalidadeVISA = "0301" Then
+'        If ValCartaoVisa > 0 Then
+'            'VISA
+'            wGrupoMovimento = "10301"
+'            Agencia = bandeiraCartaoVisa
+'            wSubGrupo = ""
+'            wValorMovimento = Format(ValCartaoVisa, "##,##0.00")
+'
+'                If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+'                    UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+'                    Retorno = Bematech_FI_EfetuaFormaPagamento("VISA", ValCartaoVisa * 100)
+'                    Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+'
+'                    If Retorno <> 1 Then
+'                        MsgBox "Por favor verificar se impressora está ligada corretamente!"
+'                        Exit Sub
+'                    End If
+'                End If
+'
+'            Call GravaRegistro
+'        End If
+'    End If
 
-                If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
-                    UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                    Retorno = Bematech_FI_EfetuaFormaPagamento("VISA", ValCartaoVisa * 100)
-                    Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-
-                    If Retorno <> 1 Then
-                        MsgBox "Por favor verificar se impressora está ligada corretamente!"
-                        Exit Sub
-                    End If
-                End If
-
-            Call GravaRegistro
-        End If
-    End If
-
-    If wCodigoModalidadeMASTERCARD = "0302" Then
-        If ValCartaoMastercard > 0 Then
-            'MASTERCARD
-            wGrupoMovimento = "10302"
-            Agencia = bandeiraCartaoMastercard
-            wSubGrupo = ""
-            wValorMovimento = Format(ValCartaoMastercard, "##,##0.00")
-            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
-                UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                Retorno = Bematech_FI_EfetuaFormaPagamento("MASTERCARD", ValCartaoMastercard * 100)
-                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-            End If
-            Call GravaRegistro
-        End If
-    End If
-
-
-    If WCodigoModalidadeAMEX = "0303" Then
-        If ValCartaoAmex > 0 Then
-            'AMEX
-            wGrupoMovimento = "10303"
-            Agencia = bandeiraCartaoAmex
-            wSubGrupo = ""
-            wValorMovimento = Format(ValCartaoAmex, "##,##0.00")
-
-            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
-            UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                Retorno = Bematech_FI_EfetuaFormaPagamento("AMEX", ValCartaoAmex * 100)
-                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-            End If
-
-            Call GravaRegistro
-        End If
-    End If
+'    If wCodigoModalidadeMASTERCARD = "0302" Then
+'        If ValCartaoMastercard > 0 Then
+'            'MASTERCARD
+'            wGrupoMovimento = "10302"
+'            Agencia = bandeiraCartaoMastercard
+'            wSubGrupo = ""
+'            wValorMovimento = Format(ValCartaoMastercard, "##,##0.00")
+'            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+'                UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+'                Retorno = Bematech_FI_EfetuaFormaPagamento("MASTERCARD", ValCartaoMastercard * 100)
+'                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+'            End If
+'            Call GravaRegistro
+'        End If
+'    End If
 
 
-    If wCodigoModalidadeBNDES = "0304" Then
-        If ValCartaoBNDES > 0 Then
-            'BNDES
-            wGrupoMovimento = "10304"
-            wSubGrupo = ""
-            wValorMovimento = Format(ValCartaoBNDES, "##,##0.00")
+'    If WCodigoModalidadeAMEX = "0303" Then
+'        If ValCartaoAmex > 0 Then
+'            'AMEX
+'            wGrupoMovimento = "10303"
+'            Agencia = bandeiraCartaoAmex
+'            wSubGrupo = ""
+'            wValorMovimento = Format(ValCartaoAmex, "##,##0.00")
+'
+'            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+'            UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+'                Retorno = Bematech_FI_EfetuaFormaPagamento("AMEX", ValCartaoAmex * 100)
+'                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+'            End If
+'
+'            Call GravaRegistro
+'        End If
+'    End If
 
 
-            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
-            UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                Retorno = Bematech_FI_EfetuaFormaPagamento("AMEX", ValCartaoAmex * 100)
-                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-            End If
-        
-            Call GravaRegistro
-        End If
-    End If
-
-    If ValTEFVisaElectron > 0 Then
-        'TEF
-        wGrupoMovimento = "10206"
-        wSubGrupo = "Visa Elec."
-        Agencia = bandeiraTEFVisaElectron
-        wValorMovimento = Format(ValTEFVisaElectron, "##,###0.00")
-
-        If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
-            UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-            Retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFVisaElectron * 100)
-            Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-        End If
-
-        Call GravaRegistro
-    End If
-
-    If ValTEFRedeShop > 0 Then
-        'TEF
-        wGrupoMovimento = "10203"
-        wSubGrupo = "RedeShop"
-        Agencia = bandeiraTEFRedeShop
-        wValorMovimento = Format(ValTEFRedeShop, "##,###0.00")
-
-        If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
-            UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-            Retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFRedeShop * 100)
-            Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-        End If
 
 
-        Call GravaRegistro
-    End If
+'    If ValTEFVisaElectron > 0 Then
+'        'TEF
+'        wGrupoMovimento = "10206"
+'        wSubGrupo = "Visa Elec."
+'        Agencia = bandeiraTEFVisaElectron
+'        wValorMovimento = Format(ValTEFVisaElectron, "##,###0.00")
+'
+'        If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+'            UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+'            Retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFVisaElectron * 100)
+'            Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+'        End If
+'
+'        Call GravaRegistro
+'    End If
 
-    If ValTEFHiperCard > 0 Then
-        'TEF
-        wGrupoMovimento = "10205"
-        wSubGrupo = "HiperCard"
-        Agencia = bandeiraTEFHiperCard
-        wValorMovimento = Format(ValTEFHiperCard, "##,##0.00")
+'    If ValTEFRedeShop > 0 Then
+'        'TEF
+'        wGrupoMovimento = "10203"
+'        wSubGrupo = "RedeShop"
+'        Agencia = bandeiraTEFRedeShop
+'        wValorMovimento = Format(ValTEFRedeShop, "##,###0.00")
+'
+'        If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+'            UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+'            Retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFRedeShop * 100)
+'            Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+'        End If
+'
+'
+'        Call GravaRegistro
+'    End If
 
-        If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
-            UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-            Retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFHiperCard * 100)
-            Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-        End If
-        
-        Call GravaRegistro
-    End If
+'    If ValTEFHiperCard > 0 Then
+'        'TEF
+'        wGrupoMovimento = "10205"
+'        wSubGrupo = "HiperCard"
+'        Agencia = bandeiraTEFHiperCard
+'        wValorMovimento = Format(ValTEFHiperCard, "##,##0.00")
+'
+'        If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+'            UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+'            Retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFHiperCard * 100)
+'            Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+'        End If
+'
+'        Call GravaRegistro
+'    End If
 
 
-    If wCodigoModalidadeNOTACREDITO = "0701" Then
-        If ValNotaCredito > 0 Then
-            'NOTA DE CREDITO
-            wGrupoMovimento = "10701"
-            wSubGrupo = ""
-            wValorMovimento = Format(ValNotaCredito, "##,##0.00")
-            
-            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
-                UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                Retorno = Bematech_FI_EfetuaFormaPagamento("NC", ValNotaCredito * 100)
-                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-            End If
-            
-            Call GravaRegistro
-        End If
-    End If
+'    If wCodigoModalidadeNOTACREDITO = "0701" Then
+'        If ValNotaCredito > 0 Then
+'            'NOTA DE CREDITO
+'            wGrupoMovimento = "10701"
+'            wSubGrupo = ""
+'            wValorMovimento = Format(ValNotaCredito, "##,##0.00")
+'
+'            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+'                UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+'                Retorno = Bematech_FI_EfetuaFormaPagamento("NC", ValNotaCredito * 100)
+'                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+'            End If
+'
+'            Call GravaRegistro
+'        End If
+'    End If
 
-    If WCodigoModalidadeCHEQUE = "0201" Then
-        If ValCheque > 0 Then
-            'CHEQUE
-            wGrupoMovimento = "10201"
-            wSubGrupo = ""
-            wValorMovimento = Format(ValCheque, "##,##0.00")
-            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
-                UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                Retorno = Bematech_FI_EfetuaFormaPagamento("CHEQUE", ValCheque * 100)
-                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-            End If
-            Call GravaRegistro
-        End If
-    End If
+'    If WCodigoModalidadeCHEQUE = "0201" Then
+'        If ValCheque > 0 Then
+'            'CHEQUE
+'            wGrupoMovimento = "10201"
+'            wSubGrupo = ""
+'            wValorMovimento = Format(ValCheque, "##,##0.00")
+'            If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
+'                UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
+'                Retorno = Bematech_FI_EfetuaFormaPagamento("CHEQUE", ValCheque * 100)
+'                Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
+'            End If
+'            Call GravaRegistro
+'        End If
+'    End If
 
 
     If wCodigoModalidadeDINHEIRO = "0101" Then
@@ -2611,7 +2749,7 @@ Private Sub GravaMovimentoCaixa()
             
             If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
                 UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                Retorno = Bematech_FI_EfetuaFormaPagamento("DINHEIRO", ValDinheiro * 100)
+                retorno = Bematech_FI_EfetuaFormaPagamento("DINHEIRO", ValDinheiro * 100)
                 Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
             End If
 
@@ -2873,18 +3011,10 @@ ativaAtalho = False
 End Sub
 
 Private Sub chbVisa_Click()
-  lblModalidade.Caption = "VISA"
- ' FraParcelas.Visible = True
-  lblParcelas.Visible = True
-  txtValorModalidade.Enabled = True
-  txtValorModalidade.SetFocus
-  CodigoModalidade = "0301"
-  WCodigoModalidadeVISA = "0301"
-  'cmdFecharCupom
-  cFormaPGTO = "Cartao"
-'  wPagamentoECF = 3
-  'wPagamentoECF = BuscaCodigoPagamentoTEF("Visa")
-
+    carregaCodigoModalidade "VISA"
+    lblParcelas.Visible = True
+    txtValorModalidade.Enabled = True
+    txtValorModalidade.SetFocus
 End Sub
 
 
@@ -2898,24 +3028,11 @@ End If
 End Sub
 
 Private Sub chbVisaElectron_Click()
-  frmcond.Visible = False
-
-'  FraParcelas.Visible = False
-  lblParcelas.Visible = False
-  lblModalidade.Caption = "VISA ELEC."
-  txtValorModalidade.Enabled = True
-  txtValorModalidade.SetFocus
-  
-  CodigoModalidade = "0401"
- ' wPagamentoECF = 2
- 
-  'wPagamentoECF = BuscaCodigoPagamentoTEF("TEF")
- ' wTEFVisaElectron = "0401"
-  
- ' wTEFHiperCard = ""
-    
- ' wTEFRedeShop = ""
-  
+    carregaCodigoModalidade "VISA ELEC."
+    frmcond.Visible = False
+    lblParcelas.Visible = False
+    txtValorModalidade.Enabled = True
+    txtValorModalidade.SetFocus
 End Sub
 Private Sub cmdCondicao_Click()
 If wMostraGrideCondicao = False Then
@@ -3002,11 +3119,11 @@ Private Sub cmdTefCredito_Click()
   cFormaPGTO = "Cartao"
 
     '3 Crédito
-    'EfetuaPagamentoTEF ("3")
+
 End Sub
 
 Private Sub cmdTefDebito_Click()
-
+  carregaCodigoModalidade "VISA ELEC."
   lblModalidade.Caption = "DEBITO"
 
   'lblParcelas.Visible = True
@@ -3017,7 +3134,27 @@ Private Sub cmdTefDebito_Click()
   cFormaPGTO = "Cartao"
 
   '2 Débito
-  'EfetuaPagamentoTEF ("2")
+
+End Sub
+
+Private Sub cmdTefDebito_KeyDown(KeyCode As Integer, Shift As Integer)
+    timeHabilitaTEF.Enabled = True
+    tempoHabilitaPOS = 0
+End Sub
+
+Private Sub cmdTefDebito_KeyUp(KeyCode As Integer, Shift As Integer)
+    timeHabilitaTEF.Enabled = False
+    tempoHabilitaPOS = 0
+End Sub
+
+Private Sub cmdTefDebito_MouseDown(Button As Integer, Shift As Integer, X As Single, Y As Single)
+    timeHabilitaTEF.Enabled = True
+    tempoHabilitaPOS = 0
+End Sub
+
+Private Sub cmdTefDebito_MouseUp(Button As Integer, Shift As Integer, X As Single, Y As Single)
+    timeHabilitaTEF.Enabled = False
+    tempoHabilitaPOS = 0
 End Sub
 
 Private Sub cmdTrocar_Click()
@@ -3112,7 +3249,7 @@ If rsComplementoVenda("cp_tipo") = "FI" Or rsComplementoVenda("cp_tipo") = "FA" 
     rsComplementoVenda.Close
 Else
     fraPagamento.Visible = True
-    chbValoraPagar.SetFocus
+    'chbValoraPagar.SetFocus
     fraFinanciadoFaturado.left = 135
     fraFinanciadoFaturado.top = 510
     
@@ -3158,7 +3295,15 @@ Private Sub Form_Load()
     
 End Sub
 
-
+Private Sub limpaMovimentoAnteriores()
+    'Limpa registros
+    Sql = "delete movimentocaixa where  mc_serie = '" & txtSerie.text & "' and " _
+    & "mc_protocolo = " & GLB_CTR_Protocolo & " and " _
+    & "mc_nrocaixa = '" & GLB_Caixa & "' and mc_pedido = '" & txtPedido.text & "'"
+    
+    rdoCNLoja.Execute Sql
+    
+End Sub
 
 Public Sub Form_Unload(Cancel As Integer)
     
@@ -3203,10 +3348,10 @@ If txtTipoNota.text = "CUPOM" Then
 
 ' Inicia o fechamento do cupom
 
-          Retorno = Bematech_FI_IniciaFechamentoCupom("D", "$", 0)
+          retorno = Bematech_FI_IniciaFechamentoCupom("D", "$", 0)
           Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
           
-          If Retorno <> 1 Then
+          If retorno <> 1 Then
             MsgBox "Por favor verificar se impressora está ligada corretamente!"
             Exit Sub
           End If
@@ -3431,6 +3576,17 @@ End If
 End Sub
 
 
+
+Private Sub timeHabilitaTEF_Timer()
+    If tempoHabilitaPOS >= 3 Then
+        MsgBox "POS Habilitado com sucesso!" & vbNewLine & _
+               "Atenção! Os administradores serão alertado sobre essa operação", vbInformation
+        timeHabilitaTEF.Enabled = False
+        framePagamentoTEF.Visible = False
+    Else
+        tempoHabilitaPOS = tempoHabilitaPOS + 1
+    End If
+End Sub
 
 Private Sub txtValorModalidade_GotFocus()
    txtValorModalidade.text = ""
@@ -3697,7 +3853,7 @@ valValoraPagar = 0
 ValTEFRedeShop = 0
 ValTEFHiperCard = 0
 TotPago = 0
-Modalidade = 0
+modalidade = 0
 'wTEFRedeShop = 0
 'wTEFHiperCard = 0
 ValNotaCredito = 0
