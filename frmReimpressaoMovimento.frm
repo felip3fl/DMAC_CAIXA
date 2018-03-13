@@ -753,7 +753,7 @@ End Sub
 Private Sub grdAnaliticoVenda_DblClick()
  If MsgBox("Deseja imprimir o movimento?", vbQuestion + vbYesNo, "Atenção") = vbYes Then
  
-  Call ImprimeAnaliticoVenda
+  Call ImprimeAnaliticoVenda(grdAnaliticoVenda)
 
   Screen.MousePointer = 0
   
@@ -1485,41 +1485,6 @@ Sub CarregaAnaliticoVenda(ByVal wData As Date)
             End If
             RsCarimbo.Close
           
-End Sub
-
-Sub ImprimeAnaliticoVenda()
- 
-    Screen.MousePointer = 11
-    
-    
-    impressoraRelatorio "[INICIO]"
-    
-    'Retorno = Bematech_FI_AbreRelatorioGerencialMFD("01")
- 
-    impressoraRelatorio ("________________________________________________" & _
-                   "          RELATORIO ANALITICO DE VENDA          " & _
-                   left("Loja " & Format(GLB_Loja, "000") & Space(10), 10) & _
-                   right(Space(38) & (Format(Trim(""), "dd/mm/yyyy")), 38) & _
-                   "________________________________________________")
-    
-    impressoraRelatorio ("                                                " & _
-                   left("NF " & Space(10), 10) & left("SERIE" & Space(8), 8) & _
-                   left("FORMA PAGAMENTO" & Space(20), 20) & left("VALOR " & Space(10), 10) & _
-                   "                                                ")
- 
-     For Idx = 1 To grdAnaliticoVenda.Rows - 1 Step 1
-     
-     impressoraRelatorio (left(grdAnaliticoVenda.TextMatrix(Idx, 0) & Space(10), 10) & _
-                   left(grdAnaliticoVenda.TextMatrix(Idx, 1) & Space(8), 8) & _
-                   left(grdAnaliticoVenda.TextMatrix(Idx, 2) & Space(20), 20) & _
-                   right(Space(10) & Format(grdAnaliticoVenda.TextMatrix(Idx, 3), "###,###,##0.00"), 10))
-     Next Idx
-    
-        impressoraRelatorio "[FIM]"
- 
- 
-     Screen.MousePointer = 0
-     
 End Sub
 
 

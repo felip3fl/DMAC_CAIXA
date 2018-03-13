@@ -17,6 +17,8 @@ Global comprovantePagamento As String
 Global ComprovantePagamentoFila As String
 Global GLB_TefHabilidado As Boolean
 Private Const endereco = ""
+Private filaCuponsTEF(1 To 20) As String
+Private posicaoFila As Integer
 
 Public Type notaFiscalTEF
     numero As String
@@ -173,19 +175,36 @@ End Sub
 
 Public Sub ImprimeComprovanteTEF(ByRef mensagemComprovanteTEF As String)
     
-    If mensagemComprovanteTEF = "" Then Exit Sub
+    'If mensagemComprovanteTEF = "" Then Exit Sub
+    
+    Dim i As Integer
     
     Screen.MousePointer = 11
     
     exibirMensagemTEF " Imprimindo TEF" & vbNewLine & "   Aguarde..."
     
-    impressoraRelatorio "[INICIO]"
-    impressoraRelatorio mensagemComprovanteTEF
-    impressoraRelatorio "[FIM]"
+    For i = 1 To posicaoFila - 1
+    
+        impressoraRelatorio "[INICIO]"
+        impressoraRelatorio filaCuponsTEF(i)
+        impressoraRelatorio "[FIM]"
+        filaCuponsTEF(i) = ""
+    
+    Next i
  
     Screen.MousePointer = 0
-    
     mensagemComprovanteTEF = ""
+    posicaoFila = 1
+    
+End Sub
+
+Public Sub adicionarFilaComprovanteTEF(mensagem As String)
+
+    If posicaoFila <= 0 Then posicaoFila = 1
+
+    filaCuponsTEF(posicaoFila) = mensagem
+
+    posicaoFila = posicaoFila + 1
     
 End Sub
 
@@ -291,11 +310,11 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                                                 
         valores = ""
                                                 
-        logOperacoesTEF = logOperacoesTEF & "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
+        'logOperacoesTEF = logOperacoesTEF & "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
                               "[Resu:" & Space(4 - Len(Trim(Resultado))) & Resultado & "]" & _
                               "[Tipo:" & Space(4 - Len(Trim(TipoCampo))) & TipoCampo & "] " & left(Buffer, 200) & vbNewLine
                               
-        Debug.Print "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
+        'Debug.Print "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
                     "[Resu:" & Space(4 - Len(Trim(Resultado))) & Resultado & "]" & _
                     "[Tipo:" & Space(4 - Len(Trim(TipoCampo))) & TipoCampo & "] " & left(Buffer, 200) & vbNewLine
         
@@ -319,7 +338,7 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                             valores = entradaDeValores("ProximoComando[" & ProximoComando & "]", Buffer, TamanhoMinimo, tamanhoMaximo)
                         Else
                             valores = "1"
-                            If Buffer Like "1:A Vista;2:Parcelado pelo Estabelecimento;3:Parcelado pela Administradora;*" Then
+                            If Buffer Like "1:A Vista*" Then
                                 If nf.Parcelas > 1 Then valores = "2"
                             ElseIf Buffer Like "1:Magnetico/Chip;2:Digitado*" Then
                                 valores = "1"
@@ -340,10 +359,8 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                     End Select
                 
                         
-                Case 121 'Buffer contém a primeira via do comprovante de pagamento
-                        nf.comprovantePagamento = nf.comprovantePagamento & Buffer & vbNewLine
-                Case 122
-                        nf.comprovantePagamento = nf.comprovantePagamento & Buffer & vbNewLine
+                Case 121, 122 'Buffer contém a primeira via do comprovante de pagamento
+                        adicionarFilaComprovanteTEF Buffer
                 Case 132
                         bandeiraCartao.Caption = Mid(Buffer, 1, 5)
                         bandeiraCartao.Caption = obterTipoPagamentoCreditoTEF(bandeiraCartao.Caption)
@@ -396,11 +413,11 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
             'End If
             
             If valores <> "" Then
-                logOperacoesTEF = logOperacoesTEF & "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
+                'logOperacoesTEF = logOperacoesTEF & "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
                               "[Resu:" & Space(4 - Len(Trim(Resultado))) & Resultado & "]" & _
                               "[Tipo:" & Space(4 - Len(Trim(TipoCampo))) & TipoCampo & "] VALORES: " & left(valores, 200) & vbNewLine
                 
-                Debug.Print "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
+                'Debug.Print "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
                             "[Resu:" & Space(4 - Len(Trim(Resultado))) & Resultado & "]" & _
                             "[Tipo:" & Space(4 - Len(Trim(TipoCampo))) & TipoCampo & "] VALORES: " & left(valores, 200) & vbNewLine
                 

@@ -11,6 +11,7 @@ Begin VB.Form frmSangria
    ClientTop       =   1125
    ClientWidth     =   18900
    LinkTopic       =   "Form1"
+   LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
    ScaleHeight     =   10575
@@ -1383,7 +1384,7 @@ End Sub
 
 Private Sub cmdImprimirMovimento_Click()
     frameOperacoes.Visible = False
-    Call ImprimeAnaliticoVenda
+    Call ImprimeAnaliticoVenda(grdAnaliticoVenda)
 End Sub
 
 Private Sub cmdImprimirTEF_Click()
@@ -1470,7 +1471,10 @@ Private Sub Form_Load()
   
   imgLogo.Picture = LoadPicture(endIMG("logo"))
   
-  If GLB_TefHabilidado = False Then cmdImprimirTEF.Enabled = False
+  If GLB_TefHabilidado = False Then
+    cmdImprimirTEF.Enabled = False
+    grdAnaliticoVenda.ColHidden(5) = True
+  End If
   
 End Sub
 
@@ -2234,36 +2238,36 @@ Sub CarregaAnaliticoSangria()
     
 End Sub
 
-Sub ImprimeAnaliticoVenda()
- 
- 
-Screen.MousePointer = 11
-    retorno = Bematech_FI_AbreRelatorioGerencialMFD("01")
- 
-    retorno = Bematech_FI_UsaRelatorioGerencialMFD("________________________________________________" & _
-                   "          RELATORIO ANALITICO DE VENDA          " & _
-                   left("Loja " & Format(GLB_Loja, "000") & Space(10), 10) & _
-                   right(Space(38) & (Format(Trim(wData), "dd/mm/yyyy")), 38) & _
-                   "________________________________________________")
-    
-    retorno = Bematech_FI_UsaRelatorioGerencialMFD("                                                " & _
-                   left("NF " & Space(10), 10) & left("SERIE" & Space(8), 8) & _
-                   left("FORMA PAGAMENTO" & Space(20), 20) & left("VALOR " & Space(10), 10) & _
-                   "                                                ")
- 
-     For Idx = 1 To grdAnaliticoVenda.Rows - 1 Step 1
-     
-     retorno = Bematech_FI_UsaRelatorioGerencialMFD(left(grdAnaliticoVenda.TextMatrix(Idx, 0) & Space(10), 10) & _
-                   left(grdAnaliticoVenda.TextMatrix(Idx, 1) & Space(8), 8) & _
-                   left(grdAnaliticoVenda.TextMatrix(Idx, 2) & Space(20), 20) & _
-                   right(Space(10) & Format(grdAnaliticoVenda.TextMatrix(Idx, 3), "###,###,##0.00"), 10))
-     Next Idx
-    
-     retorno = Bematech_FI_FechaRelatorioGerencial()
- 
-     Screen.MousePointer = 0
-     
-End Sub
+'Sub ImprimeAnaliticoVenda()
+'
+'
+'Screen.MousePointer = 11
+'    retorno = Bematech_FI_AbreRelatorioGerencialMFD("01")
+'
+'    retorno = Bematech_FI_UsaRelatorioGerencialMFD("________________________________________________" & _
+'                   "          RELATORIO ANALITICO DE VENDA          " & _
+'                   left("Loja " & Format(GLB_Loja, "000") & Space(10), 10) & _
+'                   right(Space(38) & (Format(Trim(wData), "dd/mm/yyyy")), 38) & _
+'                   "________________________________________________")
+'
+'    retorno = Bematech_FI_UsaRelatorioGerencialMFD("                                                " & _
+'                   left("NF " & Space(10), 10) & left("SERIE" & Space(8), 8) & _
+'                   left("FORMA PAGAMENTO" & Space(20), 20) & left("VALOR " & Space(10), 10) & _
+'                   "                                                ")
+'
+'     For Idx = 1 To grdAnaliticoVenda.Rows - 1 Step 1
+'
+'     retorno = Bematech_FI_UsaRelatorioGerencialMFD(left(grdAnaliticoVenda.TextMatrix(Idx, 0) & Space(10), 10) & _
+'                   left(grdAnaliticoVenda.TextMatrix(Idx, 1) & Space(8), 8) & _
+'                   left(grdAnaliticoVenda.TextMatrix(Idx, 2) & Space(20), 20) & _
+'                   right(Space(10) & Format(grdAnaliticoVenda.TextMatrix(Idx, 3), "###,###,##0.00"), 10))
+'     Next Idx
+'
+'     retorno = Bematech_FI_FechaRelatorioGerencial()
+'
+'     Screen.MousePointer = 0
+'
+'End Sub
 Private Sub CarregaModalidadeVenda()
     Sql = "SELECT MO_Grupo,MO_Descricao FROM Modalidade WHERE MO_Grupo between '10101' and '10701'"
     adoConsulta.CursorLocation = adUseClient

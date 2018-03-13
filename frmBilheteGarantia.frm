@@ -202,21 +202,21 @@ Dim codigoBilheteDMACHTML As String
 Dim codigoTermoHTML As String
 
 Public Sub statusFuncionamento()
-    Dim Mensagem As String
+    Dim mensagem As String
     
-    Mensagem = "Imprimindo Garantia Estendida" & " "
-    If lblStatusImpressao.Caption = Mensagem & "  . . . ." Then
-        lblStatusImpressao.Caption = Mensagem & ".   . . ."
-    ElseIf lblStatusImpressao.Caption = Mensagem & ".   . . ." Then
-        lblStatusImpressao.Caption = Mensagem & ". .   . ."
-    ElseIf lblStatusImpressao.Caption = Mensagem & ". .   . ." Then
-        lblStatusImpressao.Caption = Mensagem & ". . .   ."
-    ElseIf lblStatusImpressao.Caption = Mensagem & ". . .   ." Then
-        lblStatusImpressao.Caption = Mensagem & ". . . .  "
-    ElseIf lblStatusImpressao.Caption = Mensagem & ". . . .  " Then
-        lblStatusImpressao.Caption = Mensagem & "  . . . ."
+    mensagem = "Imprimindo Garantia Estendida" & " "
+    If lblStatusImpressao.Caption = mensagem & "  . . . ." Then
+        lblStatusImpressao.Caption = mensagem & ".   . . ."
+    ElseIf lblStatusImpressao.Caption = mensagem & ".   . . ." Then
+        lblStatusImpressao.Caption = mensagem & ". .   . ."
+    ElseIf lblStatusImpressao.Caption = mensagem & ". .   . ." Then
+        lblStatusImpressao.Caption = mensagem & ". . .   ."
+    ElseIf lblStatusImpressao.Caption = mensagem & ". . .   ." Then
+        lblStatusImpressao.Caption = mensagem & ". . . .  "
+    ElseIf lblStatusImpressao.Caption = mensagem & ". . . .  " Then
+        lblStatusImpressao.Caption = mensagem & "  . . . ."
     Else
-        lblStatusImpressao.Caption = Mensagem & "  . . . ."
+        lblStatusImpressao.Caption = mensagem & "  . . . ."
     End If
 End Sub
 

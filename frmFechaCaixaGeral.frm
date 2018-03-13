@@ -693,12 +693,12 @@ Private Sub ImprimeMovimento()
          If (Idx = 25) Or (Idx = 26) Or (Idx = 27) Or (Idx = 28) Or (Idx = 29) Or (Idx = 32) Or (Idx = 33) Or (Idx = 34) Or _
          (Idx = 37) Or (Idx = 38) Or (Idx = 39) Or (Idx = 40) Or (Idx = 41) Then
                           
-         Retorno = Bematech_FI_UsaRelatorioGerencialMFD(left(grdMovimentoCaixa.TextMatrix(Idx, 0) & Space(23), 23) & _
+         retorno = Bematech_FI_UsaRelatorioGerencialMFD(left(grdMovimentoCaixa.TextMatrix(Idx, 0) & Space(23), 23) & _
                right(Space(20) & Format(grdMovimentoCaixa.TextMatrix(Idx, 1), "###,###,##0.00"), 20) & _
                right(Space(5) & grdMovimentoCaixa.TextMatrix(Idx, 2), 5))
          Else
          
-          Retorno = Bematech_FI_UsaRelatorioGerencialMFD(left(grdMovimentoCaixa.TextMatrix(Idx, 0) & Space(23), 23) & _
+          retorno = Bematech_FI_UsaRelatorioGerencialMFD(left(grdMovimentoCaixa.TextMatrix(Idx, 0) & Space(23), 23) & _
                right(Space(20) & Format(grdMovimentoCaixa.TextMatrix(Idx, 1), "###,###,##0.00"), 20) & "     ")
          End If
      Next Idx
@@ -720,7 +720,7 @@ Private Sub ImprimeMovimento()
      wTotalTransferencia = wTotalTransferencia - wtotalGarantia
     
      
-     Retorno = Bematech_FI_UsaRelatorioGerencialMFD("________________________________________________" & _
+     retorno = Bematech_FI_UsaRelatorioGerencialMFD("________________________________________________" & _
         "               MOVIMENTO DE CAIXA               " & _
         "________________________________________________" & _
         "SALDO ANTERIOR >> " & right(Space(30) & Format("", ""), 30) & _
@@ -733,19 +733,19 @@ Private Sub ImprimeMovimento()
         "GARANTIA ESTEN.   " & right(Space(30) & Format(wtotalGarantia, "###,###,##0.00"), 30))
  
           
-      Retorno = Bematech_FI_UsaRelatorioGerencialMFD("SALDO DO CAIXA >>                               " & _
+      retorno = Bematech_FI_UsaRelatorioGerencialMFD("SALDO DO CAIXA >>                               " & _
         "  Dinheiro        " & right(Space(30) & Format(wSaldoFinalDinheiro, "###,###,##0.00"), 30) & _
         "  Cheque          " & right(Space(30) & Format(wSaldoFinalCheque, "###,###,##0.00"), 30) & _
         "  SALDO FINAL     " & right(Space(30) & Format((wSaldoFinalDinheiro + wSaldoFinalCheque), "###,###,##0.00"), 30) & _
         "________________________________________________")
           
  
-      Retorno = Bematech_FI_UsaRelatorioGerencialMFD(left("Data Inicial " & Trim("") & " " & Trim("") & Space(48), 48) & _
+      retorno = Bematech_FI_UsaRelatorioGerencialMFD(left("Data Inicial " & Trim("") & " " & Trim("") & Space(48), 48) & _
          left("Data Final   " & Trim("") & " " & Trim("") & Space(48), 48) & _
          left("Protocolo    " & "" & Space(48), 48))
                     
                     
-      Retorno = Bematech_FI_UsaRelatorioGerencialMFD("________________________________________________" & _
+      retorno = Bematech_FI_UsaRelatorioGerencialMFD("________________________________________________" & _
          "                                                " & _
          "                                                " & _
          "                                                " & _
@@ -755,7 +755,7 @@ Private Sub ImprimeMovimento()
          "                                                ")
     
  
-        Retorno = Bematech_FI_FechaRelatorioGerencial()
+        retorno = Bematech_FI_FechaRelatorioGerencial()
  
       Screen.MousePointer = 0
      
@@ -781,9 +781,9 @@ End If
  
 rdoCapa.Close
     Screen.MousePointer = 11
-         Retorno = Bematech_FI_AbreRelatorioGerencialMFD("01")
+         retorno = Bematech_FI_AbreRelatorioGerencialMFD("01")
     
-          Retorno = Bematech_FI_UsaRelatorioGerencialMFD("                                                " & _
+          retorno = Bematech_FI_UsaRelatorioGerencialMFD("                                                " & _
                     "                     CONTROLE X                 " & _
                     " Loja " & left(GLB_Loja & Space(4), 4) & Space(28) & Format(Date, "dd/mm/yyyy") & _
                     "                                                " & _
@@ -797,7 +797,7 @@ rdoCapa.Close
                     left("Protocolo    " & GLB_CTR_Protocolo & Space(48), 48))
                     
                     
-          Retorno = Bematech_FI_UsaRelatorioGerencialMFD("________________________________________________" & _
+          retorno = Bematech_FI_UsaRelatorioGerencialMFD("________________________________________________" & _
                     "                                                " & _
                     "                                                " & _
                     "                                                " & _
@@ -805,7 +805,7 @@ rdoCapa.Close
                     " " & left(txtSupervisor.text & Space(47), 47) & _
                     "                                                " & _
                     "                                                ")
-        Retorno = Bematech_FI_FechaRelatorioGerencial()
+        retorno = Bematech_FI_FechaRelatorioGerencial()
  
       Screen.MousePointer = 0
  
@@ -816,22 +816,22 @@ End Sub
 Private Sub ImprimeTransfNumerario()
      
     Screen.MousePointer = 11
-    Retorno = Bematech_FI_AbreRelatorioGerencialMFD("01")
+    retorno = Bematech_FI_AbreRelatorioGerencialMFD("01")
  
-    Retorno = Bematech_FI_UsaRelatorioGerencialMFD("________________________________________________" & _
+    retorno = Bematech_FI_UsaRelatorioGerencialMFD("________________________________________________" & _
                    "TRANSFERENCIA DE NUMERARIO GERAL" & right(Space(16) & "Nro.  " & GLB_CTR_Protocolo, 16) & _
                    left("Loja " & Format(GLB_Loja, "000") & Space(10), 10) & right(Space(38) & Format(Date, "dd/mm/yyyy") & " " & Format(Time, "HH:MM:SS"), 38) & _
                    "________________________________________________" & _
                    "    USO INTERNO          SEM VALOR COMERCIAL    ")
    
-   Retorno = Bematech_FI_UsaRelatorioGerencialMFD("------------------------------------------------" & _
+   retorno = Bematech_FI_UsaRelatorioGerencialMFD("------------------------------------------------" & _
                    "VISA              " & right(Space(30) & Format(wTNVisa, "###,###,##0.00"), 30) & _
                    "MASTERCARD        " & right(Space(30) & Format(wTNRedecard, "###,###,##0.00"), 30) & _
                    "AMEX              " & right(Space(30) & Format(wTNAmex, "###,###,##0.00"), 30) & _
                    "BNDS              " & right(Space(30) & Format(wTNBNDES, "###,###,##0.00"), 30) & _
                    "HIPERCARD         " & right(Space(30) & Format(wTNHiperCard, "###,###,##0.00"), 30))
                    
-   Retorno = Bematech_FI_UsaRelatorioGerencialMFD( _
+   retorno = Bematech_FI_UsaRelatorioGerencialMFD( _
                    "TEF               " & right(Space(30) & Format(wTNVisaEletron + wTNRedeShop, "###,###,##0.00"), 30) & _
                    "DEPOSITO          " & right(Space(30) & Format(wTNDeposito, "###,###,##0.00"), 30) & _
                    "NOTA CREDITO      " & right(Space(30) & Format(wTNNotaCredito, "###,###,##0.00"), 30) & _
@@ -840,7 +840,7 @@ Private Sub ImprimeTransfNumerario()
                    "                                                " & _
                    "TOTAL             " & right(Space(30) & Format(wTNTotal, "###,###,##0.00"), 30))
                    
-    Retorno = Bematech_FI_UsaRelatorioGerencialMFD("________________________________________________" & _
+    retorno = Bematech_FI_UsaRelatorioGerencialMFD("________________________________________________" & _
                     "                                                " & _
                     "                                                " & _
                     "                                                " & _
@@ -848,7 +848,7 @@ Private Sub ImprimeTransfNumerario()
                     " " & left(txtSupervisor.text & Space(47), 47) & _
                     "                                                " & _
                     "                                                ")
-        Retorno = Bematech_FI_FechaRelatorioGerencial()
+        retorno = Bematech_FI_FechaRelatorioGerencial()
  
       Screen.MousePointer = 0
  

@@ -4511,7 +4511,7 @@ End Function
 
 
 
- Public Sub NOVO_ImprimeMovimento(grid, titulo As String, operador As String, _
+ Public Sub NOVO_ImprimeMovimento(grid, Titulo As String, operador As String, _
                                   nroCaixa As String, dataInicio As String, _
                                   horaInicio As String, dataFim As String, _
                                   horaFim As String, protocolo As String)
@@ -4535,7 +4535,7 @@ End Function
     impressoraRelatorio "[INICIO]"
      
     impressoraRelatorio "________________________________________________"
-    impressoraRelatorio centralizarTexto(titulo, tamanhoPadraoLinhas)
+    impressoraRelatorio centralizarTexto(Titulo, tamanhoPadraoLinhas)
     impressoraRelatorio " DATA " & left(dataInicio, 10) & "                        Loja " & Format(GLB_Loja, "000")
     impressoraRelatorio "________________________________________________"
  
@@ -4619,7 +4619,7 @@ Public Sub imprimeCampoGerenteOperador()
 End Sub
 
 
-Public Sub NOVO_ImprimeTransfNumerario(grid, titulo As String, operador As String, _
+Public Sub NOVO_ImprimeTransfNumerario(grid, Titulo As String, operador As String, _
                                        nroCaixa As String, dataInicio As String, _
                                        horaInicio As String, dataFim As String, _
                                        horaFim As String, protocolo As String)
@@ -4631,7 +4631,7 @@ Public Sub NOVO_ImprimeTransfNumerario(grid, titulo As String, operador As Strin
     impressoraRelatorio "[INICIO]"
     
     impressoraRelatorio "________________________________________________"
-    impressoraRelatorio centralizarTexto(titulo, tamanhoPadraoLinhas)
+    impressoraRelatorio centralizarTexto(Titulo, tamanhoPadraoLinhas)
     impressoraRelatorio " DATA " & left(dataInicio, 10) & "                        Loja " & Format(GLB_Loja, "000")
     impressoraRelatorio "________________________________________________"
     
@@ -5137,9 +5137,9 @@ TrataErro:
     
 End Sub
 
-Public Function entradaDeValores(titulo As String, mensagem As String, tamanhoMinino As Integer, tamanhoMaximo As Integer) As String
+Public Function entradaDeValores(Titulo As String, mensagem As String, tamanhoMinino As Integer, tamanhoMaximo As Integer) As String
 
-    frmEntradaDeValores.lblTitulo.Caption = Trim(titulo)
+    frmEntradaDeValores.lblTitulo.Caption = Trim(Titulo)
     frmEntradaDeValores.lblMensagem.Caption = Trim(mensagem)
     frmEntradaDeValores.tamanhoMaximo = tamanhoMaximo
     frmEntradaDeValores.tamanhoMinino = tamanhoMinino
@@ -5151,4 +5151,40 @@ Public Function entradaDeValores(titulo As String, mensagem As String, tamanhoMi
     'Debug.Print retornoEntradaDeValores
     
 End Function
+
+Sub ImprimeAnaliticoVenda(grid As Object)
+ 
+    Screen.MousePointer = 11
+    
+    
+    impressoraRelatorio "[INICIO]"
+    
+    'Retorno = Bematech_FI_AbreRelatorioGerencialMFD("01")
+ 
+    impressoraRelatorio ("________________________________________________" & _
+                   "          RELATORIO ANALITICO DE VENDA          " & _
+                   left("Loja " & Format(GLB_Loja, "000") & Space(10), 10) & _
+                   right(Space(38) & (Format(Trim(""), "dd/mm/yyyy")), 38) & _
+                   "________________________________________________")
+    
+    impressoraRelatorio ("                                                " & _
+                   left("NF " & Space(10), 10) & left("SERIE" & Space(8), 8) & _
+                   left("FORMA PAGAMENTO" & Space(20), 20) & left("VALOR " & Space(10), 10) & _
+                   "                                                ")
+ 
+     For Idx = 1 To grid.Rows - 1 Step 1
+     
+     impressoraRelatorio (left(grid.TextMatrix(Idx, 0) & Space(10), 10) & _
+                   left(grid.TextMatrix(Idx, 1) & Space(8), 8) & _
+                   left(grid.TextMatrix(Idx, 2) & Space(20), 20) & _
+                   right(Space(10) & Format(grid.TextMatrix(Idx, 3), "###,###,##0.00"), 10))
+     Next Idx
+    
+     impressoraRelatorio "[FIM]"
+ 
+ 
+     Screen.MousePointer = 0
+     
+End Sub
+
 

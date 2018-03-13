@@ -4,8 +4,8 @@ Begin VB.Form frmFormaPagamento
    BorderStyle     =   0  'None
    Caption         =   "Forma de Pagamento"
    ClientHeight    =   8640
-   ClientLeft      =   690
-   ClientTop       =   1200
+   ClientLeft      =   2760
+   ClientTop       =   1455
    ClientWidth     =   13425
    BeginProperty Font 
       Name            =   "Arial Black"
@@ -2194,6 +2194,9 @@ Private Sub carregaCodigoModalidade(modalidade As String)
         CodigoModalidade = "0401"
     Case Else
         MsgBox "Modalidade desconhecida inserida", vbCritical, "Erro ao carregar código modalidade"
+        lblModalidade.Caption = "DINHEIRO"
+        CodigoModalidade = "0101"
+        wCodigoModalidadeDINHEIRO = "0101"
     End Select
 End Sub
 

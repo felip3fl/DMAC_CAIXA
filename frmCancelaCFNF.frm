@@ -376,7 +376,7 @@ Dim wNumeroPedido As Double
 Dim wWhere As String
 Dim wDataEmissao As String
 
-Dim Nf As notaFiscalTEF
+Dim nf As notaFiscalTEF
 
 Private Sub cmbSair_Click()
  Unload Me
@@ -583,22 +583,22 @@ Private Function cancelarTEF()
         
         codigoOperacao = Mid(grdNumeroTEF.TextMatrix(I, 2), 1, 1)
         
-        Nf.pedido = txtPedido.text
-        Nf.numeroTEF = grdNumeroTEF.TextMatrix(I, 0)
-        Nf.serie = txtSerie.text
-        Nf.dataEmissao = wDataEmissao
-        Nf.valor = grdNumeroTEF.TextMatrix(I, 1)
+        nf.pedido = txtPedido.text
+        nf.numeroTEF = grdNumeroTEF.TextMatrix(I, 0)
+        nf.serie = txtSerie.text
+        nf.dataEmissao = wDataEmissao
+        nf.valor = grdNumeroTEF.TextMatrix(I, 1)
         
-        lblModalidade.Caption = "Insira cartão da bandeira " & grdNumeroTEF.TextMatrix(I, 3) & " do valor de " & Nf.valor
+        lblModalidade.Caption = "Insira cartão da bandeira " & grdNumeroTEF.TextMatrix(I, 3) & " do valor de " & nf.valor
         lblMensagensTEF.Caption = ""
         
         If codigoOperacao = 2 Then codigoOperacaoCancelamento = 211
         If codigoOperacao = 3 Then codigoOperacaoCancelamento = 210
         
-        If EfetuaOperacaoTEF(codigoOperacaoCancelamento, Nf, lblModalidade, lblMensagensTEF) Then
+        If EfetuaOperacaoTEF(codigoOperacaoCancelamento, nf, lblModalidade, lblMensagensTEF) Then
             
-            ImprimeComprovanteTEF Nf.comprovantePagamento
-            cancelaMovimentoCaixaEspecifico Nf.numeroTEF, Nf.pedido
+            ImprimeComprovanteTEF nf.comprovantePagamento
+            cancelaMovimentoCaixaEspecifico grdNumeroTEF.TextMatrix(I, 0), nf.pedido
         End If
             
         'carregaNotasComTEFGrid

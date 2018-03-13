@@ -936,13 +936,13 @@ Public Sub cmdTransmitir_Click()
         Sql = "exec sp_vda_cria_nfe '" & nf.loja & "', '" & nf.numero & "', 'NE', ''"
         rdoCNLoja.Execute Sql
     
-        Dim I As Byte
+        Dim i As Byte
     
-        For I = 0 To UBound(vetCampos)
-            If vetCampos(I) <> "" Then
-                leituraEstrutura vetCampos(I)
+        For i = 0 To UBound(vetCampos)
+            If vetCampos(i) <> "" Then
+                leituraEstrutura vetCampos(i)
             End If
-        Next I
+        Next i
     
         numeroCopiaImpressao
     
@@ -993,7 +993,7 @@ End Sub
 Private Sub notaPedentes()
 
     Dim ado_estrutura As New ADODB.Recordset
-    Dim I As Integer
+    Dim i As Integer
     Dim add As Boolean
     'Dim dataPesquisa As String
     Dim tiponota As String
@@ -1898,9 +1898,9 @@ Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
 
     Dim ado_campo As New ADODB.Recordset
     Dim informacao As String
-    Dim I As Byte
+    Dim i As Byte
     
-    I = 0
+    i = 0
     
     Sql = "select " & RTrim(ado_estrutura("etr_campo_de")) & " as Informacao " & vbNewLine & _
           "from " & ado_estrutura("etr_tabela_de") & " " & vbNewLine & _
@@ -1929,7 +1929,7 @@ Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
         
         
         Sql = insertTabelaNFLojas & _
-              Trim(ado_estrutura("etr_sequencia") + (I)) & "', '" & ado_estrutura("etr_campo") & _
+              Trim(ado_estrutura("etr_sequencia") + (i)) & "', '" & ado_estrutura("etr_campo") & _
               "', '" & RTrim(informacao) & "', '" & _
               nf.loja & "', '" & nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
               
@@ -1937,7 +1937,7 @@ Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
         
         If ado_estrutura("etr_campo") = "    NDUP" Then
             Sql = insertTabelaNFLojas & _
-            Trim(ado_estrutura("etr_sequencia") + (I) - 1) & "', '[" & RTrim(ado_estrutura("etr_ROTULO")) & _
+            Trim(ado_estrutura("etr_sequencia") + (i) - 1) & "', '[" & RTrim(ado_estrutura("etr_ROTULO")) & _
             "]', '" & "" & "', '" & _
             nf.loja & "', '" & nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
               
@@ -1946,7 +1946,7 @@ Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
         End If
               
         ado_campo.MoveNext
-        I = I + 5
+        i = i + 5
     Loop
     ado_campo.Close
     ado_estrutura.MoveNext
@@ -2697,7 +2697,7 @@ Public Function mensagemLOG2(grid, Data As Date, tipoStatus As Integer, loja As 
 
     Dim status As String
     Dim corLinha As ColorConstants
-    Dim I As Byte
+    Dim i As Byte
     
     
     Select Case tipoStatus
@@ -2734,18 +2734,18 @@ End Function
 
 Public Sub pintaLinha(grid, Cor, Linha As Integer)
     grid.Row = Linha
-    For I = 0 To grid.Cols - 1
-        grid.Col = I
+    For i = 0 To grid.Cols - 1
+        grid.Col = i
         grid.CellForeColor = Cor
-    Next I
+    Next i
 End Sub
 
 Public Sub pintaFonteLinha(grid, Cor, Linha As Integer)
     grid.Row = Linha
-    For I = 0 To grid.Cols - 1
-        grid.Col = I
+    For i = 0 To grid.Cols - 1
+        grid.Col = i
         grid.s = Cor
-    Next I
+    Next i
 End Sub
 
 
@@ -2951,13 +2951,13 @@ Private Sub numeroCopiaImpressao()
         rdoCNLoja.Execute SQLLinhaImpressora
     End If
     
-    For I = 2 To WQtdeCopiaNE
+    For i = 2 To WQtdeCopiaNE
         rdoCNLoja.Execute SQLLinhaImpressora
-    Next I
+    Next i
 
     ado_rotulo.Close
     
-    rdoCNLoja.Execute SQLLinhaImpressora
+    'rdoCNLoja.Execute SQLLinhaImpressora
     
 End Sub
 
