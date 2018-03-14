@@ -133,14 +133,14 @@ Function Cliptografia(ByRef ValorClipt As String)
     Dim Ret As String
     Dim CharLido As String
     Dim Maximo As Long
-    Dim I As Long
+    Dim i As Long
 
     
     Ret = ""
     Maximo = Len(ValorClipt)
     
-    For I = 1 To Maximo
-        CharLido = UCase(Mid(ValorClipt, I, 1))
+    For i = 1 To Maximo
+        CharLido = UCase(Mid(ValorClipt, i, 1))
         If CharLido = "A" Then
             CharLido = "E"
         ElseIf CharLido = "B" Then
@@ -2319,7 +2319,7 @@ Function FU_ValidaCPF(CPF As String) As Integer
 '
     Dim soma As Integer
     Dim Resto As Integer
-    Dim I As Integer
+    Dim i As Integer
     
     'Valida argumento
     If Len(CPF) <> 11 Then
@@ -2330,9 +2330,9 @@ Function FU_ValidaCPF(CPF As String) As Integer
         
     
     soma = 0
-    For I = 1 To 9
-        soma = soma + Val(Mid$(CPF, I, 1)) * (11 - I)
-    Next I
+    For i = 1 To 9
+        soma = soma + Val(Mid$(CPF, i, 1)) * (11 - i)
+    Next i
     Resto = 11 - (soma - (Int(soma / 11) * 11))
     If Resto = 10 Or Resto = 11 Then Resto = 0
     If Resto <> Val(Mid$(CPF, 10, 1)) Then
@@ -2341,9 +2341,9 @@ Function FU_ValidaCPF(CPF As String) As Integer
     End If
         
     soma = 0
-    For I = 1 To 10
-        soma = soma + Val(Mid$(CPF, I, 1)) * (12 - I)
-    Next I
+    For i = 1 To 10
+        soma = soma + Val(Mid$(CPF, i, 1)) * (12 - i)
+    Next i
     Resto = 11 - (soma - (Int(soma / 11) * 11))
     If Resto = 10 Or Resto = 11 Then Resto = 0
     If Resto <> Val(Mid$(CPF, 11, 1)) Then
@@ -2356,14 +2356,14 @@ Function FU_ValidaCPF(CPF As String) As Integer
 End Function
 
 Function FU_ValidaCGC(CGC As String) As Integer
-        Dim retorno, a, j, I, d1, d2
+        Dim retorno, a, j, i, d1, d2
         If Len(CGC) = 8 And Val(CGC) > 0 Then
            a = 0
            j = 0
            d1 = 0
-           For I = 1 To 7
-               a = Val(Mid(CGC, I, 1))
-               If (I Mod 2) <> 0 Then
+           For i = 1 To 7
+               a = Val(Mid(CGC, i, 1))
+               If (i Mod 2) <> 0 Then
                   a = a * 2
                End If
                If a > 9 Then
@@ -2371,7 +2371,7 @@ Function FU_ValidaCGC(CGC As String) As Integer
                Else
                   j = j + a
                End If
-           Next I
+           Next i
            d1 = IIf((j Mod 10) <> 0, 10 - (j Mod 10), 0)
            If d1 = Val(Mid(CGC, 8, 1)) Then
               FU_ValidaCGC = True
@@ -2381,23 +2381,23 @@ Function FU_ValidaCGC(CGC As String) As Integer
         Else
            If Len(CGC) = 14 And Val(CGC) > 0 Then
               a = 0
-              I = 0
+              i = 0
               d1 = 0
               d2 = 0
               j = 5
-              For I = 1 To 12 Step 1
-                  a = a + (Val(Mid(CGC, I, 1)) * j)
+              For i = 1 To 12 Step 1
+                  a = a + (Val(Mid(CGC, i, 1)) * j)
                   j = IIf(j > 2, j - 1, 9)
-              Next I
+              Next i
               a = a Mod 11
               d1 = IIf(a > 1, 11 - a, 0)
               a = 0
-              I = 0
+              i = 0
               j = 6
-              For I = 1 To 13 Step 1
-                  a = a + (Val(Mid(CGC, I, 1)) * j)
+              For i = 1 To 13 Step 1
+                  a = a + (Val(Mid(CGC, i, 1)) * j)
                   j = IIf(j > 2, j - 1, 9)
-              Next I
+              Next i
               a = a Mod 11
               d2 = IIf(a > 1, 11 - a, 0)
               If (d1 = Val(Mid(CGC, 13, 1)) And d2 = Val(Mid(CGC, 14, 1))) Then
@@ -2581,14 +2581,14 @@ Function ConverteVirgula(ByVal numero As String) As String
     Dim Ret As String
     Dim CharLido As String
     Dim Maximo As Long
-    Dim I As Long
+    Dim i As Long
     
     Ret = ""
     numero = IIf(IsNull(numero), 0, numero)
     Maximo = Len(numero)
     
-    For I = 1 To Maximo
-        CharLido = Mid(numero, I, 1)
+    For i = 1 To Maximo
+        CharLido = Mid(numero, i, 1)
         If IsNumeric(CharLido) Then
             Ret = Ret & CharLido
         ElseIf CharLido = "," And InStr(Ret, ".") = 0 Then
@@ -2605,14 +2605,14 @@ Function ReplaceVirgula(ByVal numero As String) As String
     Dim Ret As String
     Dim CharLido As String
     Dim Maximo As Long
-    Dim I As Long
+    Dim i As Long
     
     Ret = "0"
     numero = IIf(IsNull(numero), 0, numero)
     Maximo = Len(numero)
     
-    For I = 1 To Maximo
-        CharLido = Mid(numero, I, 1)
+    For i = 1 To Maximo
+        CharLido = Mid(numero, i, 1)
         
         
         If IsNumeric(CharLido) Then
@@ -4702,10 +4702,10 @@ Public Sub impressoraRelatorio(Texto As String)
 
         If Texto = "[INICIO]" Then
         
-            Printer.PaintPicture frmSangria.imgLogo.Picture, 1200, -500, 2000, 2000
-            For I = 0 To 9
+           ' Printer.PaintPicture frmSangria.imgLogo.Picture, 1200, -500, 2000, 2000
+            For i = 0 To 9
                 Printer.Print " "
-            Next I
+            Next i
             'Printer.Print "---------------------"
             'Printer.EndDoc
             
@@ -5032,7 +5032,7 @@ Public Function CriaNotaCredito1(ByVal nf As Double, ByVal serie As String, ByVa
                 wTotalNota = ValorNotaCredito
             End If
 
-            For I = 1 To 4
+            For i = 1 To 4
 
                 Printer.ScaleMode = vbMillimeters
                 Printer.FontName = "Romam"
@@ -5061,7 +5061,7 @@ Public Function CriaNotaCredito1(ByVal nf As Double, ByVal serie As String, ByVa
                         & left(rsVerLoja("LO_Telefone") & Space(10), 10) & " -  " _
                         & "FAX : " & "(" & right(String(3, "0") & rsVerLoja("LO_DDD"), 3) & ")" & left(rsVerLoja("LO_Telefone") & Space(10), 10)
                 Printer.Print Space(2) & "C.G.C : " & left(rsVerLoja("LO_CGC") & Space(25), 25) & "INSCR.EST. : " & rsVerLoja("LO_InscricaoEstadual")
-                Printer.Print Space(140) & "NUM.  " & right(String(9, "0") & NotaCredito, 9) & right(Space(10) & I & "a.VIA", 10)
+                Printer.Print Space(140) & "NUM.  " & right(String(9, "0") & NotaCredito, 9) & right(Space(10) & i & "a.VIA", 10)
                 Printer.Print Space(2) & "A"
                 Printer.Print Space(2) & rsDadosNfCapa("ce_razao")
                 Printer.Print Space(2) & left(rsDadosNfCapa("ce_endereco") & Space(130), 130) & left("DATA : " & rsDadosNfCapa("DataEmi") & Space(18), 18)
@@ -5090,10 +5090,10 @@ Public Function CriaNotaCredito1(ByVal nf As Double, ByVal serie As String, ByVa
                 End If
                 Printer.Print
                 Printer.Print
-                If I = 2 Then
+                If i = 2 Then
                     Printer.NewPage
                 End If
-            Next I
+            Next i
             Printer.EndDoc
         End If
     End If

@@ -195,6 +195,7 @@ Global pegadados As New ADODB.Recordset
 Global RsDadosLoja As New ADODB.Recordset
 Global rsItensVenda As New ADODB.Recordset
 Global rsNFE As New ADODB.Recordset
+Global GLB_TEFnaoCancelado As Boolean
 
 Global RsdadosItens As New ADODB.Recordset
 Global rdoParametro As New ADODB.Recordset
@@ -366,7 +367,7 @@ Global wCodigo As String
 Global wValoraPagarNORMAL As Double
 Global wNomeservidor As String
 Global wNomeBanco As String
-Global I As Integer
+Global i As Integer
 Global wNomeservidorMatriz As String
 Global wNomeBancoMatriz As String
 

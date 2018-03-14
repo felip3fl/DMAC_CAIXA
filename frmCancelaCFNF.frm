@@ -5,19 +5,21 @@ Begin VB.Form frmCancelaCFNF
    BorderStyle     =   0  'None
    Caption         =   "Cancela CF/NF"
    ClientHeight    =   7455
-   ClientLeft      =   2910
-   ClientTop       =   1875
+   ClientLeft      =   2145
+   ClientTop       =   1950
    ClientWidth     =   15165
    ControlBox      =   0   'False
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   7455
-   ScaleWidth      =   15165
+   ScaleHeight     =   10575
+   ScaleWidth      =   20490
    ShowInTaskbar   =   0   'False
    Begin VB.Frame frameCancelamentoTEF 
-      BackColor       =   &H80000012&
+      Appearance      =   0  'Flat
+      BackColor       =   &H00000000&
+      ForeColor       =   &H80000008&
       Height          =   5370
       Left            =   5295
       TabIndex        =   12
@@ -68,7 +70,7 @@ Begin VB.Form frmCancelaCFNF
          GridLinesFixed  =   2
          GridLineWidth   =   1
          Rows            =   50
-         Cols            =   4
+         Cols            =   8
          FixedRows       =   1
          FixedCols       =   0
          RowHeightMin    =   0
@@ -188,7 +190,7 @@ Begin VB.Form frmCancelaCFNF
    Begin VB.Frame Frame1 
       BackColor       =   &H80000012&
       Height          =   2430
-      Left            =   75
+      Left            =   150
       TabIndex        =   0
       Top             =   30
       Width           =   4890
@@ -363,6 +365,44 @@ Begin VB.Form frmCancelaCFNF
          Width           =   555
       End
    End
+   Begin Balcao2010.chameleonButton cmdCancelarTEFnaoFinalizado 
+      Height          =   555
+      Left            =   6090
+      TabIndex        =   17
+      Top             =   5595
+      Width           =   4335
+      _ExtentX        =   7646
+      _ExtentY        =   979
+      BTYPE           =   14
+      TX              =   "Cancelar TEF(s) não finalizado"
+      ENAB            =   -1  'True
+      BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+         Name            =   "Arial"
+         Size            =   12
+         Charset         =   0
+         Weight          =   700
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      COLTYPE         =   2
+      FOCUSR          =   -1  'True
+      BCOL            =   2500134
+      BCOLO           =   4210752
+      FCOL            =   16777215
+      FCOLO           =   16777215
+      MCOL            =   5263440
+      MPTR            =   1
+      MICON           =   "frmCancelaCFNF.frx":0121
+      UMCOL           =   -1  'True
+      SOFT            =   0   'False
+      PICPOS          =   0
+      NGREY           =   0   'False
+      FX              =   0
+      HAND            =   0   'False
+      CHECK           =   0   'False
+      VALUE           =   0   'False
+   End
 End
 Attribute VB_Name = "frmCancelaCFNF"
 Attribute VB_GlobalNameSpace = False
@@ -465,7 +505,7 @@ Private Sub finalizarCancelamento()
         Sql = "SELECT TOP 1 TIPONOTA,NumeroPed, SERIE, NF, TOTALNOTA, DATAEMI, rtrim(CHAVENFE) as CHAVENFE " _
             & " FROM NFCAPA WHERE " _
             & " SERIE = '" & txtSerie.text & "' AND " _
-            & " NF = " & txtNotaFiscal.text & " " & Where
+            & " NF = " & txtNotaFiscal.text & " " & where
          
         ADOCancela.CursorLocation = adUseClient
         ADOCancela.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
@@ -513,8 +553,24 @@ Private Sub cmdRetorna_Click()
 Unload Me
 End Sub
 
+Private Sub cmdCancelarTEFnaoFinalizado_Click()
+    cancelarTEF
+End Sub
+
 Private Sub Form_Activate()
   txtNotaFiscal.SetFocus
+End Sub
+
+Private Sub cancelarTEFdeOperacaoNaoConcluida()
+    
+    If Not GLB_TefHabilidado Then Exit Sub
+    
+    'Dim ADOCancelaTEF As New ADODB.Recordset
+    
+    carregaNotasComTEFGrid False
+    
+    'grdNumeroTEF.Rows = grdNumeroTEF.FixedRows
+    
 End Sub
 
 Private Sub Form_Load()
@@ -523,6 +579,11 @@ Private Sub Form_Load()
     
     frameCancelamentoTEF.Visible = False
     grdNumeroTEF.Rows = grdNumeroTEF.FixedRows
+    
+    carregaNotasComTEF
+    cancelarTEFdeOperacaoNaoConcluida
+    
+    cmdCancelarTEFnaoFinalizado.Visible = GLB_TEFnaoCancelado
     
 End Sub
 
@@ -573,23 +634,23 @@ Private Function cancelarTEF()
 
     If Not GLB_TefHabilidado Then Exit Function
     
-    Dim I As Byte
+    Dim i As Byte
     Dim codigoOperacaoVenda As String
     Dim codigoOperacaoCancelamento As String
     
-    I = grdNumeroTEF.FixedRows
+    i = grdNumeroTEF.FixedRows
     
-    Do While I <= grdNumeroTEF.Rows - 1
+    Do While i <= grdNumeroTEF.Rows - 1
         
-        codigoOperacao = Mid(grdNumeroTEF.TextMatrix(I, 2), 1, 1)
+        codigoOperacao = Mid(grdNumeroTEF.TextMatrix(i, 2), 1, 1)
         
-        nf.pedido = txtPedido.text
-        nf.numeroTEF = grdNumeroTEF.TextMatrix(I, 0)
-        nf.serie = txtSerie.text
-        nf.dataEmissao = wDataEmissao
-        nf.valor = grdNumeroTEF.TextMatrix(I, 1)
+        nf.pedido = grdNumeroTEF.TextMatrix(i, 6)
+        nf.numeroTEF = grdNumeroTEF.TextMatrix(i, 0)
+        nf.serie = grdNumeroTEF.TextMatrix(i, 5)
+        nf.dataEmissao = grdNumeroTEF.TextMatrix(i, 4)
+        nf.valor = grdNumeroTEF.TextMatrix(i, 1)
         
-        lblModalidade.Caption = "Insira cartão da bandeira " & grdNumeroTEF.TextMatrix(I, 3) & " do valor de " & nf.valor
+        lblModalidade.Caption = "Insira cartão da bandeira " & grdNumeroTEF.TextMatrix(i, 3) & " do valor de " & nf.valor
         lblMensagensTEF.Caption = ""
         
         If codigoOperacao = 2 Then codigoOperacaoCancelamento = 211
@@ -598,20 +659,25 @@ Private Function cancelarTEF()
         If EfetuaOperacaoTEF(codigoOperacaoCancelamento, nf, lblModalidade, lblMensagensTEF) Then
             
             ImprimeComprovanteTEF nf.comprovantePagamento
-            cancelaMovimentoCaixaEspecifico grdNumeroTEF.TextMatrix(I, 0), nf.pedido
+            cancelaMovimentoCaixaEspecifico grdNumeroTEF.TextMatrix(i, 0), nf.pedido
         End If
             
         'carregaNotasComTEFGrid
         
-        I = I + 1
+        i = i + 1
         
     Loop
     
-    carregaNotasComTEFGrid
+    carregaNotasComTEFGrid Not (GLB_TEFnaoCancelado)
+    
+    
     
     If grdNumeroTEF.Rows > grdNumeroTEF.FixedRows Then
         MsgBox "Há TEF(s) não cencelado(s) que impedem o cancelamento da Nota Fiscal", vbExclamation, "TEF"
         cancelarTEF = False
+    Else
+        GLB_TEFnaoCancelado = False
+        cmdCancelarTEFnaoFinalizado.Visible = GLB_TEFnaoCancelado
     End If
     
 End Function
@@ -623,7 +689,6 @@ Private Sub cancelaMovimentoCaixaEspecifico(numeroTEF As String, numeroPedido As
     Sql = "update movimentocaixa " & vbNewLine & _
           "set mc_tiponota = 'C'" & vbNewLine & _
           "where mc_pedido = '" & numeroPedido & "' " & vbNewLine & _
-          "and mc_tiponota IN ('V') " & vbNewLine & _
           "and mc_sequenciaTEF = '" & numeroTEF & "'"
 
     rdoCNLoja.Execute Sql
@@ -715,7 +780,8 @@ Private Sub txtSerie_LostFocus()
         wTipoNota = ADOCancela("TipoNota")
         wDataEmissao = ADOCancela("dataemi")
         
-        carregaNotasComTEF (pedido)
+        carregaNotasComTEF
+        carregaNotasComTEFGrid True
         
     Else
         MsgBox "NF não encontrado ou já cancelado", vbInformation, "Aviso"
@@ -729,7 +795,7 @@ Private Sub txtSerie_LostFocus()
 
 End Sub
 
-Private Sub carregaNotasComTEF(numeroPedido As String)
+Private Sub carregaNotasComTEF()
 
     If Not GLB_TefHabilidado Then Exit Sub
 
@@ -737,12 +803,14 @@ Private Sub carregaNotasComTEF(numeroPedido As String)
     lblMensagensTEF.Caption = "As mensagens do TEF serão exibida aqui"
     lblModalidade.Caption = ""
     
-    carregaNotasComTEFGrid
+    
 
 End Sub
 
-Private Sub carregaNotasComTEFGrid()
+Private Sub carregaNotasComTEFGrid(carregaNotasFinalizadas As Boolean)
     Dim Sql As String
+    Dim where As String
+    Dim orderby As String
     Dim RsDados As New ADODB.Recordset
     Dim descricaoModalidade As String
     Dim tipoModalidade As String
@@ -750,15 +818,31 @@ Private Sub carregaNotasComTEFGrid()
     grdNumeroTEF.Rows = grdNumeroTEF.FixedRows
     
     Sql = "select MC_SequenciaTEF as TEF, MC_VALOR as valor, " & vbNewLine & _
-          "MO_Descricao as descricaoModalidade, MC_Grupo as grupo " & vbNewLine & _
+          "MO_Descricao as descricaoModalidade, MC_Grupo as grupo, " & vbNewLine & _
+          "Mc_PEDIDO as PEDIDO, MC_DOCUMENTO as Documento, " & vbNewLine & _
+          "Mc_DATA as data, MC_SERIE as SERIE " & vbNewLine & _
           "from MovimentoCaixa " & vbNewLine & _
           "FULL OUTER JOIN modalidade " & vbNewLine & _
-          "on MC_Grupo = MO_Grupo " & vbNewLine & _
-          "where mc_pedido = '" & txtPedido.text & "' " & vbNewLine & _
-          "and mc_tipoNOTA IN ('V') " & vbNewLine & _
-          "and MC_Sequenciatef > 0 " & vbNewLine & _
-          "and MC_Grupo < '20000'" & vbNewLine & _
-          "order by mc_sequenciaTEF"
+          "on MC_Grupo = MO_Grupo " & vbNewLine
+          
+    
+    If carregaNotasFinalizadas Then
+    
+        where = "where mc_pedido = '" & txtPedido.text & "' " & vbNewLine & _
+              "and mc_tipoNOTA IN ('V') " & vbNewLine & _
+              "and MC_Sequenciatef > 0 " & vbNewLine & _
+              "and MC_Grupo < '20000'" & vbNewLine
+
+    Else
+    
+        where = "where mc_tipoNOTA IN ('PA') " & vbNewLine & _
+              "and MC_Sequenciatef > 0 "
+    
+    End If
+
+    orderby = "order by mc_sequenciaTEF" & vbNewLine
+
+    Sql = Sql & where & orderby
 
     RsDados.CursorLocation = adUseClient
     RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
@@ -780,7 +864,11 @@ Private Sub carregaNotasComTEFGrid()
             grdNumeroTEF.AddItem RsDados("TEF") & vbTab & _
                                  Format(RsDados("valor"), "###,###,##0.00") & vbTab & _
                                  tipoModalidade & vbTab & _
-                                 descricaoModalidade
+                                 descricaoModalidade & vbTab & _
+                                 RsDados("data") & vbTab & _
+                                 RsDados("serie") & vbTab & _
+                                 RsDados("pedido") & vbTab & _
+                                 RsDados("documento")
             RsDados.MoveNext
             
         Loop

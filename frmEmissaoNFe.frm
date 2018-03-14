@@ -5,8 +5,8 @@ Begin VB.Form frmEmissaoNFe
    BorderStyle     =   0  'None
    Caption         =   "Emissão NFe"
    ClientHeight    =   9240
-   ClientLeft      =   660
-   ClientTop       =   990
+   ClientLeft      =   1380
+   ClientTop       =   915
    ClientWidth     =   19035
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True

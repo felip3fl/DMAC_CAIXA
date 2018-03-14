@@ -361,6 +361,7 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                         
                 Case 121, 122 'Buffer contém a primeira via do comprovante de pagamento
                         adicionarFilaComprovanteTEF Buffer
+                        nf.comprovantePagamento = Buffer
                 Case 132
                         bandeiraCartao.Caption = Mid(Buffer, 1, 5)
                         bandeiraCartao.Caption = obterTipoPagamentoCreditoTEF(bandeiraCartao.Caption)

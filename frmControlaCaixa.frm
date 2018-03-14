@@ -3,15 +3,15 @@ Begin VB.Form frmControlaCaixa
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    ClientHeight    =   10440
-   ClientLeft      =   3570
-   ClientTop       =   600
-   ClientWidth     =   15630
+   ClientLeft      =   1785
+   ClientTop       =   795
+   ClientWidth     =   15375
    Icon            =   "frmControlaCaixa.frx":0000
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
    Picture         =   "frmControlaCaixa.frx":23FA
    ScaleHeight     =   10440
-   ScaleWidth      =   15630
+   ScaleWidth      =   15375
    ShowInTaskbar   =   0   'False
    WindowState     =   2  'Maximized
    Begin VB.Frame frmTrans 
@@ -285,11 +285,11 @@ Begin VB.Form frmControlaCaixa
    End
    Begin Balcao2010.chameleonButton cmdNroCaixa 
       Height          =   450
-      Left            =   1785
+      Left            =   1650
       TabIndex        =   12
       Top             =   2085
-      Width           =   2400
-      _ExtentX        =   4233
+      Width           =   2925
+      _ExtentX        =   5159
       _ExtentY        =   794
       BTYPE           =   11
       TX              =   "NroCaixa"
@@ -323,7 +323,7 @@ Begin VB.Form frmControlaCaixa
    End
    Begin Balcao2010.chameleonButton cmdOperador 
       Height          =   450
-      Left            =   4665
+      Left            =   4995
       TabIndex        =   11
       Top             =   2085
       Width           =   5355
@@ -1299,6 +1299,27 @@ Private Sub Form_Activate()
 
 End Sub
 
+Private Sub carregaQtdeTEFnaoCancelado()
+    
+    Dim Sql As String
+    Dim RsDados As New ADODB.Recordset
+
+    If Not GLB_TefHabilidado Then Exit Sub
+
+    Sql = "SELECT count(*) qtdeTEFnaoCancelado FROM MOVIMENTOCAIXA WHERE MC_Sequenciatef > '0' AND MC_TipoNota = 'PA' "
+    
+    RsDados.CursorLocation = adUseClient
+    RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        
+        If RsDados("qtdeTEFnaoCancelado") > 0 Then
+            GLB_TEFnaoCancelado = True
+            lblMensagensTEF.Caption = "ATENÇÃO!" & vbNewLine & " Há " & RsDados("qtdeTEFnaoCancelado") & " TEF(s) não cancelado registrado no sistema. Cancele antes de realiszar qualquer operação."
+        End If
+        
+    RsDados.Close
+        
+End Sub
+
 Private Sub abilitaFuncoesCF()
     
     VerificaSeEmiteCupom
@@ -1370,6 +1391,8 @@ Private Sub Form_Load()
     abilitaFuncoesCF
     
     Call conectarTEF(lblMensagensTEF)
+    
+    carregaQtdeTEFnaoCancelado
     
     'txtPedido.SetFocus
     
