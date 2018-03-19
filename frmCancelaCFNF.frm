@@ -5,16 +5,16 @@ Begin VB.Form frmCancelaCFNF
    BorderStyle     =   0  'None
    Caption         =   "Cancela CF/NF"
    ClientHeight    =   7455
-   ClientLeft      =   2145
-   ClientTop       =   1950
+   ClientLeft      =   1725
+   ClientTop       =   1965
    ClientWidth     =   15165
    ControlBox      =   0   'False
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   10575
-   ScaleWidth      =   20490
+   ScaleHeight     =   7455
+   ScaleWidth      =   15165
    ShowInTaskbar   =   0   'False
    Begin VB.Frame frameCancelamentoTEF 
       Appearance      =   0  'Flat

@@ -1538,7 +1538,7 @@ Dim ValorPago() As String
 Dim hora As Date
 Dim pagtoCartao As Boolean
 Dim acumulado As Double
-Public I As Integer
+Public i As Integer
 Public j As Integer
 Dim iConta As Integer
 Dim curSubTotal As Currency
@@ -2840,7 +2840,7 @@ Private Function ProcuraPedido()
    Screen.MousePointer = 11
    Dim vSQL As String
    Dim Linha As Long
-   Dim I As Integer
+   Dim i As Integer
    Dim wTootip As Double
    Dim Tootip1 As Double
       
@@ -3275,6 +3275,9 @@ End If
 frmFormaPagamento.left = 8880
 frmFormaPagamento.Width = 5550
 'frmFormaPagamento.Height = 7110
+
+    limpaMovimentoAnteriores
+
 End Sub
 
 Private Sub habilitaPagamentoTEF()
@@ -3296,13 +3299,16 @@ Private Sub Form_Load()
 
     habilitaPagamentoTEF
     
+    
+    
 End Sub
 
 Private Sub limpaMovimentoAnteriores()
     'Limpa registros
     Sql = "delete movimentocaixa where  mc_serie = '" & txtSerie.text & "' and " _
     & "mc_protocolo = " & GLB_CTR_Protocolo & " and " _
-    & "mc_nrocaixa = '" & GLB_Caixa & "' and mc_pedido = '" & txtPedido.text & "'"
+    & "mc_nrocaixa = '" & GLB_Caixa & "' and mc_pedido = '" & txtPedido.text & "'" _
+    & "and mc_sequenciaTEF = 0"
     
     rdoCNLoja.Execute Sql
     
