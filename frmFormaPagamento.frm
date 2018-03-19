@@ -4,8 +4,8 @@ Begin VB.Form frmFormaPagamento
    BorderStyle     =   0  'None
    Caption         =   "Forma de Pagamento"
    ClientHeight    =   8640
-   ClientLeft      =   2760
-   ClientTop       =   1455
+   ClientLeft      =   3210
+   ClientTop       =   1710
    ClientWidth     =   13425
    BeginProperty Font 
       Name            =   "Arial Black"
@@ -1683,7 +1683,9 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
                 Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
             End If
             Call GravaRegistro
-        
+            
+            ValCheque = 0
+            txtNumeroTEF.text = ""
          
       End If
 
@@ -1706,13 +1708,15 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
             End If
     
             Call GravaRegistro
-
+            
+            ValTEFVisaElectron = 0
+            txtNumeroTEF.text = ""
           
       End If
 
       If lblModalidade.Caption = "REDESHOP" Then
-          TotPago = TotPago + modalidade
           ValTEFRedeShop = ValTEFRedeShop + modalidade
+          TotPago = TotPago + modalidade
           bandeiraTEFRedeShop = Agencia
           
 
@@ -1728,9 +1732,11 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
                 Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
             End If
     
-    
             Call GravaRegistro
 
+            ValTEFRedeShop = 0
+            txtNumeroTEF.text = ""
+            
           
       End If
 
@@ -1752,6 +1758,8 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
             
             Call GravaRegistro
     
+            ValTEFHiperCard = 0
+            txtNumeroTEF.text = ""
           
       End If
 
@@ -1773,6 +1781,8 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
             
             Call GravaRegistro
         
+            ValNotaCredito = 0
+            txtNumeroTEF.text = ""
           
       End If
 
@@ -1798,7 +1808,9 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
                 End If
     
             Call GravaRegistro
-
+            
+            ValCartaoVisa = 0
+            txtNumeroTEF.text = ""
           
       End If
 
@@ -1843,6 +1855,8 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
 
             Call GravaRegistro
         
+            ValCartaoAmex = 0
+            txtNumeroTEF.text = ""
           
       End If
 
@@ -1864,7 +1878,9 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
             End If
         
             Call GravaRegistro
-        
+            
+            ValCartaoBNDES = 0
+            txtNumeroTEF.text = ""
           
       End If
 
