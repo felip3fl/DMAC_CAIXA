@@ -829,4 +829,62 @@ Private Sub RotinadeAberturadoCupom()
 
 End Sub
 
+Private Sub ImprimeReforcoSangria()
+  Dim wSangrialinha1 As String
+  Dim wSangrialinha2 As String
+    
+    Screen.MousePointer = 11
+    
+    impressoraRelatorio "[INICIO]"
+    
+    impressoraRelatorio "________________________________________________"
+    impressoraRelatorio "         RETIRADA / REFORÇO DE CAIXA            "
+    impressoraRelatorio "                                                "
+    impressoraRelatorio left("Loja         " & GLB_Loja & Space(48), 48)
+    impressoraRelatorio left("Caixa Nro.   " & GLB_Caixa & Space(48), 48)
+    impressoraRelatorio left("Operador     " & GLB_USU_Nome & Space(48), 48)
+    impressoraRelatorio left("Protocolo    " & GLB_CTR_Protocolo & Space(48), 48)
+    impressoraRelatorio left("Data/Hora    " & Format(Date, "DD/MM/YYYY") & " - " & Format(Time, "HH:MM") & Space(48), 48)
+    impressoraRelatorio "                                                "
+    impressoraRelatorio "________________________________________________"
+ 
+   
+   If txtReforco.text > 0 Then
+     
+        impressoraRelatorio "                                                "
+        impressoraRelatorio "::::::::::::::  REFORÇO DE CAIXA  ::::::::::::::"
+        impressoraRelatorio "                                                "
+        impressoraRelatorio "                                                "
+        impressoraRelatorio left(Space(10) & "R$ " & Format(txtReforco.text, "###,###,##0.00") & Space(38), 48)
+        impressoraRelatorio "                                                "
 
+        imprimeCampoGerenteOperador
+ 
+    ElseIf txtRetirada.text > 0 Then
+    
+        impressoraRelatorio "                                                "
+        impressoraRelatorio "::::::::::::  " & UCase(Mid(cmbGrupoAuxiliar.text, 7, 20)) & "  ::::::::::::"
+        impressoraRelatorio "                                                "
+        impressoraRelatorio "                                                "
+        impressoraRelatorio left(Space(10) & "R$ " & Format(txtRetirada.text, "###,###,##0.00") & Space(38), 48)
+        impressoraRelatorio "                                                "
+
+        imprimeCampoGerenteOperador
+        
+    End If
+   
+   
+   
+   
+   
+   
+   'TxtFormatado = “Teste de formatação relatório gerencial !!!” + Chr(10) + cItalico + cNegrito + cCondensado + cSublinhado + cExpandido
+   'Abre relatório gerencial
+        'Retorno = Bematech_FI_AbreRelatorioGerencialMFD("01")
+   'impressão texto formatado
+
+   'Encerra relatório gerencial
+    impressoraRelatorio "[FIM]"
+ 
+    Screen.MousePointer = 0
+End Sub
