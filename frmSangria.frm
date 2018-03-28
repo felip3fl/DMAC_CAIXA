@@ -14,8 +14,8 @@ Begin VB.Form frmSangria
    LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   10575
-   ScaleWidth      =   20490
+   ScaleHeight     =   9090
+   ScaleWidth      =   18900
    ShowInTaskbar   =   0   'False
    Begin VB.Frame frameOperacoes 
       BackColor       =   &H00000000&
@@ -204,7 +204,7 @@ Begin VB.Form frmSangria
       BackColor       =   &H00000000&
       BorderStyle     =   0  'None
       ForeColor       =   &H80000008&
-      Height          =   1215
+      Height          =   1155
       Left            =   15195
       TabIndex        =   32
       Top             =   585
@@ -746,7 +746,7 @@ Begin VB.Form frmSangria
       BackColor       =   &H00000000&
       BorderStyle     =   0  'None
       ForeColor       =   &H80000008&
-      Height          =   1320
+      Height          =   1140
       Left            =   5610
       TabIndex        =   14
       Top             =   825
@@ -1131,7 +1131,7 @@ Begin VB.Form frmSangria
          Strikethrough   =   0   'False
       EndProperty
       ForeColor       =   &H00FFFFFF&
-      Height          =   255
+      Height          =   225
       Left            =   10635
       TabIndex        =   13
       Top             =   585
@@ -1441,10 +1441,10 @@ Private Sub Form_Load()
   Call AjustaTela(frmSangria)
   
   grdMovimentoCaixa.Row = 14
-  For I = 0 To grdMovimentoCaixa.Cols - 1
-    grdMovimentoCaixa.Col = I
+  For i = 0 To grdMovimentoCaixa.Cols - 1
+    grdMovimentoCaixa.Col = i
     grdMovimentoCaixa.CellBackColor = &HC0C0FF
-  Next I
+  Next i
 
   Call CarregaMovimentocaixa
   Call BuscaTransNumerico
@@ -2397,10 +2397,10 @@ Private Sub carregaGridAuditor()
                                             
             If msgStatus <> "OK" Then
                 grdAuditorMovimento.Row = grdAuditorMovimento.Rows - 1
-                For I = 0 To grdAuditorMovimento.Cols - 1
-                    grdAuditorMovimento.Col = I
+                For i = 0 To grdAuditorMovimento.Cols - 1
+                    grdAuditorMovimento.Col = i
                     grdAuditorMovimento.CellForeColor = vbRed
-                Next I
+                Next i
             End If
                                             
             rdoDataFechamentoRetaguarda2.MoveNext

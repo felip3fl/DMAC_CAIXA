@@ -1615,12 +1615,17 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
 
       modalidade = Format(txtValorModalidade.text, "0.00")
 
+         If lblModalidade.Caption <> "DINHEIRO" Then
          
-         If ((modalidade + TotPago) - valValoraPagar) > ValDinheiro _
-          And lblModalidade.Caption <> "DINHEIRO" And valValoraPagar < (modalidade + TotPago) Then
-            MsgBox "Não é permitido troco maior que pagamento em dinheiro"
-            Exit Sub
-          End If
+            'If ((modalidade + TotPago) - valValoraPagar) > ValDinheiro _
+            'And valValoraPagar < (modalidade + TotPago) Then
+            If ((modalidade + TotPago) - valValoraPagar) > 0 Or modalidade <= 0 Then
+                MsgBox "Não é permitido troco maior que pagamento em dinheiro"
+                Exit Sub
+            End If
+         
+         End If
+         
             
       If lblModalidade.Caption = "DINHEIRO" Then
            TotPago = TotPago + modalidade
@@ -3063,6 +3068,35 @@ Else
 End If
 End Sub
 
+Function carregarFormaPagamentoAnteriorTEF() As Double
+
+    Dim Sql As String
+    Dim rsConsulta As New ADODB.Recordset
+    
+    Sql = "select sum(mc_valor) as totalvalor " & vbNewLine & _
+    "from movimentocaixa " & vbNewLine & _
+    "where  mc_serie = '" & txtSerie.text & "' and " & vbNewLine & _
+    "mc_protocolo = " & GLB_CTR_Protocolo & " and " & vbNewLine & _
+    "mc_nrocaixa = '" & GLB_Caixa & "' " & vbNewLine & _
+    "and mc_pedido = '" & txtPedido.text & "'" & vbNewLine & _
+    "and mc_sequenciaTEF <> 0"
+    
+    rsConsulta.CursorLocation = adUseClient
+    rsConsulta.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    
+    If Not rsConsulta.EOF Then
+        
+        If Not IsNull(rsConsulta("totalvalor")) Then
+            carregarFormaPagamentoAnteriorTEF = rsConsulta("totalvalor")
+        End If
+        
+        rsConsulta.MoveNext
+        
+    End If
+    
+    rsConsulta.Close
+   
+End Function
 
 Private Sub FormaPagamento()
 
@@ -3091,9 +3125,11 @@ Private Sub FormaPagamento()
 
   txtValorModalidade.Enabled = False
   chbValorPago.Caption = Format(0, "0.00")
-  chbValorFalta.Caption = Format(wValoraPagarNORMAL + wtotalGarantia, "##,###0.00")
+  chbValorPago.Caption = Format(carregarFormaPagamentoAnteriorTEF, "##,###0.00")
+  chbValorFalta.Caption = Format(wValoraPagarNORMAL + wtotalGarantia - chbValorPago.Caption, "##,###0.00")
   chbValoraPagar.Caption = Format(wValoraPagarNORMAL + wtotalGarantia, "##,###0.00")
   valValoraPagar = wValoraPagarNORMAL + wtotalGarantia
+  TotPago = chbValorPago.Caption
 
 If frmFormaPagamento.txtSerie.text = "00" Then
      txtPedido.text = pedido
@@ -3863,6 +3899,7 @@ End Sub
 
 
 Public Sub ZeraVariaveis()
+
 EntFaturada = 0
 EntFinanciada = 0
 ValorPagamentoCartao = 0
@@ -3901,6 +3938,7 @@ frmFormaPagamento.txtValorModalidade.text = ""
  wTEFRedeShop = ""
  wTEFHiperCard = ""
  WCodigoModalidadeVISA = ""
+ 
 End Sub
 
 
