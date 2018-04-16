@@ -4,8 +4,8 @@ Begin VB.Form frmFormaPagamento
    BorderStyle     =   0  'None
    Caption         =   "Forma de Pagamento"
    ClientHeight    =   8640
-   ClientLeft      =   3210
-   ClientTop       =   1710
+   ClientLeft      =   840
+   ClientTop       =   2010
    ClientWidth     =   13425
    BeginProperty Font 
       Name            =   "Arial Black"
@@ -1626,12 +1626,7 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
          
          End If
          
-            
-      If lblModalidade.Caption = "DINHEIRO" Then
-           TotPago = TotPago + modalidade
-           ValDinheiro = ValDinheiro + modalidade
-      End If
-      
+
       
       nf.pedido = txtPedido.text
       nf.serie = txtSerie.text
@@ -1673,6 +1668,13 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
       End If
       
       'TEF ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+            
+      If lblModalidade.Caption = "DINHEIRO" Then
+           TotPago = TotPago + modalidade
+           ValDinheiro = ValDinheiro + modalidade
+      End If
+      
 
       If lblModalidade.Caption = "CHEQUE" Then
          ValCheque = ValCheque + modalidade
@@ -2214,7 +2216,9 @@ Private Sub carregaCodigoModalidade(modalidade As String)
         lblModalidade.Caption = "VISA ELEC."
         CodigoModalidade = "0401"
     Case Else
-        MsgBox "Modalidade desconhecida inserida", vbCritical, "Erro ao carregar código modalidade"
+        MsgBox "A modalidade não foi reconhecida internamente no sistema. " _
+             & "Essa modalidade será gravada como: DINHEIRO. " _
+             & "Você poderá alterar modalidade futuramente.", vbInformation, "Modalidade desconhecida"
         lblModalidade.Caption = "DINHEIRO"
         CodigoModalidade = "0101"
         wCodigoModalidadeDINHEIRO = "0101"

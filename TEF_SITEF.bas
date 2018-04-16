@@ -310,11 +310,11 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                                                 
         valores = ""
                                                 
-        'logOperacoesTEF = logOperacoesTEF & "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
+        logOperacoesTEF = logOperacoesTEF & "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
                               "[Resu:" & Space(4 - Len(Trim(Resultado))) & Resultado & "]" & _
                               "[Tipo:" & Space(4 - Len(Trim(TipoCampo))) & TipoCampo & "] " & left(Buffer, 200) & vbNewLine
                               
-        'Debug.Print "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
+        Debug.Print "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
                     "[Resu:" & Space(4 - Len(Trim(Resultado))) & Resultado & "]" & _
                     "[Tipo:" & Space(4 - Len(Trim(TipoCampo))) & TipoCampo & "] " & left(Buffer, 200) & vbNewLine
         
@@ -414,11 +414,11 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
             'End If
             
             If valores <> "" Then
-                'logOperacoesTEF = logOperacoesTEF & "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
+                logOperacoesTEF = logOperacoesTEF & "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
                               "[Resu:" & Space(4 - Len(Trim(Resultado))) & Resultado & "]" & _
                               "[Tipo:" & Space(4 - Len(Trim(TipoCampo))) & TipoCampo & "] VALORES: " & left(valores, 200) & vbNewLine
                 
-                'Debug.Print "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
+                Debug.Print "[Coma:" & Space(4 - Len(Trim(ProximoComando))) & ProximoComando & "]" & _
                             "[Resu:" & Space(4 - Len(Trim(Resultado))) & Resultado & "]" & _
                             "[Tipo:" & Space(4 - Len(Trim(TipoCampo))) & TipoCampo & "] VALORES: " & left(valores, 200) & vbNewLine
                 
