@@ -186,3 +186,16 @@ Set fso = CreateObject("Scripting.FileSystemObject")
     End If
 End Function
 
+Public Function ImprimeTef_1() As String
+Dim fso As New FileSystemObject
+Dim mensagemArquivoTXT As TextStream
+VereficaArquivos ("C:\Sistemas\DMAC Caixa\Tef_Cupom")
+   Set mensagemArquivoTXT = fso.OpenTextFile _
+                    ("C:\Sistemas\DMAC Caixa\Tef_Cupom")
+                    tef_cupom = mensagemArquivoTXT.ReadAll
+                    mensagemArquivoTXT.Close
+        ImprimeTef_1 = tef_cupom
+
+End Function
+
+

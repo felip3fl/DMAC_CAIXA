@@ -248,7 +248,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Dim sql As String
+Dim Sql As String
 Dim wUltimoCupom As Double
 Dim WGrupoAtualzado As Double
 Dim wNumeroPedido As Double
@@ -349,11 +349,11 @@ Private Sub finalizarCancelamento()
         wWhere = " "
   '      End If
 
-        sql = "SELECT CTR_DATAINICIAL, CTR_SITUACAOCAIXA FROM  CONTROLECAIXA " _
+        Sql = "SELECT CTR_DATAINICIAL, CTR_SITUACAOCAIXA FROM  CONTROLECAIXA " _
             & " WHERE CTR_Supervisor <> 99 and CTR_SITUACAOCAIXA = 'A'"
      
         ADOSituacao.CursorLocation = adUseClient
-        ADOSituacao.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        ADOSituacao.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                                           
         If Not ADOSituacao.EOF Then
            wData = ADOSituacao("CTR_DATAINICIAL")
@@ -366,13 +366,13 @@ Private Sub finalizarCancelamento()
           
         ADOSituacao.Close
      
-        sql = "SELECT TOP 1 TIPONOTA,NumeroPed, SERIE, NF, TOTALNOTA, DATAEMI, rtrim(CHAVENFE) as CHAVENFE " _
+        Sql = "SELECT TOP 1 TIPONOTA,NumeroPed, SERIE, NF, TOTALNOTA, DATAEMI, rtrim(CHAVENFE) as CHAVENFE " _
             & " FROM NFCAPA WHERE " _
             & " SERIE = '" & txtSerie.text & "' AND " _
             & " NF = " & txtNotaFiscal.text & " " & Where
          
         ADOCancela.CursorLocation = adUseClient
-        ADOCancela.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        ADOCancela.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
  
 
         If Not ADOCancela.EOF Then
@@ -403,8 +403,8 @@ Private Sub finalizarCancelamento()
                     Exit Sub
                 End If
             End If
-                sql = "exec SP_Cancela_NotaFiscal " & txtNotaFiscal.text & ",'" & txtSerie.text & "'"
-                rdoCNLoja.Execute (sql)
+                Sql = "exec SP_Cancela_NotaFiscal " & txtNotaFiscal.text & ",'" & txtSerie.text & "'"
+                rdoCNLoja.Execute (Sql)
             Else
                 MsgBox "Cancelamento não realizado", vbCritical, "DMAC Caixa"
             End If
@@ -447,6 +447,10 @@ End Sub
 
 Private Sub Form_Unload(Cancel As Integer)
     wPedido = 0
+End Sub
+
+Private Sub Frame1_DragDrop(Source As Control, X As Single, Y As Single)
+
 End Sub
 
 Private Sub txtNotaFiscal_KeyPress(KeyAscii As Integer)
@@ -542,11 +546,11 @@ End If
 
 txtSerie.text = UCase(txtSerie.text)
     
-sql = "SELECT TOTALNOTA, NF, SERIE,TipoNota,numeroped FROM NFCAPA WHERE NF = " & txtNotaFiscal.text & " " _
+Sql = "SELECT TOTALNOTA, NF, SERIE,TipoNota,numeroped FROM NFCAPA WHERE NF = " & txtNotaFiscal.text & " " _
     & "AND SERIE = '" & UCase(Trim(txtSerie.text)) & "' and TIPONOTA <> 'C' and Dataemi = '" & Format(Date, "yyyy/mm/dd") & "'"
     
  ADOCancela.CursorLocation = adUseClient
- ADOCancela.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+ ADOCancela.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
 If Not ADOCancela.EOF Then
        txtValorNF.text = Format(ADOCancela("TOTALNOTA"), "0.00")
@@ -584,11 +588,11 @@ End Sub
 
 
 Private Sub Cancela_Tef(ByVal sequecial As Integer)
-sql = "Select * from  MovimentoCaixa where mc_data='" & Format(Date, "yyyy/mm/dd") & "' and mc_pedido=" & txtPedido.text & " and  mc_documento=" & txtNotaFiscal.text & "" _
+Sql = "Select * from  MovimentoCaixa where mc_data='" & Format(Date, "yyyy/mm/dd") & "' and mc_pedido=" & txtPedido.text & " and  mc_documento=" & txtNotaFiscal.text & "" _
 & " and MC_TipoNota='V' and MC_SequenciaTEF > " & Trim(sequecial) & " and MC_Grupo in (10203,10205,10206,10301,10302,10303) order by MC_SequenciaTEF "
 
  ADOTef_C.CursorLocation = adUseClient
- ADOTef_C.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+ ADOTef_C.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
  If Not ADOTef_C.EOF Then
  
    qtdCartao = 1
@@ -813,20 +817,20 @@ Private Sub Conclui_Tef()
         tef_dados = ""
         If ChkTef.Value = 0 Then
         
-        sql = "update movimentocaixa set mc_tiponota='C',mc_sequenciatef1 = " & Trim(tef_nsu_ctf) & " where mc_sequenciatef=" & Trim(tef_num_doc) & " and mc_serie='" & Trim(txtSerie.text) & "' and mc_documento=" & Trim(txtNotaFiscal.text)
-        rdoCNLoja.Execute (sql)
+        Sql = "update movimentocaixa set mc_tiponota='C',mc_sequenciatef1 = " & Trim(tef_nsu_ctf) & " where mc_sequenciatef=" & Trim(tef_num_doc) & " and mc_serie='" & Trim(txtSerie.text) & "' and mc_documento=" & Trim(txtNotaFiscal.text)
+        rdoCNLoja.Execute (Sql)
         
-        Call Cancela_Tef(tef_nsu_ctf)
+        Call Cancela_Tef(tef_num_doc)
         If wskTef.State <> 0 Then
            Exit Sub
         End If
-        sql = ""
-        sql = "exec SP_Cancela_NotaFiscal " & txtNotaFiscal.text & ",'" & txtSerie.text & "'"
-        rdoCNLoja.Execute (sql)
+        Sql = ""
+        Sql = "exec SP_Cancela_NotaFiscal " & txtNotaFiscal.text & ",'" & txtSerie.text & "'"
+        rdoCNLoja.Execute (Sql)
         
         ElseIf ChkTef.Value = 1 Then
-             sql = "update movimentocaixa set mc_sequenciatef1 = " & Trim(tef_nsu_ctf) & " where mc_sequenciatef=" & Trim(tef_num_doc) & " and mc_serie='" & Trim(txtSerie.text) & "' and mc_documento=" & Trim(txtNotaFiscal.text)
-                rdoCNLoja.Execute (sql)
+             Sql = "update movimentocaixa set mc_sequenciatef1 = " & Trim(tef_nsu_ctf) & " where mc_sequenciatef=" & Trim(tef_num_doc) & " and mc_serie='" & Trim(txtSerie.text) & "' and mc_documento=" & Trim(txtNotaFiscal.text)
+                rdoCNLoja.Execute (Sql)
                  Call Cancela_Tef(tef_nsu_ctf)
                 If wskTef.State <> 0 Then
                    Exit Sub
