@@ -200,6 +200,7 @@ Private Sub validaValores()
         txtEntrada.SetFocus
     Else
         retornoEntradaDeValores = (txtEntrada.text)
+        Me.Visible = False
         Unload Me
     End If
     

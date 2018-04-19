@@ -367,13 +367,13 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                         bandeiraCartao.Caption = obterTipoPagamentoCreditoTEF(bandeiraCartao.Caption)
                 Case 515
                         valores = nf.dataEmissao
-                        If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Data da transação a ser cancelada (DDMMAAAA) ou a ser re-impressa", TamanhoMinimo, tamanhoMaximo)
+                        If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Data da transacao (DDMMAAAA)", TamanhoMinimo, tamanhoMaximo)
                 Case 516
                         valores = nf.numeroTEF 'numero tef
-                        If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Número do documento a ser cancelado ou a ser re-impresso", TamanhoMinimo, tamanhoMaximo)
+                        If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo)
                 Case 146
                         valores = nf.valor
-                        If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "A rotina está sendo chamada para ler o Valor a ser cancelado.", TamanhoMinimo, tamanhoMaximo)
+                        If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Forneca o valor da transacao a ser cancelada", TamanhoMinimo, tamanhoMaximo)
                 Case 512, 513, 514
                         'valores = InputBox(Buffer)
                         valores = entradaDeValores("TipoCampo = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo)
@@ -432,11 +432,13 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
     
     If (retorno = 0) Then
         campoExibirMensagem.Caption = "Operação completada com sucesso"
+        campoExibirMensagem.Refresh
         nf.numeroTEF = lerCamporResultadoTEF(nf.comprovantePagamento, "Host")
         EfetuaOperacaoTEF = True
     Else
         MsgBox "Erro " & "" & retornoFuncoesTEF(Str(retorno)), vbCritical, "Erro TEF"
         campoExibirMensagem.Caption = "Erro " & "" & retornoFuncoesTEF(Str(retorno))
+        campoExibirMensagem.Refresh
     End If
     
     If codigoOperacao <> "113" Then
@@ -461,7 +463,12 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
 End Function
 
 
-Private Sub carregarDadosTEFBancoDeDados(ByRef labelMensagem As Label, ByRef Ip As String, ByRef IdTerminal As String, ByRef IdLoja As String, ByRef HabilitaTEF As Boolean)
+Private Sub carregarDadosTEFBancoDeDados(ByRef labelMensagem As Label, _
+                                         ByRef Ip As String, _
+                                         ByRef IdTerminal As String, _
+                                         ByRef IdLoja As String, _
+                                         ByRef HabilitaTEF As Boolean, _
+                                         ByRef CNPJDesenvolvedor As String)
 
     Dim RsDados As New ADODB.Recordset
     Dim Sql As String
@@ -473,13 +480,18 @@ Private Sub carregarDadosTEFBancoDeDados(ByRef labelMensagem As Label, ByRef Ip 
           "LT_IPSiTef IPSiTef, " & vbNewLine & _
           "LT_IdLoja IdLoja, " & vbNewLine & _
           "LT_IdTerminal IdTerminal, " & vbNewLine & _
+          "'60872124000199' CNPJDesenvolvedor, " & vbNewLine & _
           "LT_Reservado Reservado" & vbNewLine & _
           "from lojaTEF " & vbNewLine & _
           "where LT_LOJA = '" & wLoja & "'" & vbNewLine & _
           "and LT_NumeroCaixa = '" & GLB_Caixa & "'"
-
+    
+    Screen.MousePointer = 11
+    
     RsDados.CursorLocation = adUseClient
     RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+
+    Screen.MousePointer = 0
     
     If Not RsDados.EOF Then
         If RsDados("Habilitado") = "S" Then GLB_TefHabilidado = True
@@ -487,6 +499,7 @@ Private Sub carregarDadosTEFBancoDeDados(ByRef labelMensagem As Label, ByRef Ip 
         
         IdLoja = RsDados("IdLoja")
         IdTerminal = RsDados("IdTerminal")
+        CNPJDesenvolvedor = RsDados("CNPJDesenvolvedor")
     End If
 
     RsDados.Close
@@ -507,13 +520,14 @@ Public Sub conectarTEF(ByRef labelMensagem As Label)
   Dim Ip As String
   Dim IdTerminal As String
   Dim IdLoja As String
+  Dim CNPJDesenvolvedor As String
   
   On Error GoTo TrataErro
 
   labelMensagem.Caption = ""
   Screen.MousePointer = 11
 
-  carregarDadosTEFBancoDeDados labelMensagem, Ip, IdTerminal, IdLoja, GLB_TefHabilidado
+  carregarDadosTEFBancoDeDados labelMensagem, Ip, IdTerminal, IdLoja, GLB_TefHabilidado, CNPJDesenvolvedor
 
   If Not GLB_TefHabilidado Then
     Exit Sub
@@ -525,12 +539,13 @@ Public Sub conectarTEF(ByRef labelMensagem As Label)
      MsgBox "Atenção: A automação comercial não deve utilizar a identificação de terminal na faixa entre 000900 a 000999 que é reservada para uso pelo SiTef: Função ConfiguraIntSiTefInterativo (EndSiTef, IdLoja, IdTerminal, Reservado);", vbCritical, "Inicialização TEF"
   End If
         
-  retorno = ConfiguraIntSiTefInterativoEx(Ip & Chr(0), IdLoja & Chr(0), IdTerminal & Chr(0), 0, "[ParmsClient=1=60872124000199;2=60872124000199]")
+  retorno = ConfiguraIntSiTefInterativoEx(Ip & Chr(0), IdLoja & Chr(0), IdTerminal & Chr(0), 0, "[ParmsClient=1=" & wCGC & ";2=" & CNPJDesenvolvedor & "]")
 
   If (retorno = 0) Then
     labelMensagem.Caption = "Conexão com o sistema SITEF realizada com sucesso"
   Else
     labelMensagem.Caption = "TEF Erro: Retorno -> " & CStr(retorno)
+    MsgBox "Erro no envio do CNPJ (TEF). Verifique se o CNPJ " & wCGC & " está valido.", vbCritical, "Validação CNPJ TEF (" & CStr(retorno) & ")"
   End If
   
   exibirMensagemPadraoTEF

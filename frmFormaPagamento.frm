@@ -4,8 +4,8 @@ Begin VB.Form frmFormaPagamento
    BorderStyle     =   0  'None
    Caption         =   "Forma de Pagamento"
    ClientHeight    =   8640
-   ClientLeft      =   840
-   ClientTop       =   2010
+   ClientLeft      =   3990
+   ClientTop       =   1725
    ClientWidth     =   13425
    BeginProperty Font 
       Name            =   "Arial Black"
@@ -2216,7 +2216,7 @@ Private Sub carregaCodigoModalidade(modalidade As String)
         lblModalidade.Caption = "VISA ELEC."
         CodigoModalidade = "0401"
     Case Else
-        MsgBox "A modalidade não foi reconhecida internamente no sistema. " _
+        'MsgBox "A modalidade não foi reconhecida internamente no sistema. " _
              & "Essa modalidade será gravada como: DINHEIRO. " _
              & "Você poderá alterar modalidade futuramente.", vbInformation, "Modalidade desconhecida"
         lblModalidade.Caption = "DINHEIRO"
