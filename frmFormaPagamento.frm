@@ -4,8 +4,8 @@ Begin VB.Form frmFormaPagamento
    BorderStyle     =   0  'None
    Caption         =   "Forma de Pagamento"
    ClientHeight    =   8640
-   ClientLeft      =   3990
-   ClientTop       =   1725
+   ClientLeft      =   2805
+   ClientTop       =   1755
    ClientWidth     =   13425
    BeginProperty Font 
       Name            =   "Arial Black"
@@ -1653,6 +1653,20 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
           End If
       End If
 
+      If lblModalidade.Caption = "Operação 0" Then
+          If EfetuaOperacaoTEF("0", nf, lblModalidade, lblMensagemTEF) Then
+            txtNumeroTEF.text = nf.numeroTEF
+            carregaCodigoModalidade lblModalidade.Caption
+            
+            ComprovantePagamentoFila = ComprovantePagamentoFila & nf.comprovantePagamento
+            'TotPago = TotPago + Modalidade
+            'ValTEFVisaElectron = ValTEFVisaElectron + Modalidade
+            'bandeiraTEFVisaElectron = Agencia
+          Else
+            lblModalidade.Caption = ""
+          End If
+      End If
+
       If lblModalidade.Caption = "DEBITO" Then
           If EfetuaOperacaoTEF("2", nf, lblModalidade, lblMensagemTEF) Then
             txtNumeroTEF.text = nf.numeroTEF
@@ -3216,10 +3230,19 @@ Private Sub cmdTefDebito_MouseUp(Button As Integer, Shift As Integer, X As Singl
     tempoHabilitaPOS = 0
 End Sub
 
+Private Sub cmdTefOperacao0_Click()
+
+
+  
+  
+End Sub
+
 Private Sub cmdTrocar_Click()
     Agencia = ""
     frameCartoes.Visible = False
 End Sub
+
+
 
 Private Sub Form_Activate()
 
@@ -3347,6 +3370,7 @@ Private Sub habilitaPagamentoTEF()
     framePagamentoTEF.top = chbRede.top + fraPagamento.top + fraNModalidades.top
     framePagamentoTEF.BackColor = vbBlack
     lblMensagemTEF.Caption = ""
+    If GLB_Administrador Then lblMensagemTEF.Caption = "Click aqui para executar função 0"
 
 End Sub
 
@@ -3642,6 +3666,21 @@ End Sub
 
 
 
+Private Sub lblMensagemTEF_Click()
+
+    If GLB_Administrador Then
+      carregaCodigoModalidade "VISA ELEC."
+      lblModalidade.Caption = "Operação 0"
+    
+      'lblParcelas.Visible = True
+      txtValorModalidade.Enabled = True
+      txtValorModalidade.SetFocus
+      'CodigoModalidade = "0302"
+      'wCodigoModalidadeMASTERCARD = "0302"
+      cFormaPGTO = "Cartao"
+  End If
+End Sub
+
 Private Sub timeHabilitaTEF_Timer()
     If tempoHabilitaPOS >= 3 Then
         MsgBox "POS Habilitado com sucesso!" & vbNewLine & _
@@ -3702,6 +3741,7 @@ If KeyAscii = 27 Then
     
 
     Call GuardaValoresParaGravarMovimentoCaixa
+    
     chbDinheiro.SetFocus
     txtValorModalidade.text = ""
     txtValorModalidade.Enabled = False
