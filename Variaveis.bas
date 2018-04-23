@@ -449,6 +449,8 @@ Global ReImpressao_Dev As Boolean
 
 Global retornoEntradaDeValores As String
 
+Global retornaOperacaoTEF As Boolean
+
 'Global GLB_EnderecoPortal As String
 
 

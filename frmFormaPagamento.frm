@@ -20,14 +20,14 @@ Begin VB.Form frmFormaPagamento
    LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   8640
-   ScaleWidth      =   13425
+   ScaleHeight     =   0
+   ScaleWidth      =   0
    ShowInTaskbar   =   0   'False
    Begin VB.TextBox txtNumeroTEF 
       Appearance      =   0  'Flat
       Height          =   405
       Left            =   6045
-      TabIndex        =   60
+      TabIndex        =   57
       Text            =   "0"
       Top             =   330
       Visible         =   0   'False
@@ -36,71 +36,118 @@ Begin VB.Form frmFormaPagamento
    Begin VB.Frame framePagamentoTEF 
       BackColor       =   &H00404040&
       BorderStyle     =   0  'None
-      Height          =   1515
+      Height          =   2145
       Left            =   5550
       TabIndex        =   55
       Top             =   5235
       Visible         =   0   'False
       Width           =   4755
-      Begin VB.CommandButton cmdTefCredito 
-         Appearance      =   0  'Flat
-         BackColor       =   &H00FFC0C0&
-         BeginProperty Font 
-            Name            =   "MS Sans Serif"
-            Size            =   8.25
-            Charset         =   0
-            Weight          =   400
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         Height          =   750
-         Left            =   2370
-         Picture         =   "frmFormaPagamento.frx":0000
-         Style           =   1  'Graphical
-         TabIndex        =   57
-         Top             =   0
-         Width           =   2340
-      End
-      Begin VB.CommandButton cmdTefDebito 
-         Appearance      =   0  'Flat
-         BackColor       =   &H00FFC0C0&
-         BeginProperty Font 
-            Name            =   "MS Sans Serif"
-            Size            =   8.25
-            Charset         =   0
-            Weight          =   400
-            Underline       =   0   'False
-            Italic          =   0   'False
-            Strikethrough   =   0   'False
-         EndProperty
-         Height          =   750
+      Begin VB.Frame framePagamentoTEFInterno 
+         BackColor       =   &H00808080&
+         BorderStyle     =   0  'None
+         Height          =   1515
          Left            =   0
-         Picture         =   "frmFormaPagamento.frx":1F76
-         Style           =   1  'Graphical
-         TabIndex        =   56
+         TabIndex        =   59
          Top             =   0
-         Width           =   2340
+         Width           =   4755
+         Begin VB.CommandButton cmdTefDebito 
+            Appearance      =   0  'Flat
+            BackColor       =   &H00FFC0C0&
+            BeginProperty Font 
+               Name            =   "MS Sans Serif"
+               Size            =   8.25
+               Charset         =   0
+               Weight          =   400
+               Underline       =   0   'False
+               Italic          =   0   'False
+               Strikethrough   =   0   'False
+            EndProperty
+            Height          =   750
+            Left            =   0
+            Picture         =   "frmFormaPagamento.frx":0000
+            Style           =   1  'Graphical
+            TabIndex        =   61
+            Top             =   0
+            Width           =   2340
+         End
+         Begin VB.CommandButton cmdTefCredito 
+            Appearance      =   0  'Flat
+            BackColor       =   &H00FFC0C0&
+            BeginProperty Font 
+               Name            =   "MS Sans Serif"
+               Size            =   8.25
+               Charset         =   0
+               Weight          =   400
+               Underline       =   0   'False
+               Italic          =   0   'False
+               Strikethrough   =   0   'False
+            EndProperty
+            Height          =   750
+            Left            =   2370
+            Picture         =   "frmFormaPagamento.frx":1AA2
+            Style           =   1  'Graphical
+            TabIndex        =   60
+            Top             =   0
+            Width           =   2340
+         End
+         Begin VB.Label lblMensagemTEF 
+            Alignment       =   2  'Center
+            BackStyle       =   0  'Transparent
+            Caption         =   "Mensagem TEF"
+            BeginProperty Font 
+               Name            =   "Arial"
+               Size            =   12
+               Charset         =   0
+               Weight          =   400
+               Underline       =   0   'False
+               Italic          =   0   'False
+               Strikethrough   =   0   'False
+            EndProperty
+            ForeColor       =   &H00FFFFFF&
+            Height          =   570
+            Left            =   15
+            TabIndex        =   62
+            Top             =   900
+            Width           =   4725
+         End
       End
-      Begin VB.Label lblMensagemTEF 
-         Alignment       =   2  'Center
-         BackStyle       =   0  'Transparent
-         Caption         =   "Mensagem TEF"
-         BeginProperty Font 
+      Begin Balcao2010.chameleonButton cmdRetornaOperacaoTEF 
+         Height          =   465
+         Left            =   1155
+         TabIndex        =   58
+         Top             =   1650
+         Width           =   2400
+         _ExtentX        =   4233
+         _ExtentY        =   820
+         BTYPE           =   14
+         TX              =   "Retornar Operação"
+         ENAB            =   -1  'True
+         BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
             Name            =   "Arial"
             Size            =   12
             Charset         =   0
-            Weight          =   400
+            Weight          =   700
             Underline       =   0   'False
             Italic          =   0   'False
             Strikethrough   =   0   'False
          EndProperty
-         ForeColor       =   &H00FFFFFF&
-         Height          =   570
-         Left            =   15
-         TabIndex        =   58
-         Top             =   900
-         Width           =   4725
+         COLTYPE         =   2
+         FOCUSR          =   -1  'True
+         BCOL            =   2500134
+         BCOLO           =   4210752
+         FCOL            =   16777215
+         FCOLO           =   16777215
+         MCOL            =   5263440
+         MPTR            =   1
+         MICON           =   "frmFormaPagamento.frx":3A18
+         UMCOL           =   -1  'True
+         SOFT            =   0   'False
+         PICPOS          =   0
+         NGREY           =   0   'False
+         FX              =   0
+         HAND            =   0   'False
+         CHECK           =   0   'False
+         VALUE           =   0   'False
       End
    End
    Begin VB.Timer timeHabilitaTEF 
@@ -137,7 +184,7 @@ Begin VB.Form frmFormaPagamento
       FCOLO           =   0
       MCOL            =   12632256
       MPTR            =   1
-      MICON           =   "frmFormaPagamento.frx":3A18
+      MICON           =   "frmFormaPagamento.frx":3A34
       UMCOL           =   -1  'True
       SOFT            =   0   'False
       PICPOS          =   0
@@ -182,7 +229,7 @@ Begin VB.Form frmFormaPagamento
          FCOLO           =   0
          MCOL            =   12632256
          MPTR            =   1
-         MICON           =   "frmFormaPagamento.frx":3A34
+         MICON           =   "frmFormaPagamento.frx":3A50
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -220,7 +267,7 @@ Begin VB.Form frmFormaPagamento
          FCOLO           =   4210752
          MCOL            =   12632256
          MPTR            =   1
-         MICON           =   "frmFormaPagamento.frx":3A50
+         MICON           =   "frmFormaPagamento.frx":3A6C
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -258,7 +305,7 @@ Begin VB.Form frmFormaPagamento
          FCOLO           =   4210752
          MCOL            =   12632256
          MPTR            =   1
-         MICON           =   "frmFormaPagamento.frx":3A6C
+         MICON           =   "frmFormaPagamento.frx":3A88
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -296,7 +343,7 @@ Begin VB.Form frmFormaPagamento
          FCOLO           =   0
          MCOL            =   12632256
          MPTR            =   1
-         MICON           =   "frmFormaPagamento.frx":3A88
+         MICON           =   "frmFormaPagamento.frx":3AA4
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -432,7 +479,7 @@ Begin VB.Form frmFormaPagamento
          EndProperty
          Height          =   555
          Left            =   2640
-         TabIndex        =   59
+         TabIndex        =   56
          Top             =   2925
          Width           =   2310
       End
@@ -500,7 +547,7 @@ Begin VB.Form frmFormaPagamento
                EndProperty
                Height          =   750
                Left            =   1185
-               Picture         =   "frmFormaPagamento.frx":3AA4
+               Picture         =   "frmFormaPagamento.frx":3AC0
                Style           =   1  'Graphical
                TabIndex        =   52
                Top             =   0
@@ -519,7 +566,7 @@ Begin VB.Form frmFormaPagamento
                EndProperty
                Height          =   750
                Left            =   0
-               Picture         =   "frmFormaPagamento.frx":62FA
+               Picture         =   "frmFormaPagamento.frx":6316
                Style           =   1  'Graphical
                TabIndex        =   51
                Top             =   0
@@ -538,7 +585,7 @@ Begin VB.Form frmFormaPagamento
                EndProperty
                Height          =   750
                Left            =   2370
-               Picture         =   "frmFormaPagamento.frx":71EF
+               Picture         =   "frmFormaPagamento.frx":720B
                Style           =   1  'Graphical
                TabIndex        =   50
                Top             =   0
@@ -557,7 +604,7 @@ Begin VB.Form frmFormaPagamento
                EndProperty
                Height          =   750
                Left            =   0
-               Picture         =   "frmFormaPagamento.frx":827A
+               Picture         =   "frmFormaPagamento.frx":8296
                Style           =   1  'Graphical
                TabIndex        =   49
                Top             =   780
@@ -576,7 +623,7 @@ Begin VB.Form frmFormaPagamento
                EndProperty
                Height          =   750
                Left            =   3555
-               Picture         =   "frmFormaPagamento.frx":B37C
+               Picture         =   "frmFormaPagamento.frx":B398
                Style           =   1  'Graphical
                TabIndex        =   48
                Top             =   0
@@ -595,7 +642,7 @@ Begin VB.Form frmFormaPagamento
                EndProperty
                Height          =   750
                Left            =   1185
-               Picture         =   "frmFormaPagamento.frx":100F2
+               Picture         =   "frmFormaPagamento.frx":1010E
                Style           =   1  'Graphical
                TabIndex        =   47
                Top             =   780
@@ -629,7 +676,7 @@ Begin VB.Form frmFormaPagamento
                FCOLO           =   16777215
                MCOL            =   5263440
                MPTR            =   1
-               MICON           =   "frmFormaPagamento.frx":13560
+               MICON           =   "frmFormaPagamento.frx":1357C
                UMCOL           =   -1  'True
                SOFT            =   0   'False
                PICPOS          =   0
@@ -643,7 +690,7 @@ Begin VB.Form frmFormaPagamento
          Begin VB.CommandButton chbCielo 
             Appearance      =   0  'Flat
             BackColor       =   &H00FFC0C0&
-            DownPicture     =   "frmFormaPagamento.frx":1357C
+            DownPicture     =   "frmFormaPagamento.frx":13598
             BeginProperty Font 
                Name            =   "MS Sans Serif"
                Size            =   8.25
@@ -655,7 +702,7 @@ Begin VB.Form frmFormaPagamento
             EndProperty
             Height          =   750
             Left            =   2370
-            Picture         =   "frmFormaPagamento.frx":144D7
+            Picture         =   "frmFormaPagamento.frx":144F3
             Style           =   1  'Graphical
             TabIndex        =   45
             Top             =   825
@@ -674,7 +721,7 @@ Begin VB.Form frmFormaPagamento
             EndProperty
             Height          =   750
             Left            =   0
-            Picture         =   "frmFormaPagamento.frx":15CA9
+            Picture         =   "frmFormaPagamento.frx":15CC5
             Style           =   1  'Graphical
             TabIndex        =   2
             Top             =   45
@@ -693,7 +740,7 @@ Begin VB.Form frmFormaPagamento
             EndProperty
             Height          =   750
             Left            =   1185
-            Picture         =   "frmFormaPagamento.frx":18BCB
+            Picture         =   "frmFormaPagamento.frx":18BE7
             Style           =   1  'Graphical
             TabIndex        =   3
             Top             =   45
@@ -712,7 +759,7 @@ Begin VB.Form frmFormaPagamento
             EndProperty
             Height          =   750
             Left            =   3555
-            Picture         =   "frmFormaPagamento.frx":1B6CD
+            Picture         =   "frmFormaPagamento.frx":1B6E9
             Style           =   1  'Graphical
             TabIndex        =   4
             Top             =   45
@@ -731,7 +778,7 @@ Begin VB.Form frmFormaPagamento
             EndProperty
             Height          =   750
             Left            =   2370
-            Picture         =   "frmFormaPagamento.frx":1E04F
+            Picture         =   "frmFormaPagamento.frx":1E06B
             Style           =   1  'Graphical
             TabIndex        =   5
             Top             =   45
@@ -765,7 +812,7 @@ Begin VB.Form frmFormaPagamento
             FCOLO           =   16777215
             MCOL            =   5263440
             MPTR            =   1
-            MICON           =   "frmFormaPagamento.frx":20CD1
+            MICON           =   "frmFormaPagamento.frx":20CED
             UMCOL           =   -1  'True
             SOFT            =   0   'False
             PICPOS          =   0
@@ -778,7 +825,7 @@ Begin VB.Form frmFormaPagamento
          Begin VB.CommandButton chbRede 
             Appearance      =   0  'Flat
             BackColor       =   &H00FFC0C0&
-            DownPicture     =   "frmFormaPagamento.frx":20CED
+            DownPicture     =   "frmFormaPagamento.frx":20D09
             BeginProperty Font 
                Name            =   "MS Sans Serif"
                Size            =   8.25
@@ -790,7 +837,7 @@ Begin VB.Form frmFormaPagamento
             EndProperty
             Height          =   750
             Left            =   0
-            Picture         =   "frmFormaPagamento.frx":21AE7
+            Picture         =   "frmFormaPagamento.frx":21B03
             Style           =   1  'Graphical
             TabIndex        =   53
             Top             =   825
@@ -826,9 +873,9 @@ Begin VB.Form frmFormaPagamento
          FCOLO           =   0
          MCOL            =   12632256
          MPTR            =   1
-         MICON           =   "frmFormaPagamento.frx":22E22
-         PICN            =   "frmFormaPagamento.frx":22E3E
-         PICH            =   "frmFormaPagamento.frx":24256
+         MICON           =   "frmFormaPagamento.frx":22E3E
+         PICN            =   "frmFormaPagamento.frx":22E5A
+         PICH            =   "frmFormaPagamento.frx":24272
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -866,7 +913,7 @@ Begin VB.Form frmFormaPagamento
          FCOLO           =   4210752
          MCOL            =   12632256
          MPTR            =   1
-         MICON           =   "frmFormaPagamento.frx":26688
+         MICON           =   "frmFormaPagamento.frx":266A4
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -904,7 +951,7 @@ Begin VB.Form frmFormaPagamento
          FCOLO           =   4210752
          MCOL            =   12632256
          MPTR            =   1
-         MICON           =   "frmFormaPagamento.frx":266A4
+         MICON           =   "frmFormaPagamento.frx":266C0
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -942,7 +989,7 @@ Begin VB.Form frmFormaPagamento
          FCOLO           =   4210752
          MCOL            =   12632256
          MPTR            =   1
-         MICON           =   "frmFormaPagamento.frx":266C0
+         MICON           =   "frmFormaPagamento.frx":266DC
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -980,7 +1027,7 @@ Begin VB.Form frmFormaPagamento
          FCOLO           =   0
          MCOL            =   12632256
          MPTR            =   1
-         MICON           =   "frmFormaPagamento.frx":266DC
+         MICON           =   "frmFormaPagamento.frx":266F8
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -1018,7 +1065,7 @@ Begin VB.Form frmFormaPagamento
          FCOLO           =   4210752
          MCOL            =   12632256
          MPTR            =   1
-         MICON           =   "frmFormaPagamento.frx":266F8
+         MICON           =   "frmFormaPagamento.frx":26714
          UMCOL           =   -1  'True
          SOFT            =   0   'False
          PICPOS          =   0
@@ -1553,6 +1600,8 @@ Dim tempoHabilitaPOS As Byte
 Dim Agencia As String
 
 
+
+
 Private Sub GravaRegistro()
 
     Wecf = GLB_ECF
@@ -1637,7 +1686,12 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
       nf.numeroTEF = 0
       
       'TEF ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+      
+      habilitaFrameTEFOperacoes False
+      
+      
       If lblModalidade.Caption = "CREDITO" Then
+           
           If EfetuaOperacaoTEF("3", nf, lblModalidade, lblMensagemTEF) Then
             txtNumeroTEF.text = nf.numeroTEF
             carregaCodigoModalidade lblModalidade.Caption
@@ -1680,6 +1734,9 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
             lblModalidade.Caption = ""
           End If
       End If
+      
+      habilitaFrameTEFOperacoes True
+      
       
       'TEF ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
@@ -3180,6 +3237,10 @@ Continua:
   
 End Sub
 
+Private Sub cmdRetornaOperacaoTEF_Click()
+    retornaOperacaoTEF = True
+End Sub
+
 Private Sub cmdTefCredito_Click()
 
   lblModalidade.Caption = "CREDITO"
@@ -3196,6 +3257,7 @@ Private Sub cmdTefCredito_Click()
 End Sub
 
 Private Sub cmdTefDebito_Click()
+
   carregaCodigoModalidade "VISA ELEC."
   lblModalidade.Caption = "DEBITO"
 
@@ -3208,6 +3270,21 @@ Private Sub cmdTefDebito_Click()
 
   '2 Débito
 
+End Sub
+
+Private Sub habilitaFrameTEFOperacoes(ativa As Boolean)
+
+    retornaOperacaoTEF = False
+    
+    framePagamentoTEFInterno.Enabled = ativa
+    
+    If Not ativa Then
+        framePagamentoTEF.Height = 2145
+    End If
+    If ativa Then
+        framePagamentoTEF.Height = 1500
+    End If
+    
 End Sub
 
 Private Sub cmdTefDebito_KeyDown(KeyCode As Integer, Shift As Integer)
@@ -3368,18 +3445,30 @@ Private Sub habilitaPagamentoTEF()
     framePagamentoTEF.Visible = True
     framePagamentoTEF.left = chbRede.left + fraPagamento.left + fraNModalidades.left
     framePagamentoTEF.top = chbRede.top + fraPagamento.top + fraNModalidades.top
+    framePagamentoTEF.Height = 1515
     framePagamentoTEF.BackColor = vbBlack
+    framePagamentoTEFInterno.BackColor = vbBlack
     lblMensagemTEF.Caption = ""
     If GLB_Administrador Then lblMensagemTEF.Caption = "Click aqui para executar função 0"
 
 End Sub
 
 
+Private Sub Form_KeyDown(KeyCode As Integer, Shift As Integer)
+    'MsgBox "oi 1"
+End Sub
+
+Private Sub Form_KeyPress(KeyAscii As Integer)
+    'MsgBox "oi 2"
+End Sub
+
+Private Sub Form_KeyUp(KeyCode As Integer, Shift As Integer)
+    'MsgBox "oi 3"
+End Sub
+
 Private Sub Form_Load()
 
     habilitaPagamentoTEF
-    
-    
     
 End Sub
 
@@ -3712,6 +3801,7 @@ If KeyAscii = 27 Then
  VerteclaVirgula txtValorModalidade, KeyAscii
  
  If KeyAscii = 13 Then
+ 
     cValorPago = txtValorModalidade.text
     
     If txtValorModalidade.text = "" Then

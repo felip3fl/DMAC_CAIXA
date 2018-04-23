@@ -10,6 +10,8 @@ Declare Function GetPrivateProfileString Lib "kernel32" Alias "GetPrivateProfile
 Public Declare Function GetAsyncKeyState Lib "user32" (ByVal vKey As Long) As Integer
 Dim Fim
 
+
+
 Dim wTNDinheiro As Double
 Dim wTNCheque As Double
 Dim wTNVisa As Double

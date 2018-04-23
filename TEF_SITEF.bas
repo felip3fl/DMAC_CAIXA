@@ -7,7 +7,14 @@ Public Declare Function ConfiguraIntSiTefInterativoEx Lib "C:\Sistemas\DMAC Caix
 Public Declare Function IniciaFuncaoSiTefInterativo Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" (ByVal Funcao As Long, ByVal pValor As String, ByVal pCuponFiscal As String, ByVal pDataFiscal As String, ByVal pHorario As String, ByVal pOperador As String, ByVal pParamAdic As String) As Long
 Public Declare Sub FinalizaTransacaoSiTefInterativo Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" (ByVal Confirma As Integer, ByVal pNumeroCuponFiscal As String, ByVal pDataFiscal As String, ByVal pHorario As String)
                    
-Public Declare Function ContinuaFuncaoSiTefInterativo Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" (ByRef pProximoComando As Long, ByRef pTipoCampo As Long, ByRef pTamanhoMinimo As Integer, ByRef pTamanhoMaximo As Integer, ByVal pBuffer As String, ByVal TamMaxBuffer As Long, ByVal ContinuaNavegacao As Long) As Long
+Public Declare Function ContinuaFuncaoSiTefInterativo Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" _
+(ByRef pProximoComando As Long, _
+ByRef pTipoCampo As Long, _
+ByRef pTamanhoMinimo As Integer, _
+ByRef pTamanhoMaximo As Integer, _
+ByVal pBuffer As String, _
+ByVal TamMaxBuffer As Long, _
+ByVal ContinuaNavegacao As Long) As Long
 
 Private Declare Function LeSimNaoPinPad Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" (ByVal Funcao As String) As Long
 Private Declare Function EscreveMensagemPermanentePinPad Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" (ByVal Funcao As String) As Long
@@ -287,7 +294,15 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
     campoExibirMensagem.Caption = ""
     
     Do
-        
+            DoEvents
+            Resultado = 0
+            If retornaOperacaoTEF Then
+                'valores = 1
+                retornaOperacaoTEF = False
+                'ProximoComando = 1
+                Resultado = 1
+            End If
+            
             If valores <> "" Then
                 retorno = ContinuaFuncaoSiTefInterativo(ProximoComando, _
                                                         TipoCampo, _
@@ -302,8 +317,7 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                                                 TamanhoMinimo, _
                                                 tamanhoMaximo, _
                                                 Buffer, _
-                                                Len(Buffer), _
-                                                Resultado)
+                                                Len(Buffer), Resultado)
             End If
         
 
@@ -351,7 +365,7 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                     Case 20
                         valores = entradaDeValores("TipoCampo = " & TipoCampo, "0:Sim;1:Nao;" & Buffer, TamanhoMinimo, tamanhoMaximo)
                     Case 22
-                        MsgBox Trim(Buffer), vbInformation, "Mensagem do TEF (ProximoComando[" & ProximoComando & "])"
+                         MsgBox Trim(Buffer), vbInformation, "Mensagem do TEF (ProximoComando[" & ProximoComando & "])"
                         
                     Case 132
                         bandeiraCartao.Caption = Mid(Buffer, 1, 5)
@@ -429,6 +443,7 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
         End If
     
     Loop Until Not (retorno = 10000)
+    
     
     If (retorno = 0) Then
         campoExibirMensagem.Caption = "Operação completada com sucesso"

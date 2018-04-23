@@ -3,7 +3,7 @@ Begin VB.Form frmEntradaDeValores
    BackColor       =   &H00232323&
    BorderStyle     =   0  'None
    Caption         =   "Entrada de Valores"
-   ClientHeight    =   3780
+   ClientHeight    =   3600
    ClientLeft      =   7515
    ClientTop       =   3285
    ClientWidth     =   5280
@@ -11,7 +11,7 @@ Begin VB.Form frmEntradaDeValores
    LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   3780
+   ScaleHeight     =   3600
    ScaleWidth      =   5280
    ShowInTaskbar   =   0   'False
    Begin VB.TextBox txtEntrada 
@@ -34,21 +34,21 @@ Begin VB.Form frmEntradaDeValores
       Width           =   4905
    End
    Begin Balcao2010.chameleonButton cmdCancelar 
-      Height          =   600
-      Left            =   2670
+      Height          =   400
+      Left            =   3495
       TabIndex        =   3
       Top             =   3015
-      Width           =   2445
-      _ExtentX        =   4313
-      _ExtentY        =   1058
+      Width           =   1605
+      _ExtentX        =   2831
+      _ExtentY        =   714
       BTYPE           =   14
       TX              =   "Cancelar"
       ENAB            =   -1  'True
       BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
          Name            =   "Arial"
-         Size            =   12
+         Size            =   9.75
          Charset         =   0
-         Weight          =   700
+         Weight          =   400
          Underline       =   0   'False
          Italic          =   0   'False
          Strikethrough   =   0   'False
@@ -72,21 +72,21 @@ Begin VB.Form frmEntradaDeValores
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdOK 
-      Height          =   600
+      Height          =   400
       Left            =   195
       TabIndex        =   4
       Top             =   3015
-      Width           =   2445
-      _ExtentX        =   6668
-      _ExtentY        =   1270
+      Width           =   1600
+      _ExtentX        =   2831
+      _ExtentY        =   714
       BTYPE           =   14
-      TX              =   "OK"
+      TX              =   "Entrar"
       ENAB            =   -1  'True
       BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
          Name            =   "Arial"
-         Size            =   12
+         Size            =   9.75
          Charset         =   0
-         Weight          =   700
+         Weight          =   400
          Underline       =   0   'False
          Italic          =   0   'False
          Strikethrough   =   0   'False
@@ -100,6 +100,44 @@ Begin VB.Form frmEntradaDeValores
       MCOL            =   5263440
       MPTR            =   1
       MICON           =   "frmEntradaDeValores.frx":001C
+      UMCOL           =   -1  'True
+      SOFT            =   0   'False
+      PICPOS          =   0
+      NGREY           =   0   'False
+      FX              =   0
+      HAND            =   0   'False
+      CHECK           =   0   'False
+      VALUE           =   0   'False
+   End
+   Begin Balcao2010.chameleonButton cmdRetornoOperacaoTEF 
+      Height          =   400
+      Left            =   1845
+      TabIndex        =   5
+      Top             =   3015
+      Width           =   1605
+      _ExtentX        =   2831
+      _ExtentY        =   714
+      BTYPE           =   14
+      TX              =   "Retornar"
+      ENAB            =   -1  'True
+      BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
+         Name            =   "Arial"
+         Size            =   9.75
+         Charset         =   0
+         Weight          =   400
+         Underline       =   0   'False
+         Italic          =   0   'False
+         Strikethrough   =   0   'False
+      EndProperty
+      COLTYPE         =   2
+      FOCUSR          =   -1  'True
+      BCOL            =   2500134
+      BCOLO           =   4210752
+      FCOL            =   16777215
+      FCOLO           =   16777215
+      MCOL            =   5263440
+      MPTR            =   1
+      MICON           =   "frmEntradaDeValores.frx":0038
       UMCOL           =   -1  'True
       SOFT            =   0   'False
       PICPOS          =   0
@@ -166,6 +204,7 @@ Private Sub cmdAlterarModalidade_Click(Index As Integer)
 
 End Sub
 
+
 Private Sub cmdCancelar_Click()
     retornoEntradaDeValores = "-1"
     Unload Me
@@ -175,6 +214,13 @@ Private Sub cmdOK_Click()
     validaValores
 End Sub
 
+Private Sub cmdRetornoOperacaoTEF_Click()
+    retornaOperacaoTEF = True
+    retornoEntradaDeValores = (txtEntrada.text)
+    Me.Visible = False
+    Unload Me
+End Sub
+
 Private Sub Form_Load()
     
     Screen.MousePointer = 0
@@ -182,7 +228,7 @@ Private Sub Form_Load()
     Me.top = 4700
     Me.left = 5050
     Me.Width = 5320
-    Me.Height = 3900
+    Me.Height = 3700
     
     txtEntrada.text = ""
     lblTitulo.Caption = ""
