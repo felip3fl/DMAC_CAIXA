@@ -256,8 +256,8 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
     Dim ContinuaNavegacao  As Long
 
     Dim logOperacoesTEF As String
-    Dim horaOperacao As String
     Dim dataOperacao As String
+    Dim horaOperacaoFormatado As String
     
     Dim valores As String
     Dim tipoOperacao As String
@@ -267,7 +267,8 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
         Exit Function
     End If
     
-    horaOperacao = Format(Time, "HHMMSS")
+    horaOperacaoTEF = Time
+    horaOperacaoFormatado = Format(horaOperacaoTEF, "HHMMSS")
     dataOperacao = Format(GLB_DataInicial, "YYYYMMDD")
     
     nf.valor = Format(nf.valor, "###,###,##0.00")
@@ -279,7 +280,7 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                                           nf.valor & Chr(0), _
                                           nf.pedido & Chr(0), _
                                           dataOperacao & Chr(0), _
-                                          horaOperacao & Chr(0), _
+                                          horaOperacaoFormatado & Chr(0), _
                                           Trim(GLB_USU_Nome) & Chr(0), _
                                           Chr(0))
                                         

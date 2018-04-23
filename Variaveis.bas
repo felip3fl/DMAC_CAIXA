@@ -451,6 +451,9 @@ Global retornoEntradaDeValores As String
 
 Global retornaOperacaoTEF As Boolean
 
+     
+Global horaOperacaoTEF As String
+
 'Global GLB_EnderecoPortal As String
 
 

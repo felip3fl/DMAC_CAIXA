@@ -1612,7 +1612,7 @@ If EntFaturada = "0.00" And EntFinanciada = "0.00" Then
       & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_dataprocesso,MC_TipoNota,MC_SequenciaTEF,MC_DataBaixaAVR) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
       & " '" & Format(GLB_DataInicial, "yyyy/mm/dd") & "', " & wGrupoMovimento & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
       & "" & ConverteVirgula(Format(wValorMovimento, "##,###0.00")) & ", " _
-      & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "', CONVERT(VARCHAR(11),GETDATE(),114))"
+      & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "', '" & Format(horaOperacaoTEF, "HH:MM:SS") & "')"
       rdoCNLoja.Execute (Sql)
       
 Else
@@ -1620,7 +1620,7 @@ Else
       & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF,MC_DataBaixaAVR) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
       & " '" & Format(GLB_DataInicial, "yyyy/mm/dd") & "', " & wGrupoMovimento & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
       & "" & ConverteVirgula(Format(wValorMovimento, "##,###0.00")) & ", " _
-      & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "',CONVERT(VARCHAR(11),GETDATE(),114))"
+      & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "','" & horaOperacaoTEF & "')"
       rdoCNLoja.Execute (Sql)
       
    If EntFaturada <> "0.00" Then
@@ -1628,14 +1628,14 @@ Else
          & "MC_Contacorrente,MC_bomPara,MC_Parcelas,MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido, MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF,MC_DataBaixaAVR) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
          & " '" & Format(GLB_DataInicial, "yyyy/mm/dd") & "', " & 11004 & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
          & "" & ConverteVirgula(Format(EntFaturada, "##,###0.00")) & ", " _
-         & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "',CONVERT(VARCHAR(11),GETDATE(),114))"
+         & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "','" & horaOperacaoTEF & "')"
          rdoCNLoja.Execute (Sql)
    ElseIf EntFinanciada <> "0.00" Then
        Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_SubGrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
              & "MC_Contacorrente,MC_bomPara,MC_Parcelas,MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido, MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF,MC_DataBaixaAVR) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
              & " '" & Format(GLB_DataInicial, "yyyy/mm/dd") & "', " & 11005 & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
              & "" & ConverteVirgula(Format(EntFinanciada, "##,###0.00")) & ", " _
-             & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "',CONVERT(VARCHAR(11),GETDATE(),114))"
+             & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "','" & horaOperacaoTEF & "')"
              rdoCNLoja.Execute (Sql)
    End If
 End If
