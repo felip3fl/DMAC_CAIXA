@@ -4,7 +4,7 @@ Begin VB.Form frmFormaPagamento
    BorderStyle     =   0  'None
    Caption         =   "Forma de Pagamento"
    ClientHeight    =   8640
-   ClientLeft      =   2805
+   ClientLeft      =   2550
    ClientTop       =   1755
    ClientWidth     =   13425
    BeginProperty Font 
@@ -20,8 +20,8 @@ Begin VB.Form frmFormaPagamento
    LockControls    =   -1  'True
    MaxButton       =   0   'False
    MinButton       =   0   'False
-   ScaleHeight     =   0
-   ScaleWidth      =   0
+   ScaleHeight     =   8640
+   ScaleWidth      =   13425
    ShowInTaskbar   =   0   'False
    Begin VB.TextBox txtNumeroTEF 
       Appearance      =   0  'Flat

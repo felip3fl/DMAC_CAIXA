@@ -91,57 +91,57 @@ Public Function retornoFuncoesTEF(codigo As String)
 
     Select Case codigo
         Case "1"
-            retornoFuncoesTEF = "0 Sucesso na execução da função. "
+            retornoFuncoesTEF = "[0] Sucesso na execução da função. "
         Case "10000"
-            retornoFuncoesTEF = "10000 Deve ser chamada a rotina de continuidade do processo. "
+            retornoFuncoesTEF = "[10000] Deve ser chamada a rotina de continuidade do processo. "
         Case Is > 1
-            retornoFuncoesTEF = "1 outro valor positivo Negada pelo autorizador. "
+            retornoFuncoesTEF = "[1] outro valor positivo Negada pelo autorizador. "
         Case "-1"
-            retornoFuncoesTEF = "-1 Módulo não inicializado. O PDV tentou chamar alguma rotina sem antes executar a função configura. "
+            retornoFuncoesTEF = "[-1] Módulo não inicializado. O PDV tentou chamar alguma rotina sem antes executar a função configura. "
         Case "-2"
-            retornoFuncoesTEF = "-2 Operação cancelada pelo operador. "
+            retornoFuncoesTEF = "[-2] Operação cancelada pelo operador. "
         Case "-3"
-            retornoFuncoesTEF = "-3 O parâmetro função / modalidade é inexistente/inválido. "
+            retornoFuncoesTEF = "[-3] O parâmetro função / modalidade é inexistente/inválido. "
         Case "-4"
-            retornoFuncoesTEF = "-4 Falta de memória no PDV."
+            retornoFuncoesTEF = "[-4] Falta de memória no PDV."
         Case "-5"
-            retornoFuncoesTEF = "-5 Sem comunicação com o SiTef. "
+            retornoFuncoesTEF = "[-5] Sem comunicação com o SiTef. "
         Case "-6"
-            retornoFuncoesTEF = "-6 Operação cancelada pelo usuário (no pinpad). "
+            retornoFuncoesTEF = "[-6] Operação cancelada pelo usuário (no pinpad). "
         Case "-7"
-            retornoFuncoesTEF = "-7 Reservado"
+            retornoFuncoesTEF = "[-7] Reservado"
         Case "-7"
-            retornoFuncoesTEF = "-8 A CliSiTef não possui a implementação da função necessária, provavelmente está desatualizada (a CliSiTefI é mais recente). "
+            retornoFuncoesTEF = "[-8] A CliSiTef não possui a implementação da função necessária, provavelmente está desatualizada (a CliSiTefI é mais recente). "
         Case "-9"
-            retornoFuncoesTEF = "-9 A automação chamou a rotina ContinuaFuncaoSiTefInterativo sem antes iniciar uma função iterativa. "
+            retornoFuncoesTEF = "[-9] A automação chamou a rotina ContinuaFuncaoSiTefInterativo sem antes iniciar uma função iterativa. "
         Case "-10"
-            retornoFuncoesTEF = "-10 Algum parâmetro obrigatório não foi passado pela automação comercial. "
+            retornoFuncoesTEF = "[-10] Algum parâmetro obrigatório não foi passado pela automação comercial. "
         Case "-12"
-            retornoFuncoesTEF = "-12 Erro na execução da rotina iterativa. Provavelmente o processo iterativo anterior não foi executado até o final (enquanto o retorno for igual a 10000). "
+            retornoFuncoesTEF = "[-12] Erro na execução da rotina iterativa. Provavelmente o processo iterativo anterior não foi executado até o final (enquanto o retorno for igual a 10000). "
         Case "-13"
-            retornoFuncoesTEF = "-13 Documento fiscal não encontrado nos registros da CliSiTef. Retornado em funções de consulta tais como ObtemQuantidadeTransaçõesPendentes. "
+            retornoFuncoesTEF = "[-13] Documento fiscal não encontrado nos registros da CliSiTef. Retornado em funções de consulta tais como ObtemQuantidadeTransaçõesPendentes. "
         Case "-15"
-            retornoFuncoesTEF = "-15 Operação cancelada pela automação comercial. "
+            retornoFuncoesTEF = "[-15] Operação cancelada pela automação comercial. "
         Case "-20"
-            retornoFuncoesTEF = "-20 Parâmetro inválido passado para a função. "
+            retornoFuncoesTEF = "[-20] Parâmetro inválido passado para a função. "
         Case "-21"
-            retornoFuncoesTEF = "-21 Utilizada uma palavra proibida, por exemplo SENHA, para coletar dados em aberto no pinpad. Por exemplo na função ObtemDadoPinpadDiretoEx. "
+            retornoFuncoesTEF = "[-21] Utilizada uma palavra proibida, por exemplo SENHA, para coletar dados em aberto no pinpad. Por exemplo na função ObtemDadoPinpadDiretoEx. "
         Case "-25"
-            retornoFuncoesTEF = "-25 Erro no Correspondente Bancário: Deve realizar sangria. "
+            retornoFuncoesTEF = "[-25] Erro no Correspondente Bancário: Deve realizar sangria. "
         Case "-30"
-            retornoFuncoesTEF = "-30 Erro de acesso ao arquivo. Certifique-se que o usuário que roda a aplicação tem direitos de leitura/escrita. "
+            retornoFuncoesTEF = "[-30] Erro de acesso ao arquivo. Certifique-se que o usuário que roda a aplicação tem direitos de leitura/escrita. "
         Case "-40"
-            retornoFuncoesTEF = "-40 Transação negada pelo servidor SiTef. "
+            retornoFuncoesTEF = "[-40] Transação negada pelo servidor SiTef. "
         Case "-41"
-            retornoFuncoesTEF = "-41 Dados inválidos. "
+            retornoFuncoesTEF = "[-41] Dados inválidos. "
         Case "-42"
-            retornoFuncoesTEF = "-42 Reservado"
+            retornoFuncoesTEF = "[-42] Reservado"
         Case "-43"
-            retornoFuncoesTEF = "-43 Problema na execução de alguma das rotinas no pinpad. "
+            retornoFuncoesTEF = "[-43] Problema na execução de alguma das rotinas no pinpad. "
         Case "-50"
-            retornoFuncoesTEF = "-50 Transação não segura. "
+            retornoFuncoesTEF = "[-50] Transação não segura. "
         Case "-100"
-            retornoFuncoesTEF = "-100 Erro interno do módulo. outro valor negativo Erros detectados internamente pela rotina."
+            retornoFuncoesTEF = "[-100] Erro interno do módulo. outro valor negativo Erros detectados internamente pela rotina."
         Case Else
             retornoFuncoesTEF = "[ERRO] Código " + codigo + " desconhecido"
     End Select
@@ -436,7 +436,7 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                             "[Resu:" & Space(4 - Len(Trim(Resultado))) & Resultado & "]" & _
                             "[Tipo:" & Space(4 - Len(Trim(TipoCampo))) & TipoCampo & "] VALORES: " & left(valores, 200) & vbNewLine
                 
-                If valores < 0 Then retorno = -2
+                If valores < "0" Then retorno = -2
                 
             End If
         
@@ -451,8 +451,8 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
         nf.numeroTEF = lerCamporResultadoTEF(nf.comprovantePagamento, "Host")
         EfetuaOperacaoTEF = True
     Else
-        MsgBox "Erro " & "" & retornoFuncoesTEF(Str(retorno)), vbCritical, "Erro TEF"
-        campoExibirMensagem.Caption = "Erro " & "" & retornoFuncoesTEF(Str(retorno))
+        MsgBox retornoFuncoesTEF(Str(retorno)), vbCritical, "Erro TEF"
+        campoExibirMensagem.Caption = retornoFuncoesTEF(Str(retorno))
         campoExibirMensagem.Refresh
     End If
     
