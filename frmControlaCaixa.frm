@@ -1237,6 +1237,7 @@ Private Sub cmdNroCaixa_Click()
             Dim nf As notaFiscalTEF
             Call EfetuaOperacaoTEF("110", nf, lblMensagensTEF, lblMensagensTEF)
             ImprimeComprovanteTEF nf.comprovantePagamento
+            finalizarTransacaoTEF nf.pedido, nf.serie
         End If
     End If
 End Sub

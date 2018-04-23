@@ -1413,9 +1413,8 @@ Private Sub reimpressaoTEF()
     frameOperacoes.Height = 4400
 
     Call EfetuaOperacaoTEF("113", nf, lblMensagemTEFModalidade, lblMensagemTEF)
- 
-
     ImprimeComprovanteTEF nf.comprovantePagamento
+    finalizarTransacaoTEF nf.pedido, nf.serie
 
 End Sub
 

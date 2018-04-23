@@ -384,7 +384,7 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                         If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Data da transacao (DDMMAAAA)", TamanhoMinimo, tamanhoMaximo)
                 Case 516
                         valores = nf.numeroTEF 'numero tef
-                        If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo)
+                        If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Forneca o numero do documento", TamanhoMinimo, tamanhoMaximo)
                 Case 146
                         valores = nf.valor
                         If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Forneca o valor da transacao a ser cancelada", TamanhoMinimo, tamanhoMaximo)
@@ -394,7 +394,7 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                         'If GLB_Administrador Then valores = InputBox(Trim(Buffer), "TipoCampo = " & TipoCampo)
                 Case 500
                         valores = GLB_USU_Codigo
-                        If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo)
+                        If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Forneca o codigo do supervisor", TamanhoMinimo, tamanhoMaximo)
                 Case 5013
                         If MsgBox("Deseja cancelar essa operação?", vbQuestion + vbYesNo, "TipoCampo = " & TipoCampo) = vbYes Then
                             valores = "-2"
@@ -455,14 +455,8 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
         campoExibirMensagem.Caption = retornoFuncoesTEF(Str(retorno))
         campoExibirMensagem.Refresh
     End If
-    
-    If codigoOperacao <> "113" Then
-    FinalizaTransacaoSiTefInterativo 1, _
-                                     nf.pedido, _
-                                     dataOperacao, _
-                                     horaOperacao
-    End If
                                      
+    'finalizarTransacaoTEF
                                      
     Screen.MousePointer = 0
     
@@ -477,6 +471,49 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
  
 End Function
 
+Public Sub finalizarTransacaoTEF(numeroPedido As String, serie As String)
+
+    Dim RsDados As New ADODB.Recordset
+    Dim Sql As String
+
+    On Error GoTo TrataErro
+
+    Sql = "select " & vbNewLine & _
+          "MC_DataBaixaAVR horaOperacao, " & vbNewLine & _
+          "MC_Data data " & vbNewLine & _
+          "from MovimentoCaixa " & vbNewLine & _
+          "where MC_Pedido = '" & numeroPedido & "'" & vbNewLine & _
+          "and MC_SequenciaTEF > 0" & vbNewLine & _
+          "and MC_serie = '" & serie & "'"
+    
+    Screen.MousePointer = 11
+    
+        RsDados.CursorLocation = adUseClient
+        RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+
+    
+    
+    If Not RsDados.EOF Then
+        
+        FinalizaTransacaoSiTefInterativo 1, _
+                                     numeroPedido, _
+                                     Format(RsDados("data"), "YYYYMMDD"), _
+                                     Format(RsDados("horaOperacao"), "HHMMSS")
+    End If
+
+    Screen.MousePointer = 0
+
+    RsDados.Close
+
+TrataErro:
+
+    Screen.MousePointer = vbDefault
+    
+    If Err.Number <> 0 Then
+        MsgBox "Erro ao finalizar transacao no TEF" & vbNewLine & Err.Number & " - " & Err.Description, vbCritical, "TEF"
+    End If
+    
+End Sub
 
 Private Sub carregarDadosTEFBancoDeDados(ByRef labelMensagem As Label, _
                                          ByRef Ip As String, _

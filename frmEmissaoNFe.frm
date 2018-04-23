@@ -1461,7 +1461,7 @@ Private Sub timerSairSistema_Timer()
     carregaArquivoUnico
     If Tempo > 60 Then 'felipetef
         timerExibirMSG.Enabled = False
-        ImprimeComprovanteTEF ComprovantePagamentoFila
+        'ImprimeComprovanteTEF ComprovantePagamentoFila
         Unload Me
     End If
 End Sub

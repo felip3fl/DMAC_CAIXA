@@ -5,8 +5,8 @@ Begin VB.Form frmCaixaRomaneioDireto
    BorderStyle     =   0  'None
    Caption         =   "Romaneio"
    ClientHeight    =   8235
-   ClientLeft      =   2880
-   ClientTop       =   1680
+   ClientLeft      =   6555
+   ClientTop       =   1305
    ClientWidth     =   12360
    ControlBox      =   0   'False
    LinkTopic       =   "Form1"
