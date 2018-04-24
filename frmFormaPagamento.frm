@@ -120,7 +120,7 @@ Begin VB.Form frmFormaPagamento
          _ExtentX        =   4233
          _ExtentY        =   820
          BTYPE           =   14
-         TX              =   "Retornar Operação"
+         TX              =   "Cancelar Operação"
          ENAB            =   -1  'True
          BeginProperty FONT {0BE35203-8F91-11CE-9DE3-00AA004BB851} 
             Name            =   "Arial"
@@ -3238,7 +3238,9 @@ Continua:
 End Sub
 
 Private Sub cmdRetornaOperacaoTEF_Click()
-    retornaOperacaoTEF = True
+    'If MsgBox("A operação com o TEF será cancelada. Deseja Continuar?", vbQuestion + vbYesNo, "Atenção") = vbYes Then
+        cancelarOperacaoTEF = True
+    'End If
 End Sub
 
 Private Sub cmdTefCredito_Click()
@@ -3275,6 +3277,7 @@ End Sub
 Private Sub habilitaFrameTEFOperacoes(ativa As Boolean)
 
     retornaOperacaoTEF = False
+    cancelarOperacaoTEF = False
     
     framePagamentoTEFInterno.Enabled = ativa
     

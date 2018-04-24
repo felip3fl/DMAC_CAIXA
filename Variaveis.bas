@@ -450,6 +450,7 @@ Global ReImpressao_Dev As Boolean
 Global retornoEntradaDeValores As String
 
 Global retornaOperacaoTEF As Boolean
+Global cancelarOperacaoTEF As Boolean
 
      
 Global horaOperacaoTEF As String

@@ -297,11 +297,15 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
     Do
             DoEvents
             Resultado = 0
+            
             If retornaOperacaoTEF Then
-                'valores = 1
                 retornaOperacaoTEF = False
-                'ProximoComando = 1
                 Resultado = 1
+            End If
+            
+            If cancelarOperacaoTEF Then
+                cancelarOperacaoTEF = False
+                Resultado = 2
             End If
             
             If valores <> "" Then
