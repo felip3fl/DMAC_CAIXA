@@ -407,6 +407,8 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                 Case 505
                         valores = Format(nf.Parcelas, "0")
                         If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo)
+                Case 952
+                        nf.numeroTEF = Val(Mid(Buffer, 1, 10))
                 'Case Else
                         'If GLB_Administrador Then valores = InputBox(Trim(Buffer), "TipoCampo = " & TipoCampo)
                         
@@ -453,7 +455,7 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
     If (retorno = 0) Then
         campoExibirMensagem.Caption = "Operação completada com sucesso"
         campoExibirMensagem.Refresh
-        nf.numeroTEF = lerCamporResultadoTEF(nf.comprovantePagamento, "Host")
+        'nf.numeroTEF = lerCamporResultadoTEF(nf.comprovantePagamento, "Host")
         EfetuaOperacaoTEF = True
     Else
         MsgBox retornoFuncoesTEF(Str(retorno)), vbCritical, "Erro TEF"
