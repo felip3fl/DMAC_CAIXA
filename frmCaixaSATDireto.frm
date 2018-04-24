@@ -1105,15 +1105,6 @@ Sub PegaNumeroPedido()
     rdoCNLoja.Execute Sql, rdExecDirect
   
     rdoCNLoja.CommitTrans
-    
-'    CriaCapaPedido NroPedido
-
-    
-    'End If
-  
-' GravaItensPedido NroPedido, 11, 725
-    
-
 
 Screen.MousePointer = vbNormal
 End Sub
@@ -1179,24 +1170,24 @@ End Function
 '***** ROTINA ECF (NAO APAGAR)
 Private Sub RotinadeAberturadoCupom()
 
-      Retorno = 0
+      retorno = 0
 
-      Retorno = Bematech_FI_AbrePortaSerial()
+      retorno = Bematech_FI_AbrePortaSerial()
 
       Call VerificaRetornoImpressora("", "", "BemaFI32")
       
-      Retorno = Bematech_FI_AbreCupom(txtCGC_CPF.text)
+      retorno = Bematech_FI_AbreCupom(txtCGC_CPF.text)
 
-      If Retorno <> 1 Then
+      If retorno <> 1 Then
            MsgBox "Verifique se impressora de Cupom Fiscal está Ligada e conectada ao computador!", vbCritical, "Ateção"
-           Retorno = Bematech_FI_FechaPortaSerial()
+           retorno = Bematech_FI_FechaPortaSerial()
 
            Exit Sub
         End If
 
       wValorRetorno = ""
       Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-      Retorno = Bematech_FI_NumeroCupom(wNumeroCupom)
+      retorno = Bematech_FI_NumeroCupom(wNumeroCupom)
 
       If Trim(wValorRetorno) = "6, 2, 1" Then
 

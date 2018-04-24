@@ -927,17 +927,17 @@ Private Sub txtCodigoProduto_KeyPress(KeyAscii As Integer)
               grdItens.TopRow = grdItens.Rows - 1
 
               
-              Retorno = Bematech_FI_AumentaDescricaoItem(wDescricao38)
+              retorno = Bematech_FI_AumentaDescricaoItem(wDescricao38)
 
               Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
                   
-              Retorno = Bematech_FI_VendeItem(wCodigoProduto, wDescricao, _
+              retorno = Bematech_FI_VendeItem(wCodigoProduto, wDescricao, _
                   Trim(wAliquota), wTipoQuantidade, wQtde, wCasaDecimais, _
                   (wPrecoVenda * 100), wTipoDesconto, 0)
             
               Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
              
-             If Retorno = 1 Then
+             If retorno = 1 Then
                 wtotalitens = (wtotalitens + 1)
                 NroItens = NroItens + 1
                 wTotalVenda = _
@@ -965,7 +965,7 @@ Private Sub txtCodigoProduto_KeyPress(KeyAscii As Integer)
    
    If KeyAscii = 27 Then
      If MsgBox("Deseja cancelar essa venda?", vbQuestion + vbYesNo, "Atenção") = vbYes Then
-        Retorno = Bematech_FI_CancelaCupom()
+        retorno = Bematech_FI_CancelaCupom()
        'Função que analisa o retorno da impressora
         Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
        lblTotalvenda.Caption = ""
@@ -981,7 +981,7 @@ Sub PegaNumeroPedido()
  Screen.MousePointer = 11
 ' If NroItens = 1 Then
  
-    Sql = "Select * from Controlesistema "
+    Sql = "Select CTs_NumeroPedido from Controlesistema "
     
     rdocontrole.CursorLocation = adUseClient
     rdocontrole.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
@@ -1071,24 +1071,24 @@ End Function
 '***** ROTINA ECF (NAO APAGAR)
 Private Sub RotinadeAberturadoCupom()
 
-      Retorno = 0
+      retorno = 0
 
-      Retorno = Bematech_FI_AbrePortaSerial()
+      retorno = Bematech_FI_AbrePortaSerial()
 
       Call VerificaRetornoImpressora("", "", "BemaFI32")
       
-      Retorno = Bematech_FI_AbreCupom(txtCGC_CPF.text)
+      retorno = Bematech_FI_AbreCupom(txtCGC_CPF.text)
 
-      If Retorno <> 1 Then
+      If retorno <> 1 Then
            MsgBox "Verifique se impressora de Cupom Fiscal está Ligada e conectada ao computador!", vbCritical, "Ateção"
-           Retorno = Bematech_FI_FechaPortaSerial()
+           retorno = Bematech_FI_FechaPortaSerial()
 
            Exit Sub
         End If
 
       wValorRetorno = ""
       Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
-      Retorno = Bematech_FI_NumeroCupom(wNumeroCupom)
+      retorno = Bematech_FI_NumeroCupom(wNumeroCupom)
 
       If Trim(wValorRetorno) = "6, 2, 1" Then
 
@@ -1121,7 +1121,7 @@ Private Sub GravaNumeroCupomCgcCpf()
         Screen.MousePointer = vbNormal
     Else
         MsgBox "Falha na gravação do número de Cupom Fiscal." & vbNewLine & "Verifique o Status da Impressora", vbCritical, "Erro Cupom Fiscal"
-        Retorno = Bematech_FI_CancelaCupom()
+        retorno = Bematech_FI_CancelaCupom()
        'Função que analisa o retorno da impressora
         Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
         lblTotalvenda.Caption = ""

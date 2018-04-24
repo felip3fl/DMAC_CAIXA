@@ -3436,6 +3436,8 @@ frmFormaPagamento.Width = 5550
 'frmFormaPagamento.Height = 7110
 
     limpaMovimentoAnteriores
+    
+    limpaCamposPagamentoTotalConfirmado
 
 End Sub
 
@@ -3689,7 +3691,7 @@ ElseIf txtTipoNota.text = "SAT" Then
     End If
     
     ImprimeComprovanteTEF ComprovantePagamentoFila
-    finalizarTransacaoTEF txtPedido.text, txtSerie.text
+    finalizarTransacaoTEF txtPedido.text, txtSerie.text, True
     
     Call ZeraVariaveis
     fraRecebimento.Visible = False
@@ -3858,7 +3860,16 @@ If KeyAscii = 27 Then
        chbValorFalta.Caption = 0
     End If
        
+    limpaCamposPagamentoTotalConfirmado
+
+End If
+
+
+End Sub
+
+Private Sub limpaCamposPagamentoTotalConfirmado()
     If chbValorFalta.Caption <= 0 Then
+    
        chbOkPag.Visible = True
        chbOkPag.Enabled = True
        chbSair.Enabled = False
@@ -3869,11 +3880,14 @@ If KeyAscii = 27 Then
        lblModalidade.Visible = False
        lblParcelas.Visible = False
        exibirMensagemTEF "Pagamento Confir" & vbNewLine & "   Emitindo NF"
+       
+       If GLB_TEFnaoCancelado Then
+            MsgBox "Transação TEF efetuada. Favor reimprimir último cupom. " & _
+                   "Caso Cielo utilizar apenas 6 últimos dígitos. NSU:  *Numero do NSU* ", _
+                   vbInformation, "TEF"
+       End If
+       
     End If
-
-End If
-
-
 End Sub
 
 Private Sub txtValorModalidade_LostFocus()

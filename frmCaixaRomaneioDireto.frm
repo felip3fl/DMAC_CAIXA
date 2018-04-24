@@ -777,7 +777,7 @@ Sub PegaNumeroPedido()
  Screen.MousePointer = 11
  If NroItens = 1 Then
  
-    Sql = "Select * from Controlesistema "
+    Sql = "Select CTs_NumeroPedido from Controlesistema "
     
     rdocontrole.CursorLocation = adUseClient
     rdocontrole.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic

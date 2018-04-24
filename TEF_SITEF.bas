@@ -463,7 +463,6 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
         campoExibirMensagem.Refresh
     End If
                                      
-    'finalizarTransacaoTEF
                                      
     Screen.MousePointer = 0
     
@@ -478,14 +477,15 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
  
 End Function
 
-Public Sub finalizarTransacaoTEF(numeroPedido As String, serie As String)
+Private Function validadorBancoDeDados(numeroPedido As String, serie As String, _
+                                  ByRef dataTransicao As String, ByRef horaTransicao As String) As Boolean
 
     Dim RsDados As New ADODB.Recordset
     Dim Sql As String
 
     On Error GoTo TrataErro
 
-    Sql = "select " & vbNewLine & _
+    Sql = "select top 1" & vbNewLine & _
           "MC_DataBaixaAVR horaOperacao, " & vbNewLine & _
           "MC_Data data " & vbNewLine & _
           "from MovimentoCaixa " & vbNewLine & _
@@ -495,21 +495,18 @@ Public Sub finalizarTransacaoTEF(numeroPedido As String, serie As String)
     
     Screen.MousePointer = 11
     
-        RsDados.CursorLocation = adUseClient
-        RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
-
+    RsDados.CursorLocation = adUseClient
+    RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
+    Screen.MousePointer = 0
     
     If Not RsDados.EOF Then
-        
-        FinalizaTransacaoSiTefInterativo 1, _
-                                     numeroPedido, _
-                                     Format(RsDados("data"), "YYYYMMDD"), _
-                                     Format(RsDados("horaOperacao"), "HHMMSS")
+        dataTransicao = RsDados("data")
+        horaTransicao = RsDados("horaOperacao")
+        validadorBancoDeDados = True
     End If
-
-    Screen.MousePointer = 0
-
+    
+    
     RsDados.Close
 
 TrataErro:
@@ -518,8 +515,35 @@ TrataErro:
     
     If Err.Number <> 0 Then
         MsgBox "Erro ao finalizar transacao no TEF" & vbNewLine & Err.Number & " - " & Err.Description, vbCritical, "TEF"
+        validadorBancoDeDados = False
     End If
+        
+End Function
+
+
+Public Sub finalizarTransacaoTEF(numeroPedido As String, serie As String, validaAntesDeFinalizar As Boolean)
+
+    Dim dataTransicao As String
+    Dim horaTransicao As String
+    Dim realizarFinalizacao As Boolean
     
+    dataTransicao = Date
+    horaTransicao = horaOperacaoTEF
+    realizarFinalizacao = True
+    
+    If validaAntesDeFinalizar Then
+        realizarFinalizacao = validadorBancoDeDados(numeroPedido, serie, dataTransicao, horaTransicao)
+    End If
+
+    If realizarFinalizacao Then
+        
+        FinalizaTransacaoSiTefInterativo 1, _
+                                     numeroPedido, _
+                                     Format(dataTransicao, "YYYYMMDD"), _
+                                     Format(horaTransicao, "HHMMSS")
+
+    End If
+
 End Sub
 
 Private Sub carregarDadosTEFBancoDeDados(ByRef labelMensagem As Label, _

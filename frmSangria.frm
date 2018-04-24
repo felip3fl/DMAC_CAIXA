@@ -1414,7 +1414,7 @@ Private Sub reimpressaoTEF()
 
     Call EfetuaOperacaoTEF("113", nf, lblMensagemTEFModalidade, lblMensagemTEF)
     ImprimeComprovanteTEF nf.comprovantePagamento
-    finalizarTransacaoTEF nf.pedido, nf.serie
+    finalizarTransacaoTEF nf.pedido, nf.serie, False
 
 End Sub
 

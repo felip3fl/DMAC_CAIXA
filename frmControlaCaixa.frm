@@ -1232,12 +1232,20 @@ Private Sub chameleonButton8_Click()
 End Sub
 
 Private Sub cmdNroCaixa_Click()
+    funcao110
+End Sub
+
+Private Sub funcao110()
     If GLB_Administrador And GLB_TefHabilidado Then
         If MsgBox("Deseja executar o função 110 do TEF?", vbQuestion + vbYesNo, "MODO ADMINISTRADOR TEF") = vbYes Then
             Dim nf As notaFiscalTEF
+            PegaNumeroPedido
+            
+            nf.pedido = pedido
+            
             Call EfetuaOperacaoTEF("110", nf, lblMensagensTEF, lblMensagensTEF)
             ImprimeComprovanteTEF nf.comprovantePagamento
-            finalizarTransacaoTEF nf.pedido, nf.serie
+            finalizarTransacaoTEF nf.pedido, nf.serie, False
         End If
     End If
 End Sub

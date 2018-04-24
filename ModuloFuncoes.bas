@@ -5189,4 +5189,37 @@ Sub ImprimeAnaliticoVenda(grid As Object)
      
 End Sub
 
+Sub PegaNumeroPedido()
 
+ Screen.MousePointer = 11
+' If NroItens = 1 Then
+    Dim rdocontrole As New ADODB.Recordset
+ 
+    Sql = "Select CTs_NumeroPedido from Controlesistema "
+    
+    rdocontrole.CursorLocation = adUseClient
+    rdocontrole.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    
+    NroPedido = rdocontrole("CTs_NumeroPedido")
+    pedido = rdocontrole("CTs_NumeroPedido")
+    
+    rdocontrole.Close
+    rdoCNLoja.BeginTrans
+       
+    Sql = "Update Controlesistema set CTs_NumeroPedido = " & pedido & " + 1"
+    rdoCNLoja.Execute Sql, rdExecDirect
+  
+    rdoCNLoja.CommitTrans
+    
+'    CriaCapaPedido NroPedido
+
+    
+    'End If
+  
+' GravaItensPedido NroPedido, 11, 725
+    
+
+
+Screen.MousePointer = vbNormal
+
+End Sub
