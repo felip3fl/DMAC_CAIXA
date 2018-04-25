@@ -4,8 +4,8 @@ Begin VB.Form frmEntradaDeValores
    BorderStyle     =   0  'None
    Caption         =   "Entrada de Valores"
    ClientHeight    =   3600
-   ClientLeft      =   7515
-   ClientTop       =   3285
+   ClientLeft      =   6615
+   ClientTop       =   3330
    ClientWidth     =   5280
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
@@ -28,6 +28,7 @@ Begin VB.Form frmEntradaDeValores
       EndProperty
       ForeColor       =   &H00FFFFFF&
       Height          =   495
+      IMEMode         =   3  'DISABLE
       Left            =   200
       TabIndex        =   0
       Top             =   2310

@@ -5139,12 +5139,18 @@ TrataErro:
     
 End Sub
 
-Public Function entradaDeValores(Titulo As String, mensagem As String, tamanhoMinino As Integer, tamanhoMaximo As Integer) As String
+Public Function entradaDeValores(Titulo As String, mensagem As String, tamanhoMinino As Integer, tamanhoMaximo As Integer, mascarado As Boolean) As String
 
     frmEntradaDeValores.lblTitulo.Caption = Trim(Titulo)
     frmEntradaDeValores.lblMensagem.Caption = Trim(mensagem)
     frmEntradaDeValores.tamanhoMaximo = tamanhoMaximo
     frmEntradaDeValores.tamanhoMinino = tamanhoMinino
+    
+    If mascarado Then
+        frmEntradaDeValores.txtEntrada.PasswordChar = "*"
+    Else
+        frmEntradaDeValores.txtEntrada.PasswordChar = ""
+    End If
 
     frmEntradaDeValores.Show vbModal
     
