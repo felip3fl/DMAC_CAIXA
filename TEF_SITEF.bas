@@ -399,10 +399,11 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                             valores = nf.valor
                             If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Forneca o valor da transacao a ser cancelada", TamanhoMinimo, tamanhoMaximo, False)
                         End If
-                Case 512, 513, 514
+                Case 512, 513
                         'valores = InputBox(Buffer)
                         valores = entradaDeValores("TipoCampo = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo, False)
-                        'If GLB_Administrador Then valores = InputBox(Trim(Buffer), "TipoCampo = " & TipoCampo)
+                Case 514
+                        valores = entradaDeValores("TipoCampo = " & TipoCampo, "Código de ok,  do Cartão", TamanhoMinimo, tamanhoMaximo, False)
                 Case 500
                         valores = GLB_USU_Codigo
                         If GLB_Administrador Then
@@ -417,6 +418,9 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                         If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo, False)
                 Case 952
                         nf.numeroTEF = Val(Mid(Buffer, 1, 10))
+                Case 1190
+                        valores = entradaDeValores("TipoCampo = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo, False)
+                    
                 'Case Else
                         'If GLB_Administrador Then valores = InputBox(Trim(Buffer), "TipoCampo = " & TipoCampo)
                         
@@ -634,8 +638,6 @@ Public Sub conectarTEF(ByRef labelMensagem As Label)
   End If
         
   retorno = ConfiguraIntSiTefInterativoEx(Ip & Chr(0), IdLoja & Chr(0), IdTerminal & Chr(0), 0, "[ParmsClient=1=" & wCGC & ";2=" & CNPJDesenvolvedor & "]")
-
-    'retorno = ObtemQuantidadeTransacoesPendentes(data, cupomFiscal)
 
   If (retorno = 0) Then
     labelMensagem.Caption = "Conexão com o sistema SITEF realizada com sucesso"
