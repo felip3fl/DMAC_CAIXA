@@ -6,6 +6,9 @@ Public Declare Function ConfiguraIntSiTefInterativo Lib "C:\Sistemas\DMAC Caixa\
 Public Declare Function ConfiguraIntSiTefInterativoEx Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" (ByVal pEnderecoIP As String, ByVal pCodigoLoja As String, ByVal pNumeroTerminal As String, ByVal ConfiguraResultado As Integer, ByVal pParamAdic As String) As Long
 Public Declare Function IniciaFuncaoSiTefInterativo Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" (ByVal Funcao As Long, ByVal pValor As String, ByVal pCuponFiscal As String, ByVal pDataFiscal As String, ByVal pHorario As String, ByVal pOperador As String, ByVal pParamAdic As String) As Long
 Public Declare Sub FinalizaTransacaoSiTefInterativo Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" (ByVal Confirma As Integer, ByVal pNumeroCuponFiscal As String, ByVal pDataFiscal As String, ByVal pHorario As String)
+
+Public Declare Function ObtemQuantidadeTransacoesPendentes Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" (ByVal DataFiscal As String, ByVal cupomFiscal As String) As Long
+
                    
 Public Declare Function ContinuaFuncaoSiTefInterativo Lib "C:\Sistemas\DMAC Caixa\Sitef\CliSitef32I.dll" _
 (ByRef pProximoComando As Long, _
@@ -354,7 +357,7 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                     Case 21, 30
                         
                         If GLB_Administrador Then
-                            valores = entradaDeValores("ProximoComando[" & ProximoComando & "]", Buffer, TamanhoMinimo, tamanhoMaximo)
+                            valores = entradaDeValores("ProximoComando[" & ProximoComando & "]", Buffer, TamanhoMinimo, tamanhoMaximo, False)
                         Else
                             valores = "1"
                             If Buffer Like "1:A Vista*" Then
@@ -364,11 +367,11 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                             ElseIf Buffer Like "1:Rede;2:Cielo;3:Outros;*" Then
                                 valores = "1"
                             Else
-                                valores = entradaDeValores("ProximoComando = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo)
+                                valores = entradaDeValores("ProximoComando = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo, False)
                             End If
                         End If
                     Case 20
-                        valores = entradaDeValores("TipoCampo = " & TipoCampo, "0:Sim;1:Nao;" & Buffer, TamanhoMinimo, tamanhoMaximo)
+                        valores = entradaDeValores("TipoCampo = " & TipoCampo, "0:Sim;1:Nao;" & Buffer, TamanhoMinimo, tamanhoMaximo, False)
                     Case 22
                          MsgBox Trim(Buffer), vbInformation, "Mensagem do TEF (ProximoComando[" & ProximoComando & "])"
                         
@@ -387,27 +390,31 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                         bandeiraCartao.Caption = obterTipoPagamentoCreditoTEF(bandeiraCartao.Caption)
                 Case 515
                         valores = nf.dataEmissao
-                        If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Data da transacao (DDMMAAAA)", TamanhoMinimo, tamanhoMaximo)
+                        If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Data da transacao (DDMMAAAA)", TamanhoMinimo, tamanhoMaximo, False)
                 Case 516
                         valores = nf.numeroTEF 'numero tef
-                        If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Forneca o numero do documento", TamanhoMinimo, tamanhoMaximo)
+                        If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Forneca o numero do documento", TamanhoMinimo, tamanhoMaximo, False)
                 Case 146
-                        valores = nf.valor
-                        If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Forneca o valor da transacao a ser cancelada", TamanhoMinimo, tamanhoMaximo)
+                        If ProximoComando = 34 Then
+                            valores = nf.valor
+                            If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Forneca o valor da transacao a ser cancelada", TamanhoMinimo, tamanhoMaximo, False)
+                        End If
                 Case 512, 513, 514
                         'valores = InputBox(Buffer)
-                        valores = entradaDeValores("TipoCampo = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo)
+                        valores = entradaDeValores("TipoCampo = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo, False)
                         'If GLB_Administrador Then valores = InputBox(Trim(Buffer), "TipoCampo = " & TipoCampo)
                 Case 500
                         valores = GLB_USU_Codigo
-                        If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Forneca o codigo do supervisor", TamanhoMinimo, tamanhoMaximo)
+                        If GLB_Administrador Then
+                            valores = entradaDeValores("TipoCampo = " & TipoCampo, "Forneca o codigo do supervisor", TamanhoMinimo, tamanhoMaximo, True)
+                        End If
                 Case 5013
                         If MsgBox("Deseja cancelar essa operação?", vbQuestion + vbYesNo, "TipoCampo = " & TipoCampo) = vbYes Then
                             valores = "-2"
                         End If
                 Case 505
                         valores = Format(nf.Parcelas, "0")
-                        If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo)
+                        If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo, False)
                 Case 952
                         nf.numeroTEF = Val(Mid(Buffer, 1, 10))
                 'Case Else
@@ -606,6 +613,9 @@ Public Sub conectarTEF(ByRef labelMensagem As Label)
   Dim IdLoja As String
   Dim CNPJDesenvolvedor As String
   
+    Dim data As String
+  Dim cupomFiscal As String
+  
   On Error GoTo TrataErro
 
   labelMensagem.Caption = ""
@@ -624,6 +634,8 @@ Public Sub conectarTEF(ByRef labelMensagem As Label)
   End If
         
   retorno = ConfiguraIntSiTefInterativoEx(Ip & Chr(0), IdLoja & Chr(0), IdTerminal & Chr(0), 0, "[ParmsClient=1=" & wCGC & ";2=" & CNPJDesenvolvedor & "]")
+
+    'retorno = ObtemQuantidadeTransacoesPendentes(data, cupomFiscal)
 
   If (retorno = 0) Then
     labelMensagem.Caption = "Conexão com o sistema SITEF realizada com sucesso"
