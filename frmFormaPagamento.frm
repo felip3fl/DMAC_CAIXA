@@ -3689,9 +3689,7 @@ ElseIf txtTipoNota.text = "SAT" Then
         frmCaixaSAT.fraPedido.Visible = True
     
     End If
-    
-    ImprimeComprovanteTEF ComprovantePagamentoFila
-    finalizarTransacaoTEF txtPedido.text, txtSerie.text, True
+
     
     Call ZeraVariaveis
     fraRecebimento.Visible = False
@@ -3880,6 +3878,9 @@ Private Sub limpaCamposPagamentoTotalConfirmado()
        lblModalidade.Visible = False
        lblParcelas.Visible = False
        exibirMensagemTEF "Pagamento Confir" & vbNewLine & "   Emitindo NF"
+       
+       ImprimeComprovanteTEF ComprovantePagamentoFila
+       finalizarTransacaoTEF txtPedido.text, txtSerie.text, True
        
        If GLB_TEFnaoCancelado Then
             MsgBox "Transação TEF efetuada. Favor reimprimir último cupom. " & _

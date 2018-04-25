@@ -660,6 +660,7 @@ Private Function cancelarTEF()
             
             ImprimeComprovanteTEF nf.comprovantePagamento
             cancelaMovimentoCaixaEspecifico grdNumeroTEF.TextMatrix(i, 0), nf.pedido
+            finalizarTransacaoTEF nf.pedido, nf.serie, False
         End If
             
         'carregaNotasComTEFGrid
