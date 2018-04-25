@@ -2,7 +2,7 @@
 
 Projeto DMAC Caixa desenvolvido em VB6 seguintos os padrões DMAC
 
-<img src="https://dmac-desenv.visualstudio.com/5278aede-4736-4ea1-89f8-62f2c17cdf3a/_api/_versioncontrol/itemContent?repositoryId=f38a593c-6eda-4737-9257-c49b0e0c5d25&path=%2FMaterial%2FTela%2FDMAC+Caixa.gif&version=GBPrincipal&contentOnly=true&__v=5" >
+<img src="https://dmac-desenv.visualstudio.com/16fb0a51-4d90-4d43-b0ee-e3cc047ac6af/_apis/git/repositories/cb3c0528-c9d4-49a6-be26-fcb6a56e051c/Items?path=%2FMaterial%2FTela%2FDMAC+Caixa.gif&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=TEF&download=false&resolveLfs=true&%24format=octetStream&api-version=5.0-preview.1" >
 
 # Getting Started
 TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
