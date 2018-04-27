@@ -41,6 +41,7 @@ Public Type notaFiscal
     pedido As String
     cfop As String
     valor As String
+    sequenciaMovimento As String
 End Type
 
 
@@ -190,12 +191,12 @@ Public Function montaTXTSAT(pedido As String) As String
     
 End Function
 
-Public Function montaTXT(Nf As notaFiscal) As String
+Public Function montaTXT(nf As notaFiscal) As String
     Dim ado_estrutura As New ADODB.Recordset
 
     sql = "select nfl_descricao, nfl_dados " & _
           "from NFE_NFLojas " & _
-          "where nfl_loja = '" & Nf.loja & "' and nfl_nroNFE = '" & Nf.numero & "'" & _
+          "where nfl_loja = '" & nf.loja & "' and nfl_nroNFE = '" & nf.numero & "'" & _
           "order by NFL_sequencia, nfl_NROnfe, nfl_dados desc"
     
     ado_estrutura.CursorLocation = adUseClient
@@ -220,14 +221,14 @@ Public Sub mensagemErroDesconhecido(numeroErro As ErrObject, nomeFormulario As S
     End
 End Sub
 
-Public Function criaTXTSAT(tipoTXT As String, Nf As notaFiscal)
+Public Function criaTXTSAT(tipoTXT As String, nf As notaFiscal)
     Dim corpoMensagem As String
     
 On Error GoTo TrataErro
     
-    corpoMensagem = montaTXTSAT(Nf.pedido)
+    corpoMensagem = montaTXTSAT(nf.pedido)
     Open GLB_EnderecoPastaFIL & _
-    tipoTXT & (Format(Nf.pedido, "000000000")) & "#" & Nf.CNPJ & ".txt" For Output As #1
+    tipoTXT & (Format(nf.pedido, "000000000")) & "#" & nf.CNPJ & ".txt" For Output As #1
          Print #1, corpoMensagem
     Close #1
     
@@ -239,14 +240,14 @@ TrataErro:
     End Select
 End Function
 
-Public Function criaTXT(tipoTXT As String, Nf As notaFiscal)
+Public Function criaTXT(tipoTXT As String, nf As notaFiscal)
     Dim corpoMensagem As String
     
 On Error GoTo TrataErro
     
-    corpoMensagem = montaTXT(Nf)
+    corpoMensagem = montaTXT(nf)
     Open GLB_EnderecoPastaFIL & _
-    tipoTXT & (Format(Nf.numero, "000000000")) & "#" & Nf.CNPJ & ".txt" For Output As #1
+    tipoTXT & (Format(nf.numero, "000000000")) & "#" & nf.CNPJ & ".txt" For Output As #1
          Print #1, Mid(corpoMensagem, 4, Len(corpoMensagem))
     Close #1
     

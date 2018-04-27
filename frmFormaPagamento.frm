@@ -4,8 +4,8 @@ Begin VB.Form frmFormaPagamento
    BorderStyle     =   0  'None
    Caption         =   "Forma de Pagamento"
    ClientHeight    =   8640
-   ClientLeft      =   2550
-   ClientTop       =   1755
+   ClientLeft      =   3060
+   ClientTop       =   1635
    ClientWidth     =   13425
    BeginProperty Font 
       Name            =   "Arial Black"
@@ -1485,7 +1485,7 @@ Option Explicit
 Dim Asteristico As Boolean
 Dim AbreTela As Long
 Dim NroPedido As Long
-Dim Sql As String
+Dim sql As String
 
 Dim ativaAtalho As Boolean
 
@@ -1597,8 +1597,10 @@ Dim valValorFalta As Double
 Dim valValoraPagar As Double
 Dim tempoHabilitaPOS As Byte
 
-Dim Agencia As String
+Dim primeiroCarregamento As Boolean
 
+Dim Agencia As String
+Dim tipoNotaMovimentoCaixa As String
 
 
 
@@ -1608,44 +1610,81 @@ Private Sub GravaRegistro()
 
 If EntFaturada = "0.00" And EntFinanciada = "0.00" Then
 
-      Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_SubGrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
+      sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_SubGrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
       & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_dataprocesso,MC_TipoNota,MC_SequenciaTEF,MC_DataBaixaAVR) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
       & " '" & Format(GLB_DataInicial, "yyyy/mm/dd") & "', " & wGrupoMovimento & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
       & "" & ConverteVirgula(Format(wValorMovimento, "##,###0.00")) & ", " _
-      & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "', '" & Format(horaOperacaoTEF, "HH:MM:SS") & "')"
-      rdoCNLoja.Execute (Sql)
+      & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','" & tipoNotaMovimentoCaixa & "','" & txtNumeroTEF.text & "', '" & Format(horaOperacaoTEF, "HH:MM:SS") & "')"
+      rdoCNLoja.Execute (sql)
       
 Else
-   Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_SubGrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
+   sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_SubGrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
       & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF,MC_DataBaixaAVR) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
       & " '" & Format(GLB_DataInicial, "yyyy/mm/dd") & "', " & wGrupoMovimento & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
       & "" & ConverteVirgula(Format(wValorMovimento, "##,###0.00")) & ", " _
-      & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "','" & horaOperacaoTEF & "')"
-      rdoCNLoja.Execute (Sql)
+      & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','" & tipoNotaMovimentoCaixa & "','" & txtNumeroTEF.text & "','" & horaOperacaoTEF & "')"
+      rdoCNLoja.Execute (sql)
       
    If EntFaturada <> "0.00" Then
-      Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_SubGrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
+      sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_SubGrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
          & "MC_Contacorrente,MC_bomPara,MC_Parcelas,MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido, MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF,MC_DataBaixaAVR) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
          & " '" & Format(GLB_DataInicial, "yyyy/mm/dd") & "', " & 11004 & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
          & "" & ConverteVirgula(Format(EntFaturada, "##,###0.00")) & ", " _
-         & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "','" & horaOperacaoTEF & "')"
-         rdoCNLoja.Execute (Sql)
+         & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','" & tipoNotaMovimentoCaixa & "','" & txtNumeroTEF.text & "','" & horaOperacaoTEF & "')"
+         rdoCNLoja.Execute (sql)
    ElseIf EntFinanciada <> "0.00" Then
-       Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_SubGrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
+       sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_SubGrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
              & "MC_Contacorrente,MC_bomPara,MC_Parcelas,MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido, MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF,MC_DataBaixaAVR) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
              & " '" & Format(GLB_DataInicial, "yyyy/mm/dd") & "', " & 11005 & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
              & "" & ConverteVirgula(Format(EntFinanciada, "##,###0.00")) & ", " _
-             & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "','" & horaOperacaoTEF & "')"
-             rdoCNLoja.Execute (Sql)
+             & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','" & tipoNotaMovimentoCaixa & "','" & txtNumeroTEF.text & "','" & horaOperacaoTEF & "')"
+             rdoCNLoja.Execute (sql)
    End If
 End If
    
 End Sub
 
+
+
+
+Private Function obterSequenciaMovimentoCaixa(pedido As String)
+
+    Dim sql As String
+    Dim rsConsulta As New ADODB.Recordset
+
+    sql = "SELECT top 1 MC_Sequencia FROM  MovimentoCaixa" & vbNewLine & _
+          "where MC_GRUPO = '99999'" & vbNewLine & _
+          "and MC_PEDIDO = '" & pedido & "'" & vbNewLine & _
+          ""
+    
+    rsConsulta.CursorLocation = adUseClient
+    rsConsulta.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    
+    If Not rsConsulta.EOF Then
+        
+        obterSequenciaMovimentoCaixa = rsConsulta("MC_Sequencia")
+
+    End If
+    
+    rsConsulta.Close
+
+    
+    sql = "update movimentocaixa set MC_GRUPO = '10101'" & vbNewLine & _
+          "where MC_GRUPO = '99999'" & vbNewLine & _
+          "and MC_PEDIDO = '" & pedido & "'" & vbNewLine & _
+          ""
+    
+    rdoCNLoja.Execute sql
+    
+
+End Function
+
 Private Sub GuardaValoresParaGravarMovimentoCaixa()
 
 'wValorModalidadeIncorreto = False
       Dim nf As notaFiscalTEF
+      
+      tipoNotaMovimentoCaixa = "PA"
       
       If Trim(txtValorModalidade.text = "") Then
          Exit Sub
@@ -1668,10 +1707,10 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
          
             'If ((modalidade + TotPago) - valValoraPagar) > ValDinheiro _
             'And valValoraPagar < (modalidade + TotPago) Then
-            If ((modalidade + TotPago) - valValoraPagar) > 0 Or modalidade <= 0 Then
-                MsgBox "Não é permitido troco maior que pagamento em dinheiro"
-                Exit Sub
-            End If
+            'If ((modalidade + TotPago) - valValoraPagar) > 0 Or modalidade <= 0 Then
+                'MsgBox "Não é permitido troco maior que pagamento em dinheiro"
+                'Exit Sub
+            'End If
          
          End If
          
@@ -1689,47 +1728,75 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
       
       habilitaFrameTEFOperacoes False
       
+           If lblModalidade.Caption = "CREDITO" Then
       
-      If lblModalidade.Caption = "CREDITO" Then
-           
+              tipoNotaMovimentoCaixa = "TF"
+      
+              operacaoTEFCompleta = False
+              CodigoModalidade = "0101"
+              wCodigoModalidadeDINHEIRO = "0101"
+              wGrupoMovimento = "99999"
+              wSubGrupo = ""
+              ValTEFVisaElectron = ValTEFVisaElectron + modalidade
+              wValorMovimento = Format(ValTEFVisaElectron, "##,###0.00")
+              Call GravaRegistro
+              nf.sequenciaMovimentoCaixa = obterSequenciaMovimentoCaixa(txtPedido.text)
+              ValTEFVisaElectron = 0
+              txtNumeroTEF.text = ""
+              
+      
           If EfetuaOperacaoTEF("3", nf, lblModalidade, lblMensagemTEF) Then
+            operacaoTEFCompleta = True
+            TotPago = TotPago + modalidade
             txtNumeroTEF.text = nf.numeroTEF
-            carregaCodigoModalidade lblModalidade.Caption
+            
+            'carregaCodigoModalidade lblModalidade.Caption
             
             ComprovantePagamentoFila = ComprovantePagamentoFila & nf.comprovantePagamento
-        
-                '    If wCodigoModalidadeMASTERCARD = "0302" Then
-                     
-                    'End If
-    
+            lblModalidade.Caption = ""
           Else
             lblModalidade.Caption = ""
           End If
-      End If
-
-      If lblModalidade.Caption = "Operação 0" Then
-          If EfetuaOperacaoTEF("0", nf, lblModalidade, lblMensagemTEF) Then
-            txtNumeroTEF.text = nf.numeroTEF
-            carregaCodigoModalidade lblModalidade.Caption
-            
-            ComprovantePagamentoFila = ComprovantePagamentoFila & nf.comprovantePagamento
-            'TotPago = TotPago + Modalidade
-            'ValTEFVisaElectron = ValTEFVisaElectron + Modalidade
-            'bandeiraTEFVisaElectron = Agencia
-          Else
-            lblModalidade.Caption = ""
-          End If
+          
       End If
 
       If lblModalidade.Caption = "DEBITO" Then
+      
+              tipoNotaMovimentoCaixa = "TF"
+      
+              operacaoTEFCompleta = False
+              CodigoModalidade = "0101"
+              wCodigoModalidadeDINHEIRO = "0101"
+              wGrupoMovimento = "99999"
+              wSubGrupo = ""
+              ValTEFVisaElectron = ValTEFVisaElectron + modalidade
+              wValorMovimento = Format(ValTEFVisaElectron, "##,###0.00")
+              Call GravaRegistro
+              nf.sequenciaMovimentoCaixa = obterSequenciaMovimentoCaixa(txtPedido.text)
+              ValTEFVisaElectron = 0
+              txtNumeroTEF.text = ""
+              
+      
           If EfetuaOperacaoTEF("2", nf, lblModalidade, lblMensagemTEF) Then
+          
+            operacaoTEFCompleta = True
+            TotPago = TotPago + modalidade
+        
+            txtNumeroTEF.text = nf.numeroTEF
+            'carregaCodigoModalidade lblModalidade.Caption
+            ComprovantePagamentoFila = ComprovantePagamentoFila & nf.comprovantePagamento
+            lblModalidade.Caption = ""
+          Else
+            lblModalidade.Caption = ""
+          End If
+      End If
+      
+      If lblModalidade.Caption = "Operação 0" Then
+          tipoNotaMovimentoCaixa = "PA"
+          If EfetuaOperacaoTEF("0", nf, lblModalidade, lblMensagemTEF) Then
             txtNumeroTEF.text = nf.numeroTEF
             carregaCodigoModalidade lblModalidade.Caption
-            
             ComprovantePagamentoFila = ComprovantePagamentoFila & nf.comprovantePagamento
-            'TotPago = TotPago + Modalidade
-            'ValTEFVisaElectron = ValTEFVisaElectron + Modalidade
-            'bandeiraTEFVisaElectron = Agencia
           Else
             lblModalidade.Caption = ""
           End If
@@ -2336,20 +2403,20 @@ wRomaneio = False
 '-- Colocar a mensagem na tabela parametro
 '
 
-Sql = "Update Nfcapa set ECF = '" & GLB_ECF & "' where NumeroPed =  " & txtPedido.text
-rdoCNLoja.Execute Sql
+sql = "Update Nfcapa set ECF = '" & GLB_ECF & "' where NumeroPed =  " & txtPedido.text
+rdoCNLoja.Execute sql
 
 
 If txtTipoNota.text = "CUPOM" Then
 
 ' ROTINA ECF (NAO APAGAR)
 ' Fecha o Cupom
-   Sql = ""
-   Sql = "select ve_Codigo,ve_nome,desconto,nf from nfcapa,vende where vendedor = ve_codigo and " & _
+   sql = ""
+   sql = "select ve_Codigo,ve_nome,desconto,nf from nfcapa,vende where vendedor = ve_codigo and " & _
              "NumeroPed = " & txtPedido.text
              
    rsComplementoVenda.CursorLocation = adUseClient
-   rsComplementoVenda.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+   rsComplementoVenda.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
    If rsComplementoVenda("ve_Codigo") = 725 Then
       wAdicionaisECF = "Pedido: " & Trim(txtPedido.text) & "     " & rsComplementoVenda("ve_Codigo") & " - Caixa "
@@ -2385,12 +2452,12 @@ ElseIf txtTipoNota.text = "SAT" Then
 
 ' ROTINA ECF (NAO APAGAR)
 ' Fecha o Cupom
-   Sql = ""
-   Sql = "select ve_Codigo,ve_nome,desconto,nf from nfcapa,vende where vendedor = ve_codigo and " & _
+   sql = ""
+   sql = "select ve_Codigo,ve_nome,desconto,nf from nfcapa,vende where vendedor = ve_codigo and " & _
              "NumeroPed = " & txtPedido.text
              
    rsComplementoVenda.CursorLocation = adUseClient
-   rsComplementoVenda.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+   rsComplementoVenda.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
    If rsComplementoVenda("ve_Codigo") = 725 Then
       wAdicionaisECF = "Pedido: " & Trim(txtPedido.text) & "     " & rsComplementoVenda("ve_Codigo") & " - Caixa "
@@ -2425,16 +2492,16 @@ ElseIf txtTipoNota.text = "NF" Then
      
   '************************ Verificando se Nota é Eletrônica
         
-       Sql = ""
-       Sql = "select ce_Estado,ce_tipopessoa, cliente from fin_cliente,nfcapa where ce_CodigoCliente = Cliente and " & _
+       sql = ""
+       sql = "select ce_Estado,ce_tipopessoa, cliente from fin_cliente,nfcapa where ce_CodigoCliente = Cliente and " & _
              "NumeroPed = " & txtPedido.text
 
             rsComplementoVenda.CursorLocation = adUseClient
-            rsComplementoVenda.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+            rsComplementoVenda.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                  
-            Sql = "select CTS_SerieNota from ControleSistema"
+            sql = "select CTS_SerieNota from ControleSistema"
             rsControle.CursorLocation = adUseClient
-            rsControle.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+            rsControle.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                  
                  
             If (rsControle("CTS_SerieNota") = "NE") Or RTrim(LTrim(rsComplementoVenda("ce_Estado"))) <> "SP" _
@@ -2451,15 +2518,15 @@ ElseIf txtTipoNota.text = "NF" Then
                    rdoCNLoja.BeginTrans
                    Screen.MousePointer = vbHourglass
 
-                   Sql = ""
-                   Sql = "Update NfItens set  Serie = 'NE' " & _
+                   sql = ""
+                   sql = "Update NfItens set  Serie = 'NE' " & _
                          "where NumeroPed = " & pedido
-                   rdoCNLoja.Execute (Sql)
+                   rdoCNLoja.Execute (sql)
 
-                   Sql = ""
-                   Sql = "Update NfCapa set  Serie = 'NE', TM = 0 " & _
+                   sql = ""
+                   sql = "Update NfCapa set  Serie = 'NE', TM = 0 " & _
                          "where NumeroPed = " & pedido
-                   rdoCNLoja.Execute (Sql)
+                   rdoCNLoja.Execute (sql)
                    
                    If (rsControle("CTS_SerieNota") <> "NE") Then MsgBox "ESTE PEDIDO IRÁ GERAR A NOTA FISCAL ELETRÔNICA NÚMERO " & NroNotaFiscal & _
                            ", AVISE O CLIENTE.", vbInformation, "Atenção"
@@ -2488,20 +2555,20 @@ ElseIf txtTipoNota.text = "NF" Then
 ''''                 sql = "Update Nfcapa set Nf = " & NroNotaFiscal & ", Serie = '" & PegaSerieNota _
 ''''                        & "' where NumeroPed =  " & txtPedido.text
                         
-                 Sql = "Update Nfcapa set Nf = " & NroNotaFiscal & ", Serie = '" & PegaSerieNota _
+                 sql = "Update Nfcapa set Nf = " & NroNotaFiscal & ", Serie = '" & PegaSerieNota _
                         & "' where NumeroPed =  " & txtPedido.text
              
-                 rdoCNLoja.Execute Sql
+                 rdoCNLoja.Execute sql
                  Screen.MousePointer = vbNormal
                  rdoCNLoja.CommitTrans
     
                  rdoCNLoja.BeginTrans
                  Screen.MousePointer = vbHourglass
        
-                 Sql = "Update NfItens set Nf = " & NroNotaFiscal & ", Serie = '" & PegaSerieNota _
+                 sql = "Update NfItens set Nf = " & NroNotaFiscal & ", Serie = '" & PegaSerieNota _
                         & "' where NumeroPed =  " & txtPedido.text
                         
-                 rdoCNLoja.Execute Sql
+                 rdoCNLoja.Execute sql
                  Screen.MousePointer = vbNormal
                  rdoCNLoja.CommitTrans
                 GravaMovimentoCaixa
@@ -2581,18 +2648,18 @@ ElseIf txtTipoNota.text = "D1" Or txtTipoNota.text = "S1" Then
              
              'PegaLoja.Close
 
-       Sql = "Update nfcapa " & vbNewLine & _
+       sql = "Update nfcapa " & vbNewLine & _
              "set NF = " & Trim(frmCaixaNotaManual.txtNota) & ", " & vbNewLine & _
              "Serie = '" & txtTipoNota.text & "' " & vbNewLine & _
              "Where NumeroPed = " & frmControlaCaixa.txtPedido.text _
               & " and tiponota = 'PA'"
-        rdoCNLoja.Execute Sql
+        rdoCNLoja.Execute sql
         
-        Sql = "Update NfItens " & vbNewLine & _
+        sql = "Update NfItens " & vbNewLine & _
               "set Nf = " & Trim(frmCaixaNotaManual.txtNota) & ", " & vbNewLine & _
               "Serie = '" & txtTipoNota.text & "' " & vbNewLine & _
               "where NumeroPed =  " & frmControlaCaixa.txtPedido.text
-        rdoCNLoja.Execute Sql
+        rdoCNLoja.Execute sql
         
       txtSerie.text = txtTipoNota.text
       NroNotaFiscal = frmCaixaNotaManual.txtNota.text
@@ -2678,21 +2745,21 @@ Private Sub GravaMovimentoCaixa()
     Wecf = GLB_ECF
 
     If txtTipoNota.text = "Romaneio" Or txtTipoNota.text = "RomaneioDireto" Then
-        Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Subgrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
+        sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Subgrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
         & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
         & " '" & Format(GLB_DataInicial, "YYYY/MM/DD") & "', " & 20105 & ",''," & NroNotaFiscal & ",'" & txtSerie.text & "', " _
         & "" & ConverteVirgula(Format(frmControlaCaixa.cmdTotalVenda.Caption, "##,##0.00")) & ", " _
         & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(Date, "yyyy/mm/dd") & "','V'," & txtNumeroTEF.text & ")"
-        rdoCNLoja.Execute (Sql)
+        rdoCNLoja.Execute (sql)
     End If
 
     If AvistaReceber <> 0 Then
-        Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Subgrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
+        sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Subgrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
         & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio,MC_ControleAVR, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
         & " '" & Format(GLB_DataInicial, "YYYY/MM/DD") & "', " & 10204 & ",'', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
         & "" & ConverteVirgula(Format(AvistaReceber, "##,##0.00")) & ", " _
         & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A','A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(Date, "yyyy/mm/dd") & "','V'," & txtNumeroTEF.text & ")"
-        rdoCNLoja.Execute (Sql)
+        rdoCNLoja.Execute (sql)
     End If
 
 '    If WCodigoModalidadeVISA = "0301" Then
@@ -2895,23 +2962,23 @@ Private Sub GravaMovimentoCaixa()
 
     If wGrupo <> 0 Then
         If txtTipoNota.text = "CUPOM" Then
-            Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Subgrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
+            sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Subgrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
             & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
             & " '" & Format(GLB_DataInicial, "yyyy/mm/dd") & "', " & wGrupo & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
             & "" & ConverteVirgula(Format(frmControlaCaixa.cmdTotalVenda.Caption, "##,##0.00")) & ", " _
             & "0,'" & Agencia & "',0,0,0,0,'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "')"
-            rdoCNLoja.Execute (Sql)
+            rdoCNLoja.Execute (sql)
 
         ElseIf txtSerie.text <> "00" Then
 
             wTotalNota = frmControlaCaixa.cmdTotalVenda.Caption
 
-            Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Subgrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
+            sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_Subgrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
             & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
             & " '" & Format(GLB_DataInicial, "yyyy/mm/dd") & "', " & wGrupo & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
             & "" & ConverteVirgula(Format(wTotalNota, "##,##0.00")) & ", " _
             & "0,'" & "" & "',0,0,0,9,'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "')"
-            rdoCNLoja.Execute (Sql)
+            rdoCNLoja.Execute (sql)
             
         End If
     End If
@@ -2919,12 +2986,12 @@ Private Sub GravaMovimentoCaixa()
 
     'Garantia estendida
     If wValorGE > 0 Then
-        Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_SubGrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
+        sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja,MC_Data,MC_Grupo,MC_SubGrupo,MC_Documento,MC_Serie,MC_Valor,MC_banco,MC_Agencia," _
         & "MC_Contacorrente,MC_bomPara,MC_Parcelas,MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido, MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
         & " '" & Format(GLB_DataInicial, "yyyy/mm/dd") & "', " & 11009 & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
         & "" & ConverteVirgula(Format(wValorGE, "##,###0.00")) & ", " _
         & "0,'" & "" & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "')"
-        rdoCNLoja.Execute (Sql)
+        rdoCNLoja.Execute (sql)
     End If
 
 
@@ -2947,7 +3014,7 @@ Private Function ProcuraPedido()
 End If
 
          
-Sql = "SELECT DISTINCT NFCapa.NumeroPed, NFCapa.totalNota, NFCapa.pgentra, NFCapa.CondPag, NFCapa.vlrMercadoria," & _
+sql = "SELECT DISTINCT NFCapa.NumeroPed, NFCapa.totalNota, NFCapa.pgentra, NFCapa.CondPag, NFCapa.vlrMercadoria," & _
       "parcelas, modalidadeVenda, CondicaoPagamento.CP_intervaloparcelas, fin_Cliente.CE_CGC, Fin_Cliente.CE_TipoPessoa, " & _
       "Fin_Cliente.ce_Razao, " & _
       "CondicaoPagamento.CP_tipo From nfcapa, Produtoloja, CondicaoPagamento, fin_Cliente " & _
@@ -2955,7 +3022,7 @@ Sql = "SELECT DISTINCT NFCapa.NumeroPed, NFCapa.totalNota, NFCapa.pgentra, NFCap
       "and nfcapa.numeroped= " & txtPedido.text & " and nfcapa.tiponota= 'PA'"
         
         RsDados.CursorLocation = adUseClient
-        RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
         If Not RsDados.EOF Then
          
@@ -3145,19 +3212,19 @@ End Sub
 
 Function carregarFormaPagamentoAnteriorTEF() As Double
 
-    Dim Sql As String
+    Dim sql As String
     Dim rsConsulta As New ADODB.Recordset
     
-    Sql = "select sum(mc_valor) as totalvalor " & vbNewLine & _
+    sql = "select sum(mc_valor) as totalvalor " & vbNewLine & _
     "from movimentocaixa " & vbNewLine & _
     "where  mc_serie = '" & txtSerie.text & "' and " & vbNewLine & _
     "mc_protocolo = " & GLB_CTR_Protocolo & " and " & vbNewLine & _
     "mc_nrocaixa = '" & GLB_Caixa & "' " & vbNewLine & _
     "and mc_pedido = '" & txtPedido.text & "'" & vbNewLine & _
-    "and mc_sequenciaTEF <> 0"
+    ""
     
     rsConsulta.CursorLocation = adUseClient
-    rsConsulta.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rsConsulta.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     If Not rsConsulta.EOF Then
         
@@ -3175,8 +3242,8 @@ End Function
 
 Private Sub FormaPagamento()
 
-  left = 9100
-  top = 2750
+'  left = 9100
+ ' top = 2750
  wCodigoModalidadeDINHEIRO = ""
  WCodigoModalidadeAMEX = ""
  WCodigoModalidadeCHEQUE = ""
@@ -3326,6 +3393,9 @@ End Sub
 
 Private Sub Form_Activate()
 
+    If primeiroCarregamento Then
+
+    primeiroCarregamento = False
 frameCartoes.top = chbRede.top
 frameCartoes.left = chbRede.left
 frameCartoes.Visible = False
@@ -3335,6 +3405,12 @@ frameCartoes.Visible = False
  
  fraFinanciadoFaturado.left = fraPagamento.left
  fraFinanciadoFaturado.top = fraPagamento.top
+ 
+ 
+'frmFormaPagamento.top = 2875
+frmFormaPagamento.left = 8880
+frmFormaPagamento.Width = 5550
+'frmFormaPagamento.Height = 7110
  
 
 chbOkPag.Caption = "OK"
@@ -3362,11 +3438,11 @@ End If
  If txtIdentificadequeTelaqueveio.text = "FRMCAIXATEF" Then
      frmCaixaTEF.txtCodigoProduto.text = ""
   End If
-Sql = ""
-Sql = "Select condpag,pgentra,cp_parcelas,totalnota,cp_tipo,cp_coeficiente,GarantiaEstendida,TotalGarantia from nfcapa,CondicaoPagamento " & _
+sql = ""
+sql = "Select condpag,pgentra,cp_parcelas,totalnota,cp_tipo,cp_coeficiente,GarantiaEstendida,TotalGarantia from nfcapa,CondicaoPagamento " & _
       "where cp_codigo = condpag and numeroped = " & txtPedido.text
 rsComplementoVenda.CursorLocation = adUseClient
-rsComplementoVenda.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+rsComplementoVenda.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
 'txtSerie.Text = rsComplementoVenda("serie")
 
@@ -3429,13 +3505,7 @@ Else
 
 End If
 
-
-'frmFormaPagamento.top = 2875
-frmFormaPagamento.left = 8880
-frmFormaPagamento.Width = 5550
-'frmFormaPagamento.Height = 7110
-
-    limpaMovimentoAnteriores
+    End If
     
     limpaCamposPagamentoTotalConfirmado
 
@@ -3472,19 +3542,20 @@ Private Sub Form_KeyUp(KeyCode As Integer, Shift As Integer)
 End Sub
 
 Private Sub Form_Load()
-
+    
+    primeiroCarregamento = True
     habilitaPagamentoTEF
     
 End Sub
 
 Private Sub limpaMovimentoAnteriores()
     'Limpa registros
-    Sql = "delete movimentocaixa where  mc_serie = '" & txtSerie.text & "' and " _
+    sql = "delete movimentocaixa where  mc_serie = '" & txtSerie.text & "' and " _
     & "mc_protocolo = " & GLB_CTR_Protocolo & " and " _
     & "mc_nrocaixa = '" & GLB_Caixa & "' and mc_pedido = '" & txtPedido.text & "'" _
-    & "and mc_sequenciaTEF = 0"
+    & "and mc_sequenciaTEF = 0 and mc_tiponota <> 'TF'"
     
-    rdoCNLoja.Execute Sql
+    rdoCNLoja.Execute sql
     
 End Sub
 
@@ -3866,6 +3937,7 @@ End If
 End Sub
 
 Private Sub limpaCamposPagamentoTotalConfirmado()
+
     If chbValorFalta.Caption <= 0 Then
     
        chbOkPag.Visible = True
@@ -3879,7 +3951,8 @@ Private Sub limpaCamposPagamentoTotalConfirmado()
        lblParcelas.Visible = False
        exibirMensagemTEF "Pagamento Confir" & vbNewLine & "   Emitindo NF"
        
-       ImprimeComprovanteTEF ComprovantePagamentoFila
+       If operacaoTEFCompleta Then atualizaTipoNotaMovimentoCaixa txtPedido.text
+       ImprimeComprovanteTEF txtPedido.text
        finalizarTransacaoTEF txtPedido.text, txtSerie.text, True
        
        If GLB_TEFnaoCancelado Then
@@ -4000,12 +4073,12 @@ Sub EstornoFormaPagtosCupom1()
       
       wCupomAberto = False
       
-      Sql = "Select nfitens.*,PR_Descricao,PR_icmpdv,PR_substituicaotributaria " _
+      sql = "Select nfitens.*,PR_Descricao,PR_icmpdv,PR_substituicaotributaria " _
           & "From nfitens,Produtoloja  " _
           & "Where PR_referencia = Referencia and NumeroPed = " _
           & pedido & " and Tiponota = 'PA' order by Item"
            RsDadosTef.CursorLocation = adUseClient
-           RsDadosTef.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+           RsDadosTef.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
          
           If Not RsDadosTef.EOF Then
              Do While Not RsDadosTef.EOF
