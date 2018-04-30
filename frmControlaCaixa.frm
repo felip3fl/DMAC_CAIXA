@@ -1244,7 +1244,7 @@ Private Sub funcao110()
             nf.pedido = pedido
             
             Call EfetuaOperacaoTEF("110", nf, lblMensagensTEF, lblMensagensTEF)
-            ImprimeComprovanteTEF nf.comprovantePagamento
+            ImprimeComprovanteTEF nf.pedido
             finalizarTransacaoTEF nf.pedido, nf.serie, False
         End If
     End If

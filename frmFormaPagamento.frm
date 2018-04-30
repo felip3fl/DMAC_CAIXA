@@ -3933,7 +3933,6 @@ If KeyAscii = 27 Then
 
 End If
 
-
 End Sub
 
 Private Sub limpaCamposPagamentoTotalConfirmado()

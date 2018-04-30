@@ -32,6 +32,8 @@ Private posicaoFila As Integer
 
 Global operacaoTEFCompleta As Boolean
 
+Public Const GLB_ENDERECOCOMPROVANTETEF = "C:\Sistemas\DMAC Caixa\Sitef\Comprovantes\"
+
 Public Type notaFiscalTEF
     numero As String
     loja As String
@@ -49,7 +51,7 @@ End Type
 
 'Public Sub criaLogTef(numeropedido As String, sequenciaTEF As String, via As String, mensagem As String)
 '
-'    Open "C:\Sistemas\DMAC Caixa\Sitef\Comprovantes\" & numeropedido & "-" & sequenciaTEF & "-" & Nome & ".txt" For Output As #1
+'    Open GLB_ENDERECOCOMPROVANTETEF & numeropedido & "-" & sequenciaTEF & "-" & Nome & ".txt" For Output As #1
 '
 '        Print #1, mensagem
 '
@@ -65,11 +67,11 @@ End Type
 '
 '    numeropedido = "2611"
 '
-'    Arquivo = Dir("C:\Sistemas\DMAC Caixa\Sitef\Comprovantes\" & numeropedido & "*" & ".txt", vbDirectory)
+'    Arquivo = Dir(GLB_ENDERECOCOMPROVANTETEF & numeropedido & "*" & ".txt", vbDirectory)
 '
 '    If Arquivo <> "" Then
 '
-'         Set mensagemArquivoTXT = fso.OpenTextFile("C:\Sistemas\DMAC Caixa\Sitef\Comprovantes\" & Arquivo)
+'         Set mensagemArquivoTXT = fso.OpenTextFile(GLB_ENDERECOCOMPROVANTETEF & Arquivo)
 '         informacaoArquivo = mensagemArquivoTXT.ReadAll
 '         mensagemArquivoTXT.Close
 '
@@ -81,7 +83,7 @@ End Type
 
 Public Sub CriaComprovanteTef(numeropedido As String, sequenciaTEF As String, via As String, comprovante As String)
 
-    Open "C:\Sistemas\DMAC Caixa\Sitef\Comprovantes\" & numeropedido & "-" & sequenciaTEF & "-" & via & ".txt" For Output As #1
+    Open GLB_ENDERECOCOMPROVANTETEF & numeropedido & "-" & sequenciaTEF & "-" & via & ".txt" For Output As #1
         Print #1, comprovante
     Close #1
     
@@ -219,8 +221,6 @@ End Sub
 
 Public Sub ImprimeComprovanteTEF(ByRef pedido As String)
     
-    'If mensagemComprovanteTEF = "" Then Exit Sub
-    
     Dim i As Integer
     Dim Arquivo As String
     
@@ -228,18 +228,16 @@ Public Sub ImprimeComprovanteTEF(ByRef pedido As String)
     
     exibirMensagemTEF " Imprimindo TEF" & vbNewLine & "   Aguarde..."
     
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
     Dim mensagemArquivoTXT As TextStream
     Dim fso As New FileSystemObject
     Dim informacaoArquivo As String
 
 
-    Arquivo = Dir("C:\Sistemas\DMAC Caixa\Sitef\Comprovantes\" & pedido & "*" & ".txt", vbDirectory)
+    Arquivo = Dir(GLB_ENDERECOCOMPROVANTETEF & pedido & "*" & ".txt", vbDirectory)
     
     Do While Arquivo <> ""
     
-         Set mensagemArquivoTXT = fso.OpenTextFile("C:\Sistemas\DMAC Caixa\Sitef\Comprovantes\" & Arquivo)
+         Set mensagemArquivoTXT = fso.OpenTextFile(GLB_ENDERECOCOMPROVANTETEF & Arquivo)
          informacaoArquivo = mensagemArquivoTXT.ReadAll
          mensagemArquivoTXT.Close
     
@@ -252,17 +250,10 @@ Public Sub ImprimeComprovanteTEF(ByRef pedido As String)
     
     Loop
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-    
-    'For i = 1 To posicaoFila - 1
-    
 
-    
-    'Next i
  
     Screen.MousePointer = 0
-    'mensagemComprovanteTEF = ""
-    'posicaoFila = 1
+
     
 End Sub
 
