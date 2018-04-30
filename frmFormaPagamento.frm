@@ -3943,7 +3943,7 @@ Private Sub limpaCamposPagamentoTotalConfirmado()
        chbOkPag.Enabled = True
        chbSair.Enabled = False
        framePagamentoTEF.Visible = False
-       chbOkPag.SetFocus
+       'chbOkPag.SetFocus
        fraNModalidades.Visible = False
        txtValorModalidade.Visible = False
        lblModalidade.Visible = False

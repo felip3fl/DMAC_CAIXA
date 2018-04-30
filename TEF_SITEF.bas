@@ -26,6 +26,7 @@ Global Resultado     As Long
 Global comprovantePagamento As String
 Global ComprovantePagamentoFila As String
 Global GLB_TefHabilidado As Boolean
+Global GLB_HabilidadoCieloTEF As Boolean
 Private Const endereco = ""
 Private filaCuponsTEF(1 To 20) As String
 Private posicaoFila As Integer
@@ -415,6 +416,7 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                                 valores = "1"
                             ElseIf Buffer Like "1:Rede;2:Cielo;3:Outros;*" Then
                                 valores = "1"
+                                If GLB_HabilidadoCieloTEF Then valores = "2"
                             Else
                                 valores = entradaDeValores("ProximoComando = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo, False)
                             End If
@@ -449,7 +451,8 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                         If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Data da transacao (DDMMAAAA)", TamanhoMinimo, tamanhoMaximo, False)
                 Case 516
                         valores = nf.numeroTEF 'numero tef
-                        If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Forneca o numero do documento", TamanhoMinimo, tamanhoMaximo, False)
+                        If Not GLB_HabilidadoCieloTEF Then valores = "999" + valores
+                        If GLB_Administrador Then valores = entradaD \ eValores("TipoCampo = " & TipoCampo, "Forneca o numero do documento", TamanhoMinimo, tamanhoMaximo, False)
                 Case 146
                         If ProximoComando = 34 Then
                             valores = nf.valor
@@ -632,6 +635,7 @@ Private Sub carregarDadosTEFBancoDeDados(ByRef labelMensagem As Label, _
           "LT_IPSiTef IPSiTef, " & vbNewLine & _
           "LT_IdLoja IdLoja, " & vbNewLine & _
           "LT_IdTerminal IdTerminal, " & vbNewLine & _
+          "LT_HabilitaCielo HabilitaCielo, " & vbNewLine & _
           "'60872124000199' CNPJDesenvolvedor, " & vbNewLine & _
           "LT_Reservado Reservado" & vbNewLine & _
           "from lojaTEF " & vbNewLine & _
@@ -652,6 +656,9 @@ Private Sub carregarDadosTEFBancoDeDados(ByRef labelMensagem As Label, _
         IdLoja = RsDados("IdLoja")
         IdTerminal = RsDados("IdTerminal")
         CNPJDesenvolvedor = RsDados("CNPJDesenvolvedor")
+        
+        If RsDados("HabilitaCielo") = "S" Then GLB_HabilidadoCieloTEF = True
+        
     End If
 
     RsDados.Close
