@@ -2187,7 +2187,7 @@ Sub CarregaAnaliticoVenda()
            grdAnaliticoVenda.AddItem RsMovimentoCaixa("mc_documento") & Chr(9) & RsMovimentoCaixa("mc_serie") _
            & Chr(9) & RsMovimentoCaixa("mo_descricao") & Chr(9) & Format(RsMovimentoCaixa("mc_Valor"), "###,###,##0.00") _
            & Chr(9) & RsMovimentoCaixa("mc_sequencia") _
-           & Chr(9) & RsMovimentoCaixa("mc_sequenciaTEF") _
+           & Chr(9) & Format(RsMovimentoCaixa("mc_sequenciaTEF"), "000000") _
            & Chr(9) & RsMovimentoCaixa("mc_pedido") _
            & Chr(9) & RsMovimentoCaixa("mc_data")
            RsMovimentoCaixa.MoveNext

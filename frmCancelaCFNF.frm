@@ -6,7 +6,7 @@ Begin VB.Form frmCancelaCFNF
    Caption         =   "Cancela CF/NF"
    ClientHeight    =   7455
    ClientLeft      =   1725
-   ClientTop       =   1965
+   ClientTop       =   2520
    ClientWidth     =   15165
    ControlBox      =   0   'False
    LinkTopic       =   "Form1"
@@ -70,7 +70,7 @@ Begin VB.Form frmCancelaCFNF
          GridLinesFixed  =   2
          GridLineWidth   =   1
          Rows            =   50
-         Cols            =   8
+         Cols            =   9
          FixedRows       =   1
          FixedCols       =   0
          RowHeightMin    =   0
@@ -393,7 +393,7 @@ Begin VB.Form frmCancelaCFNF
       FCOLO           =   16777215
       MCOL            =   5263440
       MPTR            =   1
-      MICON           =   "frmCancelaCFNF.frx":0121
+      MICON           =   "frmCancelaCFNF.frx":0140
       UMCOL           =   -1  'True
       SOFT            =   0   'False
       PICPOS          =   0
@@ -409,7 +409,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Dim Sql As String
+Dim sql As String
 Dim wUltimoCupom As Double
 Dim WGrupoAtualzado As Double
 Dim wNumeroPedido As Double
@@ -485,11 +485,11 @@ Private Sub finalizarCancelamento()
         wWhere = " "
   '      End If
 
-        Sql = "SELECT CTR_DATAINICIAL, CTR_SITUACAOCAIXA FROM  CONTROLECAIXA " _
+        sql = "SELECT CTR_DATAINICIAL, CTR_SITUACAOCAIXA FROM  CONTROLECAIXA " _
             & " WHERE CTR_Supervisor <> 99 and CTR_SITUACAOCAIXA = 'A'"
      
         ADOSituacao.CursorLocation = adUseClient
-        ADOSituacao.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        ADOSituacao.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                                           
         If Not ADOSituacao.EOF Then
            wData = ADOSituacao("CTR_DATAINICIAL")
@@ -502,13 +502,13 @@ Private Sub finalizarCancelamento()
           
         ADOSituacao.Close
      
-        Sql = "SELECT TOP 1 TIPONOTA,NumeroPed, SERIE, NF, TOTALNOTA, DATAEMI, rtrim(CHAVENFE) as CHAVENFE " _
+        sql = "SELECT TOP 1 TIPONOTA,NumeroPed, SERIE, NF, TOTALNOTA, DATAEMI, rtrim(CHAVENFE) as CHAVENFE " _
             & " FROM NFCAPA WHERE " _
             & " SERIE = '" & txtSerie.text & "' AND " _
             & " NF = " & txtNotaFiscal.text & " " & where
          
         ADOCancela.CursorLocation = adUseClient
-        ADOCancela.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        ADOCancela.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
  
 
         If Not ADOCancela.EOF Then
@@ -529,8 +529,8 @@ Private Sub finalizarCancelamento()
             End If
               
             If cancelaNotaResultado = True Then
-                Sql = "exec SP_Cancela_NotaFiscal " & txtNotaFiscal.text & ",'" & txtSerie.text & "'"
-                rdoCNLoja.Execute (Sql)
+                sql = "exec SP_Cancela_NotaFiscal " & txtNotaFiscal.text & ",'" & txtSerie.text & "'"
+                rdoCNLoja.Execute (sql)
             Else
                 MsgBox "Cancelamento não realizado", vbCritical, "DMAC Caixa"
             End If
@@ -649,6 +649,7 @@ Private Function cancelarTEF()
         nf.serie = grdNumeroTEF.TextMatrix(i, 5)
         nf.dataEmissao = grdNumeroTEF.TextMatrix(i, 4)
         nf.valor = grdNumeroTEF.TextMatrix(i, 1)
+        nf.sequenciaMovimentoCaixa = grdNumeroTEF.TextMatrix(i, 8)
         
         lblModalidade.Caption = "Insira cartão da bandeira " & grdNumeroTEF.TextMatrix(i, 3) & " do valor de " & nf.valor
         lblMensagensTEF.Caption = ""
@@ -658,9 +659,10 @@ Private Function cancelarTEF()
         
         If EfetuaOperacaoTEF(codigoOperacaoCancelamento, nf, lblModalidade, lblMensagensTEF) Then
             
-            ImprimeComprovanteTEF nf.comprovantePagamento
-            cancelaMovimentoCaixaEspecifico grdNumeroTEF.TextMatrix(i, 0), nf.pedido
+            ImprimeComprovanteTEF nf.pedido
+            cancelaMovimentoCaixaEspecifico nf.sequenciaMovimentoCaixa
             finalizarTransacaoTEF nf.pedido, nf.serie, False
+            
         End If
             
         'carregaNotasComTEFGrid
@@ -683,16 +685,16 @@ Private Function cancelarTEF()
     
 End Function
 
-Private Sub cancelaMovimentoCaixaEspecifico(numeroTEF As String, numeroPedido As String)
+Private Sub cancelaMovimentoCaixaEspecifico(sequenciaMovimentoCaixa As String)
 
-    Dim Sql As String
+    Dim sql As String
     
-    Sql = "update movimentocaixa " & vbNewLine & _
+    sql = "update movimentocaixa " & vbNewLine & _
           "set mc_tiponota = 'C'" & vbNewLine & _
-          "where mc_pedido = '" & numeroPedido & "' " & vbNewLine & _
-          "and mc_sequenciaTEF = '" & numeroTEF & "'"
+          "where " & vbNewLine & _
+          "mc_sequencia = '" & sequenciaMovimentoCaixa & "'"
 
-    rdoCNLoja.Execute Sql
+    rdoCNLoja.Execute sql
     
 End Sub
 
@@ -767,11 +769,11 @@ Private Sub txtSerie_LostFocus()
     txtSerie.text = UCase(txtSerie.text)
     
     
-    Sql = "SELECT TOTALNOTA, NF, SERIE,TipoNota,numeroped, dataemi FROM NFCAPA WHERE NF = " & txtNotaFiscal.text & " " _
+    sql = "SELECT TOTALNOTA, NF, SERIE,TipoNota,numeroped, dataemi FROM NFCAPA WHERE NF = " & txtNotaFiscal.text & " " _
     & "AND SERIE = '" & UCase(Trim(txtSerie.text)) & "' and TIPONOTA <> 'C' and Dataemi = '" & Format(Date, "yyyy/mm/dd") & "'"
     
     ADOCancela.CursorLocation = adUseClient
-    ADOCancela.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    ADOCancela.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     If Not ADOCancela.EOF Then
         txtValorNF.text = Format(ADOCancela("TOTALNOTA"), "0.00")
@@ -809,7 +811,7 @@ Private Sub carregaNotasComTEF()
 End Sub
 
 Private Sub carregaNotasComTEFGrid(carregaNotasFinalizadas As Boolean)
-    Dim Sql As String
+    Dim sql As String
     Dim where As String
     Dim orderby As String
     Dim RsDados As New ADODB.Recordset
@@ -818,9 +820,10 @@ Private Sub carregaNotasComTEFGrid(carregaNotasFinalizadas As Boolean)
     
     grdNumeroTEF.Rows = grdNumeroTEF.FixedRows
     
-    Sql = "select MC_SequenciaTEF as TEF, MC_VALOR as valor, " & vbNewLine & _
+    sql = "select MC_SequenciaTEF as TEF, MC_VALOR as valor, " & vbNewLine & _
           "MO_Descricao as descricaoModalidade, MC_Grupo as grupo, " & vbNewLine & _
           "Mc_PEDIDO as PEDIDO, MC_DOCUMENTO as Documento, " & vbNewLine & _
+          "MC_Sequencia as Sequencia,  " & vbNewLine & _
           "Mc_DATA as data, MC_SERIE as SERIE " & vbNewLine & _
           "from MovimentoCaixa " & vbNewLine & _
           "FULL OUTER JOIN modalidade " & vbNewLine & _
@@ -843,10 +846,10 @@ Private Sub carregaNotasComTEFGrid(carregaNotasFinalizadas As Boolean)
 
     orderby = "order by mc_sequenciaTEF" & vbNewLine
 
-    Sql = Sql & where & orderby
+    sql = sql & where & orderby
 
     RsDados.CursorLocation = adUseClient
-    RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
         Do While Not RsDados.EOF
         
@@ -862,14 +865,15 @@ Private Sub carregaNotasComTEFGrid(carregaNotasFinalizadas As Boolean)
                 tipoModalidade = "2 Débito"
             End Select
         
-            grdNumeroTEF.AddItem RsDados("TEF") & vbTab & _
+            grdNumeroTEF.AddItem Format(RsDados("TEF"), "000000") & vbTab & _
                                  Format(RsDados("valor"), "###,###,##0.00") & vbTab & _
                                  tipoModalidade & vbTab & _
                                  descricaoModalidade & vbTab & _
                                  RsDados("data") & vbTab & _
                                  RsDados("serie") & vbTab & _
                                  RsDados("pedido") & vbTab & _
-                                 RsDados("documento")
+                                 RsDados("documento") & vbTab & _
+                                 RsDados("Sequencia")
             RsDados.MoveNext
             
         Loop

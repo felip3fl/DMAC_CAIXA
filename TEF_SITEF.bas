@@ -250,8 +250,6 @@ Public Sub ImprimeComprovanteTEF(ByRef pedido As String)
          Arquivo = Dir
     
     Loop
-
-
  
     Screen.MousePointer = 0
 
@@ -452,7 +450,7 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                 Case 516
                         valores = nf.numeroTEF 'numero tef
                         If Not GLB_HabilidadoCieloTEF Then valores = "999" + valores
-                        If GLB_Administrador Then valores = entradaD \ eValores("TipoCampo = " & TipoCampo, "Forneca o numero do documento", TamanhoMinimo, tamanhoMaximo, False)
+                        If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Forneca o numero do documento", TamanhoMinimo, tamanhoMaximo, False)
                 Case 146
                         If ProximoComando = 34 Then
                             valores = nf.valor
