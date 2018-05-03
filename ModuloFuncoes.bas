@@ -5259,7 +5259,7 @@ Public Sub atualizaGrupoModalidade(sequenciaMovimentoCaixa As String, modalidade
     Dim sql As String
     Dim rsConsulta As New ADODB.Recordset
     
-    sql = "update movimentocaixa set MC_Grupo = '" & Sequencia & "'" & vbNewLine & _
+    sql = "update movimentocaixa set MC_Grupo = '" & modalidade & "'" & vbNewLine & _
           "where MC_sequencia = '" & sequenciaMovimentoCaixa & "'"
     
     rdoCNLoja.Execute sql
@@ -5278,4 +5278,6 @@ Public Sub atualizaComprovanteMovimentoCaixa(sequenciaMovimentoCaixa As String, 
     rdoCNLoja.Execute sql
     
 End Sub
+
+
 

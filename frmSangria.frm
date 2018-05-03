@@ -2025,6 +2025,8 @@ End Sub
 
 Private Sub grdMovimentoCaixa_EnterCell()
 
+    frameOperacoes.Visible = False
+
  If grdMovimentoCaixa.Row > 0 Then
      
     ' If grdMovimentoCaixa.TextMatrix(grdMovimentoCaixa.Row, 0) = "" Then

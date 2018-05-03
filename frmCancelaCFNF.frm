@@ -770,7 +770,7 @@ Private Sub txtSerie_LostFocus()
     
     
     sql = "SELECT TOTALNOTA, NF, SERIE,TipoNota,numeroped, dataemi FROM NFCAPA WHERE NF = " & txtNotaFiscal.text & " " _
-    & "AND SERIE = '" & UCase(Trim(txtSerie.text)) & "' and TIPONOTA <> 'C' and Dataemi = '" & Format(Date, "yyyy/mm/dd") & "'"
+    & "AND SERIE = '" & UCase(Trim(txtSerie.text)) & "' and TIPONOTA <> 'C' --and Dataemi = '" & Format(Date, "yyyy/mm/dd") & "'"
     
     ADOCancela.CursorLocation = adUseClient
     ADOCancela.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic

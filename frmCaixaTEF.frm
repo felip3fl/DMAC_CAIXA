@@ -5,8 +5,8 @@ Begin VB.Form frmCaixaTEF
    BorderStyle     =   0  'None
    Caption         =   "Caixa TEF"
    ClientHeight    =   8220
-   ClientLeft      =   1005
-   ClientTop       =   2220
+   ClientLeft      =   3465
+   ClientTop       =   1260
    ClientWidth     =   15120
    ControlBox      =   0   'False
    LinkTopic       =   "Form1"
@@ -512,7 +512,7 @@ Dim Cor As String
 Dim Cor1 As String
 Dim Cor2 As String
 Dim Cor3 As String
-Dim Sql As String
+Dim sql As String
 Dim SomaTotalVenda As Double
 Dim PrecoVenda As Double
 Dim NroPedido As Long
@@ -754,49 +754,49 @@ Private Sub txtCodigoProduto_KeyDown(KeyCode As Integer, Shift As Integer)
       
        wDesconto = 0
    
-        Sql = ""
-        Sql = "Select count(referencia) as NumeroItem from NfItens " _
+        sql = ""
+        sql = "Select count(referencia) as NumeroItem from NfItens " _
           & "where NumeroPed=" & NroPedido & ""
           
           rdoContaItens.CursorLocation = adUseClient
-          rdoContaItens.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+          rdoContaItens.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
              
           
           rdoCNLoja.BeginTrans
        
-          Sql = "Update nfcapa set qtditem = " & rdoContaItens("Numeroitem") & ", CPFNFP = '" & txtCGC_CPF & _
+          sql = "Update nfcapa set qtditem = " & rdoContaItens("Numeroitem") & ", CPFNFP = '" & txtCGC_CPF & _
                 "', cliente = 999999 " _
                 & " where nf = " & wNumeroCupom & " and serie = '" & GLB_SerieCF & "' and numeroped = " & NroPedido
-          rdoCNLoja.Execute Sql, rdExecDirect
+          rdoCNLoja.Execute sql, rdExecDirect
     
           rdoCNLoja.CommitTrans
           
            'josi
           '************************ Gravando Valores NFCapa
-       Sql = ""
-       Sql = "Exec SP_Totaliza_Capa_Nota_Fiscal_Loja " & NroPedido
-       rdoCNLoja.Execute Sql
+       sql = ""
+       sql = "Exec SP_Totaliza_Capa_Nota_Fiscal_Loja " & NroPedido
+       rdoCNLoja.Execute sql
        
                   
-       Sql = ""
-       Sql = "Select count(referencia) as NumeroItem from NFItens " _
+       sql = ""
+       sql = "Select count(referencia) as NumeroItem from NFItens " _
            & "where NumeroPed=" & NroPedido & ""
           
             rsComplementoVenda.CursorLocation = adUseClient
-            rsComplementoVenda.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+            rsComplementoVenda.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
        
-       Sql = ""
-       Sql = "Update NFCapa set TipoNota = 'PA', qtditem = " & rsComplementoVenda("NumeroItem") & "" _
+       sql = ""
+       sql = "Update NFCapa set TipoNota = 'PA', qtditem = " & rsComplementoVenda("NumeroItem") & "" _
              & " Where NumeroPed = " & NroPedido
-       rdoCNLoja.Execute Sql
+       rdoCNLoja.Execute sql
        
        rsComplementoVenda.Close
        
 '************************ Gravando TipoNota NFItens
        
-       Sql = "Update NFItens Set TipoNota = 'PA' Where NumeroPed = " & NroPedido
+       sql = "Update NFItens Set TipoNota = 'PA' Where NumeroPed = " & NroPedido
        
-       rdoCNLoja.Execute Sql
+       rdoCNLoja.Execute sql
        
       ' Call LimpaForm
 
@@ -861,15 +861,15 @@ Private Sub txtCodigoProduto_KeyPress(KeyAscii As Integer)
 
         Next Ind
         Asteristico = False
-        Sql = ""
+        sql = ""
           
-        Sql = "Select PR_precovenda1,PR_icmPdv,pr_substituicaotributaria," _
+        sql = "Select PR_precovenda1,PR_icmPdv,pr_substituicaotributaria," _
              & "PR_Referencia,PR_descricao,* From Produtoloja ,ProdutoBarras " _
              & "Where PRB_Referencia = PR_Referencia and PRB_CodigoBarras='" & wReferencia & "'"
             
                  
              RsDadosTef.CursorLocation = adUseClient
-             RsDadosTef.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+             RsDadosTef.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
          
          If RsDadosTef.EOF Then
               lblDescricaoProduto.Caption = "Código não Cadastrado"
@@ -981,10 +981,10 @@ Sub PegaNumeroPedido()
  Screen.MousePointer = 11
 ' If NroItens = 1 Then
  
-    Sql = "Select CTs_NumeroPedido from Controlesistema "
+    sql = "Select CTs_NumeroPedido from Controlesistema "
     
     rdocontrole.CursorLocation = adUseClient
-    rdocontrole.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rdocontrole.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     NroPedido = rdocontrole("CTs_NumeroPedido")
     frmControlaCaixa.txtPedido.text = rdocontrole("CTs_NumeroPedido")
@@ -992,8 +992,8 @@ Sub PegaNumeroPedido()
     rdocontrole.Close
     rdoCNLoja.BeginTrans
        
-    Sql = "Update Controlesistema set CTs_NumeroPedido = " & pedido & " + 1"
-    rdoCNLoja.Execute Sql, rdExecDirect
+    sql = "Update Controlesistema set CTs_NumeroPedido = " & pedido & " + 1"
+    rdoCNLoja.Execute sql, rdExecDirect
   
     rdoCNLoja.CommitTrans
     
@@ -1009,19 +1009,19 @@ Sub PegaNumeroPedido()
 Screen.MousePointer = vbNormal
 End Sub
 
-Function CriaCapaPedido(ByVal numeroPedido As Double)
+Function CriaCapaPedido(ByVal numeropedido As Double)
  
     wLoja = PegaLojaControle
       
-      Sql = ""
-      Sql = "Select count(referencia) as NumeroItem from NfItens " _
-          & "where NumeroPed=" & numeroPedido & ""
+      sql = ""
+      sql = "Select count(referencia) as NumeroItem from NfItens " _
+          & "where NumeroPed=" & numeropedido & ""
           
           rdoContaItens.CursorLocation = adUseClient
-          rdoContaItens.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+          rdoContaItens.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     
-    Sql = ""
+    sql = ""
 '''    sql = "Insert into NfCapa (NUMEROPED,Serie, DATAEMI, " _
 '''        & "LOJAORIGEM, TIPONOTA, Vendedor, DATAPED, HORA, " _
 '''        & " VendedorLojaVenda, LojaVenda,TM,CodOper,CFOAUX,ECF,nf,Condpag,CPFNFP, qtditem,situacaoprocesso,outraloja, dataprocesso, " _
@@ -1033,27 +1033,27 @@ Function CriaCapaPedido(ByVal numeroPedido As Double)
 '''        & rdoContaItens("Numeroitem") & ",'A','" & wLoja & "','" & Format(Date, "yyyy/mm/dd") & "','725','A Vista',1, 0.00,'999999')"
 '''        rdoCNLoja.Execute (sql)
      
-      Sql = "Insert into NfCapa (NUMEROPED,Serie, DATAEMI, " _
+      sql = "Insert into NfCapa (NUMEROPED,Serie, DATAEMI, " _
         & "LOJAORIGEM, TIPONOTA, Vendedor, DATAPED, HORA, " _
         & " VendedorLojaVenda, LojaVenda,TM,CodOper,ECF,nf,Condpag,CPFNFP, qtditem,situacaoprocesso,outraloja, dataprocesso, " _
         & "OUTROVEND,MODALIDADEVENDA,TIPOFRETE, FRETECOBR,CLIENTE) " _
-        & "Values (" & numeroPedido & ",'" & GLB_SerieCF & "' , '" & Format(Date, "yyyy/mm/dd") & "', " _
+        & "Values (" & numeropedido & ",'" & GLB_SerieCF & "' , '" & Format(Date, "yyyy/mm/dd") & "', " _
         & "'" & wLoja & "','PA',725, " _
         & "'" & Format(Date, "yyyy/mm/dd") & "', '" & Format(Time, "hh:mm:ss") & "', " _
         & "725, '" & wLoja & "',0,5012," & GLB_ECF & "," & wNumeroCupom & ",01,'" & txtCGC_CPF.text & "'," _
         & rdoContaItens("Numeroitem") & ",'A','" & wLoja & "','" & Format(Date, "yyyy/mm/dd") & "','725','A Vista',1, 0.00,'999999')"
-        rdoCNLoja.Execute (Sql)
+        rdoCNLoja.Execute (sql)
         
      
      rdoContaItens.Close
      
 End Function
 
-Function GravaItensPedido(ByVal numeroPedido As Double, ByVal TipoMovimentacao As Double, ByVal Vendedor As Integer)
+Function GravaItensPedido(ByVal numeropedido As Double, ByVal TipoMovimentacao As Double, ByVal Vendedor As Integer)
 
     wLoja = PegaLojaControle
           
-     Sql = "Insert into NfItens (nf, NUMEROPED,Serie, DATAEMI, REFERENCIA, QTDE, VLUNIT, " _
+     sql = "Insert into NfItens (nf, NUMEROPED,Serie, DATAEMI, REFERENCIA, QTDE, VLUNIT, " _
         & "VLTOTITEM, ICMS, DESCONTO, PLISTA,  " _
         & "LOJAORIGEM,  TIPONOTA,  Item, situacaoprocesso, dataprocesso, baseicms,ICMSAplicado, cest) " _
         & "Values (" & wNumeroCupom & "," & NroPedido & ",'" & GLB_SerieCF & "', '" & Format(Date, "yyyy/mm/dd") & "', '" _
@@ -1062,7 +1062,7 @@ Function GravaItensPedido(ByVal numeroPedido As Double, ByVal TipoMovimentacao A
         & ConverteVirgula(Format(wVlTotItem, "0.00")) & ", " & ConverteVirgula(Format(wICMS, "0.00")) & ",0, " _
         & "  " & ConverteVirgula(Format(wPLISTA, "0.00")) & ",  " _
         & wLoja & ",'PA'," & NroItens & ",'A','" & Format(Date, "yyyy/mm/dd") & "', 0.00,0,'')"
-        rdoCNLoja.Execute (Sql)
+        rdoCNLoja.Execute (sql)
 
 '        & ConverteVirgula(Format(wItemPrecoVenda2, "0.00")) & ", "
 
@@ -1105,16 +1105,16 @@ Private Sub GravaNumeroCupomCgcCpf()
     
         Screen.MousePointer = vbHourglass
         rdoCNLoja.BeginTrans
-        Sql = "Update nfitens set serie = '" & GLB_SerieCF & "' Where NumeroPed = " & NroPedido
-              rdoCNLoja.Execute Sql, rdExecDirect
+        sql = "Update nfitens set serie = '" & GLB_SerieCF & "' Where NumeroPed = " & NroPedido
+              rdoCNLoja.Execute sql, rdExecDirect
         Screen.MousePointer = vbNormal
         rdoCNLoja.CommitTrans
         rdoCNLoja.BeginTrans
         Screen.MousePointer = vbHourglass
         
-        Sql = "Update nfcapa set serie = '" & GLB_SerieCF & "', ECF = " & GLB_ECF & " , CPFNFP = '" & txtCGC_CPF & "'" _
+        sql = "Update nfcapa set serie = '" & GLB_SerieCF & "', ECF = " & GLB_ECF & " , CPFNFP = '" & txtCGC_CPF & "'" _
               & " Where NumeroPed = " & NroPedido
-              rdoCNLoja.Execute Sql, rdExecDirect
+              rdoCNLoja.Execute sql, rdExecDirect
         Screen.MousePointer = vbNormal
         rdoCNLoja.CommitTrans
         

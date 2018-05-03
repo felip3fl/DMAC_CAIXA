@@ -448,8 +448,8 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                         valores = nf.dataEmissao
                         If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Data da transacao (DDMMAAAA)", TamanhoMinimo, tamanhoMaximo, False)
                 Case 516
-                        valores = nf.numeroTEF 'numero tef
-                        If Not GLB_HabilidadoCieloTEF Then valores = "999" + valores
+                        'valores = nf.numeroTEF 'numero tef
+                        valores = formataCampoTEF(nf.numeroTEF)
                         If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, "Forneca o numero do documento", TamanhoMinimo, tamanhoMaximo, False)
                 Case 146
                         If ProximoComando = 34 Then
@@ -527,10 +527,12 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
         campoExibirMensagem.Refresh
         'nf.numeroTEF = lerCamporResultadoTEF(nf.comprovantePagamento, "Host")
         EfetuaOperacaoTEF = True
+        operacaoTEFCompleta = True
     Else
         MsgBox retornoFuncoesTEF(Str(retorno)), vbCritical, "Erro TEF"
         campoExibirMensagem.Caption = retornoFuncoesTEF(Str(retorno))
         campoExibirMensagem.Refresh
+        operacaoTEFCompleta = False
     End If
                                      
                                      
@@ -545,6 +547,15 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
     'criaLogTef tipoOperacao, logOperacoesTEF
     
  
+End Function
+
+Private Function formataCampoTEF(valores As String)
+    formataCampoTEF = Format(valores, "000000")
+    If Not GLB_HabilidadoCieloTEF Then
+        If Len(valores) < 9 Then
+            formataCampoTEF = "999" + formataCampoTEF
+        End If
+    End If
 End Function
 
 Private Function validadorBancoDeDados(numeropedido As String, serie As String, _

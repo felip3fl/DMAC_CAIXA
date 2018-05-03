@@ -4,8 +4,8 @@ Begin VB.Form frmFormaPagamento
    BorderStyle     =   0  'None
    Caption         =   "Forma de Pagamento"
    ClientHeight    =   8640
-   ClientLeft      =   3060
-   ClientTop       =   1635
+   ClientLeft      =   2880
+   ClientTop       =   1590
    ClientWidth     =   13425
    BeginProperty Font 
       Name            =   "Arial Black"
@@ -1728,7 +1728,7 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
       
       habilitaFrameTEFOperacoes False
       
-           If lblModalidade.Caption = "CREDITO" Then
+           If lblModalidade.Caption = "CREDITO" Or lblModalidade.Caption = "DEBITO" Then
       
               tipoNotaMovimentoCaixa = "TF"
       
@@ -1744,52 +1744,25 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
               ValTEFVisaElectron = 0
               txtNumeroTEF.text = ""
               
-      
-          If EfetuaOperacaoTEF("3", nf, lblModalidade, lblMensagemTEF) Then
-            operacaoTEFCompleta = True
+          Select Case lblModalidade.Caption
+          Case "CREDITO"
+            Call EfetuaOperacaoTEF("3", nf, lblModalidade, lblMensagemTEF)
+          Case "DEBITO"
+            Call EfetuaOperacaoTEF("2", nf, lblModalidade, lblMensagemTEF)
+          End Select
+          
+          If operacaoTEFCompleta Then
             TotPago = TotPago + modalidade
             txtNumeroTEF.text = nf.numeroTEF
-            
-            'carregaCodigoModalidade lblModalidade.Caption
-            
+            carregaCodigoModalidade lblModalidade.Caption
             ComprovantePagamentoFila = ComprovantePagamentoFila & nf.comprovantePagamento
             lblModalidade.Caption = ""
+            atualizaGrupoModalidade nf.sequenciaMovimentoCaixa, wGrupoMovimento
           Else
             lblModalidade.Caption = ""
           End If
-          
       End If
 
-      If lblModalidade.Caption = "DEBITO" Then
-      
-              tipoNotaMovimentoCaixa = "TF"
-      
-              operacaoTEFCompleta = False
-              CodigoModalidade = "0101"
-              wCodigoModalidadeDINHEIRO = "0101"
-              wGrupoMovimento = "99999"
-              wSubGrupo = ""
-              ValTEFVisaElectron = ValTEFVisaElectron + modalidade
-              wValorMovimento = Format(ValTEFVisaElectron, "##,###0.00")
-              Call GravaRegistro
-              nf.sequenciaMovimentoCaixa = obterSequenciaMovimentoCaixa(txtPedido.text)
-              ValTEFVisaElectron = 0
-              txtNumeroTEF.text = ""
-              
-      
-          If EfetuaOperacaoTEF("2", nf, lblModalidade, lblMensagemTEF) Then
-          
-            operacaoTEFCompleta = True
-            TotPago = TotPago + modalidade
-        
-            txtNumeroTEF.text = nf.numeroTEF
-            'carregaCodigoModalidade lblModalidade.Caption
-            ComprovantePagamentoFila = ComprovantePagamentoFila & nf.comprovantePagamento
-            lblModalidade.Caption = ""
-          Else
-            lblModalidade.Caption = ""
-          End If
-      End If
       
       If lblModalidade.Caption = "Operação 0" Then
           tipoNotaMovimentoCaixa = "PA"
@@ -2334,32 +2307,39 @@ Private Sub carregaCodigoModalidade(modalidade As String)
         CodigoModalidade = "0302"
         wCodigoModalidadeMASTERCARD = "0302"
         cFormaPGTO = "Cartao"
+        wGrupoMovimento = "10302"
     Case "AMEX"
         lblModalidade.Caption = "AMEX"
         CodigoModalidade = "0303"
         WCodigoModalidadeAMEX = "0303"
         cFormaPGTO = "Cartao"
+        wGrupoMovimento = "10303"
     Case "HIPERCARD"
         lblModalidade.Caption = "HIPERCARD"
         CodigoModalidade = "0405"
+        wGrupoMovimento = "10205"
     Case "REDESHOP"
         lblModalidade.Caption = "REDESHOP"
         CodigoModalidade = "0402"
+        wGrupoMovimento = "10203"
     Case "VISA"
         lblModalidade.Caption = "VISA"
         CodigoModalidade = "0301"
         WCodigoModalidadeVISA = "0301"
         cFormaPGTO = "Cartao"
+        wGrupoMovimento = "10301"
     Case "VISA ELEC."
         lblModalidade.Caption = "VISA ELEC."
         CodigoModalidade = "0401"
+        wGrupoMovimento = "10206"
     Case Else
-        'MsgBox "A modalidade não foi reconhecida internamente no sistema. " _
+        MsgBox "A modalidade não foi reconhecida internamente no sistema. " _
              & "Essa modalidade será gravada como: DINHEIRO. " _
              & "Você poderá alterar modalidade futuramente.", vbInformation, "Modalidade desconhecida"
         lblModalidade.Caption = "DINHEIRO"
         CodigoModalidade = "0101"
         wCodigoModalidadeDINHEIRO = "0101"
+        wGrupoMovimento = "10101"
     End Select
 End Sub
 

@@ -527,7 +527,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 Dim wQuantidade As Integer
-Dim Sql As String
+Dim sql As String
 Dim wValorVenda As Double
 Dim SomaTotalVenda As Double
 Dim PrecoVenda As Double
@@ -585,10 +585,10 @@ If RsDados.State = 1 Then
 End If
 
  
-Sql = "Select * from ParametroCaixa where PAR_NroCaixa = " & GLB_Caixa
+sql = "Select * from ParametroCaixa where PAR_NroCaixa = " & GLB_Caixa
 
  RsDados.CursorLocation = adUseClient
- RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+ RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
 If RsDados.EOF Then
    RsDados.Close
@@ -604,11 +604,11 @@ wlblloja = Trim(RsDados("PAR_Loja"))
 
 RsDados.Close
 
-Sql = "Select ControleCaixa.*,USU_Codigo,USU_Nome from ControleCaixa,UsuarioCaixa" _
+sql = "Select ControleCaixa.*,USU_Codigo,USU_Nome from ControleCaixa,UsuarioCaixa" _
             & " Where CTR_Operador = USU_Codigo and CTR_Supervisor <> '99' and CTR_SituacaoCaixa='A' and CTR_NumeroCaixa = " & GLB_Caixa
           
              RsDados.CursorLocation = adUseClient
-             RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+             RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
             
             If RsDados.EOF = False Then
                GLB_USU_Nome = RsDados("USU_Nome")
@@ -622,9 +622,9 @@ Sql = "Select ControleCaixa.*,USU_Codigo,USU_Nome from ControleCaixa,UsuarioCaix
 
             Call CarregaGrid
 
-            Sql = "Select cliente from nfcapa where NumeroPed = " & frmControlaCaixa.txtPedido.text & " and tiponota = 'PA'"
+            sql = "Select cliente from nfcapa where NumeroPed = " & frmControlaCaixa.txtPedido.text & " and tiponota = 'PA'"
             RsDados.CursorLocation = adUseClient
-            RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+            RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
             
             If Not RsDados.EOF Then
                 If RsDados("cliente") = "999999" Then
@@ -647,21 +647,21 @@ Private Sub CarregaGrid()
         grdItens.Visible = True
         
         
-        Sql = "Select NFItens.*,PR_Descricao " _
+        sql = "Select NFItens.*,PR_Descricao " _
              & "From NFItens,Produtoloja " _
              & "Where Referencia = pr_Referencia and NumeroPed = " _
              & frmControlaCaixa.txtPedido.text & " and tiponota = 'PA' order by Item"
                
                RsDados.CursorLocation = adUseClient
-               RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+               RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
             
         pedido = frmControlaCaixa.txtPedido
             
-        Sql = "Select * From Nfcapa Where NumeroPed = " _
+        sql = "Select * From Nfcapa Where NumeroPed = " _
              & frmControlaCaixa.txtPedido.text & " and tiponota = 'PA' "
                
                 RsDadosCapa.CursorLocation = adUseClient
-                RsDadosCapa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+                RsDadosCapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
              
              
              If Not RsDadosCapa.EOF Then
