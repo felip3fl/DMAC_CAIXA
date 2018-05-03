@@ -7,8 +7,8 @@ Begin VB.Form frmSangria
    BorderStyle     =   0  'None
    Caption         =   "T. Numerário"
    ClientHeight    =   9090
-   ClientLeft      =   -4860
-   ClientTop       =   1125
+   ClientLeft      =   195
+   ClientTop       =   1470
    ClientWidth     =   18900
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True

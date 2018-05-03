@@ -1071,7 +1071,7 @@ End Sub
 Private Sub Form_Activate()
     
    frmAdministrador.Visible = GLB_Administrador
-    
+   
    qtdeLinhaAnterior = 0
   
    grdLogSig.MergeRow(0) = True
@@ -2132,24 +2132,7 @@ End Function
 
 
 
-Public Sub deletaArquivo(enderecoNomeArquivo As String)
-On Error GoTo TrataErro
 
-    Kill enderecoNomeArquivo
-    Exit Sub
-    
-TrataErro:
-    Select Case Err.Number
-        Case 53
-            MsgBox "Arquivo XML lido não pode ser encontrado na pasta", _
-            vbExclamation, "Arquivo não encontrado"
-        Case 70
-            MsgBox "Arquivo .txt invalido! " _
-            & vbNewLine & enderecoNomeArquivo, vbCritical, "Erro ao deleta arquivo"
-        Case Else
-            mensagemErroDesconhecido Err, "Erro"
-    End Select
-End Sub
 
 Private Function lerCampo(informacoes As String, campo As String) As String
     
