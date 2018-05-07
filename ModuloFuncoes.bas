@@ -4704,8 +4704,8 @@ Public Sub impressoraRelatorio(Texto As String)
 
         If Texto = "[INICIO]" Then
         
-           ' Printer.PaintPicture frmSangria.imgLogo.Picture, 1200, -500, 2000, 2000
-            For i = 0 To 9
+            Printer.PaintPicture frmControlaCaixa.logoLojaImpressaoComprovante.Picture, 115, 0, 4100, 1025
+            For i = 0 To 8
                 Printer.Print " "
             Next i
             'Printer.Print "---------------------"
@@ -5300,3 +5300,6 @@ TrataErro:
     End Select
 End Sub
 
+Public Sub carregaImagemMemoria()
+    frmControlaCaixa.logoLojaImpressaoComprovante.Picture = LoadPicture(endIMG("logo"))
+End Sub

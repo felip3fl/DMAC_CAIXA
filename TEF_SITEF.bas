@@ -781,6 +781,6 @@ Private Function obterTipoPagamentoCreditoTEF(codigoBandeiraTEF As String)
 End Function
 
 Public Sub limparArquivosImpressaoTEF()
-    deletaArquivo GLB_ENDERECOCOMPROVANTETEF & "*.txt"
+    deletaArquivo GLB_ENDERECOCOMPROVANTETEF & "*"
 End Sub
 

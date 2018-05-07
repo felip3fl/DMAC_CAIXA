@@ -603,6 +603,10 @@ Private Sub Label5_Click()
 4890
 End Sub
 
+Private Sub lblMensagensTEF_Click()
+    cancelarOperacaoTEF = True
+End Sub
+
 Private Sub txtNotaFiscal_KeyPress(KeyAscii As Integer)
 
     If KeyAscii = 27 Then

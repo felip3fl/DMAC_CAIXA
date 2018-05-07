@@ -1705,13 +1705,13 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
 
          If lblModalidade.Caption <> "DINHEIRO" Then
          
-            'If ((modalidade + TotPago) - valValoraPagar) > ValDinheiro _
-            'And valValoraPagar < (modalidade + TotPago) Then
-            'If ((modalidade + TotPago) - valValoraPagar) > 0 Or modalidade <= 0 Then
-                'MsgBox "Não é permitido troco maior que pagamento em dinheiro"
-                'Exit Sub
-            'End If
-         
+            If ((modalidade + TotPago) - valValoraPagar) > ValDinheiro _
+            And valValoraPagar < (modalidade + TotPago) Then
+            If ((modalidade + TotPago) - valValoraPagar) > 0 Or modalidade <= 0 Then
+                MsgBox "Não é permitido troco maior que pagamento em dinheiro"
+                Exit Sub
+            End If
+            End If
          End If
          
 

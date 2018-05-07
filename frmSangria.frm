@@ -7,8 +7,8 @@ Begin VB.Form frmSangria
    BorderStyle     =   0  'None
    Caption         =   "T. Numerário"
    ClientHeight    =   9090
-   ClientLeft      =   195
-   ClientTop       =   1470
+   ClientLeft      =   315
+   ClientTop       =   1380
    ClientWidth     =   18900
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
@@ -1817,6 +1817,14 @@ End Sub
 
 Private Sub sklDataMovimento_Click()
 
+End Sub
+
+Private Sub lblMensagemTEFModalidade_Click()
+    cancelarOperacaoTEF = True
+End Sub
+
+Private Sub lblMensagemTEFModalidade_DblClick()
+    cancelarOperacaoTEF = True
 End Sub
 
 Private Sub mskData_KeyPress(KeyAscii As Integer)
