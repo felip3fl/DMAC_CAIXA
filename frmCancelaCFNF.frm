@@ -5,8 +5,8 @@ Begin VB.Form frmCancelaCFNF
    BorderStyle     =   0  'None
    Caption         =   "Cancela CF/NF"
    ClientHeight    =   7455
-   ClientLeft      =   1725
-   ClientTop       =   2520
+   ClientLeft      =   2460
+   ClientTop       =   1965
    ClientWidth     =   15165
    ControlBox      =   0   'False
    LinkTopic       =   "Form1"
