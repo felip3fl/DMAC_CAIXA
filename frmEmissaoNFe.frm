@@ -830,10 +830,10 @@ Private Sub cmdCancelar_Click()
         
     ElseIf nf.eSerie Like "CE*" Then
 
-        Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & nf.pedido & "#" & nf.CNPJ & ".txt", vbDirectory)
-        If Arquivo <> "" Then
-            deletaArquivo GLB_EnderecoPastaRESP & Arquivo
-        End If
+        'Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & nf.pedido & "#" & nf.CNPJ & ".txt", vbDirectory)
+        'If Arquivo <> "" Then
+            deletaArquivo GLB_EnderecoPastaRESP & "*" & nf.numero & "*"
+        'End If
         
         finalizaProcesso "Cancelando Cupom Fiscal Eletrônico " & nf.numero, True
         cancelaSAT nf
