@@ -5,8 +5,8 @@ Begin VB.Form frmEmissaoNFe
    BorderStyle     =   0  'None
    Caption         =   "Emissão NFe"
    ClientHeight    =   9240
-   ClientLeft      =   285
-   ClientTop       =   1335
+   ClientLeft      =   555
+   ClientTop       =   1140
    ClientWidth     =   19035
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
@@ -820,9 +820,9 @@ Private Sub cmdCancelar_Click()
     cancelaNota = False
     
     If nf.eSerie = "NE" Then
-        'Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & Nf.Numero & "#" & Nf.CNPJ & ".txt", vbDirectory)
+        'Arquivo = Dir(GLB_EnderecoPastaRESP & "*" & nf.numero & "#" & nf.CNPJ & ".txt", vbDirectory)
         'If Arquivo <> "" Then
-            deletaArquivo GLB_EnderecoPastaRESP & Arquivo
+            deletaArquivo GLB_EnderecoPastaRESP & "*" & nf.numero & "*"
         'End If
         
         finalizaProcesso "Cancelando Nota Fiscal Eletrônico " & nf.numero, True
