@@ -4,8 +4,8 @@ Begin VB.Form frmFormaPagamento
    BorderStyle     =   0  'None
    Caption         =   "Forma de Pagamento"
    ClientHeight    =   8640
-   ClientLeft      =   2880
-   ClientTop       =   1590
+   ClientLeft      =   3915
+   ClientTop       =   1755
    ClientWidth     =   13425
    BeginProperty Font 
       Name            =   "Arial Black"
@@ -3426,7 +3426,7 @@ rsComplementoVenda.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
 
 'txtSerie.Text = rsComplementoVenda("serie")
 
- If txtSerie.text <> "NE" And (Not txtSerie.text Like GLB_SerieCF & "*") Then
+ If txtSerie.text <> "NE" And (Not txtSerie.text Like GLB_SerieCF & "*") And (Not txtSerie.text = "00") Then
        txtSerie.text = PegaSerieNota
  End If
  

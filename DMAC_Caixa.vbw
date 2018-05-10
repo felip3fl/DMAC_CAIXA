@@ -1,5 +1,5 @@
 frmCaixaSATDireto = 919, 81, 1366, 644, C, 0, 0, 0, 0, C
-chameleonButton = 40, 113, 487, 676, C, 12, 86, 459, 649, C
+chameleonButton = 40, 113, 487, 676, CZ, 12, 86, 459, 649, C
 frmFormaPagamento = 3043, 63, 4098, 626, C, 0, 0, 0, 0, C
 frmStartaProcessos = 203, 129, 658, 668, C, 0, 0, 0, 0, C
 frmCaixaNF = 55, 129, 510, 668, C, 0, 0, 0, 0, C

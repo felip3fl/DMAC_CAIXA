@@ -3,13 +3,13 @@ Begin VB.Form frmBandeja
    BackColor       =   &H00000000&
    Caption         =   "DMAC Caixa"
    ClientHeight    =   7605
-   ClientLeft      =   7650
-   ClientTop       =   345
+   ClientLeft      =   6570
+   ClientTop       =   1755
    ClientWidth     =   6585
    Icon            =   "frmBandeja.frx":0000
    LinkTopic       =   "Form1"
-   ScaleHeight     =   7605
-   ScaleWidth      =   6585
+   ScaleHeight     =   10575
+   ScaleWidth      =   20490
    Begin VB.Image imgTarefas 
       Height          =   11520
       Left            =   0
