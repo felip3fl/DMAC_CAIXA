@@ -976,13 +976,13 @@ Public Sub cmdTransmitir_Click()
         sql = "exec sp_vda_cria_nfe '" & Nf.loja & "', '" & Nf.numero & "', 'NE', ''"
         rdoCNLoja.Execute sql
     
-        Dim I As Byte
+        Dim i As Byte
     
-        For I = 0 To UBound(vetCampos)
-            If vetCampos(I) <> "" Then
-                leituraEstrutura vetCampos(I)
+        For i = 0 To UBound(vetCampos)
+            If vetCampos(i) <> "" Then
+                leituraEstrutura vetCampos(i)
             End If
-        Next I
+        Next i
     
         numeroCopiaImpressao
     
@@ -1030,7 +1030,7 @@ End Sub
 Private Sub notaPedentes()
 
     Dim ado_estrutura As New ADODB.Recordset
-    Dim I As Integer
+    Dim i As Integer
     Dim add As Boolean
     'Dim dataPesquisa As String
     Dim tiponota As String
@@ -1255,10 +1255,6 @@ Private Function obterNumeroNota(pedido As String, numeroNFE As String) As Strin
     rsNotaFiscal.Close
 
 End Function
-
-Private Sub frameNFE_DragDrop(Source As Control, X As Single, Y As Single)
-
-End Sub
 
 Private Sub grdLogSig_Click()
     If grdLogSig.CellForeColor = vbRed Then
@@ -1654,7 +1650,7 @@ Public Sub leituraEstrutura(campo As String)
         Loop
 
         ado_campo.Close
-    ElseIf campo = "ICMS00" Or campo = "ICMS10" Or campo = "ICMS20" Or campo = "ICMS30" Or campo = "ICMS40" Or campo = "ICMS51" Or campo = "ICMS60" Or campo = "ICMS70" Or campo = "ICMS90" Or campo = "DUP" Or campo = "ICMSSN102" Then
+    ElseIf campo = "ICMS00" Or campo = "ICMS10" Or campo = "ICMS20" Or campo = "ICMS30" Or campo = "ICMS40" Or campo = "ICMS51" Or campo = "ICMS60" Or campo = "ICMS70" Or campo = "ICMS90" Or campo = "DUP" Or campo = "ICMSSN102" Or campo = "DETPAG" Then
     
     Else
         sql = insertTabelaNFLojas & Trim(ado_estrutura("etr_sequencia")) - 1 & "','[" & campo & "]','','" & _
@@ -1668,6 +1664,8 @@ Public Sub leituraEstrutura(campo As String)
             gravaVariosDado campo, ado_estrutura
         ElseIf campo = "DUP" Then
             gravaDadosDUP campo, ado_estrutura
+        ElseIf campo = "DETPAG" Then
+            gravaDadosPAG campo, ado_estrutura
         Else
             gravaDados campo, ado_estrutura
         End If
@@ -1729,20 +1727,26 @@ End Sub
 
 Private Sub montaCamposRotulo()
 
-    ReDim vetCampos(32)
+
+    ReDim vetCampos(34)
+    
     vetCampos(0) = "IDE":           vetCampos(1) = "DANFE":         vetCampos(2) = "EMAIL":
     vetCampos(3) = "NFREF":         vetCampos(4) = "EMIT":          vetCampos(5) = "ENDEREMIT"
     vetCampos(6) = "DEST":          vetCampos(7) = "ENDERDEST":     vetCampos(8) = "ICMSTOT"
     vetCampos(9) = "TRANSP":        vetCampos(10) = "TRANSPORTA":   vetCampos(11) = "VEICTRANSP"
     vetCampos(12) = "VOL":
     vetCampos(13) = "INFADIC":      vetCampos(14) = "OBSCONT"
-    vetCampos(15) = "FAT":          vetCampos(16) = "DUP":          vetCampos(17) = "PROD"
-    vetCampos(18) = "ICMS00":       vetCampos(19) = "ICMS10":       vetCampos(20) = "ICMS20":
-    vetCampos(21) = "ICMS30":       vetCampos(22) = "ICMS40":       vetCampos(23) = "ICMS51":
-    vetCampos(24) = "ICMS60":       vetCampos(25) = "ICMS70":       vetCampos(26) = "ICMS90":
-    vetCampos(27) = "ICMSSN102":
-    vetCampos(28) = "IPI":          vetCampos(29) = "IPITRIB":      vetCampos(30) = "PISALIQ":
-    vetCampos(31) = "COFINSALIQ":   vetCampos(32) = "ICMSUFDEST"
+    vetCampos(15) = "FAT":          vetCampos(16) = "DUP":
+    vetCampos(17) = "PAG":          vetCampos(18) = "DETPAG":
+    vetCampos(19) = "PROD"
+    vetCampos(20) = "ICMS00":       vetCampos(21) = "ICMS10":       vetCampos(22) = "ICMS20":
+    vetCampos(23) = "ICMS30":       vetCampos(24) = "ICMS40":       vetCampos(25) = "ICMS51":
+
+    vetCampos(26) = "ICMS60":       vetCampos(27) = "ICMS70":       vetCampos(28) = "ICMS90":
+    vetCampos(29) = "ICMSSN102":
+    vetCampos(30) = "IPI":          vetCampos(31) = "IPITRIB":      vetCampos(32) = "PISALIQ":
+    vetCampos(33) = "COFINSALIQ":   vetCampos(34) = "ICMSUFDEST"
+
 
 End Sub
 
@@ -1937,14 +1941,63 @@ Private Sub criarArquivorDACTE(Nf As notaFiscal, chaveAcesso As String)
 
 End Sub
 
+Private Sub gravaDadosPAG(campo As String, ado_estrutura As ADODB.Recordset)
+
+    Dim ado_campo As New ADODB.Recordset
+    Dim informacao As String
+    Dim i As Byte
+    
+    i = 0
+    
+    sql = "select " & RTrim(ado_estrutura("etr_campo_de")) & " as Informacao " & vbNewLine & _
+          "from " & ado_estrutura("etr_tabela_de") & " " & vbNewLine & _
+          "where " & whereNotaFiscal & " and " & ado_estrutura("etr_campo_de") & " is not null"
+    
+    ado_campo.CursorLocation = adUseClient
+    ado_campo.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    
+    Do While Not ado_campo.EOF
+        If Mid(ado_estrutura("ETR_CAMPO"), 5, 1) = "V" Or Mid(ado_estrutura("ETR_CAMPO"), 5, 1) = "Q" Then
+            informacao = Replace(Format(ado_campo("informacao"), "0.00"), ",", ".")
+        ElseIf Mid(ado_estrutura("ETR_CAMPO"), 5, 1) = "D" Then
+            informacao = Format(ado_campo("informacao"), "YYYY-MM-DD")
+        Else
+            informacao = ado_campo("informacao")
+        End If
+        
+        sql = insertTabelaNFLojas & _
+              Trim(ado_estrutura("etr_sequencia") + (i)) & "', '" & ado_estrutura("etr_campo") & _
+              "', '" & RTrim(informacao) & "', '" & _
+              Nf.loja & "', '" & Nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
+              
+        rdoCNLoja.Execute sql
+        
+        If ado_estrutura("etr_campo") = "    INDPAG" Then
+            sql = insertTabelaNFLojas & _
+            Trim(ado_estrutura("etr_sequencia") + (i) - 1) & "', '[" & RTrim(ado_estrutura("etr_ROTULO")) & _
+            "]', '" & "" & "', '" & _
+            Nf.loja & "', '" & Nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
+              
+            rdoCNLoja.Execute sql
+            i = i + 1
+        End If
+              
+        ado_campo.MoveNext
+        i = i + 5
+    Loop
+    ado_campo.Close
+    ado_estrutura.MoveNext
+    
+    
+End Sub
 
 Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
 
     Dim ado_campo As New ADODB.Recordset
     Dim informacao As String
-    Dim I As Byte
+    Dim i As Byte
     
-    I = 0
+    i = 0
     
     sql = "select " & RTrim(ado_estrutura("etr_campo_de")) & " as Informacao " & vbNewLine & _
           "from " & ado_estrutura("etr_tabela_de") & " " & vbNewLine & _
@@ -1973,7 +2026,7 @@ Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
         
         
         sql = insertTabelaNFLojas & _
-              Trim(ado_estrutura("etr_sequencia") + (I)) & "', '" & ado_estrutura("etr_campo") & _
+              Trim(ado_estrutura("etr_sequencia") + (i)) & "', '" & ado_estrutura("etr_campo") & _
               "', '" & RTrim(informacao) & "', '" & _
               Nf.loja & "', '" & Nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
               
@@ -1981,7 +2034,7 @@ Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
         
         If ado_estrutura("etr_campo") = "    NDUP" Then
             sql = insertTabelaNFLojas & _
-            Trim(ado_estrutura("etr_sequencia") + (I) - 1) & "', '[" & RTrim(ado_estrutura("etr_ROTULO")) & _
+            Trim(ado_estrutura("etr_sequencia") + (i) - 1) & "', '[" & RTrim(ado_estrutura("etr_ROTULO")) & _
             "]', '" & "" & "', '" & _
             Nf.loja & "', '" & Nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
               
@@ -1990,7 +2043,7 @@ Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
         End If
               
         ado_campo.MoveNext
-        I = I + 5
+        i = i + 5
     Loop
     ado_campo.Close
     ado_estrutura.MoveNext
@@ -2749,7 +2802,7 @@ Public Function mensagemLOG2(grid, Data As Date, tipoStatus As Integer, loja As 
 
     Dim status As String
     Dim corLinha As ColorConstants
-    Dim I As Byte
+    Dim i As Byte
     
     
     Select Case tipoStatus
@@ -2786,18 +2839,18 @@ End Function
 
 Public Sub pintaLinha(grid, Cor, Linha As Integer)
     grid.Row = Linha
-    For I = 0 To grid.Cols - 1
-        grid.Col = I
+    For i = 0 To grid.Cols - 1
+        grid.Col = i
         grid.CellForeColor = Cor
-    Next I
+    Next i
 End Sub
 
 Public Sub pintaFonteLinha(grid, Cor, Linha As Integer)
     grid.Row = Linha
-    For I = 0 To grid.Cols - 1
-        grid.Col = I
+    For i = 0 To grid.Cols - 1
+        grid.Col = i
         grid.s = Cor
-    Next I
+    Next i
 End Sub
 
 
@@ -2982,7 +3035,7 @@ Private Sub numeroCopiaImpressao()
 
     Dim SQLLinhaImpressora As String
     Dim ado_rotulo As New ADODB.Recordset
-    Dim I As Integer
+    Dim i As Integer
 
     SQLLinhaImpressora = "INSERT INTO NFE_NFLOJAS " & vbNewLine & _
                          "SELECT TOP 1 * " & vbNewLine & _
@@ -3004,9 +3057,9 @@ Private Sub numeroCopiaImpressao()
         rdoCNLoja.Execute SQLLinhaImpressora
     End If
     
-    For I = 2 To WQtdeCopiaNE
+    For i = 2 To WQtdeCopiaNE
         rdoCNLoja.Execute SQLLinhaImpressora
-    Next I
+    Next i
         
         
     ado_rotulo.Close
