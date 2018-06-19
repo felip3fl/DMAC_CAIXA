@@ -1605,7 +1605,7 @@ Public Sub leituraEstrutura(campo As String)
         Loop
 
         ado_campo.Close
-    ElseIf campo = "ICMS00" Or campo = "ICMS10" Or campo = "ICMS20" Or campo = "ICMS30" Or campo = "ICMS40" Or campo = "ICMS51" Or campo = "ICMS60" Or campo = "ICMS70" Or campo = "ICMS90" Or campo = "DUP" Or campo = "ICMSSN102" Then
+    ElseIf campo = "ICMS00" Or campo = "ICMS10" Or campo = "ICMS20" Or campo = "ICMS30" Or campo = "ICMS40" Or campo = "ICMS51" Or campo = "ICMS60" Or campo = "ICMS70" Or campo = "ICMS90" Or campo = "DUP" Or campo = "ICMSSN102" Or campo = "DETPAG" Then
 
     
     Else
@@ -1617,10 +1617,11 @@ Public Sub leituraEstrutura(campo As String)
     
     Do While Not ado_estrutura.EOF
         If campo = "PROD" Or campo = "DET" Or campo = "ICMS00" Or campo = "ICMS10" Or campo = "ICMS20" Or campo = "ICMS30" Or campo = "ICMS40" Or campo = "ICMS51" Or campo = "ICMS60" Or campo = "ICMS70" Or campo = "ICMS90" Or campo = "PISALIQ" Or campo = "COFINSALIQ" Or campo = "IPI" Or campo = "IPITRIB" Or campo = "ICMSUFDEST" Or campo = "ICMSSN102" Then
-
             gravaVariosDado campo, ado_estrutura
         ElseIf campo = "DUP" Then
             gravaDadosDUP campo, ado_estrutura
+        ElseIf campo = "DETPAG" Then
+            gravaDadosPAG campo, ado_estrutura
         Else
             gravaDados campo, ado_estrutura
         End If
@@ -1682,21 +1683,24 @@ End Sub
 
 Private Sub montaCamposRotulo()
 
-    ReDim vetCampos(32)
+    ReDim vetCampos(34)
+    
     vetCampos(0) = "IDE":           vetCampos(1) = "DANFE":         vetCampos(2) = "EMAIL":
     vetCampos(3) = "NFREF":         vetCampos(4) = "EMIT":          vetCampos(5) = "ENDEREMIT"
     vetCampos(6) = "DEST":          vetCampos(7) = "ENDERDEST":     vetCampos(8) = "ICMSTOT"
     vetCampos(9) = "TRANSP":        vetCampos(10) = "TRANSPORTA":   vetCampos(11) = "VEICTRANSP"
     vetCampos(12) = "VOL":
     vetCampos(13) = "INFADIC":      vetCampos(14) = "OBSCONT"
-    vetCampos(15) = "FAT":          vetCampos(16) = "DUP":          vetCampos(17) = "PROD"
-    vetCampos(18) = "ICMS00":       vetCampos(19) = "ICMS10":       vetCampos(20) = "ICMS20":
-    vetCampos(21) = "ICMS30":       vetCampos(22) = "ICMS40":       vetCampos(23) = "ICMS51":
+    vetCampos(15) = "FAT":          vetCampos(16) = "DUP":
+    vetCampos(17) = "PAG":          vetCampos(18) = "DETPAG":
+    vetCampos(19) = "PROD"
+    vetCampos(20) = "ICMS00":       vetCampos(21) = "ICMS10":       vetCampos(22) = "ICMS20":
+    vetCampos(23) = "ICMS30":       vetCampos(24) = "ICMS40":       vetCampos(25) = "ICMS51":
 
-    vetCampos(24) = "ICMS60":       vetCampos(25) = "ICMS70":       vetCampos(26) = "ICMS90":
-    vetCampos(27) = "ICMSSN102":
-    vetCampos(28) = "IPI":          vetCampos(29) = "IPITRIB":      vetCampos(30) = "PISALIQ":
-    vetCampos(31) = "COFINSALIQ":   vetCampos(32) = "ICMSUFDEST"
+    vetCampos(26) = "ICMS60":       vetCampos(27) = "ICMS70":       vetCampos(28) = "ICMS90":
+    vetCampos(29) = "ICMSSN102":
+    vetCampos(30) = "IPI":          vetCampos(31) = "IPITRIB":      vetCampos(32) = "PISALIQ":
+    vetCampos(33) = "COFINSALIQ":   vetCampos(34) = "ICMSUFDEST"
 
 End Sub
 
@@ -1893,6 +1897,55 @@ Private Sub criarArquivorDACTE(nf As notaFiscal, chaveAcesso As String)
 
 End Sub
 
+Private Sub gravaDadosPAG(campo As String, ado_estrutura As ADODB.Recordset)
+
+    Dim ado_campo As New ADODB.Recordset
+    Dim informacao As String
+    Dim i As Byte
+    
+    i = 0
+    
+    sql = "select " & RTrim(ado_estrutura("etr_campo_de")) & " as Informacao " & vbNewLine & _
+          "from " & ado_estrutura("etr_tabela_de") & " " & vbNewLine & _
+          "where " & whereNotaFiscal & " and " & ado_estrutura("etr_campo_de") & " is not null"
+    
+    ado_campo.CursorLocation = adUseClient
+    ado_campo.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    
+    Do While Not ado_campo.EOF
+        If Mid(ado_estrutura("ETR_CAMPO"), 5, 1) = "V" Or Mid(ado_estrutura("ETR_CAMPO"), 5, 1) = "Q" Then
+            informacao = Replace(Format(ado_campo("informacao"), "0.00"), ",", ".")
+        ElseIf Mid(ado_estrutura("ETR_CAMPO"), 5, 1) = "D" Then
+            informacao = Format(ado_campo("informacao"), "YYYY-MM-DD")
+        Else
+            informacao = ado_campo("informacao")
+        End If
+        
+        sql = insertTabelaNFLojas & _
+              Trim(ado_estrutura("etr_sequencia") + (i)) & "', '" & ado_estrutura("etr_campo") & _
+              "', '" & RTrim(informacao) & "', '" & _
+              nf.loja & "', '" & nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
+              
+        rdoCNLoja.Execute sql
+        
+        If ado_estrutura("etr_campo") = "    INDPAG" Then
+            sql = insertTabelaNFLojas & _
+            Trim(ado_estrutura("etr_sequencia") + (i) - 1) & "', '[" & RTrim(ado_estrutura("etr_ROTULO")) & _
+            "]', '" & "" & "', '" & _
+            nf.loja & "', '" & nf.numero & "', '" & Format(Date, "YYYY/MM/DD") & "')"
+              
+            rdoCNLoja.Execute sql
+            i = i + 1
+        End If
+              
+        ado_campo.MoveNext
+        i = i + 5
+    Loop
+    ado_campo.Close
+    ado_estrutura.MoveNext
+    
+    
+End Sub
 
 Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
 
