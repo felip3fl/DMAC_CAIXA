@@ -1880,7 +1880,7 @@ Private Sub gravaDados(campo As String, ado_estrutura As ADODB.Recordset)
     Do While Not ado_campo.EOF
         If Mid(ado_estrutura("ETR_CAMPO"), 5, 1) = "V" Or Mid(ado_estrutura("ETR_CAMPO"), 5, 1) = "Q" Then
             If Trim(ado_estrutura("ETR_CAMPO")) = "VERPROC" Then
-                informacao = "nfe3g"
+                informacao = "nfe4g"
             Else
                 informacao = ado_campo("informacao")
             End If
@@ -2009,7 +2009,7 @@ Private Sub gravaDadosDUP(campo As String, ado_estrutura As ADODB.Recordset)
     Do While Not ado_campo.EOF
         If Mid(ado_estrutura("ETR_CAMPO"), 5, 1) = "V" Or Mid(ado_estrutura("ETR_CAMPO"), 5, 1) = "Q" Then
             If Trim(ado_estrutura("ETR_CAMPO")) = "VERPROC" Then
-                informacao = "nfe3g"
+                informacao = "nfe4g"
             Else
                 informacao = ado_campo("informacao")
             End If
