@@ -4,8 +4,8 @@ Begin VB.Form frmFuncoesTEF
    BorderStyle     =   0  'None
    Caption         =   "Form1"
    ClientHeight    =   7500
-   ClientLeft      =   480
-   ClientTop       =   1935
+   ClientLeft      =   495
+   ClientTop       =   1890
    ClientWidth     =   6585
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
@@ -18,7 +18,7 @@ Begin VB.Form frmFuncoesTEF
       Left            =   195
       TabIndex        =   0
       Top             =   90
-      Width           =   4050
+      Width           =   4035
       Begin Balcao2010.chameleonButton cmdLimparComprovantes 
          Height          =   555
          Left            =   285

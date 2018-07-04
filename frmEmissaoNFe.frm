@@ -5,13 +5,13 @@ Begin VB.Form frmEmissaoNFe
    BorderStyle     =   0  'None
    Caption         =   "Emissão NFe"
    ClientHeight    =   9240
-   ClientLeft      =   555
-   ClientTop       =   1140
+   ClientLeft      =   945
+   ClientTop       =   1260
    ClientWidth     =   19035
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
-   ScaleHeight     =   0
-   ScaleWidth      =   0
+   ScaleHeight     =   9240
+   ScaleWidth      =   19035
    ShowInTaskbar   =   0   'False
    Visible         =   0   'False
    Begin VB.Frame frmAdministrador 

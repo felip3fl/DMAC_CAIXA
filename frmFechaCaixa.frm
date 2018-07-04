@@ -5,8 +5,8 @@ Begin VB.Form frmFechaCaixa
    BorderStyle     =   0  'None
    Caption         =   "Fechamento do Caixa"
    ClientHeight    =   8385
-   ClientLeft      =   10365
-   ClientTop       =   1920
+   ClientLeft      =   11595
+   ClientTop       =   1650
    ClientWidth     =   5970
    FillColor       =   &H00808080&
    LinkTopic       =   "Form1"
