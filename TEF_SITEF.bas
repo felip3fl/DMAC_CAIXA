@@ -207,15 +207,15 @@ TrataErro:
 End Sub
 
 Public Sub exibirMensagemPedidoTEF(NumeroPedido As String, Parcelas As Byte)
+
     
-    Dim msgParcela As String
-    
-    msgParcela = " parcela"
-    
-    If Parcelas > 1 Then msgParcela = msgParcela + "s"
-        
-    exibirMensagemTEF ("Pedido " & Trim(NumeroPedido) & vbNewLine & _
-                   "" & Parcelas & msgParcela)
+    If Parcelas = 1 Then
+        exibirMensagemTEF ("Pedido " & Trim(NumeroPedido) & vbNewLine & _
+                   "A Vista")
+    Else
+        exibirMensagemTEF ("Pedido " & Trim(NumeroPedido) & vbNewLine & _
+                   "" & Parcelas & " parcelas")
+    End If
                    
 
 End Sub
