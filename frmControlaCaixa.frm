@@ -3,8 +3,8 @@ Begin VB.Form frmControlaCaixa
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
    ClientHeight    =   4980
-   ClientLeft      =   2400
-   ClientTop       =   105
+   ClientLeft      =   930
+   ClientTop       =   3780
    ClientWidth     =   10215
    Icon            =   "frmControlaCaixa.frx":0000
    LinkTopic       =   "Form1"
@@ -1432,6 +1432,8 @@ Private Sub Form_Load()
     carregaQtdeTEFnaoCancelado
     
     carregaImagemMemoria
+    
+    cmdFuncoesTEF.Visible = GLB_TefHabilidado
     
     'txtPedido.SetFocus
     
