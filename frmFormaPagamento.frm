@@ -1718,7 +1718,7 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
       
       nf.pedido = txtPedido.text
       nf.serie = txtSerie.text
-      nf.numero = NroNotaFiscal
+      nf.Numero = NroNotaFiscal
       nf.dataEmissao = GLB_DataInicial
       nf.valor = txtValorModalidade
       nf.Parcelas = wParcelas
@@ -1797,7 +1797,7 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
             wValorMovimento = Format(ValCheque, "##,##0.00")
             If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
                 UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                retorno = Bematech_FI_EfetuaFormaPagamento("CHEQUE", ValCheque * 100)
+                Retorno = Bematech_FI_EfetuaFormaPagamento("CHEQUE", ValCheque * 100)
                 Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
             End If
             Call GravaRegistro
@@ -1821,7 +1821,7 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
     
             If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
                 UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFVisaElectron * 100)
+                Retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFVisaElectron * 100)
                 Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
             End If
     
@@ -1846,7 +1846,7 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
     
             If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
                 UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFRedeShop * 100)
+                Retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFRedeShop * 100)
                 Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
             End If
     
@@ -1870,7 +1870,7 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
     
             If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
                 UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFHiperCard * 100)
+                Retorno = Bematech_FI_EfetuaFormaPagamento("TEF", ValTEFHiperCard * 100)
                 Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
             End If
             
@@ -1893,7 +1893,7 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
             
             If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
                 UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                retorno = Bematech_FI_EfetuaFormaPagamento("NC", ValNotaCredito * 100)
+                Retorno = Bematech_FI_EfetuaFormaPagamento("NC", ValNotaCredito * 100)
                 Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
             End If
             
@@ -1916,10 +1916,10 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
     
                 If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
                     UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                    retorno = Bematech_FI_EfetuaFormaPagamento("VISA", ValCartaoVisa * 100)
+                    Retorno = Bematech_FI_EfetuaFormaPagamento("VISA", ValCartaoVisa * 100)
                     Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
     
-                    If retorno <> 1 Then
+                    If Retorno <> 1 Then
                         MsgBox "Por favor verificar se impressora está ligada corretamente!"
                         Exit Sub
                     End If
@@ -1944,7 +1944,7 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
             wValorMovimento = Format(ValCartaoMastercard, "##,##0.00")
             If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
             UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-            retorno = Bematech_FI_EfetuaFormaPagamento("MASTERCARD", ValCartaoMastercard * 100)
+            Retorno = Bematech_FI_EfetuaFormaPagamento("MASTERCARD", ValCartaoMastercard * 100)
             Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
             End If
             Call GravaRegistro
@@ -1967,7 +1967,7 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
 
             If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
             UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                retorno = Bematech_FI_EfetuaFormaPagamento("AMEX", ValCartaoAmex * 100)
+                Retorno = Bematech_FI_EfetuaFormaPagamento("AMEX", ValCartaoAmex * 100)
                 Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
             End If
 
@@ -1991,7 +1991,7 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
 
             If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
             UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                retorno = Bematech_FI_EfetuaFormaPagamento("AMEX", ValCartaoAmex * 100)
+                Retorno = Bematech_FI_EfetuaFormaPagamento("AMEX", ValCartaoAmex * 100)
                 Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
             End If
         
@@ -2415,12 +2415,12 @@ If txtTipoNota.text = "CUPOM" Then
    '      Exit Sub
    '  End If
 
-    retorno = 0
-    retorno = Bematech_FI_TerminaFechamentoCupom(wAdicionaisECF)
+    Retorno = 0
+    Retorno = Bematech_FI_TerminaFechamentoCupom(wAdicionaisECF)
     'Função que analisa o retorno da impressora
     Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
     
-    If retorno <> 1 Then
+    If Retorno <> 1 Then
         MsgBox "Por favor verificar se impressora está ligada corretamente!", vbCritical, "ERRO"
         Exit Sub
 
@@ -2729,7 +2729,7 @@ Private Sub GravaMovimentoCaixa()
         & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
         & " '" & Format(GLB_DataInicial, "YYYY/MM/DD") & "', " & 20105 & ",''," & NroNotaFiscal & ",'" & txtSerie.text & "', " _
         & "" & ConverteVirgula(Format(frmControlaCaixa.cmdTotalVenda.Caption, "##,##0.00")) & ", " _
-        & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(Date, "yyyy/mm/dd") & "','V'," & txtNumeroTEF.text & ")"
+        & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(Date, "yyyy/mm/dd") & "','V'," & 0 & ")"
         rdoCNLoja.Execute (sql)
     End If
 
@@ -2738,7 +2738,7 @@ Private Sub GravaMovimentoCaixa()
         & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio,MC_ControleAVR, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
         & " '" & Format(GLB_DataInicial, "YYYY/MM/DD") & "', " & 10204 & ",'', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
         & "" & ConverteVirgula(Format(AvistaReceber, "##,##0.00")) & ", " _
-        & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A','A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(Date, "yyyy/mm/dd") & "','V'," & txtNumeroTEF.text & ")"
+        & "0,'" & Agencia & "',0,0," & wParcelas & ", " & 9 & ",'A','A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(Date, "yyyy/mm/dd") & "','V'," & 0 & ")"
         rdoCNLoja.Execute (sql)
     End If
 
@@ -2895,7 +2895,7 @@ Private Sub GravaMovimentoCaixa()
             
             If UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEF" Or _
                 UCase(txtIdentificadequeTelaqueveio.text) = "FRMCAIXATEFPEDIDO" Then
-                retorno = Bematech_FI_EfetuaFormaPagamento("DINHEIRO", ValDinheiro * 100)
+                Retorno = Bematech_FI_EfetuaFormaPagamento("DINHEIRO", ValDinheiro * 100)
                 Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
             End If
 
@@ -2957,7 +2957,7 @@ Private Sub GravaMovimentoCaixa()
             & "MC_Contacorrente,MC_bomPara,MC_Parcelas, MC_Remessa,MC_SituacaoEnvio, MC_Protocolo,MC_Nrocaixa,MC_Pedido,MC_DataProcesso,MC_TipoNota,MC_SequenciaTEF) values(" & Wecf & ",'" & GLB_USU_Codigo & "','" & Trim(wlblloja) & "', " _
             & " '" & Format(GLB_DataInicial, "yyyy/mm/dd") & "', " & wGrupo & ",'" & wSubGrupo & "', " & NroNotaFiscal & ",'" & txtSerie.text & "', " _
             & "" & ConverteVirgula(Format(wTotalNota, "##,##0.00")) & ", " _
-            & "0,'" & "" & "',0,0,0,9,'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & txtNumeroTEF.text & "')"
+            & "0,'" & "" & "',0,0,0,9,'A'," & GLB_CTR_Protocolo & "," & GLB_Caixa & ",'" & txtPedido.text & "','" & Format(GLB_DataInicial, "yyyy/mm/dd") & "','PA','" & 0 & "')"
             rdoCNLoja.Execute (sql)
             
         End If
@@ -3582,10 +3582,10 @@ If txtTipoNota.text = "CUPOM" Then
 
 ' Inicia o fechamento do cupom
 
-          retorno = Bematech_FI_IniciaFechamentoCupom("D", "$", 0)
+          Retorno = Bematech_FI_IniciaFechamentoCupom("D", "$", 0)
           Call VerificaRetornoImpressora("", "", "Emissão de Cupom Fiscal")
           
-          If retorno <> 1 Then
+          If Retorno <> 1 Then
             MsgBox "Por favor verificar se impressora está ligada corretamente!"
             Exit Sub
           End If
