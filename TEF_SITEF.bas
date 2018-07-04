@@ -474,7 +474,7 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                         valores = Format(nf.Parcelas, "0")
                         If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo, False)
                 Case 952
-                        nf.numeroTEF = Val(Mid(Buffer, 1, 10))
+                        nf.numeroTEF = Val(Mid(Buffer, 1, 15))
                         atualizaSequenciaTEF nf.sequenciaMovimentoCaixa, nf.numeroTEF
                 Case 1190
                         valores = entradaDeValores("TipoCampo = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo, False)
