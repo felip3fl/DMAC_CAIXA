@@ -1398,7 +1398,7 @@ Private Sub reimpressaoTEF()
     Dim sql As String
     Dim nf As notaFiscalTEF
     
-    nf.numero = grdAnaliticoVenda.TextMatrix(grdAnaliticoVenda.Row, 0)
+    nf.Numero = grdAnaliticoVenda.TextMatrix(grdAnaliticoVenda.Row, 0)
     nf.serie = grdAnaliticoVenda.TextMatrix(grdAnaliticoVenda.Row, 1)
     nf.valor = grdAnaliticoVenda.TextMatrix(grdAnaliticoVenda.Row, 3)
     nf.pedido = grdAnaliticoVenda.TextMatrix(grdAnaliticoVenda.Row, 6)
@@ -1420,7 +1420,7 @@ End Sub
 
 Private Sub Form_Load()
   
-    'defineImpressora
+    defineImpressora
   
   frmSaldo.BackColor = vbBlack
   

@@ -320,7 +320,7 @@ Dim Linhas As Long
 Dim datageral As Date
 Dim wQtdeGrid As Integer
 Dim Idx As Long
-Dim Sql As String
+Dim sql As String
 Dim Cor As String
 Dim Cor1 As String
 Dim Cor2 As String
@@ -364,7 +364,7 @@ Private Sub FechaCaixaOK()
   wQdteViasImpressao = 1
   Call BuscaQtdeViaImpressaoMovimento
   
-  For I = 1 To wQdteViasImpressao
+  For i = 1 To wQdteViasImpressao
       
       'Call ImprimeMovimento
         Call NOVO_ImprimeMovimento(grdMovimentoCaixa, "FECHAMENTO DE CAIXA", txtOperador.text, GLB_Caixa, _
@@ -379,7 +379,7 @@ Private Sub FechaCaixaOK()
                                  
       'Call ImprimeMovimento00
       'Call ImprimeTransfNumerario
-  Next I
+  Next i
   
   
   
@@ -401,13 +401,13 @@ Private Sub verificarValorNegativo()
 'ricardo versao 01
      Dim rdoSelectCapa As New ADODB.Recordset
 
-    Sql = ("Select * from Movimentocaixa Where MC_NumeroECF = " & GLB_ECF & "" _
+    sql = ("Select * from Movimentocaixa Where MC_NumeroECF = " & GLB_ECF & "" _
      & " and  mc_tipoNota = 'V' and mc_data = '" & Format(Date, "yyyy/mm/dd") _
      & "' " & " and MC_Protocolo = " & GLB_CTR_Protocolo & " ")
 
 
      rdoSelectCapa.CursorLocation = adUseClient
-     rdoSelectCapa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+     rdoSelectCapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
      
    If Not rdoSelectCapa.EOF Then
         Do While Not rdoSelectCapa.EOF
@@ -431,9 +431,9 @@ Private Sub ChkFechamento_Click()
         
         'verificarValorNegativo
     
-        Sql = "     SELECT * FROM  ControleCaixa WHERE  ctr_SITUACAOcaixa='A' AND ctr_supervisor <>99"
+        sql = "     SELECT * FROM  ControleCaixa WHERE  ctr_SITUACAOcaixa='A' AND ctr_supervisor <>99"
                 rdoFechamentoGeral.CursorLocation = adUseClient
-                rdoFechamentoGeral.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+                rdoFechamentoGeral.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
              Linhas = rdoFechamentoGeral.RecordCount
         
         If Linhas = 1 Then
@@ -464,7 +464,7 @@ Private Sub Form_Activate()
 
     Dim qtdeNotasEmitida As Integer
 
-    'defineImpressora
+    defineImpressora
 
     wControlaSaldoCaixa = 0
 
@@ -518,7 +518,7 @@ End Sub
 
 Private Function controlaNotasEmitidas() As Integer
 
-    Dim Sql As String
+    Dim sql As String
     Dim rdoNotas As New ADODB.Recordset
     'Dim dataPesquisa As String
 
@@ -526,7 +526,7 @@ Private Function controlaNotasEmitidas() As Integer
 
     notaPedente = False
 
-    Sql = "select count(*) as NFpedente " & vbNewLine & _
+    sql = "select count(*) as NFpedente " & vbNewLine & _
           "from nfcapa " & vbNewLine & _
           "where tm not in (4012,4016,9016,101,100,9005,4005,9012,204,124,4014,4017) " & vbNewLine & _
           "and tiponota in ('V','T','E','S','R')" & vbNewLine & _
@@ -535,7 +535,7 @@ Private Function controlaNotasEmitidas() As Integer
           "and dataemi >= '" & Format(GLB_DataInicial, "YYYY/MM") & "/01'"
     
     rdoNotas.CursorLocation = adUseClient
-    rdoNotas.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+    rdoNotas.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
         
         If rdoNotas("NFpedente") > 0 Then
             notaPedente = True
@@ -557,10 +557,10 @@ Private Sub Form_Load()
   
   wControlaSaldoCaixa = 0
   
-  Sql = ("Select Max(CTr_DataInicial)as DataMov,Max(Ctr_Protocolo) as Seq " _
+  sql = ("Select Max(CTr_DataInicial)as DataMov,Max(Ctr_Protocolo) as Seq " _
        & "from ControleCaixa where CTR_Supervisor <> 99 and CTr_NumeroCaixa = " & GLB_Caixa)
         rdoFechamentoGeral.CursorLocation = adUseClient
-        rdoFechamentoGeral.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+        rdoFechamentoGeral.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
   lblCabec.Caption = lblCabec & " " & Format(rdoFechamentoGeral("DataMov"), "dd/mm/yyyy")
   
   rdoFechamentoGeral.Close
@@ -865,11 +865,11 @@ Dim wImprime2 As String
 Dim wTotal00 As Double
 wTotal00 = 0
  
-Sql = ("Select Serie, sum(totalnota) as TotalSerieNota, count(Serie) as QtdeSerie from nfcapa Where ecf = " & GLB_ECF & "" _
+sql = ("Select Serie, sum(totalnota) as TotalSerieNota, count(Serie) as QtdeSerie from nfcapa Where ecf = " & GLB_ECF & "" _
      & " and  TipoNota = 'V' and Serie = '00' and  DataEmi = '" & Format(Date, "yyyy/mm/dd") _
      & "' " & " and Protocolo = " & GLB_CTR_Protocolo & " group by Serie ")
      rdoCapa.CursorLocation = adUseClient
-     rdoCapa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+     rdoCapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
      
 If Not rdoCapa.EOF Then
    wTotal00 = rdoCapa("TotalSerieNota")
@@ -1344,7 +1344,7 @@ End Sub
 
 Private Sub GravaSaldoCaixa()
 
-  Sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja, MC_Data, MC_Grupo,MC_Subgrupo, MC_Documento,MC_Serie," _
+  sql = "Insert into movimentocaixa (MC_NumeroEcf,MC_CodigoOperador,MC_Loja, MC_Data, MC_Grupo,MC_Subgrupo, MC_Documento,MC_Serie," _
                & "MC_Valor, MC_banco, MC_Agencia,MC_Contacorrente, MC_bomPara, MC_Parcelas,MC_Remessa,MC_SituacaoEnvio," _
                & "MC_NroCaixa,MC_Protocolo,MC_Pedido,MC_DataProcesso,MC_TipoNota)" _
                & " values(" & GLB_ECF & ",'" & GLB_USU_Codigo & "','" & GLB_Loja & "','" _
@@ -1352,29 +1352,29 @@ Private Sub GravaSaldoCaixa()
                & ",'',0,'SC'," _
                & ConverteVirgula(Format(wSaldoNovo, "##,###0.00")) & ", " _
                & "0,0,0,0,0,9,'A','" & GLB_Caixa & "'," & GLB_CTR_Protocolo & ",'0','" & Format(wData, "yyyy/mm/dd") & "','V')"
-      rdoCNLoja.Execute (Sql)
+      rdoCNLoja.Execute (sql)
     
 End Sub
 Private Sub FechaCaixa()
 
     If ChkFechamento.Value = 1 Then
         
-        Sql = "Update ControleCaixa set CTR_SaldoFinal = " & ConverteVirgula(Format(grdMovimentoCaixa.TextMatrix(15, 3), "##,###0.00")) _
+        sql = "Update ControleCaixa set CTR_SaldoFinal = " & ConverteVirgula(Format(grdMovimentoCaixa.TextMatrix(15, 3), "##,###0.00")) _
         & ",CTR_SituacaoCaixa='F',CTR_DataFinal=GetDate()" _
         & " Where CTR_SituacaoCaixa = 'A'"
         
-        Sql = Sql & vbNewLine & "update estoqueloja set el_estoqueanterior = el_estoque"
-        rdoCNLoja.Execute Sql, rdExecDirect
+        sql = sql & vbNewLine & "update estoqueloja set el_estoqueanterior = el_estoque"
+        rdoCNLoja.Execute sql, rdExecDirect
         
     Else
     
-        Sql = "Update ControleCaixa set CTR_SaldoFinal =" & ConverteVirgula(Format(grdMovimentoCaixa.TextMatrix(15, 3), "##,###0.00")) _
+        sql = "Update ControleCaixa set CTR_SaldoFinal =" & ConverteVirgula(Format(grdMovimentoCaixa.TextMatrix(15, 3), "##,###0.00")) _
         & ",CTR_SituacaoCaixa='F',CTR_DataFinal=GetDate()" _
         & " Where CTR_Supervisor <> 99 and CTR_SituacaoCaixa = 'A' and CTR_NumeroCaixa ='" & GLB_Caixa & "'"
         
     End If
 
-    rdoCNLoja.Execute Sql, rdExecDirect
+    rdoCNLoja.Execute sql, rdExecDirect
 
 '  sql = ("Select Max(CTr_DataInicial)as DataMov,Max(Ctr_Protocolo) as Seq " _
 '       & "from ControleCaixa where CTR_Supervisor <> 99 and CTr_NumeroCaixa = " & GLB_Caixa)
@@ -1424,9 +1424,9 @@ If KeyAscii = 13 Then
     RsDados.Close
  End If
 
-   Sql = ("Select * from UsuarioCaixa where USU_Nome ='" & txtOperador.text & "' and USU_TipoUsuario='O'")
+   sql = ("Select * from UsuarioCaixa where USU_Nome ='" & txtOperador.text & "' and USU_TipoUsuario='O'")
    RsDados.CursorLocation = adUseClient
-   RsDados.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+   RsDados.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
    If RsDados.EOF Then
       MsgBox "Operador não Cadastrado", vbCritical, "Aviso"
       RsDados.Close
@@ -1464,10 +1464,10 @@ If KeyAscii = 13 Then
                      Dim horaInicialGeral As String
                      Dim horaFinalGeral As String
                      
-                     Sql = "select ctr_protocolo as protocolo from controlecaixa " & vbNewLine & _
+                     sql = "select ctr_protocolo as protocolo from controlecaixa " & vbNewLine & _
                            "where CTR_Supervisor <> 99 and convert(char(10),CTR_DataInicial,111) = '" & Format(GLB_DataInicial, "yyyy/mm/dd") & "'"
                      rdoProtocolos.CursorLocation = adUseClient
-                     rdoProtocolos.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+                     rdoProtocolos.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
                          
                      wProtocolos = ""
                      Do While Not rdoProtocolos.EOF
@@ -1526,13 +1526,13 @@ Limapgrd
  wTotalFatFin = 0
  grdMovimentoCaixa.Row = 1
  Screen.MousePointer = 11
- Sql = ("select mc_Grupo,sum(MC_Valor) as TotalModalidade,Count(*) as Quantidade from movimentocaixa" _
+ sql = ("select mc_Grupo,sum(MC_Valor) as TotalModalidade,Count(*) as Quantidade from movimentocaixa" _
        & " Where MC_Data between '" & Format(datageral, "yyyy/mm/dd") & " 00:00:00.000' and '" _
        & Format(datageral, "yyyy/mm/dd") & " 23:59:59:000" _
        & "' and  MC_Serie <> '00' and (MC_Grupo like '10%' or MC_Grupo like '11%'" _
        & " or MC_Grupo like '50%' or MC_Grupo like '20%') and mc_tiponota  <> 'C' group by mc_grupo")
        rdoFormaPagamento.CursorLocation = adUseClient
-       rdoFormaPagamento.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rdoFormaPagamento.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
        
 '1999-01-02 00:00:00.000
 If Not rdoFormaPagamento.EOF Then
@@ -1702,11 +1702,11 @@ If Not rdoFormaPagamento.EOF Then
 
      rdoFormaPagamento.Close
   
-    Sql = ("select MC_Grupo,sum(mc_valor)as mc_valor from MovimentoCaixa where MC_Grupo in ('11006','50806') and " _
+    sql = ("select MC_Grupo,sum(mc_valor)as mc_valor from MovimentoCaixa where MC_Grupo in ('11006','50806') and " _
         & "MC_Data = '" & Format(datageral, "yyyy/mm/dd") _
        & "' group by MC_Grupo")
      rdoFormaPagamento.CursorLocation = adUseClient
-     rdoFormaPagamento.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+     rdoFormaPagamento.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
      
      Do While Not rdoFormaPagamento.EOF
          
@@ -1742,12 +1742,12 @@ If Not rdoFormaPagamento.EOF Then
   End If
   rdoFormaPagamento.Close
   
-    Sql = ("select mc_Grupo,sum(MC_Valor) as TotalModalidade,Count(*) as Quantidade from movimentocaixa" _
+    sql = ("select mc_Grupo,sum(MC_Valor) as TotalModalidade,Count(*) as Quantidade from movimentocaixa" _
        & " Where MC_Data between '" & Format(datageral, "yyyy/mm/dd") & " 00:00:00.000' and '" _
        & Format(datageral, "yyyy/mm/dd") & " 23:59:59:000" & _
          "' and MC_Serie <> '00' and MC_tiponota = 'C' and MC_Grupo like '20%' group by mc_grupo")
        rdoFormaPagamento.CursorLocation = adUseClient
-       rdoFormaPagamento.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+       rdoFormaPagamento.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
        
   If Not rdoFormaPagamento.EOF Then
      Do While Not rdoFormaPagamento.EOF
@@ -1927,11 +1927,11 @@ Retorno = Bematech_FI_AbreRelatorioGerencialMFD("01")
 
 
  
-Sql = ("Select Serie, sum(totalnota) as TotalSerieNota, count(Serie) as QtdeSerie from nfcapa Where ecf = " & GLB_ECF & "" _
+sql = ("Select Serie, sum(totalnota) as TotalSerieNota, count(Serie) as QtdeSerie from nfcapa Where ecf = " & GLB_ECF & "" _
      & " and  TipoNota = 'V' and Serie = '00' and  DataEmi = '" & Format(Date, "yyyy/mm/dd") _
      & "' " & " and Protocolo = " & GLB_CTR_Protocolo & " group by Serie ")
      rdoCapa.CursorLocation = adUseClient
-     rdoCapa.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
+     rdoCapa.Open sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
      
 If Not rdoCapa.EOF Then
    wTotal00 = rdoCapa("TotalSerieNota")
