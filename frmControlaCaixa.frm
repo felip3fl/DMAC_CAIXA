@@ -2,16 +2,16 @@ VERSION 5.00
 Begin VB.Form frmControlaCaixa 
    BackColor       =   &H00000000&
    BorderStyle     =   0  'None
-   ClientHeight    =   4980
+   ClientHeight    =   10080
    ClientLeft      =   930
    ClientTop       =   3780
-   ClientWidth     =   10215
+   ClientWidth     =   16485
    Icon            =   "frmControlaCaixa.frx":0000
    LinkTopic       =   "Form1"
    LockControls    =   -1  'True
    Picture         =   "frmControlaCaixa.frx":23FA
-   ScaleHeight     =   4980
-   ScaleWidth      =   10215
+   ScaleHeight     =   10080
+   ScaleWidth      =   16485
    ShowInTaskbar   =   0   'False
    WindowState     =   2  'Maximized
    Begin VB.Frame frmTrans 
@@ -1301,7 +1301,8 @@ Private Sub cmdSangria_Click()
 End Sub
 
 Private Sub cmdVersao_Click()
-    MsgBox "Versão " & App.Major & "." & App.Minor & "." & App.Revision
+    MsgBox "Versão " & App.Major & "." & App.Minor & "." & App.Revision, vbInformation, "Sobre"
+    frmTrocaVersao.Show vbModal
 End Sub
 
 Private Sub Form_Activate()
