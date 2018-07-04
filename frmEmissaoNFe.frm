@@ -1680,12 +1680,9 @@ Public Sub atualizaNota(campo As String)
     ado_estrutura.Close
 End Sub
 
-
-
-
 Private Sub montaCamposRotulo()
 
-    ReDim vetCampos(34)
+    ReDim vetCampos(32)
     
     vetCampos(0) = "IDE":           vetCampos(1) = "DANFE":         vetCampos(2) = "EMAIL":
     vetCampos(3) = "NFREF":         vetCampos(4) = "EMIT":          vetCampos(5) = "ENDEREMIT"
@@ -1693,17 +1690,16 @@ Private Sub montaCamposRotulo()
     vetCampos(9) = "TRANSP":        vetCampos(10) = "TRANSPORTA":   vetCampos(11) = "VEICTRANSP"
     vetCampos(12) = "VOL":
     vetCampos(13) = "INFADIC":      vetCampos(14) = "OBSCONT"
-    vetCampos(15) = "FAT":          vetCampos(16) = "DUP":
-    vetCampos(17) = "PAG":          vetCampos(18) = "DETPAG":
-    vetCampos(19) = "PROD"
-    vetCampos(20) = "ICMS00":       vetCampos(21) = "ICMS10":       vetCampos(22) = "ICMS20":
-    vetCampos(23) = "ICMS30":       vetCampos(24) = "ICMS40":       vetCampos(25) = "ICMS51":
+    
+    vetCampos(15) = "FAT":          vetCampos(16) = "DUP":          vetCampos(17) = "PROD"
+    vetCampos(18) = "ICMS00":       vetCampos(19) = "ICMS10":       vetCampos(20) = "ICMS20":
+    vetCampos(21) = "ICMS30":       vetCampos(22) = "ICMS40":       vetCampos(23) = "ICMS51":
 
-    vetCampos(26) = "ICMS60":       vetCampos(27) = "ICMS70":       vetCampos(28) = "ICMS90":
-    vetCampos(29) = "ICMSSN102":
-    vetCampos(30) = "IPI":          vetCampos(31) = "IPITRIB":      vetCampos(32) = "PISALIQ":
-    vetCampos(33) = "COFINSALIQ":   vetCampos(34) = "ICMSUFDEST"
-
+    vetCampos(24) = "ICMS60":       vetCampos(25) = "ICMS70":       vetCampos(26) = "ICMS90":
+    vetCampos(27) = "ICMSSN102":
+    vetCampos(28) = "IPI":          vetCampos(29) = "IPITRIB":      vetCampos(30) = "PISALIQ":
+    vetCampos(31) = "COFINSALIQ":   vetCampos(32) = "ICMSUFDEST"
+    
 End Sub
 
 Private Sub gravaVariosDado(campo As String, ado_estrutura As ADODB.Recordset)
