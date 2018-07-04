@@ -360,14 +360,14 @@ Begin VB.Form frmControlaCaixa
       VALUE           =   0   'False
    End
    Begin Balcao2010.chameleonButton cmdReRomaneio 
-      Height          =   495
+      Height          =   0
       Left            =   4440
       TabIndex        =   10
       Top             =   10770
       Visible         =   0   'False
       Width           =   1095
       _ExtentX        =   1931
-      _ExtentY        =   873
+      _ExtentY        =   0
       BTYPE           =   11
       TX              =   "Re Romaneio"
       ENAB            =   -1  'True
