@@ -36,7 +36,7 @@ Global operacaoTEFCompleta As Boolean
 Public Const GLB_ENDERECOCOMPROVANTETEF = "C:\Sistemas\DMAC Caixa\Sitef\Comprovantes\"
 
 Public Type notaFiscalTEF
-    Numero As String
+    numero As String
     loja As String
     serie As String
     pedido As String
@@ -82,9 +82,9 @@ End Type
 '
 'End Sub
 
-Public Sub CriaComprovanteTef(NumeroPedido As String, sequenciaTEF As String, via As String, comprovante As String)
+Public Sub CriaComprovanteTef(numeropedido As String, sequenciaTEF As String, via As String, comprovante As String)
 
-    Open GLB_ENDERECOCOMPROVANTETEF & NumeroPedido & "-" & sequenciaTEF & "-" & via & ".txt" For Output As #1
+    Open GLB_ENDERECOCOMPROVANTETEF & numeropedido & "-" & sequenciaTEF & "-" & via & ".txt" For Output As #1
         Print #1, comprovante
     Close #1
     
@@ -206,14 +206,14 @@ TrataErro:
     End If
 End Sub
 
-Public Sub exibirMensagemPedidoTEF(NumeroPedido As String, Parcelas As Byte)
+Public Sub exibirMensagemPedidoTEF(numeropedido As String, Parcelas As Byte)
 
     
     If Parcelas = 1 Then
-        exibirMensagemTEF ("Pedido " & Trim(NumeroPedido) & vbNewLine & _
+        exibirMensagemTEF ("Pedido " & Trim(numeropedido) & vbNewLine & _
                    "A Vista")
     Else
-        exibirMensagemTEF ("Pedido " & Trim(NumeroPedido) & vbNewLine & _
+        exibirMensagemTEF ("Pedido " & Trim(numeropedido) & vbNewLine & _
                    "" & Parcelas & " parcelas")
     End If
                    
@@ -476,12 +476,12 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                 Case 952
                         nf.numeroTEF = Val(Mid(Buffer, 1, 15))
                         atualizaSequenciaTEF nf.sequenciaMovimentoCaixa, nf.numeroTEF
-                Case 1190
-                        valores = entradaDeValores("TipoCampo = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo, False)
+                'Case 1190 'Embosso (4 últimos dígitos) do Cartão
+                        'valores = entradaDeValores("TipoCampo = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo, False)
                     
                 'Case Else
                         'If GLB_Administrador Then valores = InputBox(Trim(Buffer), "TipoCampo = " & TipoCampo)
-                        
+                
                         
                 End Select
             
@@ -558,7 +558,7 @@ Private Function formataCampoTEF(valores As String)
     End If
 End Function
 
-Private Function validadorBancoDeDados(NumeroPedido As String, serie As String, _
+Private Function validadorBancoDeDados(numeropedido As String, serie As String, _
                                   ByRef dataTransicao As String, ByRef horaTransicao As String) As Boolean
 
     Dim RsDados As New ADODB.Recordset
@@ -570,7 +570,7 @@ Private Function validadorBancoDeDados(NumeroPedido As String, serie As String, 
           "MC_DataBaixaAVR horaOperacao, " & vbNewLine & _
           "MC_Data data " & vbNewLine & _
           "from MovimentoCaixa " & vbNewLine & _
-          "where MC_Pedido = '" & NumeroPedido & "'" & vbNewLine & _
+          "where MC_Pedido = '" & numeropedido & "'" & vbNewLine & _
           "and MC_SequenciaTEF > 0" & vbNewLine & _
           "and MC_serie = '" & serie & "'"
     
@@ -602,7 +602,7 @@ TrataErro:
 End Function
 
 
-Public Sub finalizarTransacaoTEF(NumeroPedido As String, serie As String, validaAntesDeFinalizar As Boolean)
+Public Sub finalizarTransacaoTEF(numeropedido As String, serie As String, validaAntesDeFinalizar As Boolean)
 
     Dim dataTransicao As String
     Dim horaTransicao As String
@@ -613,13 +613,13 @@ Public Sub finalizarTransacaoTEF(NumeroPedido As String, serie As String, valida
     realizarFinalizacao = True
     
     If validaAntesDeFinalizar Then
-        realizarFinalizacao = validadorBancoDeDados(NumeroPedido, serie, dataTransicao, horaTransicao)
+        realizarFinalizacao = validadorBancoDeDados(numeropedido, serie, dataTransicao, horaTransicao)
     End If
 
     If realizarFinalizacao Then
         
         FinalizaTransacaoSiTefInterativo 1, _
-                                     NumeroPedido, _
+                                     numeropedido, _
                                      Format(dataTransicao, "YYYYMMDD"), _
                                      Format(horaTransicao, "HHMMSS")
 
