@@ -34,6 +34,7 @@ Private posicaoFila As Integer
 Global operacaoTEFCompleta As Boolean
 
 Public Const GLB_ENDERECOCOMPROVANTETEF = "C:\Sistemas\DMAC Caixa\Sitef\Comprovantes\"
+Public Const GLB_ENDERECOLOGTEF = "C:\Sistemas\DMAC Caixa\Sitef\Log\"
 
 Public Type notaFiscalTEF
     numero As String
@@ -50,15 +51,15 @@ Public Type notaFiscalTEF
     sequenciaMovimentoCaixa As String
 End Type
 
-'Public Sub criaLogTef(numeropedido As String, sequenciaTEF As String, via As String, mensagem As String)
-'
-'    Open GLB_ENDERECOCOMPROVANTETEF & numeropedido & "-" & sequenciaTEF & "-" & Nome & ".txt" For Output As #1
-'
-'        Print #1, mensagem
-'
-'    Close #1
-'
-'End Sub
+Public Sub criaLogTef(numeropedido As String, sequenciaTEF As String, via As String, Mensagem As String)
+
+    Open GLB_ENDERECOLOGTEF & numeropedido & "-" & sequenciaTEF & "-" & "LOG" & ".txt" For Output As #1
+
+        Print #1, Mensagem
+
+    Close #1
+
+End Sub
 
 'Private Sub imprimirComprovantesTEF(numeropedido As String)
 '
@@ -473,9 +474,15 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                 Case 505
                         valores = Format(nf.Parcelas, "0")
                         If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo, False)
-                Case 952
-                        nf.numeroTEF = Val(Mid(Buffer, 1, 15))
+                        
+'                Case 952
+'                        nf.numeroTEF = Val(Mid(Buffer, 1, 15))
+'                        atualizaSequenciaTEF nf.sequenciaMovimentoCaixa, nf.numeroTEF
+                        
+                Case 134
+                        nf.numeroTEF = Trim(Val(Mid(Buffer, 1, 15)))
                         atualizaSequenciaTEF nf.sequenciaMovimentoCaixa, nf.numeroTEF
+                        
                 'Case 1190 'Embosso (4 últimos dígitos) do Cartão
                         'valores = entradaDeValores("TipoCampo = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo, False)
                     
@@ -544,7 +551,7 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
         tipoOperacao = "Cancelamento" & pedido
     End If
     
-    'criaLogTef tipoOperacao, logOperacoesTEF
+    criaLogTef nf.pedido, nf.numeroTEF, tipoOperacao, logOperacoesTEF
     
  
 End Function
