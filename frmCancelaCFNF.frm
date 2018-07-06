@@ -780,6 +780,7 @@ Private Sub txtSerie_LostFocus()
     ADOCancela.Open Sql, rdoCNLoja, adOpenForwardOnly, adLockPessimistic
     
     If Not ADOCancela.EOF Then
+    
         txtValorNF.text = Format(ADOCancela("TOTALNOTA"), "0.00")
         txtPedido.text = ADOCancela("numeroped")
         wPedido = ADOCancela("numeroped")
@@ -809,7 +810,6 @@ Private Sub carregaNotasComTEF()
     frameCancelamentoTEF.Visible = True
     lblMensagensTEF.Caption = "As mensagens do TEF serão exibida aqui"
     lblModalidade.Caption = ""
-    
     
 
 End Sub
