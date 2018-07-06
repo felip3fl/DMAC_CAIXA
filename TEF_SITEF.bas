@@ -571,7 +571,7 @@ Private Function validadorBancoDeDados(numeropedido As String, serie As String, 
           "MC_Data data " & vbNewLine & _
           "from MovimentoCaixa " & vbNewLine & _
           "where MC_Pedido = '" & numeropedido & "'" & vbNewLine & _
-          "and MC_SequenciaTEF > 0" & vbNewLine & _
+          "and MC_SequenciaTEF > '0'" & vbNewLine & _
           "and MC_serie = '" & serie & "'"
     
     Screen.MousePointer = 11
