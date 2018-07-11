@@ -475,11 +475,13 @@ Public Function EfetuaOperacaoTEF(ByVal codigoOperacao As String, _
                         valores = Format(nf.Parcelas, "0")
                         If GLB_Administrador Then valores = entradaDeValores("TipoCampo = " & TipoCampo, Buffer, TamanhoMinimo, tamanhoMaximo, False)
                         
-'                Case 952
+                Case 952
+                        logOperacoesTEF = logOperacoesTEF & "[Retorno SEQUENCIA] 952: " & Val(Mid(Buffer, 1, 15)) & vbNewLine
 '                        nf.numeroTEF = Val(Mid(Buffer, 1, 15))
 '                        atualizaSequenciaTEF nf.sequenciaMovimentoCaixa, nf.numeroTEF
                         
                 Case 134
+                        logOperacoesTEF = logOperacoesTEF & "[Retorno SEQUENCIA] 134: " & Val(Mid(Buffer, 1, 15)) & vbNewLine
                         nf.numeroTEF = Trim(Val(Mid(Buffer, 1, 15)))
                         atualizaSequenciaTEF nf.sequenciaMovimentoCaixa, nf.numeroTEF
                         
