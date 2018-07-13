@@ -753,7 +753,7 @@ Private Function obterTipoPagamentoCreditoTEF(codigoBandeiraTEF As String)
     Case "00003"
         obterTipoPagamentoCreditoTEF = "Diners"
     Case "00004"
-        obterTipoPagamentoCreditoTEF = "American Express"
+        obterTipoPagamentoCreditoTEF = "AMEX"
     Case "00005"
         obterTipoPagamentoCreditoTEF = "Sollo"
     Case "00006"
