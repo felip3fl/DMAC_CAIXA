@@ -746,7 +746,7 @@ Private Function obterTipoPagamentoCreditoTEF(codigoBandeiraTEF As String)
     Select Case codigoBandeiraTEF
     Case "00000"
         obterTipoPagamentoCreditoTEF = "Débito Genérico"
-    Case "00001"
+    Case "00001", "00031" 'Credito
         obterTipoPagamentoCreditoTEF = "VISA"
     Case "00002"
         obterTipoPagamentoCreditoTEF = "MASTERCARD"
@@ -778,11 +778,11 @@ Private Function obterTipoPagamentoCreditoTEF(codigoBandeiraTEF As String)
         obterTipoPagamentoCreditoTEF = "Sorocred"
     Case "10014"
         obterTipoPagamentoCreditoTEF = "Discovery"
-    Case "20002" 'DEBITO
+    Case "20002", 20032 'DEBITO
         obterTipoPagamentoCreditoTEF = "VISA ELEC."
     Case "20001" 'Maestro 'DEBITO
         obterTipoPagamentoCreditoTEF = "REDESHOP"
-    Case "20013", "20032", "00031"
+    Case "20013", "20032"
         obterTipoPagamentoCreditoTEF = "Elo"
     Case Else
         obterTipoPagamentoCreditoTEF = "CARTÃO DESCONHECIDO"
