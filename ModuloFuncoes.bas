@@ -5275,6 +5275,18 @@ Public Sub atualizaGrupoModalidade(sequenciaMovimentoCaixa As String, modalidade
 End Sub
 
 
+Public Sub deletaComprovanteMovimentoCaixa(sequenciaMovimentoCaixa As String)
+
+    Dim Sql As String
+    Dim rsConsulta As New ADODB.Recordset
+    
+    Sql = "delete movimentocaixa" & vbNewLine & _
+          " where MC_sequencia = '" & sequenciaMovimentoCaixa & "'"
+    
+    rdoCNLoja.Execute Sql
+    
+End Sub
+
 Public Sub atualizaComprovanteMovimentoCaixa(sequenciaMovimentoCaixa As String, comprovante As String)
 
     Dim Sql As String
@@ -5286,8 +5298,6 @@ Public Sub atualizaComprovanteMovimentoCaixa(sequenciaMovimentoCaixa As String, 
     rdoCNLoja.Execute Sql
     
 End Sub
-
-
 
 Public Function deletaArquivo(enderecoNomeArquivo As String) As Boolean
 On Error GoTo TrataErro

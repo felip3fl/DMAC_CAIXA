@@ -1719,7 +1719,7 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
       
       nf.pedido = txtPedido.text
       nf.serie = txtSerie.text
-      nf.Numero = NroNotaFiscal
+      nf.numero = NroNotaFiscal
       nf.dataEmissao = GLB_DataInicial
       nf.valor = txtValorModalidade
       nf.Parcelas = wParcelas
@@ -1760,6 +1760,7 @@ Private Sub GuardaValoresParaGravarMovimentoCaixa()
             lblModalidade.Caption = ""
             atualizaGrupoModalidade nf.sequenciaMovimentoCaixa, wGrupoMovimento
           Else
+            deletaComprovanteMovimentoCaixa nf.sequenciaMovimentoCaixa
             lblModalidade.Caption = ""
           End If
       End If
