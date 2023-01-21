@@ -1,0 +1,15 @@
+Module1 = 367, 262, 1118, 838, C
+frmAbrirFecharCaixa = 128, 325, 1143, 707, C, 0, 0, 0, 0, C
+ModCaixa = 0, 104, 1024, 746, C
+Funcoes = 110, 111, 822, 493, C
+Declaracoes = 42, 143, 985, 516, C
+ModEstoque = 261, 52, 1089, 434, C
+frmLogin = 215, 143, 662, 516, C, 0, 0, 0, 0, C
+ModPedido = 278, 129, 725, 511, C
+frmMovimentoCaixa = 103, 175, 1041, 682, C, 0, 0, 0, 0, C
+frmCaixaTEF = 0, 2, 1024, 734, C, 0, 0, 0, 0, C
+frmCaixaTEFPedido = 0, 80, 1024, 743, C, 0, 0, 0, 0, C
+chameleonButton = 649, 80, 1096, 743, C, 0, 0, 0, 0, C
+frmFormaPagamento = 11, 135, 1033, 867, C, 0, 0, 0, 0, 
+frmStartaProcessos = 155, 117, 1046, 780, C, 0, 0, 0, 0, C
+frmCaixaNF = 20, 80, 884, 743, C, 0, 0, 0, 0, C
