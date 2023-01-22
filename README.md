@@ -62,6 +62,3 @@ Use o ``Visual Basic 6`` para usar este projeto
 Docusaurus is [MIT licensed](./LICENSE).
 
 The Docusaurus documentation (e.g., `.md` files in the `/docs` folder) is [Creative Commons licensed](./LICENSE-docs).
-
-
-Projeto DMAC Caixa desenvolvido em VB6 seguintos os padrões DMAC
