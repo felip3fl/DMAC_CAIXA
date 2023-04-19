@@ -1,13 +1,13 @@
-<h1 align="center"> <img src="https://user-images.githubusercontent.com/20684484/211394469-42e0ba5f-961c-4093-a3ab-be28cd57d702.png" width="50%" align="center" ><BR>CAIXA<BR><BR></h1>
+<h3 align="center"> <img src="https://user-images.githubusercontent.com/20684484/211394469-42e0ba5f-961c-4093-a3ab-be28cd57d702.png" width="35%" align="center" ><BR>CAIXA<BR><BR>
+
+<img src="https://img.shields.io/badge/STATUS-FINALIZADO-blue">
+<img src="https://img.shields.io/badge/PROJECT%20VERSION-1.0.0-yellow">
+</h3>
 
 ## 📃 Descrição do projeto
 
 <p align="justify">
  Projeto DMAC Alerta desenvolvido em VB6 seguintos os padrões dos projeto DMAC (De Meo Automação comercial)
-</p>
-<p align="center">
-<img src="https://img.shields.io/badge/STATUS-FINALIZADO-green">
-<img src="https://img.shields.io/badge/PROJECT%20VERSION-1.0.0-blue">
 </p>
 
 <BR>
