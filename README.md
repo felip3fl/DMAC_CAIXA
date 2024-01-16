@@ -3,6 +3,7 @@
 <img src="https://img.shields.io/badge/STATUS-FINALIZADO-blue">
 <img src="https://img.shields.io/badge/PROJECT%20VERSION-1.0.0-yellow">
 </h3>
+<BR>
 
 ## 📃 Descrição do projeto
 
